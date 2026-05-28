@@ -1,0 +1,20 @@
+1, reset_pin
+tp 复位
+
+2，enter_upgrade_mode
+进入升级模式，具体来讲 tp reset -> hold mcu -> auto feed
+
+3, run_ram_code(chsc_venus_burn.bin)
+下ramcode代码，chsc_venus_burn.bin 位于 SMCP\Xbin 目录
+
+4，d 300
+延时300ms
+
+5，w 20 00 00 00 12 34 56 78
+向0x20000000写0x78563412
+
+6, w 20 00 00 00 r 12
+向0x20000000读18个字节
+
+7，register_bit_set(20000000, cfffffff, 10000000)
+从0x20000000读取数据data  向0x20000000写数据  data = (data & cfffffff) | 10000000

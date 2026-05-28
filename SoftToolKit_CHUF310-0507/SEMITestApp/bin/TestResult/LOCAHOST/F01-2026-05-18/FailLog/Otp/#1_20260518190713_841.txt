@@ -1,0 +1,84 @@
+ChipSemi_Tester_V8.8.8_20260318
+WorkStation: F01   ProjectName: 0508
+
+Time Stamp:	2026-05-18 19:07:06 491
+Mtk Version = 0xd1103
+
+Time Stamp:	2026-05-18 19:07:06 984
+
+------------------------------Project Test------------------------------
+Project = 310
+
+//Project Test is Pass
+
+Time Stamp:	2026-05-18 19:07:06 984
+
+------------------------------RESET Test------------------------------
+
+
+//Reset Test is Pass
+
+Time Stamp:	2026-05-18 19:07:07 170
+
+------------------------------OSC Trim Test------------------------------
+Target No1=52000  No2=62400  No3=62400 
+osc32k trim = 52 value = 31968	osc52m trim = 195 value = 52000812
+osc52.00m trim = 195	value = 51999052 
+osc41.60m trim = 283	value = 41621504
+osc62.40m trim = 135	value  = 62373100
+Temp1 -194	Temp2 -193	Temp3 -194	Temp4 -194	
+32K = 0x34, 52M=0xc3 
+
+//OSCTrim Test is Pass
+
+Time Stamp:	2026-05-18 19:07:08 992
+
+------------------------------OTP Test------------------------------
+ATE/FCT is free & Only check 
+Fail = 1 
+
+//OTP Test is Fail
+
+Time Stamp:	2026-05-18 19:07:09 028
+
+------------------------------Current Test------------------------------
+
+avdd_active = 17502(uA), avdd_idle = 1595(uA)£¬  avdd_sleep = 177(uA)
+
+sleep(177) > setting max(30)
+
+
+//Current Test is Fail
+
+------------------------------Current Test------------------------------
+
+avdd_active = 17476(uA), avdd_idle = 1578(uA)£¬  avdd_sleep = 153(uA)
+
+sleep(153) > setting max(30)
+
+
+//Current Test is Fail
+
+------------------------------Current Test------------------------------
+
+avdd_active = 17509(uA), avdd_idle = 1590(uA)£¬  avdd_sleep = 144(uA)
+
+sleep(144) > setting max(30)
+
+
+//Current Test is Fail
+
+Time Stamp:	2026-05-18 19:07:12 975
+
+------------------------------IOVoltage Test------------------------------
+
+Time Stamp:	2026-05-18 19:07:13 483
+
+------------------------------IOVoltage Test------------------------------
+
+Time Stamp:	2026-05-18 19:07:13 841
+
+------------------------------IOVoltage Test------------------------------
+
+
+//Final result is NG

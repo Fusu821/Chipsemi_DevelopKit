@@ -1,0 +1,30 @@
+<include width="500" height="500">
+  <PacketWindow pos="0,0,-0,-0" name="sigle">
+    <mclistview name="resultlist" pos="2,2,|0,-2" headerHeight="30" class="cls_border">
+				<header2 align="center" itemSwapEnable="0" matchParent="1" font="face:仿宋,bold:1,size:15" sortHeader="0" colorBkgnd="#F3F3F3" >
+				  <items>
+					<item width="150">NAME</item>
+					<item width="150">RESULT</item>
+					<item width="243">MARK</item>
+				  </items>
+				</header2>
+				<template itemHeight="32" colorHover="rgb(153,209,230)" colorSelected="rgb(63,175,222)">
+				  <window name="col1"  clipClient="1" colorBkgnd="rgb(202,202,202)">
+					<text name="name" pos="1,0,-0,-1" align="center" colorBkgnd="#F3F3F3"  font="face:仿宋,bold:1,size:18"></text>
+				  </window>
+				  <window name="col2" clipClient="1" colorBkgnd="rgb(202,202,202)">
+					<text name="result" pos="1,0,-0,-1" align="center" colorBkgnd="#F3F3F3" font="face:仿宋,bold:1,size:18" ></text>
+				  </window>
+				  <window name="col3" clipClient="1" colorBkgnd="rgb(202,202,202)">
+					<text name="mark" pos="1,0,-0,-1" align="center" colorBkgnd="#F3F3F3" font="face:仿宋,bold:1,size:18"  ></text>
+				  </window>
+				</template>
+    </mclistview>	  
+	<graph name="imageGraph" pos="2,2,|0,-2" show="0"/>
+	<text name="txtSn" pos="2,-1,-40,-1">SN:</text>
+	<edit name="snCode" pos="31,-1,|0,-1" cueText="please input sncode" focusable="false" ></edit>
+	<richedit name="richText" pos="|2,2,-2,-68" multilines="1" autovscroll="1" autohscroll="1" hscrollBar="1" vscrollBar="1" wordwrap="0" margin-x="2" margin-y="2"></richedit>
+	<progress name="progress" pos="|2,[1,-2,@7" posSkin="skin_pos" value="0" min="0" max="100"  />
+	<button name="btnstart" pos="|2,[2,-2,-2" font="face:仿宋,bold:1,size:28" skin="StartBtnNor" colorText="#000000">START</button>
+   </PacketWindow>
+</include>

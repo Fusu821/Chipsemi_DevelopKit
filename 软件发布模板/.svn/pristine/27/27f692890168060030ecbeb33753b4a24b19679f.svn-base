@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<semitester ic_type="CHSC6440">
+  <common i2c_addr="0x5C" work_station="FT" project_name="CHSC6440_XR2526_TC5283-V2-20190613-new" configure_bin="user\CHSC6440_CHSC6440_XR2526_TC5283-V2-20190613-new_cfg.bin" boot_bin="user\CHSC6440_CHSC6440_XR2526_TC5283-V2-20190613-new_boot.bin" />
+  <firmware boot_crc="0x46C60646" config_crc="0xB42723E9" w_clk="0x2602" filter_off="0" />
+  <FT>
+    <misc way_to_start="2" sn_length="10" selected_format="0" />
+    <int_test selected="1" />
+    <reset_test selected="1" />
+    <boot_test selected="1" only_check="0" />
+    <config_test selected="1" only_check="0" />
+    <os_test selected="1" integral="1" scale_a="0x31" scale_b="0x31" m1_ratio_lower_va="18" m1_ratio_upper_va="18" m1_ratio_lower_ref="31" m1_ratio_upper_ref="43" m2_ratio="12" m3_delta_level1="-80" m3_delta_level2="-150" m3_delta_va_max="200" m3_delta_ref_max="200">
+      <os_base_0>2000 2000 2000 2000 2000 2000 2000 2000 2000 </os_base_0>
+      <os_base_1>2000 2000 2000 2000 2000 2000 2000 2000 2000 </os_base_1>
+      <os_base_2>2000 2000 2000 2000 2000 2000 2000 2000 2000 </os_base_2>
+      <os_base_3>2000 2000 2000 2000 2000 2000 2000 2000 2000 </os_base_3>
+      <os_base_4>2000 2000 0 0 0 0 0 0 0 </os_base_4>
+    </os_test>
+    <fsd_test selected="1" f_clk="0x5501" s_clk="0x5503" cmp_max="100" recheck="0" triger_min="5" triger_max="100" slow_critical_min="-150" slow_critical_max="2" fsd_besides_min="5" fast_critical_max="1" pluscheck="0" fsd_t1="10" fsd_t2="5" fsd_t3="-5" fsd_t4="-20">
+      <fsd_base_0>30 30 30 30 30 30 30 30 30 </fsd_base_0>
+      <fsd_base_1>30 30 30 30 30 30 30 30 30 </fsd_base_1>
+      <fsd_base_2>30 30 30 30 30 30 30 30 30 </fsd_base_2>
+      <fsd_base_3>30 30 30 30 30 30 30 30 30 </fsd_base_3>
+      <fsd_fast_0>2426 2426 2426 2426 2426 2426 2426 2426 2426 </fsd_fast_0>
+      <fsd_fast_1>2426 2426 2426 2426 2426 2426 2426 2426 2426 </fsd_fast_1>
+      <fsd_fast_2>2426 2426 2426 2426 2426 2426 2426 2426 2426 </fsd_fast_2>
+      <fsd_fast_3>2426 2426 2426 2426 2426 2426 2426 2426 2426 </fsd_fast_3>
+      <fsd_slow_0>2456 2456 2456 2456 2456 2456 2456 2456 2456 </fsd_slow_0>
+      <fsd_slow_1>2456 2456 2456 2456 2456 2456 2456 2456 2456 </fsd_slow_1>
+      <fsd_slow_2>2456 2456 2456 2456 2456 2456 2456 2456 2456 </fsd_slow_2>
+      <fsd_slow_3>2456 2456 2456 2456 2456 2456 2456 2456 2456 </fsd_slow_3>
+      <fsd_delta_max_0>20 20 20 20 20 20 20 20 20 </fsd_delta_max_0>
+      <fsd_delta_max_1>20 20 20 20 20 20 20 20 20 </fsd_delta_max_1>
+      <fsd_delta_max_2>20 20 20 20 20 20 20 20 20 </fsd_delta_max_2>
+      <fsd_delta_max_3>20 20 20 20 20 20 20 20 20 </fsd_delta_max_3>
+      <fsd_uniformity_left_0>20 20 20 20 20 20 20 20 20 </fsd_uniformity_left_0>
+      <fsd_uniformity_left_1>20 20 20 20 20 20 20 20 20 </fsd_uniformity_left_1>
+      <fsd_uniformity_left_2>20 20 20 20 20 20 20 20 20 </fsd_uniformity_left_2>
+      <fsd_uniformity_left_3>20 20 20 20 20 20 20 20 20 </fsd_uniformity_left_3>
+      <fsd_uniformity_right_0>20 20 20 20 20 20 20 20 20 </fsd_uniformity_right_0>
+      <fsd_uniformity_right_1>20 20 20 20 20 20 20 20 20 </fsd_uniformity_right_1>
+      <fsd_uniformity_right_2>20 20 20 20 20 20 20 20 20 </fsd_uniformity_right_2>
+      <fsd_uniformity_right_3>20 20 20 20 20 20 20 20 20 </fsd_uniformity_right_3>
+      <fsd_deviation_0>50 50 50 50 50 50 50 50 50 </fsd_deviation_0>
+      <fsd_deviation_1>50 50 50 50 50 50 50 50 50 </fsd_deviation_1>
+      <fsd_deviation_2>50 50 50 50 50 50 50 50 50 </fsd_deviation_2>
+      <fsd_deviation_3>50 50 50 50 50 50 50 50 50 </fsd_deviation_3>
+    </fsd_test>
+    <current_test selected="0" work_current_min="7000" work_current_max="8500" sleep_current_max="50" />
+    <osctrim_test selected="1" tick_standard="607500" osctrim_min="80" osctrim_max="207" />
+    <mtkversion_test selected="1" mtk_version="330020" />
+    <invalidnode>
+      <invalid_0>1 1 1 1 1 1 1 1 1 </invalid_0>
+      <invalid_1>1 1 1 1 1 1 1 1 1 </invalid_1>
+      <invalid_2>1 1 1 1 1 1 1 1 1 </invalid_2>
+      <invalid_3>1 1 1 1 1 1 1 1 1 </invalid_3>
+      <invalid_4>1 1 0 0 0 0 0 0 0 </invalid_4>
+    </invalidnode>
+    <freepaint_test selected="0" once="1" limited_time="98" />
+    <button_test selected="0" max_ng="4" limited_time="10" />
+    <linearly_test selected="0" max_ng="6" limited_time="10" distance="36" edge="30" lenth="36" postion="0" linearly_direction="1" upper_limite_h1="0" lower_limite_h1="0" upper_limite_h2="0" lower_limite_h2="0" upper_limite_h3="0" lower_limite_h3="0" upper_limite_h4="0" lower_limite_h4="0" upper_limite_h5="0" lower_limite_h5="0" upper_limite_h6="0" lower_limite_h6="0" upper_limite_v1="0" lower_limite_v1="0" upper_limite_v2="0" lower_limite_v2="0" upper_limite_v3="0" lower_limite_v3="0" upper_limite_v4="0" lower_limite_v4="0" upper_limite_v5="0" lower_limite_v5="0" upper_limite_v6="0" lower_limite_v6="0" />
+  </FT>
+  <stations station_0="FT" />
+</semitester>

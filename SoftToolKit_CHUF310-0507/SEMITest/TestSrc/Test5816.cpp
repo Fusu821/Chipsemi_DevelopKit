@@ -1,0 +1,1924 @@
+#include "checksum.h"
+#include "Test5816.h"
+#include "../Config/Config5816.h"
+
+#include <list>
+//#include <numeric>
+
+extern CConfig* G_XMLConfig;
+#define pCfg5816   (( const CConfig5816*)G_XMLConfig)
+REGIST_RUNTIME_CLASS(TEST_TYPE, (TEST_TYPE)SEMI_IC_5816, CTest5816)
+
+typedef CTest5816 CTest1716;
+REGIST_RUNTIME_CLASS(TEST_TYPE, (TEST_TYPE)SEMI_IC_1716, CTest1716)
+
+// struct SortPacket 
+// {
+// 	double dpVal;
+// 	int dpRow;
+// 	int dpCol;
+// 	SortPacket( int row, int col, double val = 0 )
+// 		:dpRow(row)
+// 		,dpCol(col)
+// 		,dpVal(val)
+// 	{
+// 
+// 	}
+// 	bool operator < ( const SortPacket& cmp )
+// 	{
+// 		return this->dpVal < cmp.dpVal;
+// 	}
+// };
+
+CTest5816::CTest5816()
+:CTestBase()
+{
+// 	memset( m_CurTestItemAddr, 0, sizeof(m_CurTestItemAddr) );
+// 	m_CurTestItemAddr[TEST_ITEM_MTK_CONNECT]     = new CRunTimeMethod<CTestBase>( this, &CTestBase::MTKConnectTest );
+// 	m_CurTestItemAddr[TEST_ITEM_TP_WAIT]         = new CRunTimeMethod<CTestBase>( this, &CTestBase::TP_WaitTest );
+// 	m_CurTestItemAddr[TEST_ITEM_TP_REMOVE]       = new CRunTimeMethod<CTestBase>( this, &CTestBase::TP_RemoveTest );
+// 	m_CurTestItemAddr[TEST_ITEM_INT_TEST]        = new CRunTimeMethod<CTest5816>( this, &CTest5816::INT_Test );
+// 	m_CurTestItemAddr[TEST_ITEM_RESET_TEST]      = new CRunTimeMethod<CTest5816>( this, &CTest5816::Reset_Test );
+// 	m_CurTestItemAddr[TEST_ITEM_FSD_TEST_5816]   = new CRunTimeMethod<CTest5816>( this, &CTest5816::FSD_Test );
+// 	m_CurTestItemAddr[TEST_ITEM_OS_TEST_5816]    = new CRunTimeMethod<CTest5816>( this, &CTest5816::OS_Test );
+// 	m_CurTestItemAddr[TEST_ITEM_BOOT_TEST]       = new CRunTimeMethod<CTest5816>( this, &CTest5816::Boot_Test );
+// 	m_CurTestItemAddr[TEST_ITEM_CFG_TEST]        = new CRunTimeMethod<CTest5816>( this, &CTest5816::Config_Test );
+// 	m_CurTestItemAddr[TEST_ITEM_BUTTON_TEST]     = new CRunTimeMethod<CTest5816>( this, &CTestBase::Graph_Test );
+// 	m_CurTestItemAddr[TEST_ITEM_LINEARLY_TEST]   = new CRunTimeMethod<CTest5816>( this, &CTestBase::Graph_Test );
+// 	m_CurTestItemAddr[TEST_ITEM_FREE_PAINT_TEST] = new CRunTimeMethod<CTest5816>( this, &CTestBase::Graph_Test );
+// 	m_CurTestItemAddr[TEST_ITEM_CURRENT_TEST]    = new CRunTimeMethod<CTest5816>( this, &CTest5816::Current_Test );
+}
+CTest5816::~CTest5816()
+{
+	
+}
+void CTest5816::SetTestContext( unsigned char deviceNo, NativeTestInterface* native )
+{
+	//m_listTestItems.clear();
+	CTestBase::SetTestContext( deviceNo, native );
+
+	int indexSel = 0;  //mtk = 0
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_MTK_CONNECT;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("MTK"), lengthof(_T("MTK")));
+		info.bSelected = true;
+		info.jumpIfNG = false;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTestBase>( this, &CTestBase::MTKConnectTest );
+	}
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_TP_WAIT;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("Waiting"), lengthof(_T("Waiting")));
+		info.bSelected = pCfg5816->way_to_start == START_BY_AUTO;
+		info.jumpIfNG = false;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTestBase>( this, &CTestBase::TP_WaitTest );
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_FRT_TEST_5816;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("FRT"), lengthof(_T("FRT")));
+		info.bSelected = pCfg5816->frt_selected;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest5816>( this, &CTest5816::FRT_Test );
+	}
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_OSCTRIM_TEST_5816;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("OSCTrim"), lengthof(_T("OSCTrim")));
+		info.bSelected = pCfg5816->osctrim_selected;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest5816>( this, &CTest5816::OSCTrim_Test );
+	}
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_BOOT_TEST;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("Boot"), lengthof(_T("Boot")));
+		info.bSelected = pCfg5816->boot_selected;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest5816>( this, &CTest5816::Boot_Test );
+	}
+
+// 	{
+// 		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+// 		info.item.ucDevice = m_deviceNo;
+// 		info.item.testCode = TEST_ITEM_CFG_TEST;
+// 		info.item.testResult = ITEM_STA_NONE;
+// 		copytextto(info.item.testName, _T("Config"), lengthof(_T("Config")));
+// 		info.bSelected = pCfg5816->config_selected;
+// 		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest5816>( this, &CTest5816::Config_Test );
+// 	}
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_OS_TEST_5816;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("Short"), lengthof(_T("Short")));
+		info.bSelected = pCfg5816->short_selected;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest5816>( this, &CTest5816::Short_Test );
+	}
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_MISC_TEST_5816;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("MISC"), lengthof(_T("MISC")));
+		info.bSelected = pCfg5816->misc_selected;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest5816>( this, &CTest5816::MISC_Test );
+	}
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_PROJECT_CODE;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("Project"), lengthof(_T("Project")));
+		info.bSelected = 1;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest5816>( this, &CTest5816::ProjectCode_Test );
+	}
+
+	//{
+	//	InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+	//	info.item.ucDevice = m_deviceNo;
+	//	info.item.testCode = TEST_ITEM_BASE_TEST_5816;
+	//	info.item.testResult = ITEM_STA_NONE;
+	//	copytextto(info.item.testName, _T("Base"), lengthof(_T("Base")));
+	//	info.bSelected = pCfg5816->base_selected;
+	//	if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest5816>( this, &CTest5816::Base_Test );
+	//}
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_SCAP_RAWDATA_TEST_5816;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("ScapData"), lengthof(_T("ScapData")));
+		info.bSelected = pCfg5816->scap_rawdata_selected;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest5816>( this, &CTest5816::ScapRawData_Test );
+	}
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_STC_5816;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("STC"), lengthof(_T("STC")));
+		info.bSelected = pCfg5816->stc_selected;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest5816>( this, &CTest5816::STC_Test );
+	}
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_MCAP_RAWDATA_5816;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("McapData"), lengthof(_T("McapData")));
+		info.bSelected = pCfg5816->mcap_rawdata_selected;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest5816>( this, &CTest5816::MCapRawData_Test );
+	}
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_VIH_TEST_5816;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("VIH"), lengthof(_T("VIH")));
+		info.bSelected = pCfg5816->vih_selected;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest5816>( this, &CTest5816::VIH_Test );
+	}
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_RESET_TEST;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("Reset"), lengthof(_T("Reset")));
+		info.bSelected = pCfg5816->reset_selected;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest5816>( this, &CTest5816::Reset_Test );
+	}
+	
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_INT_TEST;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("INT"), lengthof(_T("INT")));
+		info.bSelected = pCfg5816->int_selected;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest5816>( this, &CTest5816::INT_Test );
+	}
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_CURRENT_TEST;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("Current"), lengthof(_T("Current")));
+		info.bSelected = pCfg5816->current_selected;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest5816>( this, &CTest5816::Current_Test );
+	}
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_IOVOL_TEST_5816;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("IOVoltage"), lengthof(_T("IOVoltage")));
+		info.bSelected = pCfg5816->iovol_selected;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest5816>( this, &CTest5816::IOVoltage_Test );
+	}
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_NOISE_TEST_5816;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("Noise"), lengthof(_T("Noise")));
+		info.bSelected = pCfg5816->noise_selected;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest5816>( this, &CTest5816::Noise_Test );
+	}
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_BUTTON_TEST;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("Button"), lengthof(_T("Button")));
+		info.bSelected = pCfg5816->button_selected;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest5816>( this, &CTest5816::Graph_Test );
+	}
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_LINEARLY_TEST;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("Linearly"), lengthof(_T("Linearly")));
+		info.bSelected = pCfg5816->LINEARITY_TEST;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest5816>( this, &CTest5816::Graph_Test );
+	}
+
+    {
+        InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+        info.item.ucDevice = m_deviceNo;
+        info.item.testCode = TEST_ITEM_EXP_LINEARLY_TEST;
+        info.item.testResult = ITEM_STA_NONE;
+        copytextto(info.item.testName, _T("ExpLinearly"), lengthof(_T("ExpLinearly")));
+        info.bSelected = pCfg5816->EXP_LINEARITY_TEST;
+        if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest5816>( this, &CTest5816::Graph_Test );
+    }
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_FREE_PAINT_TEST;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("FreePaint"), lengthof(_T("FreePaint")));
+		info.bSelected = pCfg5816->FREEPAINT_TEST;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest5816>( this, &CTest5816::Graph_Test );
+	}
+
+    //////////////////////////////////////////////////////////////////////////
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_TP_REMOVE;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("Removing"), lengthof(_T("Removing")));
+		info.bSelected = pCfg5816->way_to_start == START_BY_AUTO || pCfg5816->way_to_start == START_BY_SN;
+		info.jumpIfNG = false;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest5816>( this, &CTest5816::TP_RemoveTest );
+	}
+
+	if( SM_ChipBase(m_deviceNo) )
+	{
+		CtpHalCfg halCfg;
+		halCfg.protocalType = PROTOCAL_IIC;
+		halCfg.speed = pCfg5816->Speed;
+		halCfg.IIC.slaveAddr = pCfg5816->I2cAddr;
+		halCfg.vddVoltage = pCfg5816->vddVotage;
+		halCfg.iovddVotage = pCfg5816->ioVddVotage;
+		halCfg.vihVotage = pCfg5816->vihVotage;
+		halCfg.icType = pCfg5816->IcType;
+		SM_ChipBase(m_deviceNo)->SetCommContext( halCfg );
+	}
+
+	ActionToXmlConfig();
+}
+void CTest5816::ICArrayToSensorMatrix( unsigned short (&dataMappinged)[2][MAX_MCAP_COL], unsigned short* const dataToMapping, unsigned int dataCnt, unsigned short maxRows, unsigned short* pMaxCols )
+{
+	for( int iTx = 0; iTx < pCfg5816->colsCnt; iTx++ )
+	{
+		unsigned short icChannel = pCfg5816->sensor_2_ic_map[iTx];
+		dataMappinged[0][iTx] = dataToMapping[icChannel];
+	}
+	for( int iRx = 0; iRx < pCfg5816->rowsCnt; iRx++ )
+	{
+		unsigned short icChannel = pCfg5816->sensor_2_ic_map[iRx + MAX_TX_NUM_5816];
+		dataMappinged[1][iRx] = dataToMapping[icChannel];
+	}
+}
+// void CTest5816::ICArrayToSensorMatrix( unsigned short (&dataMappinged)[MAX_MCAP_ROW][MAX_MCAP_COL], unsigned short* const dataToMapping, unsigned int dataCnt, unsigned short maxRows, unsigned short maxCols )
+// {
+// 	memset( dataMappinged, 0, sizeof( dataMappinged ) );
+// 
+// 	for( int iRow = 0; iRow < maxRows; iRow++ )
+// 	{
+// 		for( int iCol = 0; iCol < maxCols; iCol++ )
+// 		{
+// 			int index = (int)iRow * maxCols + iCol;
+// 			if( index >= (int)dataCnt )   continue;
+// 
+// 			int icPosition = pCfg5816->sensor_2_ic_map[index];
+// 			dataMappinged[iRow][iCol] = dataToMapping[icPosition];
+// 		}
+// 	}
+// 	for( int index = (int)maxRows * maxCols; index < (int)dataCnt; index++ )
+// 	{
+// 		int iCol = index - maxRows * maxCols + maxCols;
+// 		int icPosition = pCfg5816->sensor_2_ic_map[index];
+// 		dataMappinged[maxRows - 1][iCol] = dataToMapping[icPosition];
+// 	}
+// }
+// void CTest5816::ICMatrixToSensorMatrix( unsigned short (&dataMappinged)[MAX_MCAP_ROW][MAX_MCAP_COL],
+// 	unsigned short mappedRow,
+// 	unsigned short mappedCol,
+// 	const unsigned short (&dataToMapping)[MAX_MCAP_ROW][MAX_MCAP_COL],
+// 	unsigned short mappingRow,
+// 	unsigned short mappingCol )
+// {
+// 	memset( dataMappinged, 0, sizeof( dataMappinged ) );
+// 
+// 	for( int iRow = 0; iRow < mappedRow; iRow++ )
+// 	{
+// 		for( int iCol = 0; iCol < mappedCol; iCol++ )
+// 		{
+// 			int index = iRow * mappedCol + iCol;
+// 			if( index >= (int)pCfg5816->real_channel_num )   continue;
+// 
+// 			int icPosition = pCfg5816->sensor_2_ic_map[index];
+// 			int icRow = icPosition / mappingCol;
+// 			int icCol = icPosition % mappingCol;
+// 
+// 			dataMappinged[iRow][iCol] = dataToMapping[icRow][icCol];
+// 		}
+// 	}
+// }
+// void CTest5816::SensorMatrixToIcMatrix( unsigned short (&dataMappinged)[MAX_MCAP_ROW][MAX_MCAP_COL],
+// 	unsigned short mappedRow,
+// 	unsigned short mappedCol,
+// 	const unsigned short (&dataToMapping)[MAX_MCAP_ROW][MAX_MCAP_COL],
+// 	unsigned short mappingRow,
+// 	unsigned short mappingCol )
+// {
+// 	memset( dataMappinged, 0, sizeof( dataMappinged ) );
+// 
+// // 	for( int iRow = 0; iRow < mappedRow; iRow++ )
+// // 	{
+// // 		for( int iCol = 0; iCol < mappedCol; iCol++ )
+// // 		{
+// // 			int index = iRow * mappedCol + iCol;
+// // 		    int sensorPos = pCfg5816->ic_2_sensor_map[index] - 1;
+// // 			if( sensorPos >= MAX_MCAP_CHANNEL )
+// // 				continue;
+// // 			int sensorRow = sensorPos / mappingCol;
+// // 			int sensorCol = sensorPos % mappingCol;
+// // 
+// // 			dataMappinged[iRow][iCol] = dataToMapping[sensorRow][sensorCol];
+// // 		}
+// // 	}
+// 
+// 	for( int iRow = 0; iRow < mappingRow; iRow++ )
+// 	{
+// 		for( int iCol = 0; iCol < mappingCol; iCol++ )
+// 		{
+// 			int index = iRow * mappingCol + iCol;
+// 			if( index >= (int)pCfg5816->real_channel_num )   continue;
+// 
+// 			int icPosition = pCfg5816->sensor_2_ic_map[index];
+// 			int icRow = icPosition / mappedCol;
+// 			int icCol = icPosition % mappedCol;
+// 
+// 			dataMappinged[icRow][icCol] = dataToMapping[iRow][iCol];
+// 		}
+// 	}
+// }
+BOOL CTest5816::CheckTpBootSame( )
+{
+	BOOL bCheckBootOk = FALSE;
+	unsigned int iReCode = ERROR_CODE_OK;
+	ISMChip5816* iChip5816 = (ISMChip5816*)SM_ChipBase(m_deviceNo);
+	if( NULL == iChip5816 )   return FALSE;
+
+	unsigned int crc_from_tp = 0, otm_time = 0;
+	iReCode = iChip5816->GetBootCheckSum( &crc_from_tp, &otm_time );
+	if( iReCode != ERROR_CODE_OK ) 
+	{
+		TestResultInfo( _T("main area compare code = 1\r\n") );
+		return FALSE;
+	}
+
+	//TCHAR szBuffer[MAX_PATH] = {0};
+	//transformat( szBuffer, _T("BootID = 0x%x,   %d-%d, %d:%d:%d"), otm_time, (otm_time>>22)&0xf, (otm_time>>17)&0x1f,(otm_time>>12)&0x1f, (otm_time>>6)&0x3f, otm_time&0x3f );
+	//TestResultInfo( szBuffer );
+	
+	if( crc_from_tp != pCfg5816->boot_check_sum )
+	{
+		//transformat( szBuffer, "crc from tp = %x, checksum from file = %x\r\n", crc_from_tp, pCfg5816->boot_check_sum );
+		//TestResultInfo( szBuffer );
+		TestResultInfoR( "crc from tp = %x, checksum from file = %x\r\n", crc_from_tp, pCfg5816->boot_check_sum );
+		return FALSE;
+	}
+
+	unsigned char readBuffer[256] = {0};
+	iReCode = iChip5816->ReadBurnSpace( 40 * 1024, readBuffer, sizeof(readBuffer) );
+	if( iReCode != ERROR_CODE_OK )  return FALSE;
+
+	//bCheckBootOk = TRUE;
+
+	unsigned char* oneRecord = readBuffer;
+	auto check = [&]()->BOOL{
+
+		for( int index = 0; index < 9; index++ )
+		{
+			if( caculate_check_sum_ex( oneRecord, 24 ) == *(unsigned int*)(oneRecord + 24) )
+			{
+				if( oneRecord[0] + oneRecord[2] != 0xff )
+					return FALSE;
+				if( oneRecord[1] + oneRecord[3] != 0xff )
+					return FALSE;
+				if( m_stOneRecord.Mcap.oscTrim != *(unsigned int*)oneRecord )
+					return FALSE;
+				if( pCfg5816->vid_pid != (*(UINT64*)(oneRecord + 16) ))
+					return FALSE;
+			}
+			else 
+			{
+				TestResultInfo( _T("extra area compare code = 1\r\n") );
+				return FALSE;
+			}
+
+			oneRecord += 28;
+		}
+
+		return TRUE;
+
+	};
+
+	bCheckBootOk = check();
+// 	for( int index = 0; index < 10; index++ )
+// 	{
+// 		 if( oneRecord[0] + oneRecord[2] != 0xff )
+// 			 return FALSE;
+// 		 if( oneRecord[1] + oneRecord[3] != 0xff )
+// 			 return FALSE;
+// 		 if( m_stOneRecord.Mcap.oscTrim != *(unsigned int*)oneRecord )
+// 			 return FALSE;
+// 		 if( pCfg5816->vid_pid != (*(unsigned int*)(oneRecord + 16) ))
+// 			 return FALSE;
+// 		 if( caculate_check_sum_ex( oneRecord, 20 ) != *(unsigned int*)(oneRecord + 20) )
+// 			 return FALSE;
+// 
+// 		 oneRecord += 24;
+// 	}
+
+	return bCheckBootOk;
+}
+BOOL CTest5816::CheckFlashEraseOk()
+{
+	unsigned int iReCode = ERROR_CODE_OK;
+	ISMChip5816* iChip5816 = (ISMChip5816*)SM_ChipBase(m_deviceNo);
+	if( NULL == iChip5816 )  return FALSE;
+
+	unsigned char readBuffer[4096] = {0};
+	unsigned int writeData = 0x5ee5e55e, readData = 0x00000000;
+	iReCode = iChip5816->WriteBurnSpace( 0xd000, (const unsigned char*)&writeData, sizeof(writeData), OTP_W_CHK | TLK_DATACHK_EX1 );
+	if( iReCode != ERROR_CODE_OK ) return FALSE;
+
+	iReCode = iChip5816->ReadBurnSpace( 0xd000, (unsigned char*)&readData, sizeof(writeData) );
+	if( iReCode != ERROR_CODE_OK ) return FALSE;
+
+	if( writeData != readData )
+	{
+		TestResultInfo( _T("Check Erase Falsh step 1 Failed\r\n") );
+		return FALSE;
+	}
+
+	writeData = 0xe55e5ee5, readData = 0x00000000;
+	iReCode = iChip5816->WriteBurnSpace( 0xd000, (const unsigned char*)&writeData, sizeof(writeData), OTP_W_CHK | TLK_DATACHK_EX1 );
+	if( iReCode != ERROR_CODE_OK ) return FALSE;
+
+	iReCode = iChip5816->ReadBurnSpace( 0xd000, (unsigned char*)&readData, sizeof(writeData) );
+	if( iReCode != ERROR_CODE_OK ) return FALSE;
+
+	if( writeData != readData )
+	{
+		TestResultInfo( _T("Check Erase Falsh step 2 Failed\r\n") );
+		return false;
+	}
+
+	writeData = 0xffffffff;
+	iReCode = iChip5816->WriteBurnSpace( 0xd000, (const unsigned char*)&writeData, sizeof(writeData), OTP_W_CHK | TLK_DATACHK_EX1 );
+	if( iReCode != ERROR_CODE_OK ) return FALSE;
+
+	iReCode = iChip5816->ReadBurnSpace( 0xd000, readBuffer, sizeof(readBuffer) );
+	if( iReCode != ERROR_CODE_OK ) return FALSE;
+
+	for( int index = 0; index < sizeof(readBuffer); index++ )
+	{
+		if( 0xff != readBuffer[index] ) 
+		{
+		    TestResultInfo( _T("Check Erase Falsh step 3 Failed\r\n") );
+			return FALSE;
+		}
+	}
+
+	//Gen ICID
+	memset( readBuffer, 0xff, sizeof(readBuffer) );
+	iReCode = iChip5816->ReadBurnSpace( 0xc000, readBuffer, 8 );
+	if( iReCode != ERROR_CODE_OK ) return FALSE;
+
+	UINT32* pIntData = (UINT32*)readBuffer;
+	if( 0xffffffff == pIntData[0] && 0xffffffff == pIntData[1] )
+	{
+		SYSTEMTIME SysTime;
+		::GetLocalTime(&SysTime);
+		pIntData[0] = (SysTime.wMonth << 22) + (SysTime.wDay << 17) + (SysTime.wHour << 12) + (SysTime.wMinute << 6) + SysTime.wSecond;
+		pIntData[1] = GetTickCount();
+		iChip5816->WriteBurnSpace( 0xc000, readBuffer, 8, OTP_W_CHK | TLK_DATACHK_EX1 );
+		if( iReCode != ERROR_CODE_OK ) return FALSE;
+		
+		SysDelay( 10 );
+	}
+
+	m_stOneRecord.ReleaseID = *(UINT64*)readBuffer;
+
+	//TCHAR szBuffer[MAX_PATH] = {0};
+	UINT32 otm_time = *(UINT32*)&m_stOneRecord.ReleaseID;
+	//transformat( szBuffer, _T("ICID = 0x%llx,   %d-%d, %d:%d:%d\r\n"), m_stOneRecord.ReleaseID, (otm_time>>22)&0xf, (otm_time>>17)&0x1f,(otm_time>>12)&0x1f, (otm_time>>6)&0x3f, otm_time&0x3f );
+	//TestResultInfo( szBuffer );
+	TestResultInfoR( _T("ICID = 0x%llx,   %d-%d, %d:%d:%d\r\n"), m_stOneRecord.ReleaseID, (otm_time>>22)&0xf, (otm_time>>17)&0x1f,(otm_time>>12)&0x1f, (otm_time>>6)&0x3f, otm_time&0x3f );
+	
+
+	return TRUE;
+}
+unsigned int CTest5816::Boot_Test( NativeTestItem& itemQuote )
+{
+	unsigned int iReCode = ERROR_CODE_COMM_ERROR;
+	ItemNotifyer itemNotify( m_pNativeIntr, itemQuote );
+
+	TestResultInfo( _T("\r\n------------------------------BOOT Test------------------------------\r\n") );
+
+	ISMChip5816* iChip5816 = (ISMChip5816*)SM_ChipBase(m_deviceNo);
+	if( NULL == iChip5816 )   return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+	unsigned short booVerFromTp = 0;
+	iReCode = iChip5816->GetBootVersion( &booVerFromTp );
+	if( ERROR_CODE_OK != iReCode )  return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	//TCHAR szBootVer[MAX_PATH] = {0};
+	//transformat( szBootVer, _T("Ver=0x%x"), booVerFromTp );
+
+	BOOL bSameBoot = CheckTpBootSame();
+
+	//wasim
+	//bSameBoot = FALSE;
+
+	if( bSameBoot )
+	{
+		TestResultInfo( _T("\r\nBoot from tp is same with Boot from setting\r\n") );
+		//TestResultInfo( szBootVer );
+		auto szBootVer = TestResultInfoR( _T("Ver=0x%x"), booVerFromTp );
+		TestResultInfo( "\r\n\r\n//BOOT Test is Pass\r\n", ITEM_STA_PASS );
+		itemNotify.UpdateItemResult( ITEM_STA_PASS, szBootVer );
+	}
+	else
+	{
+		if( pCfg5816->boot_only_check )
+		{
+			TestResultInfo( _T("\r\nBoot from tp is differant from setting\r\n") );
+			//TestResultInfo( szBootVer );
+			auto szBootVer = TestResultInfoR( _T("Ver=0x%x"), booVerFromTp );
+			TestResultInfo( "\r\n\r\n//BOOT Test is Fail\r\n", ITEM_STA_FAIL );
+			itemNotify.UpdateItemResult( ITEM_STA_FAIL, szBootVer );
+		}
+		else
+		{
+			TestResultInfo( _T("\r\nDownlad new boot bin...\r\n") );
+			iReCode = iChip5816->BurnBootBin( pCfg5816->bootBinSize, pCfg5816->vid_pid, m_stOneRecord.Mcap.oscTrim, m_stOneRecord.ReleaseID );
+			if( iReCode == ERROR_CODE_OK )   
+			{
+				/*unsigned short */booVerFromTp = 0;
+				iReCode = iChip5816->GetBootVersion( &booVerFromTp );
+				if( ERROR_CODE_OK != iReCode )  return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+				//TCHAR szBootVer[MAX_PATH] = {0};
+				//transformat( szBootVer, _T("NewVer=0x%x"), booVerFromTp );
+
+				BOOL bSameBoot2 = CheckTpBootSame();
+				if( bSameBoot2 )
+				{
+					TestResultInfo( "\r\n\r\n//BOOT Test is Pass\r\n", ITEM_STA_PASS );
+					//TestResultInfo( szBootVer );
+					auto szBootVer = TestResultInfoR( _T("NewVer=0x%x"), booVerFromTp );
+					itemNotify.UpdateItemResult( ITEM_STA_PASS, szBootVer );
+				}
+				else
+				{
+					TestResultInfo( _T("\r\nBoot from tp is differant from setting\r\n") );
+					//TestResultInfo( szBootVer );
+					auto szBootVer = TestResultInfoR( _T("NewVer=0x%x"), booVerFromTp );
+					TestResultInfo( "\r\n\r\n//BOOT Test is Fail\r\n", ITEM_STA_FAIL );
+					itemNotify.UpdateItemResult( ITEM_STA_FAIL, szBootVer );
+				}
+			}
+			else
+			{
+				TestResultInfo( _T("\r\nDownload boot exception\r\n") );
+				//TestResultInfo( szBootVer );
+				auto szBootVer = TestResultInfoR( _T("Ver=0x%x"), booVerFromTp );
+				TestResultInfo( "\r\n\r\n//BOOT Test is Fail\r\n", ITEM_STA_FAIL );
+				itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+			}
+		}
+	}
+
+	return itemNotify;
+}
+BOOL CTest5816::CheckConfigSame( const unsigned char* pCfg, unsigned short len )
+{
+	if( len != pCfg5816->cfgBinSize ) return FALSE;
+
+	unsigned int iReCode = ERROR_CODE_OK;
+	ISMChip5816* iChip5816 = (ISMChip5816*)SM_ChipBase(m_deviceNo);
+	if( NULL == iChip5816 )   return FALSE;
+
+	unsigned int check = caculate_check_sum_ex( pCfg, len );
+	if( check != pCfg5816->config_check_sum )
+	{
+		return FALSE;
+	}
+
+	for( int index = 0; index < len; index++ ) 
+	{
+		if( pCfg[index] != pCfg5816->cfgBinBuffer[index] )
+			return FALSE;
+	}
+
+	return TRUE;
+}
+unsigned int CTest5816::ProjectCode_Test( NativeTestItem& itemQuote )
+{
+	unsigned int iReCode = ERROR_CODE_OK;
+	ItemNotifyer itemNotify( m_pNativeIntr, itemQuote );
+
+	TestResultInfo( _T("\r\n------------------------------Project Test------------------------------\r\n") );
+
+	ISMChip5816* iChip5816 = (ISMChip5816*)SM_ChipBase(m_deviceNo);
+	if( NULL == iChip5816 )   return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+	iReCode = SM_ChipBase(m_deviceNo)->IncokeCommand( CMD_CTP_RST );
+	if( iReCode != ERROR_CODE_OK ) itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+	SysDelay( 50 );
+
+	iReCode = SM_ChipBase(m_deviceNo)->IncokeCommand( CMD_IDENTITY );
+	if( iReCode != ERROR_CODE_OK ) itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+	unsigned char cfgBuffer[MAX_CFG_BIN_SIZE] = {0};
+	iReCode = SM_ChipBase(m_deviceNo)->ReadCoreSpace( 0x20000000 + 0x80, (unsigned char*)cfgBuffer, 256 );
+	if( iReCode != ERROR_CODE_OK ) itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+	TCHAR chTemp[MAX_PATH] = {0};
+	unsigned short s = cfgBuffer[1];
+	unsigned short p = (cfgBuffer[3] << 8) + cfgBuffer[2];
+	unsigned short v = (cfgBuffer[5] << 8)+cfgBuffer[4];
+	//transformat( chTemp, _T("SoftWare Ver = %d, ProjectCode = %d, VenderID = %d\r\n"), s, p, v );
+	//TestResultInfo( chTemp );
+	TestResultInfoR( _T("SoftWare Ver = %d, ProjectCode = %d, VenderID = %d\r\n"), s, p, v );
+
+	transformat( chTemp, _T("S=%d, P=%d, V=%d"), s, p, v );
+
+	if( pCfg5816->sVersion == s && pCfg5816->pVersion == p && pCfg5816->vVersion == v )
+	{
+		if(pCfg5816->cfgTestBinSize)
+		{
+			iReCode = iChip5816->SetConfigInFctMode( (unsigned char*)pCfg5816->cfgTestBinBuffer, pCfg5816->cfgTestBinSize );
+			if(iReCode != ERROR_CODE_OK)
+			{
+				TestResultInfo( _T("\r\nSet Config dynamic failed\r\n") );
+				return itemNotify.UpdateItemResult( ITEM_STA_FAIL );
+			}
+			else
+			{
+				TestResultInfo( _T("\r\nSet Config dynamic succesed\r\n") );
+			}
+		}
+
+		TestResultInfo( "\r\n\r\n//Project Test is Pass\r\n", ITEM_STA_PASS );
+		itemNotify.UpdateItemResult( ITEM_STA_PASS, chTemp );
+	}
+	else
+	{
+		TestResultInfo( "\r\n\r\n//Project Test is Fail\r\n", ITEM_STA_FAIL );
+		itemNotify.UpdateItemResult( ITEM_STA_FAIL, chTemp );
+	}
+
+	return itemNotify;
+}
+unsigned int CTest5816::Config_Test( NativeTestItem& itemQuote )
+{
+	unsigned int iReCode = ERROR_CODE_COMM_ERROR;
+	ItemNotifyer itemNotify( m_pNativeIntr, itemQuote );
+
+	TestResultInfo( _T("\r\n------------------------------CONFIG Test------------------------------\r\n") );
+
+	ISMChip5816* iChip5816 = (ISMChip5816*)SM_ChipBase(m_deviceNo);
+	if( NULL == iChip5816 )   return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+	unsigned short cfgVerFromTp = 0;
+	unsigned char configBuffer[MAX_CFG_BIN_SIZE] = {0};
+	iReCode = iChip5816->GetFirmWareConfig( configBuffer, pCfg5816->cfgBinSize );
+	if( ERROR_CODE_OK != iReCode )  return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+	cfgVerFromTp = configBuffer[1];
+	TCHAR szConfigVer[MAX_PATH] = {0};
+	transformat( szConfigVer, _T("Ver=0x%x"), cfgVerFromTp );
+
+	BOOL bSameConfig = CheckConfigSame( configBuffer, pCfg5816->cfgBinSize );
+
+	//wasim
+	//bSameConfig = FALSE;
+
+	if( bSameConfig )
+	{
+		TestResultInfo( _T("\r\nConfig from tp is same with Config from setting\r\n") );
+		TestResultInfo( "\r\n\r\n//Config Test is Pass\r\n", ITEM_STA_PASS );
+		itemNotify.UpdateItemResult( ITEM_STA_PASS, szConfigVer );
+	}
+	else
+	{
+		if( pCfg5816->config_only_check )
+		{
+			TestResultInfo( _T("\r\nConfig from tp is differant from setting\r\n") );
+			TestResultInfo( "\r\n\r\n//Config Test is Fail\r\n", ITEM_STA_FAIL );
+			itemNotify.UpdateItemResult( ITEM_STA_FAIL, szConfigVer );
+		}
+		else
+		{
+			TestResultInfo( _T("\r\nDownlad new config bin...\r\n") );
+			iReCode = iChip5816->BurnConfigBin( pCfg5816->cfgBinBuffer, pCfg5816->cfgBinSize );
+			if( iReCode == ERROR_CODE_OK )   
+			{
+				memset( configBuffer, 0, sizeof(configBuffer) );
+				iChip5816->GetFirmWareConfig( configBuffer, pCfg5816->cfgBinSize );
+				BOOL bSameConfig2 = CheckConfigSame( configBuffer, pCfg5816->cfgBinSize );
+
+				cfgVerFromTp = configBuffer[1];
+				TCHAR szConfigVer[MAX_PATH] = {0};
+				transformat( szConfigVer, _T("NewVer=0x%x"), cfgVerFromTp );
+
+				if( bSameConfig2 )
+				{
+					TestResultInfo( "\r\n\r\n//Config Test is Pass\r\n", ITEM_STA_PASS );
+					itemNotify.UpdateItemResult( ITEM_STA_PASS, szConfigVer );
+				}
+				else
+				{
+					TestResultInfo( _T("\r\nConfig from tp is differant from setting\r\n") );
+					TestResultInfo( "\r\n\r\n//Config Test is Fail\r\n", ITEM_STA_FAIL );
+					itemNotify.UpdateItemResult( ITEM_STA_FAIL, szConfigVer );
+				}
+			}
+			else
+			{
+				TestResultInfo( _T("\r\nDownload config exception\r\n") );
+				TestResultInfo( "\r\n\r\n//Config Test is Fail\r\n", ITEM_STA_FAIL );
+				itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+			}
+		}
+	}
+
+	return itemNotify;
+}
+unsigned int CTest5816::OSCTrim_Test( NativeTestItem& itemQuote )
+{
+	int failerCnt = 0;
+	unsigned int iReCode = ERROR_CODE_OK;
+	ISMChip5816* iChip5816 = (ISMChip5816*)SM_ChipBase(m_deviceNo);
+	ItemNotifyer itemNotify( m_pNativeIntr, itemQuote );
+
+	TestResultInfo( _T("\r\n------------------------------OSC Trim Test------------------------------\r\n") );
+
+	//unsigned short osTrim1 = 0, osTrim2 = 0, oscTrimNew = 0;
+	unsigned char osTrim32k = 0, osTrim24m = 0;
+	//TCHAR szBuffer[MAX_PATH] = {0};
+
+	unsigned char readBuffer[300] = {0};
+	iReCode = SM_ChipBase(m_deviceNo)->ReadBurnSpace( 40 * 1024, readBuffer, 256 ); 
+	if( iReCode != ERROR_CODE_OK ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+	unsigned char* oneRecord = readBuffer;
+
+	auto check = [&]()->bool {
+		for( int index = 0; index < 9; index++ )
+		{
+			if( caculate_check_sum_ex( oneRecord, 24 ) == *(unsigned int*)(oneRecord + 24) )
+			{
+				if( *(unsigned short*)oneRecord + *(unsigned short*)(oneRecord + 2) != 0xffff ) return false;
+			}
+			else
+			{
+				return false;
+			}
+			oneRecord += 28;
+		}
+		return true;
+
+	};
+
+	bool IsCheck = check();
+	oneRecord = readBuffer;
+	osTrim24m = oneRecord[0];
+	osTrim32k = oneRecord[1];
+
+	if(	!IsCheck
+		||0xff != (oneRecord[1] + oneRecord[3]) 
+		|| 0xff != (oneRecord[0] + oneRecord[2]) 
+		|| osTrim24m < pCfg5816->trim_24m_min 
+		|| osTrim24m > pCfg5816->trim_24m_max
+		|| osTrim32k < pCfg5816->trim_32k_min
+		|| osTrim32k > pCfg5816->trim_32k_max )
+	{
+		TestResultInfo( _T("Start Trim And Refresh Trim Value\r\n") );
+
+		SysDelay( 10 );
+		iReCode = iChip5816->GetOSCTrim( &osTrim32k, &osTrim24m, pCfg5816->tick_32k_standard, pCfg5816->tick_24m_standard );
+		if( iReCode != ERROR_CODE_OK ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+		if( osTrim32k < pCfg5816->trim_32k_min )
+			failerCnt++;
+		else if( osTrim32k > pCfg5816->trim_32k_max )
+			failerCnt++;
+		else if( osTrim24m < pCfg5816->trim_24m_min )
+			failerCnt++;
+		else if( osTrim24m > pCfg5816->trim_24m_max )
+			failerCnt++;
+
+		if( !failerCnt )
+		{
+			
+			oneRecord[0] = osTrim24m;
+			oneRecord[1] = osTrim32k;
+			oneRecord[2] = ~osTrim24m;
+			oneRecord[3] = ~osTrim32k;
+
+			//iReCode = SM_ChipBase(m_deviceNo)->WriteBurnSpace( 40 * 1024, oneRecord, sizeof(oneRecord), OTP_W_CHK | TLK_DATACHK_EX1 );
+			//SysDelay(5);
+			//iReCode = SM_ChipBase(m_deviceNo)->ReadBurnSpace( 40 * 1024, oneRecord, 8 );
+
+			//if( osTrim32k != oneRecord[1] || osTrim24m != oneRecord[0] || 0xff != (oneRecord[1] + oneRecord[3]) || 0xff != (oneRecord[0] + oneRecord[2]) )
+			//{
+			//	failerCnt++;
+			//	TestResultInfo( _T("Write OSCTrim failed\r\n") );
+			//}
+		}
+	}
+	m_stOneRecord.Mcap.oscTrim = *((unsigned int*)oneRecord);
+
+	//Gen ICID
+	unsigned int* pIntData = (unsigned int*)&oneRecord[8];
+	unsigned short* pShortData = (unsigned short*)&oneRecord[8];
+	if(0xffff != (pShortData[2] + pShortData[3]))
+	{
+		SYSTEMTIME SysTime;
+		::GetLocalTime(&SysTime);
+		pIntData[0] = (SysTime.wMonth << 22) + (SysTime.wDay << 17) + (SysTime.wHour << 12) + (SysTime.wMinute << 6) + SysTime.wSecond;
+
+		std::srand((pIntData[0]+SysTime.wMilliseconds));
+		::GetLocalTime(&SysTime);
+		pShortData[2] = (((rand()&0xffff) + ((SysTime.wMilliseconds % 1000)<<3))&0xfff8) + m_deviceNo;
+		pShortData[3] = ~pShortData[2];
+		//iReCode = SM_ChipBase(m_deviceNo)->WriteBurnSpace( 40 * 1024, oneRecord, sizeof(oneRecord), OTP_W_CHK | TLK_DATACHK_EX1 );
+		//if( iReCode != ERROR_CODE_OK ) return FALSE;
+
+		//SysDelay( 10 );
+	}
+
+	m_stOneRecord.ReleaseID = *(UINT64*)&oneRecord[8];
+	UINT32 otm_time = *(UINT32*)&m_stOneRecord.ReleaseID;
+	//transformat( szBuffer, _T("ICID = 0x%llx,   %d-%d, %d:%d:%d\r\n"), m_stOneRecord.ReleaseID, (otm_time>>22)&0xf, (otm_time>>17)&0x1f,(otm_time>>12)&0x1f, (otm_time>>6)&0x3f, otm_time&0x3f );
+	//TestResultInfo( szBuffer );
+	TestResultInfoR( _T("ICID = 0x%llx,   %d-%d, %d:%d:%d\r\n"), m_stOneRecord.ReleaseID, (otm_time>>22)&0xf, (otm_time>>17)&0x1f,(otm_time>>12)&0x1f, (otm_time>>6)&0x3f, otm_time&0x3f );
+
+	//transformat( szBuffer, _T("32K = 0x%02x, 24M = 0x%02x"), osTrim32k, osTrim24m );
+	//TestResultInfo( szBuffer );
+	auto szBuffer = TestResultInfoR( _T("32K = 0x%02x, 24M = 0x%02x"), osTrim32k, osTrim24m );
+
+	if( failerCnt )
+	{
+		TestResultInfo( "\r\n\r\n//OSCTrim Test is Fail\r\n", ITEM_STA_FAIL );
+		itemNotify.UpdateItemResult( ITEM_STA_FAIL, szBuffer );
+	}
+	else
+	{
+		TestResultInfo( "\r\n\r\n//OSCTrim Test is Pass\r\n", ITEM_STA_PASS );
+		itemNotify.UpdateItemResult( ITEM_STA_PASS, szBuffer );
+	}
+
+	return itemNotify;
+}
+unsigned int CTest5816::Current_Test( NativeTestItem& itemQuote )
+{
+	TEST_ITEM_STATUS itemStatus = ITEM_STA_NONE;
+	for( int index = 0; index < 3; index++ )
+	{
+		itemStatus = (TEST_ITEM_STATUS)Current_TestEx( itemQuote );
+		if( itemStatus == ITEM_STA_PASS ) break;
+	}
+	return itemStatus;
+}
+unsigned int CTest5816::Current_TestEx( NativeTestItem& itemQuote )
+{
+	int failedCount = 0;
+	unsigned int iReCode = ERROR_CODE_COMM_ERROR;
+	ItemNotifyer itemNotify( m_pNativeIntr, itemQuote );
+
+	TestResultInfo( _T("\r\n------------------------------Current Test------------------------------\r\n") );
+
+	ISMChip5816* iChip5816 = (ISMChip5816*)SM_ChipBase(m_deviceNo);
+	if( NULL == SM_ChipBase(m_deviceNo) )   return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+	short deepCurrent = 0, sleepCurrent = 0, activeCurrent = 0, idleCurrent = 0;
+	short level[2][3] = {
+		pCfg5816->power_supply, pCfg5816->power_supply, pCfg5816->power_supply,
+		pCfg5816->power_supply, pCfg5816->power_supply, pCfg5816->power_supply,
+	};
+	iReCode = iChip5816->GetCurrent( level, (unsigned short*)&activeCurrent, (unsigned short*)&sleepCurrent, (unsigned short*)&deepCurrent, (unsigned short*)&idleCurrent );
+	if( ERROR_CODE_OK != iReCode )  return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+	iReCode = SM_ChipBase(m_deviceNo)->IncokeCommand( CMD_CTP_RST );
+	SysDelay( 50 );
+
+	//TCHAR szTmep[MAX_PATH] = {0};
+
+	{
+		m_stOneRecord.current_mode1 = activeCurrent;
+		m_stOneRecord.current_mode2 = sleepCurrent;
+		m_stOneRecord.current_mode3 = deepCurrent;
+		//transformat( szTmep, _T("\r\nactive = %d, idle = %d, sleep = %d, deep = %d\r\n"), activeCurrent, idleCurrent, sleepCurrent, deepCurrent );
+		//TestResultInfo( szTmep );
+		TestResultInfoR( _T("\r\nactive = %d, idle = %d, sleep = %d, deep = %d\r\n"), activeCurrent, idleCurrent, sleepCurrent, deepCurrent );
+	}
+	if( activeCurrent < pCfg5816->active_current_min )
+	{
+		failedCount++;
+		//transformat( szTmep, _T( "\r\nactive(%d) < setting min(%d)\r\n"), activeCurrent, pCfg5816->active_current_min );
+		//TestResultInfo( szTmep );
+		TestResultInfoR( _T( "\r\nactive(%d) < setting min(%d)\r\n"), activeCurrent, pCfg5816->active_current_min );
+	}
+	if( activeCurrent > pCfg5816->active_current_max )
+	{
+		failedCount++;
+		//transformat( szTmep, _T( "\r\nactive(%d) > setting max(%d)\r\n"), activeCurrent, pCfg5816->active_current_max );
+		//TestResultInfo( szTmep );
+		TestResultInfoR( _T( "\r\nactive(%d) > setting max(%d)\r\n"), activeCurrent, pCfg5816->active_current_max );
+	}
+	if( sleepCurrent < pCfg5816->sleep_current_min )
+	{
+		failedCount++;
+		//transformat( szTmep, _T( "\r\nsleep(%d) < setting min(%d)\r\n"), sleepCurrent, pCfg5816->sleep_current_min );
+		//TestResultInfo( szTmep );
+		TestResultInfoR( _T( "\r\nsleep(%d) < setting min(%d)\r\n"), sleepCurrent, pCfg5816->sleep_current_min );
+	}
+	if( sleepCurrent > pCfg5816->sleep_current_max )
+	{
+		failedCount++;
+		//transformat( szTmep, _T( "\r\nsleep(%d) > setting max(%d)\r\n"), sleepCurrent, pCfg5816->sleep_current_max );
+		//TestResultInfo( szTmep );
+		TestResultInfoR( _T( "\r\nsleep(%d) > setting max(%d)\r\n"), sleepCurrent, pCfg5816->sleep_current_max );
+	}
+	if( deepCurrent < pCfg5816->deep_current_min )
+	{
+		failedCount++;
+		//transformat( szTmep, _T( "\r\ndeep(%d) < setting min(%d)\r\n"), deepCurrent, pCfg5816->deep_current_min );
+		//TestResultInfo( szTmep );
+		TestResultInfoR( _T( "\r\ndeep(%d) < setting min(%d)\r\n"), deepCurrent, pCfg5816->deep_current_min );
+	}
+	if( deepCurrent > pCfg5816->deep_current_max )
+	{
+		failedCount++;
+		//transformat( szTmep, _T( "\r\ndeep(%d) > setting max(%d)\r\n"), deepCurrent, pCfg5816->deep_current_max );
+		//TestResultInfo( szTmep );
+		TestResultInfoR( _T( "\r\ndeep(%d) > setting max(%d)\r\n"), deepCurrent, pCfg5816->deep_current_max );
+	}
+	if( idleCurrent < pCfg5816->idle_current_min )
+	{
+		failedCount++;
+		//transformat( szTmep, _T( "\r\nidle(%d) < setting min(%d)\r\n"), idleCurrent, pCfg5816->idle_current_min );
+		//TestResultInfo( szTmep );
+		TestResultInfoR( _T( "\r\nidle(%d) < setting min(%d)\r\n"), idleCurrent, pCfg5816->idle_current_min );
+	}
+	if( idleCurrent > pCfg5816->idle_current_max )
+	{
+		failedCount++;
+		//transformat( szTmep, _T( "\r\nidle(%d) > setting max(%d)\r\n"), idleCurrent, pCfg5816->idle_current_max );
+		//TestResultInfo( szTmep );
+		TestResultInfoR( _T( "\r\nidle(%d) > setting max(%d)\r\n"), idleCurrent, pCfg5816->idle_current_max );
+	}
+
+	if( failedCount )
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_FAIL );
+		TestResultInfo( "\r\n\r\n//Current Test is Fail\r\n", ITEM_STA_FAIL );
+	}
+	else
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_PASS );
+		TestResultInfo( "\r\n\r\n//Current Test is Pass\r\n", ITEM_STA_PASS );
+	}
+
+	return itemNotify;
+}
+//unsigned int CTest5816::Base_Test( NativeTestItem& itemQuote )
+//{
+//	int failerCount = 0;
+//	unsigned int iReCode = ERROR_CODE_COMM_ERROR;
+//	ItemNotifyer itemNotify( m_pNativeIntr, itemQuote );
+//	signed short baseTempBuffer[MAX_MCAP_CHANNEL * 2] = {0};
+//	/*unsigned*/ short baseMatrix[MAX_MCAP_ROW][MAX_MCAP_COL];
+//	const unsigned int iRawDataLen = ((pCfg5816->rowsCnt) * (pCfg5816->colsCnt) * 2 + 3) & 0xfffffffc;
+//
+//	TestResultInfo( _T("\r\n------------------------------Base Test------------------------------\r\n") );
+//
+//	if( NULL == SM_ChipBase(m_deviceNo) )   return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+//	ISMChip5816* iChip5816 = (ISMChip5816*)SM_ChipBase(m_deviceNo);
+//
+//	int addRow = ( pCfg5816->real_channel_num - pCfg5816->va_channel_num ) ? 1 : 0;
+//
+//	iReCode = iChip5816->IncokeCommand( CMD_CTP_RST );
+//	SysDelay( 50 );
+//
+//	iReCode = iChip5816->SwitchMode( MODE_RAWDATA, iRawDataLen );
+//	if( ERROR_CODE_OK != iReCode ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+//	SysDelay( 20 );
+//
+//	for( int index = 0; index < 2; index++ )
+//	{
+//		iReCode = iChip5816->GetRawData( baseTempBuffer, iRawDataLen );
+//		if( iReCode == ERROR_CODE_OK ) break;
+//		if( ERROR_CODE_OK != iReCode ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+//	}
+//	
+//	int ref_channel_num = min(pCfg5816->real_channel_num - pCfg5816->va_channel_num, pCfg5816->colsCnt);
+//	AnalyzeInfo info( pCfg5816->rowsCnt, pCfg5816->colsCnt, ref_channel_num, false );
+//	ReShappingData</*unsigned*/ short>( baseMatrix, (/*unsigned*/ short*)baseTempBuffer, G_XMLConfig->real_channel_num * 2, pCfg5816->rowsCnt, pCfg5816->colsCnt );
+//	//short baseMin[MAX_MCAP_ROW][MAX_MCAP_COL] = {0}, baseMax[MAX_MCAP_ROW][MAX_MCAP_COL] = {0};
+//	//FillArrayUseValue( baseMin, pCfg5816->base_min );
+//	//FillArrayUseValue( baseMax, pCfg5816->base_max );
+//
+//	NodeVal nodeOutRange;
+//	ColorText textTemp( _T("\r\nBase Data:\r\n") );
+//	bool bResult = AnalyzeTestResult( baseMatrix, pCfg5816->base_min, pCfg5816->base_max, pCfg5816->invalid_node, info, textTemp, nodeOutRange, true );
+//	TestResultInfo( textTemp );
+//	if( !bResult )
+//	{
+//		failerCount++;
+//		LPCTSTR strHead = _T("\r\n//========= Out of Threshold in BaseTest: \r\n");
+//		PrintNodeValue( m_ColorText, &nodeOutRange, strHead );
+//	}
+//
+//	if( failerCount )
+//	{
+//		itemNotify.UpdateItemResult( ITEM_STA_FAIL );
+//		TestResultInfo( "\r\n\r\n//Base Test is Fail\r\n", ITEM_STA_FAIL );
+//	}
+//	else
+//	{
+//		itemNotify.UpdateItemResult( ITEM_STA_PASS );
+//		TestResultInfo( "\r\n\r\n//Base Test is Pass\r\n", ITEM_STA_PASS );
+//	}
+//
+//	return itemNotify;
+//}
+unsigned int CTest5816::ScapRawData_Test( NativeTestItem& itemQuote )
+{
+	int failerCount = 0;
+	unsigned int iReCode = ERROR_CODE_COMM_ERROR;
+	ItemNotifyer itemNotify( m_pNativeIntr, itemQuote );
+	signed short baseTempBuffer[MAX_MCAP_CHANNEL * 2] = {0};
+	/*unsigned*/ short dataMatrix[MAX_MCAP_ROW][MAX_MCAP_COL];
+	const unsigned int iRawDataLen = ((pCfg5816->rowsCnt + 1) * (pCfg5816->colsCnt + 1) * 2 + 3) & 0xfffffffc;
+	const unsigned int iScapRawDataLen = pCfg5816->rowsCnt + pCfg5816->colsCnt;
+
+	TestResultInfo( _T("\r\n------------------------------ScapData Test------------------------------\r\n") );
+
+	if( NULL == SM_ChipBase(m_deviceNo) )   return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	ISMChip5816* iChip5816 = (ISMChip5816*)SM_ChipBase(m_deviceNo);
+
+	int addRow = ( pCfg5816->real_channel_num - pCfg5816->va_channel_num ) ? 1 : 0;
+
+	//iReCode = iChip5816->IncokeCommand( CMD_CTP_RST );
+	//SysDelay( 50 );
+
+	iReCode = iChip5816->SwitchMode( MODE_RAWDATA, iRawDataLen );
+	if( ERROR_CODE_OK != iReCode ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	SysDelay( 20 );
+
+	for( int index = 0; index < 2; index++ )
+	{
+		iReCode = iChip5816->GetRawData( baseTempBuffer, iRawDataLen );
+		if( iReCode == ERROR_CODE_OK ) break;
+		if( ERROR_CODE_OK != iReCode ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	}
+
+	int ref_channel_num = min(pCfg5816->real_channel_num - pCfg5816->va_channel_num, pCfg5816->colsCnt);
+	AnalyzeInfo info( pCfg5816->rowsCnt, pCfg5816->colsCnt );
+    unsigned short maxCols[] = { pCfg5816->colsCnt, pCfg5816->rowsCnt };
+	ReShappingData</*unsigned*/ short>( dataMatrix, (/*unsigned*/ short*)baseTempBuffer + pCfg5816->rowsCnt * pCfg5816->colsCnt, iScapRawDataLen, 2, maxCols );
+	//short baseMin[MAX_MCAP_ROW][MAX_MCAP_COL] = {0}, baseMax[MAX_MCAP_ROW][MAX_MCAP_COL] = {0};
+	//FillArrayUseValue( baseMin, pCfg5816->base_min );
+	//FillArrayUseValue( baseMax, pCfg5816->base_max );
+
+	NodeVal nodeOutRange;
+	ColorText textTemp( _T("\r\nScap Data:\r\n") );
+	bool bResult = AnalyzeTestResultMSCap( dataMatrix, pCfg5816->scap_rawdata_min, pCfg5816->scap_rawdata_max, pCfg5816->invalid_node, info, textTemp, nodeOutRange, true );
+	TestResultInfo( textTemp );
+	if( !bResult )
+	{
+		failerCount++;
+		LPCTSTR strHead = _T("\r\n//========= Out of Threshold in ScapDataTest: \r\n");
+		PrintNodeValue( m_ColorText, &nodeOutRange, strHead );
+	}
+
+	if( failerCount )
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_FAIL );
+		TestResultInfo( "\r\n\r\n//ScapData Test is Fail\r\n", ITEM_STA_FAIL );
+	}
+	else
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_PASS );
+		TestResultInfo( "\r\n\r\n//ScapData Test is Pass\r\n", ITEM_STA_PASS );
+	}
+
+	return itemNotify;
+}
+unsigned int CTest5816::STC_Test( NativeTestItem& itemQuote )
+{
+	int failerCount = 0;
+	unsigned int iReCode = ERROR_CODE_COMM_ERROR;
+	ItemNotifyer itemNotify( m_pNativeIntr, itemQuote );
+	signed short baseTempBuffer[MAX_MCAP_CHANNEL * 2] = {0};
+	signed int baseSum[MAX_MCAP_CHANNEL * 2] = {0};
+	/*unsigned*/ short baseMatrix[MAX_MCAP_ROW][MAX_MCAP_COL], uniformityMin[MAX_MCAP_ROW][MAX_MCAP_COL];
+	const unsigned int iRawDataLen = ((pCfg5816->rowsCnt) * (pCfg5816->colsCnt) * 2 + 3) & 0xfffffffc;
+	const unsigned int iRetry = 20;
+
+	TestResultInfo( _T("\r\n------------------------------STC Test------------------------------\r\n") );
+
+	if( NULL == SM_ChipBase(m_deviceNo) )   return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	ISMChip5816* iChip5816 = (ISMChip5816*)SM_ChipBase(m_deviceNo);
+
+	int addRow = ( pCfg5816->real_channel_num - pCfg5816->va_channel_num ) ? 1 : 0;
+	memset( uniformityMin, 0, sizeof(uniformityMin) );
+
+	//iReCode = iChip5816->IncokeCommand( CMD_CTP_RST );
+	//SysDelay( 100 );
+
+	//iReCode = iChip5816->SetClkInFctMode( pCfg5816->stc_clk_div, false );
+	//if( ERROR_CODE_OK != iReCode ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	//SysDelay( 20 );
+
+	iReCode = iChip5816->SwitchMode( MODE_RAWDATA, iRawDataLen );
+	if( ERROR_CODE_OK != iReCode ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	SysDelay( 20 );
+
+	memset( baseSum, 0, sizeof(baseSum) );
+	for( int index = 0; index < iRetry; index++ )
+	{
+		iReCode = iChip5816->GetRawData( baseTempBuffer, iRawDataLen );
+		if( ERROR_CODE_OK != iReCode ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+		if(0 == index) continue;
+		ArrayAddtion( baseSum, baseTempBuffer, iRawDataLen );
+	}
+	ArrayAverage( baseTempBuffer, baseSum, iRawDataLen, iRetry - 1);
+
+	int ref_channel_num = min(pCfg5816->real_channel_num - pCfg5816->va_channel_num, pCfg5816->colsCnt);
+	AnalyzeInfo info( pCfg5816->rowsCnt, pCfg5816->colsCnt, ref_channel_num, false );
+	ReShappingData</*unsigned*/ short>( baseMatrix, (/*unsigned*/ short*)baseTempBuffer, G_XMLConfig->real_channel_num * 2, pCfg5816->rowsCnt, pCfg5816->colsCnt );
+	//short baseMin[MAX_MCAP_ROW][MAX_MCAP_COL] = {0}, baseMax[MAX_MCAP_ROW][MAX_MCAP_COL] = {0};
+	//FillArrayUseValue( baseMin, pCfg5816->base_min );
+	//FillArrayUseValue( baseMax, pCfg5816->base_max );
+
+	{
+		NodeVal nodeOutRange;
+		ColorText textTemp( _T("\r\nstc_rawdata:\r\n") );
+		short baseMin[MAX_MCAP_ROW][MAX_MCAP_COL] = {0}, baseMax[MAX_MCAP_ROW][MAX_MCAP_COL] = {0};
+		FillMatrixUseValue<short>( baseMax, 30000 );
+		bool bResult = AnalyzeTestResult( baseMatrix, baseMin, baseMax, pCfg5816->invalid_node, info, textTemp, nodeOutRange, true );
+		TestResultInfo( textTemp );
+	}
+
+	{
+		NodeVal nodeOutRange;
+		ColorText textTemp( _T("\r\nstc_deviation:\r\n") );
+		for( int iRow = 0; iRow < pCfg5816->rowsCnt; iRow++ )
+		{
+			for( int iCol = 0; iCol < pCfg5816->colsCnt; iCol++ )
+			{
+				int deviation = 10 * abs( baseMatrix[iRow][iCol] - pCfg5816->stc_mean[iRow][iCol] );
+				baseMatrix[iRow][iCol] = (short)(100 * deviation / (deviation + 3 * pCfg5816->stc_mse[iRow][iCol] + 0.001));
+			}
+		}
+			
+				
+		short stcMin[MAX_MCAP_ROW][MAX_MCAP_COL] = {0}, stcMax[MAX_MCAP_ROW][MAX_MCAP_COL] = {0};
+		FillMatrixUseValue( stcMin, pCfg5816->stc_min );
+		FillMatrixUseValue( stcMax, pCfg5816->stc_max );
+		bool bResult = AnalyzeTestResult( baseMatrix, stcMin, stcMax, pCfg5816->invalid_node, info, textTemp, nodeOutRange, true );
+		TestResultInfo( textTemp );
+		if( !bResult )
+		{
+			failerCount++;
+			LPCTSTR strHead = _T("\r\n//========= Out of Threshold in STC Test: \r\n");
+			PrintNodeValue( m_ColorText, &nodeOutRange, strHead );
+		}
+	}
+
+// 	{
+// 		NodeVal nodeOutRange;
+// 		ColorText textTemp( _T("\r\nstc_convolution_h:\r\n") );
+// 		short uniformityHorMatrix[MAX_MCAP_ROW][MAX_MCAP_COL];
+// 		unsigned char uniformityHorInvalid[MAX_MCAP_ROW][MAX_MCAP_COL];
+// 		CopyAndInvalid( uniformityHorInvalid, pCfg5816->invalid_node, 0, MAX_MCAP_COL );
+// 		GenHorizontalConvolution( baseMatrix, uniformityHorMatrix, pCfg5816->rowsCnt, pCfg5816->colsCnt );
+// 		bool bResult = AnalyzeTestResult( uniformityHorMatrix, uniformityMin, pCfg5816->stc_uniformity_h, uniformityHorInvalid, info, textTemp, nodeOutRange, true );
+// 		TestResultInfo( textTemp );
+// 		if( !bResult )
+// 		{
+// 			failerCount++;
+// 			LPCTSTR strHead = _T("\r\n//========= Out of Threshold in STC Uniformity-H: \r\n");
+// 			PrintNodeValue( m_ColorText, &nodeOutRange, strHead );
+// 		}
+// 	}
+// 	
+// 	{
+// 		NodeVal nodeOutRange;
+// 		ColorText textTemp( _T("\r\nstc_convolution_v:\r\n") );
+// 		short uniformityVerMatrix[MAX_MCAP_ROW][MAX_MCAP_COL];
+// 		unsigned char uniformityVerInvalid[MAX_MCAP_ROW][MAX_MCAP_COL];
+// 		CopyAndInvalid( uniformityVerInvalid, pCfg5816->invalid_node, MAX_MCAP_ROW, 0 );
+// 		GenVerticalConvolution( baseMatrix, uniformityVerMatrix, pCfg5816->rowsCnt, pCfg5816->colsCnt );
+// 		bool bResult = AnalyzeTestResult( uniformityVerMatrix, uniformityMin, pCfg5816->stc_uniformity_v, uniformityVerInvalid, info, textTemp, nodeOutRange, true );
+// 		TestResultInfo( textTemp );
+// 		if( !bResult )
+// 		{
+// 			failerCount++;
+// 			LPCTSTR strHead = _T("\r\n//========= Out of Threshold in STC Uniformity-V: \r\n");
+// 			PrintNodeValue( m_ColorText, &nodeOutRange, strHead );
+// 		}
+// 	}
+
+	if( failerCount )
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_FAIL );
+		TestResultInfo( "\r\n\r\n//STC Test is Fail\r\n", ITEM_STA_FAIL );
+	}
+	else
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_PASS );
+		TestResultInfo( "\r\n\r\n//STC Test is Pass\r\n", ITEM_STA_PASS );
+	}
+
+	return itemNotify;
+}
+unsigned int CTest5816::MCapRawData_Test( NativeTestItem& itemQuote )
+{
+	int failerCount = 0;
+	unsigned int iReCode = ERROR_CODE_COMM_ERROR;
+	ItemNotifyer itemNotify( m_pNativeIntr, itemQuote );
+	signed short baseTempBuffer[MAX_MCAP_CHANNEL * 2] = {0};
+	signed int baseSum[MAX_MCAP_CHANNEL * 2] = {0};
+	/*unsigned*/ short baseMatrix[MAX_MCAP_ROW][MAX_MCAP_COL], uniformityMin[MAX_MCAP_ROW][MAX_MCAP_COL], NormalizationMatrix[MAX_MCAP_ROW][MAX_MCAP_COL];
+	const unsigned int iRawDataLen = ((pCfg5816->rowsCnt) * (pCfg5816->colsCnt) * 2 + 3) & 0xfffffffc;
+	const unsigned int iRetry = 20;
+
+	TestResultInfo( _T("\r\n------------------------------MCap RawData Test------------------------------\r\n") );
+
+	if( NULL == SM_ChipBase(m_deviceNo) )   return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	ISMChip5816* iChip5816 = (ISMChip5816*)SM_ChipBase(m_deviceNo);
+
+	int addRow = ( pCfg5816->real_channel_num - pCfg5816->va_channel_num ) ? 1 : 0;
+	memset( uniformityMin, 0, sizeof(uniformityMin) );
+
+	//iReCode = iChip5816->IncokeCommand( CMD_CTP_RST );
+	//SysDelay( 100 );
+
+	//iReCode = iChip5816->SetClkInFctMode( pCfg5816->mcap_clk_div, false );
+	//if( ERROR_CODE_OK != iReCode ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	//SysDelay( 20 );
+
+	iReCode = iChip5816->SwitchMode( MODE_RAWDATA, iRawDataLen );
+	if( ERROR_CODE_OK != iReCode ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	SysDelay( 20 );
+
+	memset( baseSum, 0, sizeof(baseSum) );
+	for( int index = 0; index < iRetry; index++ )
+	{
+		iReCode = iChip5816->GetRawData( baseTempBuffer, iRawDataLen );
+		if( ERROR_CODE_OK != iReCode ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+		if(0 == index) continue;
+		ArrayAddtion( baseSum, baseTempBuffer, iRawDataLen );
+	}
+	ArrayAverage( baseTempBuffer, baseSum, iRawDataLen, iRetry - 1);
+
+	int ref_channel_num = min(pCfg5816->real_channel_num - pCfg5816->va_channel_num, pCfg5816->colsCnt);
+	AnalyzeInfo info( pCfg5816->rowsCnt, pCfg5816->colsCnt, ref_channel_num, false );
+	ReShappingData</*unsigned*/ short>( baseMatrix, (/*unsigned*/ short*)baseTempBuffer, G_XMLConfig->real_channel_num * 2, pCfg5816->rowsCnt, pCfg5816->colsCnt );
+	//short baseMin[MAX_MCAP_ROW][MAX_MCAP_COL] = {0}, baseMax[MAX_MCAP_ROW][MAX_MCAP_COL] = {0};
+	//FillArrayUseValue( baseMin, pCfg5816->base_min );
+	//FillArrayUseValue( baseMax, pCfg5816->base_max );
+	ColorText textTempa( _T("\r\nmcap_rawdata:\r\n") );
+	PrintMaxtrixValue( textTempa, baseMatrix,pCfg5816->invalid_node, info, true );
+	TestResultInfo( textTempa );
+	Copy_RawData<MAX_MCAP_ROW,MAX_MCAP_COL>(NormalizationMatrix, baseMatrix, pCfg5816->rowsCnt, pCfg5816->colsCnt);
+
+	auto pioce = 1.0f;
+	RawData_Normalization<MAX_MCAP_ROW,MAX_MCAP_COL>(NormalizationMatrix, pCfg5816->mcap_rawdata_min, pCfg5816->mcap_rawdata_max,pCfg5816->rowsCnt, pCfg5816->colsCnt,pCfg5816->macp_normalization_ratio_min,pCfg5816->macp_normalization_ratio_max,pioce);
+
+	TestResultInfoR(_T("\r\nnormalization_constant = %.2f, min =%.2f, max= %.2f\r\n"),pioce,pCfg5816->macp_normalization_ratio_min,pCfg5816->macp_normalization_ratio_max );
+
+	{
+		NodeVal nodeOutRange;
+		ColorText textTemp( _T("\r\nmcap_normalization:\r\n") );
+		bool bResult = AnalyzeTestResult( baseMatrix, pCfg5816->mcap_rawdata_min, pCfg5816->mcap_rawdata_max, pCfg5816->invalid_node, info, textTemp, nodeOutRange, true );
+		TestResultInfo( textTemp );
+		if( !bResult )
+		{
+			failerCount++;
+			LPCTSTR strHead = _T("\r\n//========= Out of Threshold in MCap RawData Test: \r\n");
+			PrintNodeValue( m_ColorText, &nodeOutRange, strHead );
+		}
+	}
+	
+	if(pCfg5816->check_uniformity_hor)
+	{
+		NodeVal nodeOutRange;
+		ColorText textTemp( _T("\r\nmcap_uniformity_h:\r\n") );
+		short uniformityHorMatrix[MAX_MCAP_ROW][MAX_MCAP_COL];
+		unsigned char uniformityHorInvalid[MAX_MCAP_ROW][MAX_MCAP_COL];
+		CopyAndInvalid( uniformityHorInvalid, pCfg5816->invalid_node, 0, MAX_MCAP_COL );
+		GenHorizontalUniformity( NormalizationMatrix, uniformityHorMatrix, pCfg5816->rowsCnt, pCfg5816->colsCnt );
+		bool bResult = AnalyzeTestResult( uniformityHorMatrix, uniformityMin, pCfg5816->mcap_uniformity_h, uniformityHorInvalid, info, textTemp, nodeOutRange, true );
+		TestResultInfo( textTemp );
+		if( !bResult )
+		{
+			failerCount++;
+			LPCTSTR strHead = _T("\r\n//========= Out of Threshold in MCap Uniformity-H: \r\n");
+			PrintNodeValue( m_ColorText, &nodeOutRange, strHead );
+		}
+	}
+
+	if(pCfg5816->check_uniformity_ver)
+	{
+		NodeVal nodeOutRange;
+		ColorText textTemp( _T("\r\nmcap_uniformity_v:\r\n") );
+		short uniformityVerMatrix[MAX_MCAP_ROW][MAX_MCAP_COL];
+		unsigned char uniformityVerInvalid[MAX_MCAP_ROW][MAX_MCAP_COL];
+		CopyAndInvalid( uniformityVerInvalid, pCfg5816->invalid_node, MAX_MCAP_ROW, 0 );
+		GenVerticalUniformity( NormalizationMatrix, uniformityVerMatrix, pCfg5816->rowsCnt, pCfg5816->colsCnt );
+		bool bResult = AnalyzeTestResult( uniformityVerMatrix, uniformityMin, pCfg5816->mcap_uniformity_v, uniformityVerInvalid, info, textTemp, nodeOutRange, true );
+		TestResultInfo( textTemp );
+		if( !bResult )
+		{
+			failerCount++;
+			LPCTSTR strHead = _T("\r\n//========= Out of Threshold in MCap Uniformity-V: \r\n");
+			PrintNodeValue( m_ColorText, &nodeOutRange, strHead );
+		}
+	}
+
+	auto sampling = Judge_RawData_sampling<MAX_MCAP_ROW,MAX_MCAP_COL>(pCfg5816->mcap_rawdata_min, pCfg5816->mcap_rawdata_max,pCfg5816->invalid_node,pCfg5816->rowsCnt, pCfg5816->colsCnt,pCfg5816->rawdata_min_value,pCfg5816->rawdata_max_value);
+	if(sampling == false)
+	{
+		failerCount++;
+		TestResultInfoR(_T("\r\nMcap_rawdata not sampled\r\n"));
+	}
+
+	if( failerCount )
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_FAIL );
+		TestResultInfo( "\r\n\r\n//MCap RawData Test is Fail\r\n", ITEM_STA_FAIL );
+	}
+	else
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_PASS );
+		TestResultInfo( "\r\n\r\n//MCap Test is Pass\r\n", ITEM_STA_PASS );
+	}
+
+	return itemNotify;
+}
+unsigned int CTest5816::Short_Test( NativeTestItem& itemQuote )
+{
+	int failerCount = 0;
+	unsigned int iReCode = ERROR_CODE_COMM_ERROR;
+	ItemNotifyer itemNotify( m_pNativeIntr, itemQuote );
+	const int max_short_adc_num = 16;
+	unsigned short shortAdc[max_short_adc_num] = {0};
+	unsigned short adcMatrix[2][MAX_MCAP_COL] = {0};
+	AnalyzeInfo info( pCfg5816->rowsCnt, pCfg5816->colsCnt, 0, false );
+
+	TestResultInfo( _T("\r\n------------------------------Short Test------------------------------\r\n") );
+
+	if( NULL == SM_ChipBase(m_deviceNo) )   return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	ISMChip5816* iChip5816 = (ISMChip5816*)SM_ChipBase(m_deviceNo);
+
+	iReCode = iChip5816->GetShortData( shortAdc, max_short_adc_num * 2 );
+	if( ERROR_CODE_OK != iReCode ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+	unsigned short maxCols[] = { pCfg5816->colsCnt, pCfg5816->rowsCnt };
+	ICArrayToSensorMatrix( adcMatrix, shortAdc, max_short_adc_num, 2, maxCols );
+
+	NodeVal nodeOutRange;
+	unsigned short adcMin[2][MAX_MCAP_COL] = {0};
+	unsigned short adcMax[2][MAX_MCAP_COL] = {0};
+	ColorText textTemp( _T("\r\nShort Data:\r\n") );
+	FillMatrixUseValue( adcMin, (unsigned short)0 );
+	FillMatrixRowUseValue( adcMax, pCfg5816->short_tx_max, 0 );
+	FillMatrixRowUseValue( adcMax, pCfg5816->short_rx_max, 1 );
+	adcMax[0][6] = 1300;
+	bool bResult = AnalyzeTestResultMSCap<unsigned short>( adcMatrix, adcMin, adcMax, pCfg5816->invalid_node, info, textTemp, nodeOutRange, true );
+	TestResultInfo( textTemp );
+	if( !bResult )
+	{
+		failerCount++;
+		LPCTSTR strHead = _T("\r\n//========= Out of Threshold in ShortTest: \r\n");
+		PrintNodeValue( m_ColorText, &nodeOutRange, strHead );
+	}
+
+	if( failerCount )
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_FAIL );
+		TestResultInfo( "\r\n\r\n//Short Test is Fail\r\n", ITEM_STA_FAIL );
+	}
+	else
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_PASS );
+		TestResultInfo( "\r\n\r\n//Short Test is Pass\r\n", ITEM_STA_PASS );
+	}
+
+	return itemNotify;
+}
+unsigned int CTest5816::FRT_Test( NativeTestItem& itemQuote )
+{
+	int failerCnt = 0;
+	unsigned int iReCode = ERROR_CODE_COMM_ERROR, errCode = 0;
+	ItemNotifyer itemNotify( m_pNativeIntr, itemQuote );
+	unsigned char retBuffer[20];
+	//char tempBuffer[MAX_PATH];
+
+	TestResultInfo( _T("\r\n------------------------------FRT Test------------------------------\r\n") );
+
+	if( NULL == SM_ChipBase(m_deviceNo) )   return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	ISMChip5816* iChip5816 = (ISMChip5816*)SM_ChipBase(m_deviceNo);
+
+	iReCode = iChip5816->IncokeCommand( CMD_RAM_TST, 0, 0, 0, retBuffer );
+	if( iReCode != ERROR_CODE_OK ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+	errCode = *(unsigned int*)&retBuffer[2];
+	if(0x54000000 != errCode)
+	{
+		failerCnt++;
+		//transformat( tempBuffer, _T("ReadCoreSpace, Code = 0x%x\r\n"), errCode );
+		//TestResultInfo( tempBuffer );
+		TestResultInfoR( _T("ReadCoreSpace, Code = 0x%x\r\n"), errCode );
+	}
+
+	if( failerCnt )
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_FAIL );
+		TestResultInfo( "\r\n\r\n//FRT Test is Fail\r\n", ITEM_STA_FAIL );
+	}
+	else
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_PASS );
+		TestResultInfo( "\r\n\r\n//FRT Test is Pass\r\n", ITEM_STA_PASS );
+	}
+
+	return itemNotify;
+}
+unsigned int CTest5816::IOVoltage_Test( NativeTestItem& itemQuote )
+{
+	int failerCnt = 0;
+	unsigned int iReCode = ERROR_CODE_COMM_ERROR;
+	ItemNotifyer itemNotify( m_pNativeIntr, itemQuote );
+	//TCHAR szTemp[MAX_PATH] = {0};
+
+	TestResultInfo( _T("\r\n------------------------------IOVoltage Test------------------------------\r\n") );
+
+	if( NULL == SM_ChipBase(m_deviceNo) )   return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	ISMChip5816* iChip5816 = (ISMChip5816*)SM_ChipBase(m_deviceNo);
+
+	unsigned int ioVols[2][10] = {0};
+	iReCode = iChip5816->GetIoVoltage( ioVols );
+	if( iReCode != ERROR_CODE_OK ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+	if( PROTOCAL_IIC == pCfg5816->protocalType )
+	{
+		//transformat( szTemp, _T("pin = low,  int vol = %-6d,	sda vol = %-6d,	scl vol = %-6d, vdd vol = %-6d, vio = %-6d\r\n"), ioVols[0][2], ioVols[0][0], ioVols[0][1], ioVols[0][8], ioVols[0][9]);
+		//TestResultInfo( szTemp );
+		TestResultInfoR( _T("pin = low,  int vol = %-6d,	sda vol = %-6d,	scl vol = %-6d, vdd vol = %-6d, vio = %-6d\r\n"), ioVols[0][2], ioVols[0][0], ioVols[0][1], ioVols[0][8], ioVols[0][9] );
+		//transformat( szTemp, _T("pin = high, int vol = %-6d,	sda vol = %-6d,	scl vol = %-6d, vdd vol = %-6d, vio = %-6d\r\n"), ioVols[1][2], ioVols[1][0], ioVols[1][1], ioVols[1][8], ioVols[1][9] );
+		//TestResultInfo( szTemp );
+		TestResultInfoR( _T("pin = high, int vol = %-6d,	sda vol = %-6d,	scl vol = %-6d, vdd vol = %-6d, vio = %-6d\r\n"), ioVols[1][2], ioVols[1][0], ioVols[1][1], ioVols[1][8], ioVols[1][9] );
+	}
+	else if( PROTOCAL_SPI == pCfg5816->protocalType )
+	{
+		//transformat( szTemp, _T("pin = low,  int vol = %-6d,	csn vol = %-6d,	mosi vol = %-6d,	miso = %-6d,	clk = %-6d\r\n"), ioVols[0][2], ioVols[0][3], ioVols[0][4], ioVols[0][5], ioVols[0][6] );
+		//TestResultInfo( szTemp );
+		TestResultInfoR( _T("pin = low,  int vol = %-6d,	csn vol = %-6d,	mosi vol = %-6d,	miso = %-6d,	clk = %-6d\r\n"), ioVols[0][2], ioVols[0][3], ioVols[0][4], ioVols[0][5], ioVols[0][6] );
+		//transformat( szTemp, _T("pin = high, int vol = %-6d,	csn vol = %-6d,	mosi vol = %-6d,	miso = %-6d,	clk = %-6d\r\n"), ioVols[1][2], ioVols[1][3], ioVols[1][4], ioVols[1][5], ioVols[1][6] );
+		//TestResultInfo( szTemp );
+		TestResultInfoR( _T("pin = high, int vol = %-6d,	csn vol = %-6d,	mosi vol = %-6d,	miso = %-6d,	clk = %-6d\r\n"), ioVols[1][2], ioVols[1][3], ioVols[1][4], ioVols[1][5], ioVols[1][6] );
+	}
+
+
+
+	if( ioVols[0][2] < pCfg5816->int_low_min || ioVols[0][2] > pCfg5816->int_low_max )
+	{
+		failerCnt++;
+		//transformat( szTemp, _T("int vol = %d, th = [%d - %d]\r\n"), ioVols[0][2], pCfg5816->int_low_min, pCfg5816->int_low_max );
+		//TestResultInfo( szTemp );
+		TestResultInfoR( _T("int vol = %d, th = [%d - %d]\r\n"), ioVols[0][2], pCfg5816->int_low_min, pCfg5816->int_low_max );
+	}
+	if( ioVols[1][2] < pCfg5816->int_high_min || ioVols[1][2] > pCfg5816->int_high_max )
+	{
+		failerCnt++;
+		//transformat( szTemp, _T("int vol = %d, th = [%d - %d]\r\n"), ioVols[1][2], pCfg5816->int_high_min, pCfg5816->int_high_max );
+		//TestResultInfo( szTemp );
+		TestResultInfoR( _T("int vol = %d, th = [%d - %d]\r\n"), ioVols[1][2], pCfg5816->int_high_min, pCfg5816->int_high_max );
+	}
+
+	if( PROTOCAL_IIC == pCfg5816->protocalType )
+	{
+		if( ioVols[0][0] < pCfg5816->iic_low_min || ioVols[0][0] > pCfg5816->iic_low_max )
+		{
+			failerCnt++;
+			//transformat( szTemp, _T("sda vol = %d, th = [%d - %d]\r\n"), ioVols[0][0], pCfg5816->iic_low_min, pCfg5816->iic_low_max );
+			//TestResultInfo( szTemp );
+			TestResultInfoR( _T("sda vol = %d, th = [%d - %d]\r\n"), ioVols[0][0], pCfg5816->iic_low_min, pCfg5816->iic_low_max );
+		}
+		if( ioVols[1][0] < pCfg5816->iic_high_min || ioVols[1][0] > pCfg5816->iic_high_max )
+		{
+			failerCnt++;
+			//transformat( szTemp, _T("sda vol = %d, th = [%d - %d]\r\n"), ioVols[1][0], pCfg5816->iic_high_min, pCfg5816->iic_high_max );
+			//TestResultInfo( szTemp );
+			TestResultInfoR( _T("sda vol = %d, th = [%d - %d]\r\n"), ioVols[1][0], pCfg5816->iic_high_min, pCfg5816->iic_high_max );
+		}
+
+		if( ioVols[0][1] < pCfg5816->iic_low_min || ioVols[0][1] > pCfg5816->iic_low_max )
+		{
+			failerCnt++;
+			//transformat( szTemp, _T("scl vol = %d, th = [%d - %d]\r\n"), ioVols[0][1], pCfg5816->iic_low_min, pCfg5816->iic_low_max );
+			//TestResultInfo( szTemp );
+			TestResultInfoR( _T("scl vol = %d, th = [%d - %d]\r\n"), ioVols[0][1], pCfg5816->iic_low_min, pCfg5816->iic_low_max );
+		}
+		if( ioVols[1][1] < pCfg5816->iic_high_min || ioVols[1][1] > pCfg5816->iic_high_max )
+		{
+			failerCnt++;
+			//transformat( szTemp, _T("scl vol = %d, th = [%d - %d]\r\n"), ioVols[1][1], pCfg5816->iic_high_min, pCfg5816->iic_high_max );
+			//TestResultInfo( szTemp );
+			TestResultInfoR( _T("scl vol = %d, th = [%d - %d]\r\n"), ioVols[1][1], pCfg5816->iic_high_min, pCfg5816->iic_high_max );
+		}
+	}
+	else if( PROTOCAL_SPI == pCfg5816->protocalType )
+	{
+		if( ioVols[0][3] < pCfg5816->spi_low_min || ioVols[0][3] > pCfg5816->spi_low_max )
+		{
+			failerCnt++;
+			//transformat( szTemp, _T("csn vol = %d, th = [%d - %d]\r\n"), ioVols[0][3], pCfg5816->spi_low_min, pCfg5816->spi_low_max );
+			//TestResultInfo( szTemp );
+			TestResultInfoR( _T("csn vol = %d, th = [%d - %d]\r\n"), ioVols[0][3], pCfg5816->spi_low_min, pCfg5816->spi_low_max );
+		}
+		if( ioVols[1][3] < pCfg5816->spi_high_min || ioVols[1][3] > pCfg5816->spi_high_max )
+		{
+			failerCnt++;
+			//transformat( szTemp, _T("csn vol = %d, th = [%d - %d]\r\n"), ioVols[1][3], pCfg5816->spi_high_min, pCfg5816->spi_high_max );
+			//TestResultInfo( szTemp );
+			TestResultInfoR( _T("csn vol = %d, th = [%d - %d]\r\n"), ioVols[1][3], pCfg5816->spi_high_min, pCfg5816->spi_high_max );
+		}
+
+		if( ioVols[0][4] < pCfg5816->spi_low_min || ioVols[0][4] > pCfg5816->spi_low_max )
+		{
+			failerCnt++;
+			//transformat( szTemp, _T("mosi vol = %d, th = [%d - %d]\r\n"), ioVols[0][4], pCfg5816->spi_low_min, pCfg5816->spi_low_max );
+			//TestResultInfo( szTemp );
+			TestResultInfoR( _T("mosi vol = %d, th = [%d - %d]\r\n"), ioVols[0][4], pCfg5816->spi_low_min, pCfg5816->spi_low_max );
+		}
+		if( ioVols[1][4] < pCfg5816->spi_high_min || ioVols[1][4] < pCfg5816->spi_high_max )
+		{
+			failerCnt++;
+			//transformat( szTemp, _T("mosi vol = %d, th = [%d - %d]\r\n"), ioVols[1][4], pCfg5816->spi_high_min, pCfg5816->spi_high_max );
+			//TestResultInfo( szTemp );
+			TestResultInfoR( _T("mosi vol = %d, th = [%d - %d]\r\n"), ioVols[1][4], pCfg5816->spi_high_min, pCfg5816->spi_high_max );
+		}
+
+		if( ioVols[0][5] < pCfg5816->spi_low_min || ioVols[0][5] > pCfg5816->spi_low_max )
+		{
+			failerCnt++;
+			//transformat( szTemp, _T("miso vol = %d, th = [%d - %d]\r\n"), ioVols[0][5], pCfg5816->spi_low_min, pCfg5816->spi_low_max );
+			//TestResultInfo( szTemp );
+			TestResultInfoR( _T("miso vol = %d, th = [%d - %d]\r\n"), ioVols[0][5], pCfg5816->spi_low_min, pCfg5816->spi_low_max );
+		}
+		if( ioVols[1][5] < pCfg5816->spi_high_min || ioVols[1][5] < pCfg5816->spi_high_max )
+		{
+			failerCnt++;
+			//transformat( szTemp, _T("miso vol = %d, th = [%d - %d]\r\n"), ioVols[1][5], pCfg5816->spi_high_min, pCfg5816->spi_high_max );
+			//TestResultInfo( szTemp );
+			TestResultInfoR( _T("miso vol = %d, th = [%d - %d]\r\n"), ioVols[1][5], pCfg5816->spi_high_min, pCfg5816->spi_high_max );
+		}
+
+		if( ioVols[0][6] < pCfg5816->spi_low_min || ioVols[0][6] > pCfg5816->spi_low_max )
+		{
+			failerCnt++;
+			//transformat( szTemp, _T("sclk vol = %d, th = [%d - %d]\r\n"), ioVols[0][6], pCfg5816->spi_low_min, pCfg5816->spi_low_max );
+			//TestResultInfo( szTemp );
+			TestResultInfoR( _T("sclk vol = %d, th = [%d - %d]\r\n"), ioVols[0][6], pCfg5816->spi_low_min, pCfg5816->spi_low_max );
+		}
+		if( ioVols[1][6] < pCfg5816->spi_high_min || ioVols[1][6] < pCfg5816->spi_high_max )
+		{
+			failerCnt++;
+			//transformat( szTemp, _T("sclk vol = %d, th = [%d - %d]\r\n"), ioVols[1][6], pCfg5816->spi_high_min, pCfg5816->spi_high_max );
+			//TestResultInfo( szTemp );
+			TestResultInfoR( _T("sclk vol = %d, th = [%d - %d]\r\n"), ioVols[1][6], pCfg5816->spi_high_min, pCfg5816->spi_high_max );
+		}
+	}
+
+	if( ioVols[0][8] < pCfg5816->vdd_low_min || ioVols[0][8] > pCfg5816->vdd_low_max )
+	{
+		failerCnt++;
+		//transformat( szTemp, _T("vdd vol = %d, th = [%d - %d]\r\n"), ioVols[0][8], pCfg5816->vdd_low_min, pCfg5816->vdd_low_max );
+		//TestResultInfo( szTemp );
+		TestResultInfoR( _T("vdd vol = %d, th = [%d - %d]\r\n"), ioVols[0][8], pCfg5816->vdd_low_min, pCfg5816->vdd_low_max );
+	}
+	if( ioVols[1][8] < pCfg5816->vdd_high_min || ioVols[1][8] > pCfg5816->vdd_high_max )
+	{
+		failerCnt++;
+		//transformat( szTemp, _T("vdd vol = %d, th = [%d - %d]\r\n"), ioVols[1][8], pCfg5816->vdd_high_min, pCfg5816->vdd_high_max );
+		//TestResultInfo( szTemp );
+		TestResultInfoR( _T("vdd vol = %d, th = [%d - %d]\r\n"), ioVols[1][8], pCfg5816->vdd_high_min, pCfg5816->vdd_high_max );
+	}
+
+	if( failerCnt )
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_FAIL );
+		TestResultInfo( "\r\n\r\n//IOVoltage Test is Fail\r\n", ITEM_STA_FAIL );
+	}
+	else
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_PASS );
+		TestResultInfo( "\r\n\r\n//IOVoltage Test is Pass\r\n", ITEM_STA_PASS );
+	}
+
+	return itemNotify;
+}
+unsigned int CTest5816::VIH_Test( NativeTestItem& itemQuote )
+{
+	int failerCnt = 0;
+	unsigned int iReCode = ERROR_CODE_COMM_ERROR;
+	ItemNotifyer itemNotify( m_pNativeIntr, itemQuote );
+	unsigned char coreBuffer_b[256] = {0}, coreBuffer_t[256] = {0};
+
+	TestResultInfo( _T("\r\n------------------------------VIH Test------------------------------\r\n") );
+
+	if( NULL == SM_ChipBase(m_deviceNo) )   return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	ISMChip5816* iChip5816 = (ISMChip5816*)SM_ChipBase(m_deviceNo);
+
+	for(int retry = 0; retry < 3; retry++)
+	{
+		memset(coreBuffer_b, 0, sizeof(coreBuffer_b));
+		memset(coreBuffer_t, 0, sizeof(coreBuffer_t));
+
+		iReCode = iChip5816->ReadCoreSpace( 0x20000080,  coreBuffer_b, 256);
+		if(0 != iReCode) failerCnt++;
+
+		iReCode = iChip5816->SetConfigInFctMode( (unsigned char*)coreBuffer_b, 256 );
+		if(0 != iReCode) failerCnt++;
+
+		iReCode = iChip5816->ReadCoreSpace( 0x20000080,  coreBuffer_t, 256);
+		if(0 != iReCode) failerCnt++;
+
+		for(int index = 0; index < 256; index++)
+		{
+			if(coreBuffer_b[index] != coreBuffer_t[index])
+				failerCnt++;
+		}
+
+		if(failerCnt) break;
+	}
+
+	if( failerCnt )
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_FAIL );
+		TestResultInfo( "\r\n\r\n//VIH Test is Fail\r\n", ITEM_STA_FAIL );
+	}
+	else
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_PASS );
+		TestResultInfo( "\r\n\r\n//VIH Test is Pass\r\n", ITEM_STA_PASS );
+	}
+
+	return itemNotify;
+}
+unsigned int CTest5816::MISC_Test( NativeTestItem& itemQuote )
+{
+	int failerCnt = 0;
+	unsigned int iReCode = ERROR_CODE_COMM_ERROR, errCode = 0;
+	ItemNotifyer itemNotify( m_pNativeIntr, itemQuote );
+	//char tempBuffer[MAX_PATH];
+
+	TestResultInfo( _T("\r\n------------------------------MISC Test------------------------------\r\n") );
+
+	if( NULL == SM_ChipBase(m_deviceNo) )   return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	ISMChip5816* iChip5816 = (ISMChip5816*)SM_ChipBase(m_deviceNo);
+
+	unsigned short rsp[8] = {0};
+	iReCode = iChip5816->IncokeCommand( CMD_MISC_TST, pCfg5816->misc_mode, 0, 0, (unsigned char*)rsp );
+	if( iReCode != ERROR_CODE_OK ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+	if(rsp[1])
+	{
+		failerCnt++;
+		//transformat( tempBuffer, _T("Misc(%d), Code = 0x%x\r\n"), rsp[1],  (rsp[2] << 16) + rsp[3]);
+		//TestResultInfo( tempBuffer );
+		TestResultInfoR( _T("Misc(%d), Code = 0x%x\r\n"), rsp[1],  (rsp[2] << 16) + rsp[3] );
+	}
+
+	if( failerCnt )
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_FAIL );
+		TestResultInfo( "\r\n\r\n//MISC Test is Fail\r\n", ITEM_STA_FAIL );
+	}
+	else
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_PASS );
+		TestResultInfo( "\r\n\r\n//MISC Test is Pass\r\n", ITEM_STA_PASS );
+	}
+
+	return itemNotify;
+}
+
+unsigned int CTest5816::Noise_Test( NativeTestItem& itemQuote )
+{
+
+	int failerCount = 0;
+	unsigned int iReCode = ERROR_CODE_COMM_ERROR;
+	ItemNotifyer itemNotify( m_pNativeIntr, itemQuote );
+	signed short diffMaxBuffer[200] = {0};
+	signed short baseBuffer[200] = {0};
+	signed short MaxBuffer[200] = {0};
+	signed short MinBuffer[200] = {0};
+	/*unsigned*/ short dataMatrix[MAX_MCAP_ROW][MAX_MCAP_COL];
+	const unsigned int iRawDataLen = ((pCfg5816->rowsCnt) * (pCfg5816->colsCnt) * 2 + 3) & 0xfffffffc;
+	unsigned short readBuffer[128] = {0};
+
+	TestResultInfo( _T("\r\n------------------------------Noise Test------------------------------\r\n") );
+
+	if( NULL == SM_ChipBase(m_deviceNo) )   return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	ISMChip5816* iChip5816 = (ISMChip5816*)SM_ChipBase(m_deviceNo);
+
+	iReCode = iChip5816->SwitchMode( MODE_RAWDATA, iRawDataLen );
+	if( ERROR_CODE_OK != iReCode ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	SysDelay( 20 );
+
+	for( int index = 0; index < 5; index++ )
+	{
+		iReCode = iChip5816->GetRawData( baseBuffer, iRawDataLen );
+		if( ERROR_CODE_OK != iReCode ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	}
+
+	memcpy(MaxBuffer,baseBuffer,sizeof(baseBuffer));
+	memcpy(MinBuffer,baseBuffer,sizeof(baseBuffer));
+
+	for(int index = 0; index < pCfg5816->noise_frame; index++)
+	{
+		iReCode = iChip5816->GetRawData( baseBuffer, iRawDataLen );
+		if( ERROR_CODE_OK != iReCode ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+		for(int iCnt = 0; iCnt < pCfg5816->rowsCnt * pCfg5816->colsCnt;  iCnt++)
+		{
+			MaxBuffer[iCnt] = max(baseBuffer[iCnt] , MaxBuffer[iCnt]);
+			MinBuffer[iCnt] = min(baseBuffer[iCnt] , MinBuffer[iCnt]);
+			diffMaxBuffer[iCnt] = MaxBuffer[iCnt] - MinBuffer[iCnt];
+		}
+	}
+
+	int ref_channel_num = min(pCfg5816->real_channel_num - pCfg5816->va_channel_num, pCfg5816->colsCnt);
+	AnalyzeInfo info( pCfg5816->rowsCnt, pCfg5816->colsCnt, ref_channel_num, false );
+	ReShappingData</*unsigned*/ short>( dataMatrix, (/*unsigned*/ short*)diffMaxBuffer, G_XMLConfig->real_channel_num * 2, pCfg5816->rowsCnt, pCfg5816->colsCnt );
+
+	short noiseMin[MAX_MCAP_ROW][MAX_MCAP_COL], noiseMax[MAX_MCAP_ROW][MAX_MCAP_COL];
+	FillMatrixUseValue( noiseMin, (short)0 );
+	FillMatrixUseValue( noiseMax, (short)pCfg5816->noise_max );
+
+	NodeVal nodeOutRange;
+	ColorText textTemp( _T("\r\nNoise Data:\r\n") );
+	bool bResult = AnalyzeTestResult( dataMatrix, noiseMin, noiseMax, pCfg5816->invalid_node, info, textTemp, nodeOutRange, true );
+	TestResultInfo( textTemp );
+	if( !bResult )
+	{
+		failerCount++;
+		LPCTSTR strHead = _T("\r\n//========= Out of Threshold in NoiseTest: \r\n");
+		PrintNodeValue( m_ColorText, &nodeOutRange, strHead );
+	}
+
+	if( failerCount )
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_FAIL );
+		TestResultInfo( "\r\n\r\n//Noise Test is Fail\r\n", ITEM_STA_FAIL );
+	}
+	else
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_PASS );
+		TestResultInfo( "\r\n\r\n//Noise Test is Pass\r\n", ITEM_STA_PASS );
+	}
+
+	return itemNotify;
+
+
+}
+unsigned int CTest5816::SetClkInFctMode( unsigned short clkDiv )
+{
+	return SM_ChipBase(m_deviceNo)->SetClkInFctMode(clkDiv, pCfg5816->filter_off);
+}
+unsigned int CTest5816::WorkForGraphMode( bool bEnterGraphing /*= false*/ )
+{
+	unsigned int iReCode = ERROR_CODE_OK;
+
+	if( bEnterGraphing && !IsTestInGraphStep() )
+	{
+		iReCode = SM_ChipBase(m_deviceNo)->IncokeCommand( CMD_CTP_RST );
+		CHECK_RETURN_IF_FAIL( iReCode );
+
+		SysDelay( 120 );
+
+        iReCode = SM_ChipBase(m_deviceNo)->IncokeCommand( 0x03, 0x07, 0x0 );//used for int pin level low long time
+        CHECK_RETURN_IF_FAIL( iReCode );
+
+		SysDelay( 10 );
+
+		iReCode = SM_ChipBase(m_deviceNo)->SwitchMode( MODE_TOUCH );
+		CHECK_RETURN_IF_FAIL( iReCode );
+	}
+	else
+	{
+
+	}
+
+	bEnterGraphing ? SetTestStatusInGraphStep() : SetTestStatusInDataStep();
+
+	return iReCode;
+}
+void CTest5816::PrepareSimulate( SimulateData& sm )
+{
+	unsigned char cmdID = sm.itemID & 0xff;
+	unsigned char dataIndex = (sm.itemID >> 8) & 0xff;
+	unsigned char sumCnt = 1;
+	int iDesIndex = 0;
+
+	//scap data
+	if( sm.itemID == ((0xfa << 16) + 0x28) )
+	{
+		iDesIndex += pCfg5816->rowsCnt * pCfg5816->colsCnt;
+		for( int iCol = 0; iCol <  pCfg5816->colsCnt; iCol++ )
+			sm.itemArray[iDesIndex++] = sm.itemData[0][iCol] * sumCnt;
+		for( int iCol = 0; iCol < pCfg5816->rowsCnt; iCol++ )
+			sm.itemArray[iDesIndex++] = sm.itemData[1][iCol] * sumCnt;
+	}
+	else
+	{
+		for( int iRow = 0; iRow < sm.rows; iRow++ )
+		{
+			for( int iCol = 0; iCol < sm.cols; iCol++ )
+			{
+				if( iDesIndex >= sizeof(sm.itemArray)/sizeof(short) ) break;
+
+				//int icPosition = pCfg5816->sensor_2_ic_map[index];
+				sm.itemArray[iDesIndex++] = sm.itemData[iRow][iCol] * sumCnt;
+			}
+		}
+	}
+}

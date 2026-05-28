@@ -1,0 +1,65 @@
+ChipSemi_Tester_V8.8.8_20260318
+WorkStation: F01   ProjectName: 0508
+
+Time Stamp:	2026-05-18 20:01:58 216
+Mtk Version = 0xd1103
+
+Time Stamp:	2026-05-18 20:01:58 706
+
+------------------------------Project Test------------------------------
+Project = 310
+
+//Project Test is Pass
+
+Time Stamp:	2026-05-18 20:01:58 706
+
+------------------------------RESET Test------------------------------
+
+
+//Reset Test is Pass
+
+Time Stamp:	2026-05-18 20:01:58 892
+
+------------------------------Current Test------------------------------
+
+avdd_active = 17500(uA), avdd_idle = 1576(uA)£¬  avdd_sleep = 188(uA)
+
+sleep(188) > setting max(30)
+
+
+//Current Test is Fail
+
+------------------------------Current Test------------------------------
+
+avdd_active = 17510(uA), avdd_idle = 1563(uA)£¬  avdd_sleep = 197(uA)
+
+sleep(197) > setting max(30)
+
+
+//Current Test is Fail
+
+------------------------------Current Test------------------------------
+
+avdd_active = 17483(uA), avdd_idle = 1580(uA)£¬  avdd_sleep = 177(uA)
+
+sleep(177) > setting max(30)
+
+
+//Current Test is Fail
+
+Time Stamp:	2026-05-18 20:02:02 836
+
+------------------------------IOVoltage Test------------------------------
+
+IOV = 1.8V  High : int0 vol = 1771  ,	int2 vol = 1771  
+IOV = 1.8V  Low  : int0 vol = 25    ,	int2 vol = 1     
+IOV = 1.2V  High : int0 vol = 1224  ,	int2 vol = 1224  
+IOV = 1.2V  Low  : int0 vol = 18    ,	int2 vol = 0     
+
+IOV 1.62V  & 1.08V trans test PASS
+
+
+//IOVoltage Test is Pass
+
+
+//Final result is NG

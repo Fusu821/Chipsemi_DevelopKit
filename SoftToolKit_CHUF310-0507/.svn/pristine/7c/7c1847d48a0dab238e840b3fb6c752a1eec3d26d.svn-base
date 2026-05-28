@@ -1,0 +1,629 @@
+#pragma once
+#include "Macro.h"
+
+#ifdef _MSC_VER
+#include <InitGuid.h>
+DEFINE_GUID(IID_SMUSBGUID,0x28d78fad, 0x5a12, 0x11D1, 0xae, 0x5b, 0x00, 0x00, 0xf8, 0x03, 0xa8, 0xc2);
+//DEFINE_GUID(TSC_SMUSBGUID,0x36fc9e60, 0xc465, 0x11cf, 0x80, 0x56, 0x44, 0x45, 0x53, 0x54, 0x00, 0x00);
+DEFINE_GUID(IID_SMHIDGUID, 0x4D1E55B2, 0xF16F, 0x11CF, 0x88, 0xCB, 0x00, 0x11, 0x11, 0x00, 0x00, 0x30);
+
+//36fc9e60-c465-11cf-8056-444553540000
+//HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\DeviceClasses\{378de44c-56ef-11d1-bc8c-00a0c91405dd}
+//HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\DeviceClasses\{4d1e55b2-f16f-11cf-88cb-001111000030}
+//HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\DeviceClasses\{884b96c3-56ef-11d1-bc8c-00a0c91405dd}
+#endif
+
+#define         _1_MULTIPLE_N_      1
+#define         APP_TOUCH           _T("semi-touch")
+
+typedef enum 
+{
+	CMD_NA              = 0x0f,
+	CMD_IDENTITY        = 0x01,
+	CMD_CTP_SSCAN       = 0x02,
+	CMD_CTP_PMU         = 0x03,
+	CMD_CTP_FREQ        = 0x04,
+
+	CMD_CTP_SET        = 0x05,
+
+	CMD_ROCKER_CALIB    = 0x07,
+
+	CMD_CTP_RST         = 0x10,
+	CMD_OPEN_TST        = 0x20,
+	CMD_SHORT_TST       = 0x21,
+	CMD_INT_TST         = 0x22,
+	CMD_RST_TST         = 0x23, 
+	CMD_FSD_TST         = 0x24,
+	CMD_CHK_CFG         = 0x26,
+	CMD_HOLD_MTK        = 0x27,
+	CMD_DATA_SYNC       = 0x28,
+
+	CMD_Sync_Comb       = 0x29,
+	CMD_TYPE_LINE       = 0x2A,
+	CMD_DOG_TST         = 0x2B,
+
+	CMD_MEM_WR          = 0x30,
+	CMD_MEM_RD          = 0x31,
+	CMD_FLASH_ERASE     = 0x32,
+	CMD_FW_SUM          = 0x33,
+	CMD_ENTER_UPGRADE_MODE = 0x34,
+	CMD_WRITE_REGISTER  = 0X35,
+	CMD_READ_REGISTER   = 0X36,
+	CMD_BSPR_RW         = 0x37,
+	CMD_RESERVE         = 0x38,
+	CMD_MTK_UPGRADE_ENTER = 0x39,
+	CMD_JUMP_RAMCODE = 0x3A,
+	CMD_MTK_UPGRADE_WRITE = 0x40,
+	CMD_MTK_UPGRADE_LEAVE = 0x41,
+
+	CMD_CFG_IIC         = 0x42,
+
+	CMD_MTK_UPGRADE_READ = 0x43,
+
+	CMD_SWITCH_IIC      = 0x50,     
+	CMD_ENTER_FW_BOOT_LOADER = 0x51,
+	CMD_ENPIN_TST       = 0x52,
+	
+
+	CMD_IC_AUTO_TEST    = 0x80,
+	CMD_GET_ENCRY_INF   = 0x81,
+	CMD_MTK_NEW_DONE    = 0x82,
+	CMD_MTK_FBOOT_CHK   = 0x83,
+	CMD_MTK_MEM_MOVE    = 0x84, 
+	CMD_MTK_MEM_WR      = 0x85,
+	CMD_MTK_MEM_RD      = 0x86,
+	CMD_MTK_FLASH_ERASE = 0x87,
+	CMD_SEND_ENCRY_KEY  = 0x88,
+	CMD_MTK_EXT_OUTPUT  = 0x89,
+	CMD_MTK_VDD_LEVEL   = 0x90,
+	CMD_DUT_SUSPEND     = 0x94,
+	CMD_DUT_CLK_CALIB   = 0x95,
+	CMD_DUT_HOLD        = 0x96,
+	CMD_SCAN_ID         = 0x97,
+	CMD_CFG_INIT        = 0x98,
+	CMD_SET_FEATURE     = 0x99,
+	CMD_TIMING_SEQ_TST  = 0x9A,
+	CMD_MTK_CLK_CALIB   = 0x9B,
+	CMD_MTK_SET_VOLTAGE = 0x9C,
+	CMD_MTK_TEST_PINS_LEAK = 0x9D,
+	CMD_RAM_TST         = 0x9E,
+	CMD_FLASH_TST       = 0x9F,
+	CMD_IOVOLTAGE_TST   = 0xA0,
+	CMD_CLK_TST   = 0xA2,
+	CMD_VT_TST   = 0xA3,
+	CMD_MISC_TST        = 0xF0,
+}cmdTypeID;
+
+typedef enum {
+	CC_SUCCESS =0,
+	CC_ERR_ELEN =1,
+	CC_ERR_CMDID_CHK =2,
+	CC_ERR_CMDDATA_CHK =3,
+	CC_ERR_APPEND_CHK =4,
+	CC_ERR_ARG =5, //cmd arguments err, such as out of range
+	CC_ERR_CMDID_NA =6,
+	CC_ERR_GOING =7,
+	CC_ERR_INIT =8,
+	CC_ERR_X =9,
+	CC_EDRV_NOTCMD =0x10,  //  16
+	CC_EDRV_MAGIC =0x11,     //  17
+	CC_EDRV_RSPFRM =0x12,     //  18
+	CC_DEV_OR_IIC = 0x13,   // no device or i2c mode error
+	CC_ERR_RAMCODE1 = 0x14,   // enter otp mode error    
+	CC_TAG_EXTDATA =0x80,
+}cmd_complete_e;
+
+#define DIRECTLY_MODE    0x0
+#define DEDICATE_MODE    0x1
+
+#define OTP_R            0x3
+#define CORE_R           0x4
+#define CORE_W           0x5
+#define OTP_W_NOCHK      0x0
+#define OTP_W_CHK        0x1
+#define OTP_W_TAIL       0x2
+#define OTP_W_CHKEX      0x11
+
+#define TLK_B4WRCHK_EX   0x40
+#define TLK_DUT_FLASH    0x80
+#define TLK_DATACHK_MSK  0x30    // payload checksum m1
+#define TLK_DATACHK_EX1  0x10    // payload checksum m1
+#define TLK_DATA_ENCRY   0x20  
+
+#define MAX_BOOT_PAGE     (96)
+#define TYPE_NAME_SZ(x)   #x
+#define LEN_RAW_POINT     34
+#define MAX_CFG_BIN_SIZE  0x800//512
+#define MAX_CFG_5562_BIN_SIZE  0x800
+#define MAX_CFG_7126_BIN_SIZE  0x800
+#define MAX_BOT_BIN_SIZE  (MAX_BOOT_PAGE * 1024)
+#define MAX_BOT_BIN_BUFFER_SIZE  (200*1024)
+#define MAX_MTK_APP_SIZE  (400 * 1024)
+
+#define MAX_CFG_570_BIN_SIZE  0x800
+
+enum { PROTOCAL_IIC = 0, PROTOCAL_SPI = 1, };
+enum { MODE_RAWDATA = 0, MODE_DIFFER = 1, MODE_TOUCH = 2, MODE_BASE = 3, MODE_SIMULATE_RAW = 4, MODE_SIMULATE_DIFF = 5, MODE_TWOICS_RAWDATA = 6, MODE_TWOICS_TOUCH = 7, MODE_810ANALOG_RAW = 8, MODE_810ANALOG_TOUCH = 9, MODE_810TWOICS_RAWDATA = 10, MODE_810TWOICS_TOUCH = 11};
+enum { LINK_TYPE_USB = 1, LINK_TYPE_COM = 2, LINK_TYPE_TCP = 3, LINK_TYPE_UDP = 4, LINK_TYPE_FAKE = 5, LINK_TYPE_PROC = 6, LINK_TYPE_HID = 7 , LINK_TYPE_HID_IIC = 8 , LINK_TYPE_THP = 9 };
+enum { MTK_TYPE_V5 = 1, MTK_TYPE_V7 = 2, MTK_TYPE_V8 = 3};
+
+// enum EVENT_SIGN
+// {
+//  EVENT_SIGN_NONE = 0,
+// 	EVENT_SIGN_DOWN = 1,
+// 	EVENT_SIGN_UP   = 2,
+// 	EVENT_SIGN_CONT = 3,
+// };
+
+enum CHIP_TYPE {};
+enum PROG_TYPE {};
+enum COMM_TYPE {};
+
+#define           MTK_LINK_AND_ID                     0x0001
+
+#define           MTK_CMD_BUF                         0xb400
+#define           MTK_RSP_BUF                         0xb440
+#define           MTK_FUNC_BUF                        0xc000
+#define           MTK_TXRX_BUF_SCAP                   0xcc00
+#define           MTK_TXRX_BUF_MCAP                   0xc400
+#define           MTK_TXRX_BUF_MTK                    MTK_TXRX_BUF_MCAP
+#define           DEV_TYPE_ADDR                       0xd200
+#define           MTK_VER_ADDR                        0xd204
+#define           MTK_DATA_RDY                        0xd209
+#define           SM_MTK_DEVICE_NO_ADDR               0xd218
+#define           MTK_FLASHBOOT_1KCHK                 0xd300
+
+
+#define           MTK_TXRX_BUF_MCAP_V8                   0x1000
+#define           MTK_TXRX_BUF_MTK_V8                    MTK_TXRX_BUF_MCAP_V8
+#define           MTK_TXRX_BUF_SCAP_V8                   0x1000
+
+#define           MTK_DEV_TYPE_ADDR_V8                   0xd000
+#define           MTK_VER_ADDR_V8                        0xd004
+#define           MTK_DATA_RDY_V8                        0xd200
+#define           MTK_DEVICE_NO_ADDR_V8                  0xd218
+
+#define           MTK_FUNC_BUF_V8                        0xd300
+#define           MTK_FLASHBOOT_1KCHK_V8                 0xd400
+
+#define           MTK_CMD_BUF_V8                         0xdc00
+#define           MTK_RSP_BUF_V8                         0xdc40
+
+#define           MAX_TXRX_SIZE                       1024	
+
+#define           MTK_FLASH                           0x1
+#define           MTK_OTP                             0x2
+
+#define           VARIFY_DEVICE_NO_OK(x)              ( 0x81696160 == ((x) & 0xfffffff0) )   
+
+struct LinkParam
+{
+	union 
+	{
+		struct  
+		{
+			LPCTSTR pszIpAddress;
+			unsigned short port;
+			unsigned short nport;
+			unsigned char async;
+		}tcp;
+		struct 
+		{
+			unsigned int boartRate;
+			unsigned short port;
+		}com;
+		struct  
+		{
+			LPCTSTR pszLinkName;
+			unsigned short devID;
+		}usb;
+		struct
+        {
+            LPCTSTR procName;
+        }proc;
+	};
+	unsigned char LinkType;
+};
+
+struct CtpHalCfg
+{
+	unsigned short icType;
+    unsigned char protocalType;
+	unsigned char vddVoltage;
+	unsigned char iovddVotage;
+	unsigned short vihVotage;//hjx-221216
+	unsigned short speed;
+	struct _IIC
+	{
+		unsigned char slaveAddr;
+		//unsigned short speed;
+	}IIC;
+	struct _SPI 
+	{
+		unsigned char mode;
+		//unsigned short speed;
+	}SPI;
+};
+
+struct Device 
+{
+	int iDevIndex;
+	HANDLE handle;
+};
+
+typedef struct __ts352x_rpt_pt
+{
+	unsigned char  x_h:6;
+	unsigned char  event:2;
+	unsigned char  x_l:8;
+	unsigned char  y_h:4;
+	unsigned char  id:4;
+	unsigned char  y_l:8;
+	unsigned char  z;
+	unsigned char  area;   //5th point, i.e pts[4] and 10th point, i.e. pts[9] is special 
+}sm_pt_t;  
+
+typedef struct __ts352x_rpt_data
+{
+	unsigned char resv;
+	unsigned char act;
+	unsigned char num;  
+	//offset 4;
+	sm_pt_t pts[2];  //reserved for 2 points
+}scap_rpt_data_t;
+
+typedef struct _rpt_point_t 
+{
+	union 
+	{
+		struct 
+		{
+			unsigned char x_l8;
+			unsigned char y_l8;
+			unsigned char z;
+			unsigned char x_h4:4;
+			unsigned char y_h4:4;
+			unsigned char id:4;
+			unsigned char event:4;
+		};
+		unsigned char data[5];
+	};
+}rpt_point_t;
+
+typedef struct _rpt_content_t 
+{
+	unsigned char act;
+	unsigned char num;
+	rpt_point_t points[15];
+}mcap_content_t;
+
+#define MAX_MUTI_TRIM    (5)
+typedef struct _fct_osc_trim{
+	unsigned int osc32k_trim;
+	unsigned int osc32k_freq;
+
+	unsigned int osc96m_trim;
+	unsigned int osc96m_freq;
+
+	unsigned int osc250m_trim;
+	unsigned int osc250m_freq;
+
+	unsigned int osc96m_table[MAX_MUTI_TRIM];
+	unsigned int osc96m_freqs[MAX_MUTI_TRIM];
+	unsigned int osc96m_meter[MAX_MUTI_TRIM];
+
+	unsigned int checskum;
+}fct_osc_trim;
+
+
+typedef void (*LPCheckCatchBootCallBack)( int dev, int curPos, int maxPos, LPCTSTR szText );
+typedef void (__stdcall *LPUpdateProcessPosCallBack)( unsigned char devNo, int pos, int maxPos );
+
+class ProtocalApi;
+
+class SM_CHIP_API ICommBase
+{
+public:
+	virtual ~ICommBase() {}
+
+	virtual BOOL Connected() = 0;
+	virtual unsigned int GetCommType() = 0;
+	virtual unsigned int SyncWorkcInit( unsigned char bHold = 1 ){ return ERROR_CODE_NO_DEVICE; }
+	virtual unsigned int HalTrySetDeviceManuly( Device hDevice ) = 0;
+	virtual unsigned int SendCommand( unsigned char* pWrite, unsigned char* pRead ) = 0;
+	virtual unsigned int SendCommandAndCheck( ProtocalApi* protocalApi, unsigned char* pWrite, unsigned char* pRead, unsigned short delay = 30 ) = 0;
+	virtual unsigned int ReadFromUsbMemory( unsigned short addr, unsigned char* pRead, unsigned short len ) = 0;
+	virtual unsigned int WriteToUsbMemory( unsigned short addr, const unsigned char* pWrite, unsigned short len ) = 0;
+	virtual unsigned int SetIoVoltage( unsigned short vdd, unsigned short iovdd, unsigned short vih ) = 0;
+	//virtual unsigned int SetIoVoltageTest( unsigned short vdd, unsigned short iovdd, unsigned short vih,unsigned short vih1000) = 0;
+	virtual unsigned int UpgradeMtkBoard( unsigned char devNo, unsigned char* pMtkBin, unsigned int len, LPUpdateProcessPosCallBack lpProcess ) = 0;
+	virtual unsigned int ReadMtkBoard( unsigned char devNo, unsigned char* pMtkBin, unsigned int len, LPUpdateProcessPosCallBack lpProcess ) {return 0;};
+	virtual unsigned int PrepareMtkBoardUpgrade(  ) = 0;
+	virtual unsigned int MtkBoardReBoot(unsigned int wantGo){ return ERROR_CODE_NO_DEVICE; }
+	virtual unsigned int DetectMtkExtendSignal( unsigned char* signal = 0 ){ return ERROR_CODE_NO_DEVICE; }
+	virtual unsigned int SetMtkExternOutput( unsigned char PB0, unsigned char PB1, unsigned char PB2 ){ return ERROR_CODE_NO_DEVICE; }
+	virtual unsigned int SetSimulateContext( LPVOID pContext ) { return ERROR_CODE_NO_DEVICE; }
+
+	virtual unsigned short GET_MTK_LINK_AND_ID() { return MTK_LINK_AND_ID;  }
+	virtual unsigned short GET_MTK_DEVICE_NO_ADDR() { return SM_MTK_DEVICE_NO_ADDR;  }
+	virtual unsigned short GET_MTK_CMD_BUF() { return MTK_CMD_BUF;  }
+	virtual unsigned short GET_MTK_RSP_BUF() { return MTK_RSP_BUF;  }
+	virtual unsigned short GET_MTK_FUNC_BUF() { return MTK_FUNC_BUF;  }
+	virtual unsigned short GET_MTK_TXRX_BUF_SCAP() { return MTK_TXRX_BUF_SCAP;  }
+	virtual unsigned short GET_MTK_TXRX_BUF_MCAP() { return MTK_TXRX_BUF_MCAP;  }
+	virtual unsigned short GET_MTK_DATA_RDY() { return MTK_DATA_RDY;  }
+	virtual unsigned short GET_MTK_TXRX_BUF_MTK() { return MTK_TXRX_BUF_MTK;  }
+	virtual unsigned short GET_MTK_DEV_TYPE_ADDR() { return DEV_TYPE_ADDR;  }
+	virtual unsigned short GET_MTK_VER_ADDR() { return MTK_VER_ADDR;  }
+	virtual unsigned short GET_MTK_FLASHBOOT_1KCHK() { return MTK_FLASHBOOT_1KCHK; }
+	
+};
+class SM_CHIP_API ISMChipBase
+{
+public:
+	virtual ~ISMChipBase(){}
+
+	virtual LPVOID GetSRefInterface() = 0;
+
+	virtual BOOL HaveTpLinked( unsigned int retry = 1 ) = 0;
+	virtual unsigned int SwitchMode( unsigned char modeType, unsigned short len = 0 ) = 0;
+	virtual unsigned int SetCommContext( const CtpHalCfg& halCfg ) = 0;
+	virtual unsigned int IncokeCommand( unsigned char command, unsigned int d0 = 0, unsigned short d1 = 0, unsigned short d2 = 0, unsigned char* retBuffer = NULL ) = 0;
+	virtual unsigned int HalAccessMode( unsigned char accType = 0 ) = 0;
+	virtual unsigned int WriteRegister( unsigned int address, unsigned int ucData ) = 0;
+	virtual unsigned int ReadRegister( unsigned int address, unsigned int* pUcData ) = 0;
+	virtual unsigned int GetTouchPoint( unsigned char* pointBuffer, unsigned short* len ) = 0;
+	virtual unsigned int GetRawData( short* rawdataBuffer, unsigned short len ) = 0;
+	virtual unsigned int ReadCoreSpace( unsigned int addr, unsigned char* buffer, unsigned int len ) = 0;
+	virtual unsigned int WriteCoreSpace( unsigned int addr, unsigned char* buffer, unsigned int len ) = 0;
+	virtual unsigned int ReadBurnSpace( unsigned int addr, unsigned char* buffer, unsigned int len ) = 0;
+	virtual unsigned int ReadMtkFlash( unsigned int addr, unsigned char* buffer, unsigned int len) = 0;
+	virtual unsigned int EraseBurnSpace( unsigned int addr, unsigned int len ) = 0;
+	virtual unsigned int WriteBurnSpace( unsigned int addr, const unsigned char* buffer, unsigned int len, unsigned char type ) = 0;
+	virtual unsigned int CheckCatchBootToMtk( unsigned int addr, unsigned char* bootBuffer, unsigned int bootLen, LPCheckCatchBootCallBack onBootCallBack = NULL ) = 0;
+	virtual unsigned int SetClkInFctMode( unsigned short clkDiv, unsigned char filterOff ) = 0;
+// 	virtual unsigned int BSPRWrite( unsigned char* writeBuffer, unsigned int iWrite ) = 0;
+// 	virtual unsigned int BSPRRead( unsigned char* readBuffer, unsigned int iRead ) = 0;
+	virtual unsigned int BSPRWriteAndRead( unsigned char* writeBuffer, unsigned int iWrite, unsigned char* readBuffer, unsigned int iRead ) = 0;
+};
+
+class SM_CHIP_API ISMChipScapPart
+{
+public:
+	virtual unsigned int GetBootVersion( unsigned short* bootVer ) = 0;
+	virtual unsigned int GetFSDFastData( unsigned short fclkDiv, unsigned short integral, unsigned short* clkData, unsigned short buffersize, unsigned char fclkCnt = 4 ) = 0;
+	virtual unsigned int GetFSDSlowData( unsigned short fclkDiv, unsigned short integral, unsigned short* clkData, unsigned short buffersize, unsigned char fclkCnt = 4 ) = 0;
+	virtual unsigned int GetCurrent( unsigned short cmd, short (&level)[2][2], unsigned short* workCurrrent, unsigned short* sleepCurrent ) = 0;
+	virtual unsigned int GetOSCTrim( unsigned short* trim, unsigned int osStd ) = 0;
+};
+
+class SM_CHIP_API ISMChip3535Part
+{
+public:
+	//virtual unsigned int GetBootVersion( unsigned short* bootVer ) = 0;
+	virtual unsigned int GetBootCheckSum( unsigned int* checkSum, unsigned int* omTime, unsigned int* marginCheck, unsigned int* normalCheck ) = 0;
+	virtual unsigned int GetFirmWareConfig( unsigned int addr, unsigned char* configBuffer, unsigned short len ) = 0;
+	virtual unsigned int GetOSData( unsigned char integral, unsigned char scale_a, unsigned char scale_b, unsigned short* osData, unsigned short len ) = 0;
+	//virtual unsigned int GetFSDFastData( unsigned short fclkDiv, unsigned short* clkData, unsigned short buffersize, unsigned char fclkCnt = 4 ) = 0;
+	//virtual unsigned int GetFSDSlowData( unsigned short fclkDiv, unsigned short* clkData, unsigned short buffersize, unsigned char fclkCnt = 4 ) = 0;
+	virtual unsigned int BurnBootBin( unsigned int bootLen, unsigned int bootSVN = 0, unsigned short oscTrim = 0, unsigned char reBurn = 0 ) = 0;
+	//virtual unsigned int GetCurrent( unsigned short cmd, unsigned short* workCurrrent, unsigned short* sleepCurrent ) = 0;
+	virtual unsigned int BurnConfigBin( unsigned int addr, const unsigned char* config, unsigned short len ) = 0;
+	//virtual unsigned int GetOSCTrim( unsigned short* trim, unsigned int osStd ) = 0;
+	virtual unsigned int FindLastCfgAddress() = 0;
+	virtual unsigned int CheckOtp(unsigned short* checknum) = 0;
+};
+class SM_CHIP_API ISMChip3535 : public ISMChipBase, public ISMChipScapPart, public ISMChip3535Part
+{
+
+};
+
+class SM_CHIP_API ISMChip3536Part 
+{
+public:
+	//virtual unsigned int GetBootVersion( unsigned short* bootVer ) = 0;
+	virtual unsigned int GetBootCheckSum( unsigned int* checkSum, unsigned int* omTime ) = 0;
+	virtual unsigned int GetFirmWareConfig( unsigned char* configBuffer, unsigned short len ) = 0;
+	virtual unsigned int GetOSData( unsigned char integral, unsigned char scale_a, unsigned char scale_b, unsigned short osClk, unsigned short* osData, unsigned short len ) = 0;
+	//virtual unsigned int GetFSDFastData( unsigned short fclkDiv, unsigned short* clkData, unsigned short buffersize, unsigned char fclkCnt = 4 ) = 0;
+	//virtual unsigned int GetFSDSlowData( unsigned short fclkDiv, unsigned short* clkData, unsigned short buffersize, unsigned char fclkCnt = 4 ) = 0;
+	virtual unsigned int BurnBootBin( unsigned int bootLen, unsigned int bootSVN = 0, unsigned short oscTrim = 0 ) = 0;
+	virtual unsigned int BurnConfigBin( const unsigned char* config, unsigned short len ) = 0;
+	//virtual unsigned int GetCurrent( unsigned short cmd, unsigned short* workCurrrent, unsigned short* sleepCurrent ) = 0;
+	//virtual unsigned int GetOSCTrim( unsigned short* trim, unsigned int osStd ) = 0;
+	virtual unsigned int GetVirtualTouchData( unsigned short xyClk, unsigned short scale, unsigned short integral, unsigned short* vtData1, unsigned short* vtData2, unsigned short len ) = 0;
+	virtual unsigned int GetIoVoltage( unsigned int (&voltage)[2][8] ) = 0;
+	virtual unsigned int GetTrimeDosc(int& fo_trim) = 0;
+};
+class SM_CHIP_API ISMChip3536 : public ISMChipBase, public ISMChipScapPart,  public ISMChip3536Part
+{
+
+};
+
+class SM_CHIP_API ISMChipMcapPart
+{
+public:
+	virtual unsigned int GetBootVersion( unsigned short* bootVer ) = 0;
+	virtual unsigned int GetBootCheckSum( unsigned int* checkSum, unsigned int* omTime ) = 0;
+	virtual unsigned int GetFirmWareConfig( unsigned char* configBuffer, unsigned short len ) = 0;
+	virtual unsigned int GetShortData( unsigned short* sData, unsigned short len ) = 0;
+	virtual unsigned int BurnConfigBin( const unsigned char* config, unsigned short len ) = 0;
+	virtual unsigned int GetIoVoltage( unsigned int (&voltage)[2][10] ) = 0;
+	virtual unsigned int GetCurrent( short (&level)[2][3], unsigned short* activeCurrrent, unsigned short* sleepCurrent, unsigned short* deepCurrent, unsigned short* idle ) = 0;
+	virtual unsigned int SetConfigInFctMode( unsigned char* cfgBuffer, unsigned short len ) = 0;
+};
+
+class SM_CHIP_API ISMChip5472Part
+{
+public:
+	virtual unsigned int GetDifferMax(unsigned short frames, short* sData, unsigned short len ) = 0;
+	virtual unsigned int GetDifferMaxNew(unsigned short frames, unsigned short tag, short* sData, unsigned short len ) = 0;
+	virtual unsigned int BurnBootBin( unsigned int bootLen, unsigned int bootSVN = 0, unsigned short oscTrim = 0 ) = 0;
+	virtual unsigned int GetOSCTrim( unsigned char* trim32k, unsigned char* trim48m, unsigned char* trim150m, unsigned char trim_mode, unsigned int osStd32k, unsigned int osStd48m, unsigned int osStd150m ) = 0;
+};
+
+class SM_CHIP_API ISMChip5472 : public ISMChipBase, public ISMChipMcapPart, public ISMChip5472Part
+{
+
+};
+class SM_CHIP_API ISMChip5562Part
+{
+public:
+	virtual unsigned int GetDifferMax(unsigned short frames, short* sData, unsigned short len ) = 0;
+	virtual unsigned int BurnBootBin( unsigned int bootLen, unsigned int bootSVN = 0, unsigned short oscTrim = 0 ) = 0;
+	virtual unsigned int GetOSCTrim( unsigned char* trim32k, unsigned char* trim48m, unsigned char* trim150m, unsigned char trim_mode, unsigned int osStd32k, unsigned int osStd48m, unsigned int osStd150m ) = 0;
+	virtual unsigned int GetOSCTrimN( unsigned char* trim32k, unsigned char* trim48m, unsigned char* trim150m, unsigned char trim_mode, unsigned int osStd32k, unsigned int osStd48m, unsigned int osStd150m,unsigned int osStd48mNo2,unsigned int osStd48mNo3,unsigned int osStd48mNo4,unsigned int osStd48mNo5 ) = 0;
+	virtual unsigned int GetCurrent55xx( short (&level)[2][3], unsigned short* activeCurrrent, unsigned short* sleepCurrent, unsigned short* deepCurrent, unsigned short* vbactiveCurrrent, unsigned short* vbsleepCurrent, unsigned short* vbdeepCurrent ) = 0;
+	virtual unsigned int GetNewBootCheckSum( unsigned int* checkSum, unsigned int* omTime, unsigned int* bootloadercheckSum) = 0;
+	virtual unsigned int GetTrimeDosc(fct_osc_trim& fo_trim) = 0;
+	virtual unsigned int GetVtData( unsigned short* sData, unsigned short len ) = 0;
+	virtual unsigned int GetFwData(short* sData, unsigned short len ) = 0;
+};
+class SM_CHIP_API ISMChip5562:public ISMChipBase, public ISMChipMcapPart, public ISMChip5562Part
+{
+
+};
+
+class SM_CHIP_API ISMChip570Part
+{
+public:
+	virtual unsigned int GetDifferMax(unsigned short frames, short* sData, unsigned short len ) = 0;
+	virtual unsigned int BurnBootBin( unsigned int bootLen, unsigned int bootSVN = 0, unsigned short oscTrim = 0 ) = 0;
+	virtual unsigned int GetOSCTrim( unsigned char* trim32k, unsigned char* trim48m, unsigned char* trim150m, unsigned char trim_mode, unsigned int osStd32k, unsigned int osStd48m, unsigned int osStd150m, unsigned int* oscTrimArray) = 0;
+	virtual unsigned int GetOSCTrimN( unsigned char* trim32k, unsigned char* trim48m, unsigned char* trim150m, unsigned char trim_mode, unsigned int osStd32k, unsigned int osStd48m, unsigned int osStd150m,unsigned int osStd48mNo2,unsigned int osStd48mNo3,unsigned int osStd48mNo4,unsigned int osStd48mNo5 ) = 0;
+	virtual unsigned int GetCurrent55xx( short (&level)[2][3], unsigned short* activeCurrrent, unsigned short* sleepCurrent, unsigned short* deepCurrent, unsigned short* vbactiveCurrrent, unsigned short* vbsleepCurrent, unsigned short* vbdeepCurrent ) = 0;
+	virtual unsigned int GetNewBootCheckSum( unsigned int* checkSum, unsigned int* omTime, unsigned int* bootloadercheckSum) = 0;
+	virtual unsigned int GetTrimeDosc(fct_osc_trim& fo_trim) = 0;
+	virtual unsigned int GetVtData( unsigned short* sData, unsigned short len ) = 0;
+	virtual unsigned int GetFwData(short* sData, unsigned short len ) = 0;
+};
+class SM_CHIP_API ISMChip570:public ISMChipBase, public ISMChipMcapPart, public ISMChip570Part
+{
+
+};
+
+class SM_CHIP_API ISMChip7126Part
+{
+public:
+	virtual unsigned int GetDifferMax(unsigned short frames, short* sData, unsigned short len ) = 0;
+	virtual unsigned int BurnBootBin( unsigned int bootLen, unsigned int bootSVN = 0, unsigned short oscTrim = 0 ) = 0;
+	virtual unsigned int GetOSCTrim( unsigned char* trim32k, unsigned char* trim48m, unsigned char* trim150m, unsigned char trim_mode, unsigned int osStd32k, unsigned int osStd48m, unsigned int osStd150m ) = 0;
+	virtual unsigned int GetOSCTrimN( unsigned char* trim32k, unsigned char* trim48m, unsigned char* trim150m, unsigned char trim_mode, unsigned int osStd32k, unsigned int osStd48m, unsigned int osStd150m,unsigned int osStd48mNo2,unsigned int osStd48mNo3,unsigned int osStd48mNo4,unsigned int osStd48mNo5 ) = 0;
+	virtual unsigned int GetCurrent55xx( short (&level)[2][3], unsigned short* activeCurrrent, unsigned short* sleepCurrent, unsigned short* deepCurrent, unsigned short* vbactiveCurrrent, unsigned short* vbsleepCurrent, unsigned short* vbdeepCurrent ) = 0;
+	virtual unsigned int GetNewBootCheckSum( unsigned int* checkSum, unsigned int* omTime, unsigned int* bootloadercheckSum) = 0;
+	virtual unsigned int GetTrimeDosc(fct_osc_trim& fo_trim) = 0;
+	virtual unsigned int GetVtData( unsigned short* sData, unsigned short len ) = 0;
+	virtual unsigned int GetFwData(short* sData, unsigned short len ) = 0;
+};
+class SM_CHIP_API ISMChip7126:public ISMChipBase, public ISMChipMcapPart, public ISMChip7126Part
+{
+
+};
+
+class SM_CHIP_API ISMChip810Part
+{
+public:
+	virtual unsigned int GetDifferMax(unsigned short frames, short* sData, unsigned short len ) = 0;
+	virtual unsigned int BurnBootBin( unsigned int bootLen, unsigned int bootSVN = 0, unsigned short oscTrim = 0 ) = 0;
+	virtual unsigned int GetOSCTrim( unsigned char* trim32k, unsigned char* trim48m, unsigned char* trim150m, unsigned char trim_mode, unsigned int osStd32k, unsigned int osStd48m, unsigned int osStd150m ) = 0;
+	virtual unsigned int RockerCalibR( unsigned short offset1, unsigned short offset2, unsigned short offset3,  unsigned short offset4, unsigned short csum_ref1, unsigned short csum_ref2, unsigned char* cfg, unsigned short len) = 0;
+	virtual unsigned int GetCurrent810( short (&level)[2][3], unsigned short* activeCurrrent, unsigned short* sleepCurrent, unsigned short* deepCurrent, unsigned short* vbactiveCurrrent, unsigned short* vbsleepCurrent, unsigned short* vbdeepCurrent ) = 0;
+};
+class SM_CHIP_API ISMChip810:public ISMChipBase, public ISMChipMcapPart, public ISMChip810Part
+{
+
+};
+
+class SM_CHIP_API ISMChip8006Part
+{
+public:
+	virtual unsigned int GetDifferMax(unsigned short frames, short* sData, unsigned short len ) = 0;
+	virtual unsigned int BurnBootBin( unsigned int bootLen, unsigned int bootSVN = 0, unsigned short oscTrim = 0 ) = 0;
+	virtual unsigned int GetOSCTrim( unsigned char* trim32k, unsigned char* trim64m,unsigned int osStd32k, unsigned int osStd64m ) = 0;
+	virtual unsigned int GetCurrent8006( short (&level)[2][3], unsigned short* activeCurrrent, unsigned short* sleepCurrent, unsigned short* deepCurrent, unsigned short* vbactiveCurrrent, unsigned short* vbsleepCurrent, unsigned short* vbdeepCurrent ) = 0;
+};
+class SM_CHIP_API ISMChip8006:public ISMChipBase, public ISMChipMcapPart, public ISMChip8006Part
+{
+
+};
+
+class SM_CHIP_API ISMChip7449Part
+{
+public:
+	virtual unsigned int GetNewBootVersion( unsigned short* bootVer,unsigned int addr ) = 0;
+	virtual unsigned int GetDifferMax(unsigned short frames, short* sData, unsigned short len ) = 0;
+	virtual unsigned int BurnBootBin( unsigned int bootLen, unsigned int bootSVN = 0, unsigned short oscTrim = 0 ) = 0;
+	virtual unsigned int GetOSCTrim( unsigned char* trim32k, unsigned char* trim48m, unsigned char* trim150m, unsigned char trim_mode, unsigned int osStd32k, unsigned int osStd48m, unsigned int osStd150m ) = 0;
+};
+class SM_CHIP_API ISMChip7449 : public ISMChipBase, public ISMChipMcapPart, public ISMChip7449Part
+{
+};
+
+class SM_CHIP_API ISMChip5816Part
+{
+public:
+	virtual unsigned int BurnBootBin( unsigned int bootLen, UINT64 VidPid = 0, unsigned int oscTrim = 0, long long icID = 0 ) = 0;
+	virtual unsigned int GetOSCTrim( unsigned char* trim32k, unsigned char* trim24m, unsigned int osStd32k, unsigned int osStd24m ) = 0;
+};
+class SM_CHIP_API ISMChip5816 : public ISMChipBase, public ISMChipMcapPart, public ISMChip5816Part
+{
+};
+
+class SM_CHIP_API ISMChipWrapper
+{
+public:
+	virtual ~ISMChipWrapper(){}
+	virtual unsigned int SetICTypeAndCreateComponent( USHORT uIcType )     = 0;
+	virtual inline ISMChipBase*& GetChipBaseInterface()                                             = 0;
+	virtual inline ICommBase*& GetCommBaseInterface()                                               = 0;
+	virtual inline unsigned char GetIDMark()                                                        = 0;
+};
+
+class SM_CHIP_API ISMChipNodeContainer
+{
+public:
+	virtual int Count( unsigned char type = 0 ) = 0;
+	virtual LPCTSTR GetIcName( unsigned short IcCode ) = 0;
+	virtual LPCTSTR GetIcNameByIndex( int index, unsigned char type = 0 ) = 0;
+	virtual unsigned short GetIcCode( LPCTSTR strIcName ) = 0;
+	virtual unsigned short GetIcCodeByIndex( int index, unsigned char type = 0 ) = 0; 
+	//virtual LPCTSTR GetIcPrambootName( unsigned short IcCode ) = 0;
+	virtual unsigned char GetChipFamily( unsigned short icID ) = 0;
+	virtual unsigned char GetSubType( LPCTSTR strIcName ) = 0;
+	virtual unsigned char GetSubType( unsigned short icID ) = 0;
+	virtual BOOL IsSameKind( const unsigned short compared, const unsigned short compareto ) = 0;
+};
+SM_CHIP_CSTYLE_API ISMChipNodeContainer* GetContainerInterface();
+SM_CHIP_CSTYLE_API unsigned char  HalLinkAndDoInit( LinkParam& param );
+SM_CHIP_CSTYLE_API unsigned char  HalDetachAndClean( LinkParam& param );
+SM_CHIP_CSTYLE_API unsigned char  UnRegisterNotification(  );
+SM_CHIP_CSTYLE_API unsigned char  RegisterNotification( HWND wnd, REFIID guid );
+SM_CHIP_CSTYLE_API bool HaveDeviceAttached( int deviceNum = 0 );
+SM_CHIP_CSTYLE_API int NumOfDeviceAttached();
+SM_CHIP_CSTYLE_API LPCTSTR GetErrorMessage( unsigned int errorCode );
+SM_CHIP_CSTYLE_API LPCTSTR GetProgramErrorMessage( unsigned char errorCode );
+SM_CHIP_CSTYLE_API void  GetDeviceNameInfo(unsigned char Index, void *pName);
+//SM_CHIP_CSTYLE_API void SysDelay( unsigned int DelayMS );
+
+typedef void (*SysDelayFunctionPoint)( unsigned int DelayMS );
+SM_CHIP_CSTYLE_API extern SysDelayFunctionPoint SysDelay;
+SM_CHIP_CSTYLE_API void SetSimulateGate( BOOL bSimulateGateOpen = FALSE );
+SM_CHIP_CSTYLE_API BOOL GetSimulateGate();
+
+
+#ifdef _1_MULTIPLE_N_ 
+SM_CHIP_CSTYLE_API ISMChipWrapper* GetChipWrapperAddr( int iDevice );
+#define SM_ChipBase(x)       (GetChipWrapperAddr((x))->GetChipBaseInterface())
+#define SM_CommBase(x)       (GetChipWrapperAddr((x))->GetCommBaseInterface())
+//#define FT_ICProgram(x)     (GetChipWrapperAddr((x))->GetProgramInterface())
+#else
+SM_CHIP_CSTYLE_API ISMChipWrapper* GetChipWrapperAddr();
+SM_CHIP_CSTYLE_API extern ISMChipBase*& chipbase;
+#define SM_ChipBase       chipbase
+SM_CHIP_CSTYLE_API extern ICommBase*& commbase;
+#define SM_CommBase       commbase
+// SM_CHIP_CSTYLE_API extern IICProgram*& icprograme;
+// #define FT_ICProgram     icprograme
+#endif
+
+//DEFINE_GUID(IID_SMUSBGUID,0x28d78fad, 0x5a12, 0x11D1, 0xae, 0x5b, 0x00, 0x00, 0xf8, 0x03, 0xa8, 0xc2);

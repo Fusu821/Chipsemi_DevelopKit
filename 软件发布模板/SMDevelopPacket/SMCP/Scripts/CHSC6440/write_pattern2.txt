@@ -1,0 +1,1 @@
+write_pattern(5aa5)

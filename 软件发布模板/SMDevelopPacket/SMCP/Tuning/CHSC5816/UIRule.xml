@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="GB2312"?><!DOCTYPE ControlWnd []>
+<ControlWnd>
+	<UIRules>
+		<Para Name="stAsmNormal_ucK1Delay" Min="50" Max="200" IsNullable="false" ErrMsg="请输入50-200的整数"/>
+		<Para Name="stAsmNormal_ucK2Delay" Min="0" Max="5" IsNullable="false" ErrMsg="0-5的整数"/>
+		<Para Name="stAsmNormal_ucCf" Min="0" Max="1"/>
+	</UIRules>
+	<UISource>
+		<Image Name="ImageBack" Source="pic.png"/>
+		<Image Name="TPImageBack" Source="TP1.png"/>
+	</UISource>
+</ControlWnd>

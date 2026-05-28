@@ -1,0 +1,24 @@
+ChipSemi_Tester_V8.8.8_20260318
+WorkStation: F01   ProjectName: 0508
+
+Time Stamp:	2026-05-09 21:12:43 539
+Mtk Version = 0xd1103
+
+Time Stamp:	2026-05-09 21:12:44 033
+
+------------------------------Current Test------------------------------
+
+avdd_active = 5887(uA), avdd_idle = 1451(uA)£¬  avdd_sleep = 18(uA)
+
+
+//Current Test is Pass
+
+Time Stamp:	2026-05-09 21:12:45 262
+
+------------------------------Project Test------------------------------
+
+
+//Project Test is Pass
+
+
+//Final result is Pass

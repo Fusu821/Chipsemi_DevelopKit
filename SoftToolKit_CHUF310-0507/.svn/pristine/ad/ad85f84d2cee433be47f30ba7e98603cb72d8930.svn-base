@@ -1,0 +1,259 @@
+﻿<UserControl x:Class="SEMIDevelopKit.Src.WinSub.ToolsFrame"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:avalonDock="http://schemas.xceed.com/wpf/xaml/avalondock"
+             xmlns:wpfCtrl="clr-namespace:SEMIDevelopKit.Src.Util"
+             xmlns:winSub="clr-namespace:SEMIDevelopKit.Src.WinSub"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"     
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="800">
+
+    <avalonDock:DockingManager  Grid.Row="1" x:Name="dockManager"  AllowMixedOrientation="True">
+        <avalonDock:DockingManager.Theme>
+            <avalonDock:VS2010Theme></avalonDock:VS2010Theme>
+        </avalonDock:DockingManager.Theme>
+
+        <avalonDock:LayoutRoot>
+            <avalonDock:LayoutPanel Orientation="Horizontal">
+                <avalonDock:LayoutAnchorablePaneGroup>
+                    <avalonDock:LayoutAnchorablePane x:Name="panelLeft">
+                        <avalonDock:LayoutAnchorable Title="TP-Burn">
+                            <Grid Background="#AAAAAA">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition></RowDefinition>
+                                    <RowDefinition Height="200"></RowDefinition>
+                                    <!--RowDefinition Height="200"></RowDefinition-->
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition></RowDefinition>
+                                        <RowDefinition Height="50"></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                        <ColumnDefinition Width="100"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <ListBox x:Name="listTpBurn" Grid.Row="0" Grid.Column="0" Background="#AAAAAA"  ItemsSource="{Binding ListBurns}" SelectedIndex="{Binding SelectedBurn}">
+                                    </ListBox>
+                                    <GroupBox Header="Custom" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2">
+                                        <StackPanel>
+                                            <Button Content="Add" Margin="5" >
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="Click">
+                                                        <i:InvokeCommandAction Command="{Binding ctrlClickCommand}" CommandParameter="tool-add-click"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                            </Button>
+                                            <Button Content="Up" Margin="5" >
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="Click">
+                                                        <i:InvokeCommandAction Command="{Binding ctrlClickCommand}" CommandParameter="tool-up-click"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                            </Button>
+                                            <Button Content="Down" Margin="5" >
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="Click">
+                                                        <i:InvokeCommandAction Command="{Binding ctrlClickCommand}" CommandParameter="tool-down-click"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                            </Button>
+                                            <Button Content="Delete" Margin="5" >
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="Click">
+                                                        <i:InvokeCommandAction Command="{Binding ctrlClickCommand}" CommandParameter="tool-delete-click"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                            </Button>
+                                        </StackPanel>
+                                    </GroupBox>
+                                    <WrapPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+
+                                        <wpfCtrl:WpfToggleButton Width="130" Height="40" IsChecked="{Binding ExecuteChecked}" Margin="0,0,5,0">
+                                            <ToggleButton.Style>
+                                                <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource WpfToggleButtonStyle}">
+                                                    <Setter Property="Content" Value="Execute"></Setter>
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsChecked" Value="True">
+                                                            <Setter Property="Content" Value="Execute"></Setter>
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ToggleButton.Style>
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="Checked">
+                                                    <i:InvokeCommandAction Command="{Binding ctrlClickCommand}" CommandParameter="burn-execute-click"/>
+                                                </i:EventTrigger>
+                                                <i:EventTrigger EventName="Unchecked">
+                                                    <i:InvokeCommandAction Command="{Binding ctrlClickCommand}" CommandParameter="stop-execute-click"/>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </wpfCtrl:WpfToggleButton>
+
+                                        <wpfCtrl:WpfToggleButton Width="130" Height="40" IsChecked="{Binding LoopChecked}" Margin="5,0,0,0">
+                                            <ToggleButton.Style>
+                                                <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource WpfToggleButtonStyle}">
+                                                    <Setter Property="Content" Value="Loop"></Setter>
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsChecked" Value="True">
+                                                            <Setter Property="Content" Value="Stop"></Setter>
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ToggleButton.Style>
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="Checked">
+                                                    <i:InvokeCommandAction Command="{Binding ctrlClickCommand}" CommandParameter="loop-execute-click"/>
+                                                </i:EventTrigger>
+                                                <i:EventTrigger EventName="Unchecked">
+                                                    <i:InvokeCommandAction Command="{Binding ctrlClickCommand}" CommandParameter="loop-stop-click"/>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </wpfCtrl:WpfToggleButton>
+                                    </WrapPanel>
+                                </Grid>
+                                <GridSplitter Grid.Row="0" Height="4" HorizontalAlignment="Stretch" Grid.ColumnSpan="2" VerticalAlignment="Bottom"></GridSplitter>
+                                <ListBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding ListBurnResult, Mode=TwoWay}"></ListBox>
+                            </Grid>
+                        </avalonDock:LayoutAnchorable>
+                        <avalonDock:LayoutAnchorable Title="MTK">
+                            <Grid Background="#AAAAAA">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="35"></RowDefinition>
+                                    <RowDefinition Height="35"></RowDefinition>
+                                    <RowDefinition></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="100"></ColumnDefinition>
+                                    <ColumnDefinition></ColumnDefinition>
+                                    <ColumnDefinition Width="150"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                     
+                                <Button Content="MtkBin" Margin="5" Grid.Column="0">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="Click">
+                                            <i:InvokeCommandAction Command="{Binding ctrlClickCommand}" CommandParameter="mtk-bin-click"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </Button>
+                                <TextBox Text="{Binding MtkTextBinPath}" Margin="5" Grid.Column="1"></TextBox>
+                                <Button Content="Download" Margin="5" Grid.Column="2">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="Click">
+                                            <i:InvokeCommandAction Command="{Binding ctrlClickCommand}" CommandParameter="mtk-download-click"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </Button>
+                                <Label  Margin="5" Grid.Row="1" Grid.Column="0" FlowDirection="LeftToRight" HorizontalContentAlignment="Center" VerticalAlignment="Center">READ SIZE</Label>
+                                <TextBox  Margin="5" Grid.Row="1" Grid.Column="1" Text="{Binding MtkBinSize, Converter={StaticResource HexValueStringConverter}}" ></TextBox>
+                                <Button Content="MtkBinRead" Margin="5" Grid.Row="1" Grid.Column="2">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="Click">
+                                            <i:InvokeCommandAction Command="{Binding ctrlClickCommand}" CommandParameter="mtk-bin-read-click"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </Button>
+                            </Grid>
+                        </avalonDock:LayoutAnchorable>
+                       <!-- <avalonDock:LayoutAnchorable Title="Protocal">
+                            <Grid Background="#AAAAAA" AllowDrop="True" Drop="ParserView_Drop" DragEnter="ParserView_DragEnter">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition></RowDefinition>
+                                    <RowDefinition Height="120"></RowDefinition>
+                                    <RowDefinition Height="25"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <RichTextBox VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto">
+                                    <FlowDocument>
+                                        <Paragraph>
+                                            <Run AllowDrop="True" Text="{Binding ProtocalParsed}"/>
+                                        </Paragraph>
+                                    </FlowDocument>
+                                </RichTextBox>           
+                                
+                                <GroupBox Grid.Row="1" Header="ProtocalType">
+                                    <UniformGrid Rows="3" Columns="2">
+                                        <RadioButton Content="I2C" IsChecked="{Binding CurSelTranslate, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static winSub:EnumTranslateType.Translate_PackToIIC}}"></RadioButton>
+                                        <RadioButton Content="SPI" IsChecked="{Binding CurSelTranslate, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static winSub:EnumTranslateType.Translate_PackToSPI}}"></RadioButton>
+
+                                        <RadioButton Content="Hex->Txt" IsChecked="{Binding CurSelTranslate, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static winSub:EnumTranslateType.Translate_HexToTxt}}"></RadioButton>
+                                        <RadioButton Content="Txt->Hex" IsChecked="{Binding CurSelTranslate, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static winSub:EnumTranslateType.Translate_TxtToHex}}"></RadioButton>
+
+                                        <RadioButton Content="SPI(s)" IsChecked="{Binding CurSelTranslate, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static winSub:EnumTranslateType.Translate_PackToSPIx}}"></RadioButton>
+                                    </UniformGrid>
+                                </GroupBox>
+
+                                <UniformGrid Grid.Row="2" Rows="1" Columns="4">
+                                    <CheckBox Content="PacketTime" Margin="20, 2" IsChecked="{Binding PacketTime}"></CheckBox>
+                                    <TextBox Text="{Binding Pattern}" Margin="5, 2"></TextBox>
+                                    <Button Content="ShotCuts" Background="Transparent" Margin="5, 2" Click="ShortCuts_Click"></Button>
+                                    <Button Content="Pattern" Background="Transparent" Margin="5, 2" Click="Pattern_Click"></Button>
+                                </UniformGrid>
+
+                            </Grid>
+                        </avalonDock:LayoutAnchorable>
+                        <avalonDock:LayoutAnchorable Title="CheckSum">
+                            <Grid Background="#AAAAAA">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition></RowDefinition>
+                                    <RowDefinition Height="120"></RowDefinition>
+                                    <RowDefinition Height="25"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Text="{Binding CheckSumDataInput, Mode=TwoWay}" AcceptsReturn="True" TextWrapping="Wrap"></TextBox>
+
+                                <GroupBox Grid.Row="1" Header="CheckType">
+                                    <UniformGrid Rows="3" Columns="4">
+                                        <RadioButton Content="CheckSumU816" IsChecked="{Binding CurSelCheckSum, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static winSub:CheckSumType.CheckSumU8}}"></RadioButton>
+                                        <RadioButton Content="CheckSumU16" IsChecked="{Binding CurSelCheckSum, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static winSub:CheckSumType.CheckSumU16}}"></RadioButton>
+                                        <RadioButton Content="CheckSumEx" IsChecked="{Binding CurSelCheckSum, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static winSub:CheckSumType.CheckSumEx}}"></RadioButton>
+                                        <RadioButton Content="CheckSumU8" IsChecked="{Binding CurSelCheckSum, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static winSub:CheckSumType.CheckSumU8}}"></RadioButton>
+                                    </UniformGrid>
+                                </GroupBox>
+
+                                <UniformGrid Grid.Row="2" Rows="1" Columns="4">
+                                    <TextBox Text="{Binding CalcCheckSum, StringFormat={}{0:X4}}" Margin="5, 2" Width="120"></TextBox>
+                                    <Control></Control>
+                                    <Button Content="Calc" Background="Transparent" Margin="5, 2" Click="CheckSumCalc_Click"></Button>
+                                </UniformGrid>
+                            </Grid>
+                        </avalonDock:LayoutAnchorable>-->
+                        <avalonDock:LayoutAnchorable Title="Driver">
+                            <Grid Background="#AAAAAA" AllowDrop="True" Drop="AssistView_Drop" DragEnter="ParserView_DragEnter">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition></RowDefinition>
+                                    <RowDefinition Height="145"></RowDefinition>
+                                    <RowDefinition Height="30"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Text="{Binding DrvAssistTips, Mode=TwoWay}" AcceptsReturn="True" TextWrapping="Wrap"></TextBox>
+                                <GroupBox Grid.Row="1" Header="DriverAssist">
+                                    <UniformGrid Rows="3" Columns="3">
+                                        <RadioButton Content="Make Update Packet" IsChecked="{Binding CurSelAssist, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static winSub:DrvAssistType.MakeUDP}}"></RadioButton>
+                                        <!--RadioButton Content="Driver CleanUp" IsChecked="{Binding CurSelAssist, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static winSub:DrvAssistType.CleanUp}}"></RadioButton-->
+                                    </UniformGrid>
+                                </GroupBox>
+                                <UniformGrid Grid.Row="2" Rows="1" Columns="5">
+                                    <CheckBox Content="burn" IsChecked="{Binding BurnCheck}" Margin="5,0"></CheckBox>
+                                    <CheckBox Content="short" IsChecked="{Binding ShortCheck}" Margin="5,0"></CheckBox>
+                                    <CheckBox Content="expand pid-vid" IsChecked="{Binding ExpandPid_Vid}" Margin="5,0"></CheckBox>
+                                    <CheckBox Content="vendor separate" IsChecked="{Binding MultiVendorCheck}" Margin="5,0"></CheckBox>
+                                    <Button Content="Gen Update Packet" Background="Transparent" Click="AssistGenPacket_Click"></Button>
+                                </UniformGrid>
+                            </Grid>
+                        </avalonDock:LayoutAnchorable>
+                    </avalonDock:LayoutAnchorablePane>
+                </avalonDock:LayoutAnchorablePaneGroup>
+            </avalonDock:LayoutPanel>
+        </avalonDock:LayoutRoot>
+    </avalonDock:DockingManager>
+</UserControl>

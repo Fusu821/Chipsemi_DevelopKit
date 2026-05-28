@@ -1,0 +1,94 @@
+2022-06-29
+版本： ChipSemi_Developkit_V1.0.0_20220629
+修改点：
+1, CHM9500调试工具初始版本发布
+2，构建好软件基础框架， 打通上位机到下位机之间的通信
+3，完成开环行程，开环震荡，闭环行程，闭环震荡，调试PID等基本功能
+4，完成MTK版IAP升级功能
+5，完成write pram， read pram功能
+6，完成CHM9500初版固件
+
+2022-07-16
+版本： ChipSemi_Developkit_V1.1.0_20220716
+修改点：
+ch950固件程序
+1， 修补在DAC从负值 -> 正值， 电容会巨变的问题
+2， D路低通滤波器系数可配
+3， step跳跃显示， 大跳默认限定在220， 小跳默认限定在40
+4， pid默认参数修改
+
+MTK板：
+1， 新增IIC 1M速度设置， 方便快读抓数据
+2， 配合上位机抓多路数据
+
+Dev上位机
+1， 新增Function选项， 可任意选择 X- Y轴数据进行分析
+2， OSC采样， 可选定diff， 或diff + c0 + c1 + sum的组合
+4， 新增debug功能， 方便定位出问题时的数据特征以及仿真
+3， FRA功能更新
+
+2022-08-03
+版本：ChipSemi_Developkit_V1.1.2_20220803
+修改点：
+1， 添加对新激光测距仪的支持
+2， 更新优化FRA功能
+支持对 1-1KHZ 范围内FRA的测量， 1K之外由于条件限制， 结果仅供参考
+
+2022-08-03
+版本：ChipSemi_Developkit_V1.1.3_20220803
+修改点：
+1， 添加flash读写操作， flash烧录完成后， 理论上就可以直接查看PID效果了
+（代码修改比较多， 大家使用时， 先升级MTK板）
+
+2022-08-29
+版本：ChipSemi_Developkit_V1.1.4_20220829
+版本：ChipSemi_Tester_V1.0.0_20220829
+修改点：
+1， 添加flash烧录功能， 开环 + 闭环测试均在firmware code的环境下完成
+2， 发布产测软件1.0版本， 实现常规烧录 + project版本检测 + osctrim功能， 配合激光测距仪， 完成calibrate + oscillation测试
+3， MTK板配合修改
+
+2022-09-13
+版本：ChipSemi_Developkit_V1.1.6_20220913
+修改点：
+1， 优化FAR功能
+
+支持四种模式下的FRA测量：
+1， motor  马达本身的fra
+2， controller  pid控制部分的fra
+3， openloop开环对应的fra  --  servo on
+4， closeloop
+因为硬件资源限制， 测量时最好使用 32点， 原始数据测量， 测量范围限制在1K以内
+
+2022-10-20
+ChipSemi_Developkit_V1.2.0_20221020
+ChipSemi_Tester_V1.0.2_20221020
+修改点：
+1， Test 增加 Hdrv_offset校准测试（基于diff）
+2， PID算法优化
+
+使用方法：
+1， 先跑量产工具
+2， 再做PID调试
+
+2022-10-31
+ChipSemi_Developkit_V1.2.1_20221031
+ChipSemi_Tester_V1.0.3_20221031
+修改点：
+1， PID参数中D路从 65 - > 75， 让FRA更容易通过
+2， 量产测试软件新增 Current Test与IO Voltage Test， 用于测量IC的某些微损伤
+3， 更新技术支持文档
+
+2022-11-12
+ChipSemi_Developkit_V1.2.2_20221112
+ChipSemi_Tester_V1.0.4_20221112
+修改点：
+1， 增加2字节地址模式， IC上电默认运行在2字节模式下， 调试测试都手动切换到模式0
+2， cdiff -> 8192 * cdiff/csum作为信号量， 进行pid运算
+3， mtk板升级到1.4， 对应的软件升级到Stm32_MtkAppV3.0-20221112， 注意bootloader也有所修改， 请知悉~
+4， 配套的工具链修改（开发工具和量产工具）
+
+这一次修改的地方比较多， 请大家收到软件后多注意测试， 比较！
+注意点： 
+1， 新版的软件请搭配最新的MTK板 + 固件进行测试， 新旧版本之间已经混用会出现未知的问题
+2， 使用流程还是先跑量产再跑开发工具

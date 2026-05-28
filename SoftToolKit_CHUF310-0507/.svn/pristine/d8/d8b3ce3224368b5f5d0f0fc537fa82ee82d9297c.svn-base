@@ -1,0 +1,29 @@
+﻿<UserControl xmlns:my1="clr-namespace:LibraryTools"  xmlns:my="clr-namespace:SEMI.Util;assembly=SEMI.Util"  x:Class="LibraryTools.ToolRawData"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="560" d:DesignWidth="1100">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="25"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  Grid.Row="0">
+            <!--<Image Source="{Binding ModelToolRawData.Image, UpdateSourceTrigger=PropertyChanged}" DataContext="{Binding}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="{Binding ModelToolRawData.DisplayWidth}" Height="{Binding ModelToolRawData.DisplayHeight}"/>-->
+            <my1:WpfRawDataView x:Name="dispRawData" Reference="{Binding ModelToolRawData.ReferenceData, Mode=TwoWay}" Width="500" Height="600" />
+        </ScrollViewer>
+        <UniformGrid Grid.Row="1" Rows="1" Columns="8">
+            <Label  Content="行:" HorizontalContentAlignment="Right"></Label>
+            <TextBox ></TextBox>
+            <Label  Content="列:" HorizontalContentAlignment="Right"></Label>
+            <TextBox ></TextBox>
+            <Button Content="设置" Command="{Binding ModelToolRawData.ctrlClickCommand}" CommandParameter="Set" Background="Transparent" Margin="5, 2" ></Button>
+            <Button Content="演示" Command="{Binding ModelToolRawData.ctrlClickCommand}" CommandParameter="Start" Background="Transparent" Margin="5, 2" ></Button>
+        </UniformGrid>
+    </Grid>
+</UserControl>

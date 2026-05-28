@@ -1,0 +1,70 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:viewModel="clr-namespace:SEMIDevelopKit.Src.WinSub"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+			<RowDefinition Height="205"></RowDefinition>
+			<RowDefinition Height="125"></RowDefinition>
+			<RowDefinition Height="85"></RowDefinition>
+        </Grid.RowDefinitions>
+		
+		<GroupBox Header="15：补点、滤点、抖动抑制" Grid.Row="0">
+            <UniformGrid Rows="4">    
+				<UniformGrid Columns="16">
+					<Label Content="普通模式 补点、滤点帧数" Grid.Column="0" HorizontalAlignment="Right" Margin="5"></Label>
+					<TextBox Margin="5" Grid.Column="1" viewModel:TuningItem.ItemName="confirmTime"></TextBox>
+					<Label Content="[7:4]:抬起补帧；[3:0]:触摸滤帧" Grid.Column="2" HorizontalAlignment="Left" Margin="5"></Label>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+					<Label Content="手套模式 补点、滤点帧数" Grid.Column="0" HorizontalAlignment="Right" Margin="5"></Label>
+					<TextBox Margin="5" Grid.Column="1" viewModel:TuningItem.ItemName="GloveConfirmTime"></TextBox>
+					<Label Content="[7:4]:抬起补帧；[3:0]:触摸滤帧" Grid.Column="2" HorizontalAlignment="Left" Margin="5"></Label>
+				</UniformGrid>
+				<UniformGrid Columns="16">
+					<Label Content="点击抖动 抑制距离" Grid.Column="0" HorizontalAlignment="Right" Margin="5"></Label>
+					<TextBox Margin="5" Grid.Column="1" viewModel:TuningItem.ItemName="jitter_dis"></TextBox>
+					<Label Content="点击抖动 单位压力值" Grid.Column="0" HorizontalAlignment="Right" Margin="5"></Label>
+					<TextBox Margin="5" Grid.Column="1" viewModel:TuningItem.ItemName="jitter_weight"></TextBox>
+				</UniformGrid>
+				<UniformGrid Columns="16">
+					<Label Content="划线抖动抑制比例 (常规)" Grid.Column="0" HorizontalAlignment="Right" Margin="5"></Label>
+					<TextBox Margin="5" Grid.Column="1" viewModel:TuningItem.ItemName="jitterLineRatio"></TextBox>
+					<Label Content="划线抖动抑制比例 (重压)" Grid.Column="0" HorizontalAlignment="Right" Margin="5"></Label>
+					<TextBox Margin="5" Grid.Column="1" viewModel:TuningItem.ItemName="JitterLineHpRatio"></TextBox>
+				</UniformGrid>
+			</UniformGrid>
+		</GroupBox>
+		
+		<GroupBox Header="16.1：Palm 大面积" Grid.Row="1">
+            <UniformGrid Rows="2">    
+				<UniformGrid Columns="16">
+                <Label Content="总触摸节点比例" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="palm_ratio"></TextBox>
+				<Label Content="最小触摸节点数" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="palm_thd_frame"></TextBox>				
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+                <Label Content="最小连续帧退出、进入Palm" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="PalmConfirmNum"></TextBox>	
+				<Label Content="[7:4]:退出; [3:0]:进入" Grid.Column="2" HorizontalAlignment="Left" Margin="5"></Label>				
+				</UniformGrid>
+			</UniformGrid>
+		</GroupBox>
+		
+		<GroupBox Header="16.2：温漂阈值比例" Grid.Row="2">
+            <UniformGrid Rows="1">    
+				<UniformGrid Columns="16">
+                <Label Content="温漂阈值比例" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="TempDiffThdRatio"></TextBox>		
+				<Label Content="默认33=33%" Grid.Column="2" HorizontalAlignment="Left" Margin="5"></Label>	
+				</UniformGrid>
+			</UniformGrid>
+		</GroupBox>
+    </Grid>
+</UserControl>

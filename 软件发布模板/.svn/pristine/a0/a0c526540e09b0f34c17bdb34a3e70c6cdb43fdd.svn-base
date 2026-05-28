@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resource>
+	<UIDEF>
+		<file name="xml_init" path="xml\init.xml" />
+	</UIDEF>
+	<values>
+		<file name="skin" path="values\skin.xml" />
+	</values>
+	<LAYOUT>
+		<file name="XML_MAINWND" path="xml\dlg_main.xml" />
+		<file name="page_single" path="xml\page_single.xml" />
+		<file name="page_multiple" path="xml\page_multiple.xml" />
+		<file name="multi_sub" path="xml\page_multi_sub.xml" />
+	</LAYOUT>
+	<smenu>
+		<file name="menu_mode" path="menu\menu_mode.xml" />
+	</smenu>
+	<ICON>
+	   <file name="ICON_LOGO" path="image\img_logo.ico" />
+	</ICON>
+</resource>

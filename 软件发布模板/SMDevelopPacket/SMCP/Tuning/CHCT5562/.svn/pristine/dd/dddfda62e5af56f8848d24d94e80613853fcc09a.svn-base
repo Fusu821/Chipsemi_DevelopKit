@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="GB2312"?><!DOCTYPE ControlWnd []>
+<ControlWnd>
+	<!-- 纠错限制 -->
+	<UIRules>	
+
+	</UIRules>
+	
+	<UISource>
+		<Image Name="ImageBack" Source="pic.png"/>
+		<Image Name="TPImageBack" Source="TP1.png"/>
+	</UISource>
+</ControlWnd>

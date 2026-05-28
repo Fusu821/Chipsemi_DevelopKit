@@ -1,0 +1,576 @@
+#pragma once
+#include <Dbt.h>
+#include <helper/SMenuEx.h>
+#include "FrameLayOut/ListAdapter.h"
+#include <../include/core/SMsgLoop.h>
+#include "FrameLayOut/ImageGraph.h"
+#include "FrameLayOut/TestPacker.h"
+#include "FrameLayOut/Misc.h"
+#include <process.h>
+using namespace SOUI;
+
+#define Mode_Singleton_Test  1
+#define Mode_Multiple2_Test  2
+#define Mode_Multiple3_Test  3
+#define Mode_Multiple4_Test  4
+#define Mode_Multiple5_Test  5
+#define Mode_Multiple6_Test  6
+#define Mode_Multiple7_Test  7
+#define Mode_Multiple8_Test  8
+#define SUB_PACKET_CNT (MAX_DEVICE_NUM + 1)
+
+class CMainWnd;
+CMainWnd* pMainWnd = NULL;
+class CMainWnd : public SHostWnd, public SOUI::IMessageFilter
+{
+public:
+	CMainWnd( LPTSTR lpCommand = NULL ) 
+		: SHostWnd(_T("LAYOUT:XML_MAINWND"))//这里定义主界面需要使用的布局文件
+	{
+		pMainWnd = this;
+
+		m_bLayoutInited=FALSE;
+		
+		m_testMode = Mode_Singleton_Test;
+		memset( m_arrayState, 0, sizeof(m_arrayState) );
+		memset( m_testPacket, 0, sizeof(m_testPacket) );
+
+		if( lpCommand ) m_szCommandLine = tstring( lpCommand );
+
+		m_TestProxyAddr = GetTestWapperInterface();
+
+		SHostWnd::GetMsgLoop()->AddMessageFilter( this );
+	}
+
+	~CMainWnd()
+	{
+		ReleaseTestWrapperInterface(m_TestProxyAddr);
+	}
+
+	void OnClose()
+	{
+		SaveTestMode( m_testMode );
+
+		PostMessage(WM_QUIT);
+	}
+	void OnMaximize()
+	{
+		SendMessage(WM_SYSCOMMAND,SC_MAXIMIZE);
+	}
+	void OnRestore()
+	{
+		SendMessage(WM_SYSCOMMAND,SC_RESTORE);
+	}
+	void OnMinimize()
+	{
+		SendMessage(WM_SYSCOMMAND,SC_MINIMIZE);
+	}
+
+	void ForcePaint()
+	{
+		if( m_testMode != Mode_Singleton_Test )
+			return;
+
+		if( m_testPacket[SUB_PACKET_CNT - 1] )
+		{
+			BOOL bInGraph = m_testPacket[SUB_PACKET_CNT - 1]->IsCurrentGraphStep();
+
+			if( ERROR_CODE_OK == m_TestProxyAddr->ForcePaint( m_testPacket[SUB_PACKET_CNT - 1]->GetCurrentDevice(), !bInGraph ) )
+			{
+				m_testPacket[SUB_PACKET_CNT - 1]->SetCurrentStep( !bInGraph );
+			}
+		}
+
+	}
+
+	BOOL PreTranslateMessage(MSG* pMsg)
+	{
+		if( pMsg->message == WM_KEYDOWN )
+		{
+			if( pMsg->wParam == VK_SPACE )
+			{
+				//ForcePaint();
+				return TRUE;
+			}
+		}
+		if( pMsg->message == WM_CHAR )
+		{
+			if( m_testMode == Mode_Singleton_Test && 3 == m_wayToStart )
+			{
+				m_testPacket[4]->OnSnCodeUpdate( (char)pMsg->wParam, m_snCodeLen );
+			}
+		}
+		return FALSE;
+	}
+
+	int LoadTestModel()
+	{
+		 HKEY hKEY;
+		 LPCTSTR data_Set= _T("Software\\SemiChip");
+		 if ( ERROR_SUCCESS == ::RegOpenKeyEx( HKEY_CURRENT_USER, data_Set, 0, KEY_READ, &hKEY ) )
+		 {
+			 TCHAR nValue[10];
+			 DWORD dwSzType = REG_SZ;
+			 DWORD dwSize = sizeof(nValue);
+			 if (::RegQueryValueEx( hKEY, _T("TestMode"), 0, &dwSzType, (LPBYTE)&nValue, &dwSize) == ERROR_SUCCESS )
+			 {
+				 m_testMode = _ttoi( nValue );
+			 }
+			 ::RegCloseKey(hKEY);
+		 }
+
+		 OnMenuCmd( 0, m_testMode, 0 );
+
+		 return m_testMode;
+	}
+
+	void SaveTestMode(int mode)
+	{
+// 		const string KeyPath = "HKEY_CURRENT_USER\\Software\\SemiChip";
+// 		const string keyNode = "TestMode";
+// 		WinRegistry.SetValue(KeyPath, keyNode, mode.ToString());
+
+		HKEY hKey;
+		LPCTSTR data_Set= _T("Software\\SemiChip");
+		if (ERROR_SUCCESS == ::RegOpenKeyEx( HKEY_CURRENT_USER, data_Set,0, KEY_SET_VALUE, &hKey) )
+		{
+			TCHAR szByte[10] = {0};
+			transformat( szByte, _T("%d"), m_testMode );
+			if (ERROR_SUCCESS == ::RegSetValueEx(hKey, _T("TestMode"), 0, REG_SZ, (LPBYTE)szByte, lengthof(szByte)))
+			{
+
+			}
+			::RegCloseKey(hKey);
+		}
+	}
+
+	LRESULT OnDeviceChange( WPARAM wParam, LPARAM lParam )
+	{
+		LRESULT handled = FALSE;
+
+		if( DBT_DEVICEARRIVAL == (UINT32)wParam )
+		{
+			handled = TRUE;
+			DEV_BROADCAST_DEVICEINTERFACE* pDeviceAddr = reinterpret_cast<DEV_BROADCAST_DEVICEINTERFACE*>(lParam);
+			tstring szTmep = pDeviceAddr->dbcc_name;
+
+			LinkParam param;
+			param.LinkType = LINK_TYPE_USB;
+			param.usb.pszLinkName = szTmep.c_str();
+			HalLinkAndDoInit( param );
+
+			GetTestWapperInterface()->SetCommContext(param.usb.devID);
+
+			DeviceStatusUpdate();
+		}
+		else if( DBT_DEVICEREMOVECOMPLETE == (UINT32)wParam )
+		{
+			handled = TRUE;
+			DEV_BROADCAST_DEVICEINTERFACE* pDeviceAddr = reinterpret_cast<DEV_BROADCAST_DEVICEINTERFACE*>(lParam);
+			tstring szTmep = pDeviceAddr->dbcc_name;
+
+			LinkParam param;
+			param.LinkType = LINK_TYPE_USB;
+			param.usb.pszLinkName = szTmep.c_str();
+			HalDetachAndClean( param );
+
+			DeviceStatusUpdate();
+		}
+
+		return handled;
+	}
+
+	void DeviceStatusUpdate()
+	{
+		int iDeviceNum = NumOfDeviceAttached();
+		memset( m_arrayState, 0, sizeof(m_arrayState) );
+
+		for( int index = 0; index < MAX_DEVICE_NUM; index++ )
+		{
+			if( HaveDeviceAttached( index ) ){
+				m_arrayState[index] = 1;
+				m_testPacket[index]->UpdateDeviceStatus( index, TRUE );
+			}
+			else{
+				m_arrayState[index] = 0;
+				m_testPacket[index]->UpdateDeviceStatus( index, FALSE );
+			}
+		}
+
+		TCHAR szTextStc[MAX_PATH] = {0}, szTemp[10] = {0};
+		if( iDeviceNum )
+		{
+			transformat( szTextStc, _T("DeviceNumber = %d |"), iDeviceNum );
+			for( int index = 0; index < MAX_DEVICE_NUM; index++ )
+			{
+                 if( !m_arrayState[index] ) continue;
+				 transformat( szTemp, _T(" MTK%d "), index + 1 );
+				 copytextappend( szTextStc, szTemp );
+
+				 m_testPacket[SUB_PACKET_CNT - 1]->UpdateDeviceStatus( index, TRUE );
+			}
+		}
+		else
+		{
+			transformat( szTextStc, _T("No Device Connected") );
+			m_testPacket[SUB_PACKET_CNT - 1]->UpdateDeviceStatus( 0, FALSE );
+		}
+
+		SStatic* pText = (SStatic*)FindChildByName(_T("devStatus"));
+		if( pText )
+		{
+			pText->SetWindowText( szTextStc );
+		}
+	}
+
+	void OnSize(UINT32 nType, CSize size)
+	{
+		SetMsgHandled(FALSE);
+		if(!m_bLayoutInited) return;
+		if(nType==SIZE_MAXIMIZED)
+		{
+			FindChildByName(_T("btn_restore"))->SetVisible(TRUE);
+			FindChildByName(_T("btn_max"))->SetVisible(FALSE);
+		}else if(nType==SIZE_RESTORED)
+		{
+			FindChildByName(_T("btn_restore"))->SetVisible(FALSE);
+			FindChildByName(_T("btn_max"))->SetVisible(TRUE);
+		}
+
+		for( int index = 0; index < SUB_PACKET_CNT; index++ )
+		{
+			if( !m_testPacket[index] ) continue;
+
+			m_testPacket[index]->OnSize( nType, size );
+		}
+	}
+	void OnBtnMsgBox()
+	{
+		SMessageBox(NULL,_T("this is a message box"),_T("haha"),MB_OK|MB_ICONEXCLAMATION);
+		SMessageBox(NULL,_T("this message box includes two buttons"),_T("haha"),MB_YESNO|MB_ICONQUESTION);
+		SMessageBox(NULL,_T("this message box includes three buttons"),NULL,MB_ABORTRETRYIGNORE);
+	}
+
+	void OnMenuCmd(UINT32 uNotifyCode, int nID, HWND wndCtl)
+	{
+		STabCtrl* sTab =  (STabCtrl*)FindChildByName( _T("tabMode") );
+
+		if( nID <= Mode_Singleton_Test )
+		{
+			sTab->SetCurSel( 0 );
+			
+			
+		}
+		else if( Mode_Multiple2_Test == nID )
+		{
+			sTab->SetCurSel( 1 );
+			m_testPacket[0]->SetAttribute( L"pos", L"[0,0,%50,-0" );
+			m_testPacket[1]->SetAttribute( L"pos", L"[3,0,%100,-0" );
+			m_testPacket[2]->SetAttribute( L"pos", L"[0,0,0,0" );
+			m_testPacket[3]->SetAttribute( L"pos", L"[0,0,0,0" );
+		}
+		else if( Mode_Multiple3_Test == nID )
+		{
+			sTab->SetCurSel( 1 );
+			m_testPacket[0]->SetAttribute( L"pos", L"[0,0,%33,-0" );
+			m_testPacket[1]->SetAttribute( L"pos", L"[3,0,%67,-0" );
+			m_testPacket[2]->SetAttribute( L"pos", L"[3,0,%100,-0" );
+			m_testPacket[3]->SetAttribute( L"pos", L"[0,0,0,0" );
+		}
+		else if( Mode_Multiple4_Test == nID )
+		{
+			sTab->SetCurSel( 1 );
+			m_testPacket[0]->SetAttribute( L"pos", L"[0,0,%25,-0" );
+			m_testPacket[1]->SetAttribute( L"pos", L"[3,0,%50,-0" );
+			m_testPacket[2]->SetAttribute( L"pos", L"[3,0,%75,-0" );
+			m_testPacket[3]->SetAttribute( L"pos", L"[3,0,%100,-0" );
+		}
+
+		m_testMode = nID;
+	}
+
+	void InitListCtrl()
+	{
+		for( int index = 0; index < SUB_PACKET_CNT; index++ )
+		{
+			m_testPacket[index]->InitListCtrl();
+		}
+	}
+
+	void OnBtnMode()
+	{
+		SMenuEx menu;
+		menu.LoadMenu(_T("smenu:menu_mode"));
+		CPoint pt;
+		GetCursorPos(&pt);
+
+		SMenuExItem *pLangMenuItem = menu.GetMenuItem(Mode_Singleton_Test);
+		pLangMenuItem->SetAttribute(L"check",L"1");
+
+		menu.TrackPopupMenu(0, pt.x, pt.y, m_hWnd, GetScale());
+	}
+
+
+	LRESULT OnUpDateContent( UINT32 msg, WPARAM wparam, LPARAM lparam, BOOL& bHandled )
+	{
+		return 0;
+	}
+
+// 	void InitTestContext()
+// 	{
+// 		m_testPacket[4]->InitTestContext(0);
+// 		m_testPacket[0]->InitTestContext(0);
+// 		m_testPacket[1]->InitTestContext(1);
+// 		m_testPacket[2]->InitTestContext(2);
+// 		m_testPacket[3]->InitTestContext(3);
+// 	}
+
+	void ProcessCammandLine( tstring& szCommandLine )
+	{
+		 stuCommandLine.ParseCommandLine( szCommandLine );
+
+		 UINT32 commandMode = COMMAND_LINE_NONE;
+		 if( stuCommandLine.HaveCommnd( _T("-DEBUG") ) )
+			 commandMode |= COMMAND_LINE_DEBUG;
+		 if( stuCommandLine.HaveCommnd( _T("-FAE") ) )
+			 commandMode |= COMMAND_LINE_FAE;
+
+		 m_TestProxyAddr->SetCommandLineParam( commandMode );
+
+		 if( stuCommandLine.HaveCommnd( _T("-RETEST") ) )
+		 {
+			 HANDLE hThread = (HANDLE)_beginthreadex( NULL, 0, ReTestEntry, (LPVOID)this, 0, NULL );
+			 CloseHandle(hThread);
+		 }
+	}
+
+	static unsigned int WINAPI ReTestEntry(LPVOID lp)
+	{
+		CMainWnd *pDlg = (CMainWnd *)lp;
+		CTestPacket* packet = pDlg->m_testPacket[SUB_PACKET_CNT - 1];
+
+		for ( int i=0;i< 60 * 60 * 24;i++ )
+		{	
+			packet->OnBtnStart( NULL );
+			Sleep(3000);
+		}
+		return 0;
+	}
+
+	void InitMainTestView()
+	{
+		unsigned short test_mode = 1;
+		unsigned short test_agent = 0;
+		unsigned char wayToStart = 0, snLen = 0, format = 0,needclickstrt, displaytest;
+		TCHAR szWorkStation[MAX_PATH], szProjectInfo[MAX_PATH], szSoftWare[MAX_PATH],snFilter[MAX_PATH];
+		TCHAR szInfo[MAX_PATH] = {0};
+		if( ERROR_CODE_OK == m_TestProxyAddr->GetViewInfo( szWorkStation, szProjectInfo, szSoftWare,snFilter, wayToStart, snLen, format, test_mode,test_agent,needclickstrt, displaytest ) )
+		{
+			transformat( szInfo, _T("WorkStation:%s  ProjectName:%s"), szWorkStation, szProjectInfo );
+
+			FindChildByName( _T("textVer") )->SetWindowText( szSoftWare );
+			FindChildByName( _T("txtProjInfo") )->SetWindowText( szInfo );
+		}
+
+		m_wayToStart = wayToStart;
+		m_snCodeLen = snLen;
+
+		if(m_wayToStart == 3)
+		{
+			m_testPacket[4]->SetAttributeOnSn();
+		}
+	}
+
+	BOOL OnInitDialog( HWND hWnd, LPARAM lParam )
+	{
+		m_bLayoutInited=TRUE;
+
+		LinkParam param;
+		param.LinkType = LINK_TYPE_USB;
+		param.usb.pszLinkName = NULL;
+
+		HalLinkAndDoInit( param );
+
+		NativeCallBack navCallBack;
+		navCallBack.onOneTestStart = OnTestStart;
+		navCallBack.onListItemChange = OnListItemChange;
+		navCallBack.onProcssBarChanging = OnProcessBarUpdate;
+		navCallBack.onOneTestOver = OnTestOver;
+		navCallBack.onTouchReport = OnTouchDataCome;
+		m_TestProxyAddr->RegistComplexCallBack( navCallBack );
+		m_TestProxyAddr->ReloadXmlConfig();
+
+		m_testPacket[4] = (CTestPacket*)FindChildByName( _T("sigle") );
+		m_testPacket[0] = (CTestPacket*)FindChildByName( _T("muti1") );
+		m_testPacket[1] = (CTestPacket*)FindChildByName( _T("muti2") );
+		m_testPacket[2] = (CTestPacket*)FindChildByName( _T("muti3") );
+		m_testPacket[3] = (CTestPacket*)FindChildByName( _T("muti4") );
+
+		//InitTestContext();
+
+		LoadTestModel();
+
+		
+
+		RegisterNotification( m_hWnd, IID_SMUSBGUID );
+
+		InitListCtrl();
+
+		DeviceStatusUpdate();
+
+		InitMainTestView();
+
+		ProcessCammandLine( m_szCommandLine );
+
+		return 0;
+	}
+
+	static unsigned int WINAPI OnTestStart( int deviceID )
+	{
+		::SendMessage( pMainWnd->m_hWnd, WM_ON_TEST_START, deviceID, 0 );
+
+		return 0;
+	}
+
+	static void WINAPI OnListItemChange( NativeTestItem* item )
+	{
+		::SendMessage( pMainWnd->m_hWnd, WM_ON_LIST_CHANGE, item->ucDevice, (LPARAM)item );
+	}
+
+	static void WINAPI OnProcessBarUpdate( int deviceID, int pos, int max )
+	{
+		::SendMessage( pMainWnd->m_hWnd, WM_ON_PROCESS_UPDATE, deviceID, (max << 16) | pos );
+	}
+
+	static unsigned int WINAPI OnTestOver( int deviceID, unsigned int finalResult )
+	{
+		::SendMessage( pMainWnd->m_hWnd, WM_ON_TEST_OVER, deviceID, finalResult );
+
+		return 0;
+	}
+
+	static void WINAPI OnTouchDataCome( int deviceID )
+	{
+		::SendMessage( pMainWnd->m_hWnd, WM_ON_TOUCH_DATA, deviceID, 0 );
+	}
+
+	LRESULT ActionOnStart( UINT32 msg, WPARAM waprm, LPARAM lparam, BOOL& handled )
+	{
+		int index = (int)waprm;
+		if( index >= 0 && index < SUB_PACKET_CNT )
+		{
+			if( m_testMode == Mode_Singleton_Test ) index = SUB_PACKET_CNT - 1;
+			m_testPacket[index]->ActionOnStart( msg, waprm, lparam, handled );
+		}
+
+		return 0;
+	}
+
+	LRESULT ActionOnOver( UINT32 msg, WPARAM waprm, LPARAM lparam, BOOL& handled )
+	{
+		int index = (int)waprm;
+		if( index >= 0 && index < SUB_PACKET_CNT )
+		{
+			if( m_testMode == Mode_Singleton_Test ) index = SUB_PACKET_CNT - 1;
+			m_testPacket[index]->ActionOnOver( msg, waprm, lparam, handled );
+
+			SStatic* pText = (SStatic*)FindChildByName(_T("stcText"));
+			if( pText )
+			{
+				pText->SetWindowText( GetTestWapperInterface()->GetStatisticText() );
+			}
+		}
+
+		return 0;
+	}
+
+	LRESULT ActionOnListChange( UINT32 msg, WPARAM waprm, LPARAM lparam, BOOL& handled )
+	{
+		int index = (int)waprm;
+		if( index >= 0 && index < SUB_PACKET_CNT )
+		{
+			if( m_testMode == Mode_Singleton_Test ) index = SUB_PACKET_CNT - 1;
+			m_testPacket[index]->ActionOnListChange( msg, waprm, lparam, handled );
+		}
+
+		return 0;
+	}
+
+	LRESULT ActionOnProcess( UINT32 msg, WPARAM waprm, LPARAM lparam, BOOL& handled )
+	{
+		int index = (int)waprm;
+		if( index >= 0 && index < SUB_PACKET_CNT )
+		{
+			if( m_testMode == Mode_Singleton_Test ) index = SUB_PACKET_CNT - 1;
+			m_testPacket[index]->ActionOnProcess( msg, waprm, lparam, handled );
+		}
+
+		return 0;
+	}
+
+	LRESULT ActionOnTouchData( UINT32 msg, WPARAM waprm, LPARAM lparam, BOOL& handled )
+	{
+		int index = (int)waprm;
+		if( index >= 0 && index < SUB_PACKET_CNT )
+		{
+			if( m_testMode == Mode_Singleton_Test ) index = SUB_PACKET_CNT - 1;
+			m_testPacket[index]->ActionOnTouchData( msg, waprm, lparam, handled );
+		}
+
+		return 0;
+	}
+
+	void OnCbxShowResult(EventArgs *e)
+	{
+		EventCBSelChange* eventCbx = (EventCBSelChange*)e;
+		STabCtrl* st = (STabCtrl*)FindChildByName( _T("tabMode") );
+		STabPage* sp = st->GetItem( 1 );
+
+		if( sp )
+		{
+			SRichEdit* pRichEdit = (SRichEdit*)sp->FindChildByName( _T("richText") );
+			pRichEdit->SetWindowText( _T("") );
+			
+			ColorText& text =  GetTestWapperInterface()->GetTestMessage( (int)eventCbx->nCurSel );
+
+			CTestPacket::PrintRichMsg( pRichEdit, text );
+		}
+	}
+
+protected:
+	EVENT_MAP_BEGIN()
+		EVENT_NAME_COMMAND(L"btn_close",OnClose)
+		EVENT_NAME_COMMAND(L"btn_min",OnMinimize)
+		EVENT_NAME_COMMAND(L"btn_max",OnMaximize)
+		EVENT_NAME_COMMAND(L"btn_restore",OnRestore)
+		EVENT_NAME_COMMAND(L"btn_msgbox",OnBtnMsgBox)
+		EVENT_NAME_COMMAND(L"main_mode", OnBtnMode)
+		EVENT_NAME_HANDLER(L"cbx_test", EventCBSelChange::EventID, OnCbxShowResult)
+		EVENT_MAP_END()    
+
+		BEGIN_MSG_MAP_EX(CMainWnd)
+		MSG_WM_INITDIALOG(OnInitDialog)
+		MSG_WM_CLOSE(OnClose)
+		MSG_WM_SIZE(OnSize)
+		MSG_WM_DEVICECHANGE(OnDeviceChange)
+		MESSAGE_HANDLER(WM_ON_TEST_START, ActionOnStart)
+		MESSAGE_HANDLER(WM_ON_TEST_OVER, ActionOnOver)
+		MESSAGE_HANDLER(WM_ON_LIST_CHANGE, ActionOnListChange)
+		MESSAGE_HANDLER(WM_ON_PROCESS_UPDATE, ActionOnProcess)
+		MESSAGE_HANDLER(WM_ON_TOUCH_DATA, ActionOnTouchData)
+		COMMAND_RANGE_HANDLER_EX(1,4,OnMenuCmd)
+		CHAIN_MSG_MAP(SHostWnd)
+		REFLECT_NOTIFICATIONS_EX()
+		END_MSG_MAP()
+private:
+	BOOL            m_bLayoutInited;
+	tstring         m_szCommandLine;
+	unsigned int    m_testMode;
+	unsigned char   m_wayToStart;
+	unsigned char   m_snCodeLen;
+	NativeTestInterface* m_TestProxyAddr;
+	unsigned char m_arrayState[MAX_DEVICE_NUM];
+
+	CTestPacket* m_testPacket[SUB_PACKET_CNT];
+};
+

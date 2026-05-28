@@ -1,0 +1,118 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:viewModel="clr-namespace:SEMIDevelopKit.Src.WinSub"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+        <Grid>
+		
+        <Grid.RowDefinitions>
+            <RowDefinition Height="85"></RowDefinition>
+            <RowDefinition Height="125"></RowDefinition>
+            <RowDefinition Height="285"></RowDefinition>
+            <RowDefinition Height="85"></RowDefinition>
+            <RowDefinition Height="85"></RowDefinition>
+        </Grid.RowDefinitions>
+		
+        <GroupBox Header="触摸点个数" Grid.Row="0">
+            <UniformGrid Rows="1" Columns="8">
+                <Label Content="触摸点个数" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="finger"></TextBox>
+            </UniformGrid>
+        </GroupBox>
+		
+        <GroupBox Header="阈值设置" Grid.Row="1">
+            <UniformGrid Rows="2" Columns="8">
+                <Label Content="触摸阈值(互容 MUL)" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="touchLv_mul"></TextBox>
+				<Label Content="触摸阈值(自容 RX)" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="touchLv_slr"></TextBox>
+				<Label Content="触摸阈值(自容 TX)" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="touchLv_slt"></TextBox>
+				<Control></Control>
+				<Control></Control>
+				
+                <Label Content="抬起阈值(互容 MUL)" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="leaveLv_mul"></TextBox>
+                <Label Content="抬起阈值(自容 RX)" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="leaveLv_slr"></TextBox>
+                <Label Content="抬起阈值(自容 TX)" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="leaveLv_slt"></TextBox>	
+				<Control></Control>
+				<Control></Control>
+            </UniformGrid>
+        </GroupBox>
+		
+        <GroupBox Header="拉边系数" Grid.Row="2">
+            <UniformGrid Rows="6">    
+                <UniformGrid Columns="8">
+                    <Label Content="顶部拉边" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Margin="5" viewModel:TuningItem.ItemName="cut_up"></TextBox>
+                    <Label Content="底部拉边" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Margin="5" viewModel:TuningItem.ItemName="cut_down"></TextBox>
+					<Label Content="报点内缩X" HorizontalAlignment="Right" Margin="5"></Label>
+					<TextBox Margin="5" viewModel:TuningItem.ItemName="marginX"></TextBox>
+					<Label Content="[7:4]:X左边；[3:0]:X右边" HorizontalAlignment="Left" Margin="5"></Label>
+                </UniformGrid>
+				
+                <UniformGrid Columns="8">
+                    <Label Content="左边拉边" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Margin="5" viewModel:TuningItem.ItemName="cut_left"></TextBox>
+                    <Label Content="右边拉边" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Margin="5" viewModel:TuningItem.ItemName="cut_right"></TextBox>
+					<Label Content="报点内缩Y" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Margin="5" viewModel:TuningItem.ItemName="marginY"></TextBox>
+					<Label Content="[7:4]:Y左边；[3:0]:Y右边" HorizontalAlignment="Left" Margin="5"></Label>                </UniformGrid>
+				
+				<UniformGrid Columns="8">
+					<Label Content="拉边起始位置     （L1）" HorizontalAlignment="Right" Margin="5"></Label>
+					<TextBox Margin="5" viewModel:TuningItem.ItemName="stretchEdgeT"></TextBox>
+					<Label Content="拉边系数      （Top）" HorizontalAlignment="Right" Margin="5"></Label>
+					<TextBox Margin="5" viewModel:TuningItem.ItemName="stretchRatioT"></TextBox>
+				</UniformGrid>
+
+				<UniformGrid Columns="8">
+					<Label Content="拉边起始位置（L2）" HorizontalAlignment="Right" Margin="5"></Label>
+					<TextBox Margin="5" viewModel:TuningItem.ItemName="stretchEdgeB"></TextBox>
+					<Label Content="拉边系数（Bottom）" HorizontalAlignment="Right" Margin="5"></Label>
+					<TextBox Margin="5" viewModel:TuningItem.ItemName="stretchRatioB"></TextBox>
+				</UniformGrid>
+
+				<UniformGrid Columns="8">
+					<Label Content="拉边起始位置     （L3）" HorizontalAlignment="Right" Margin="5"></Label>
+					<TextBox Margin="5" viewModel:TuningItem.ItemName="stretchEdgeL"></TextBox>
+					<Label Content="拉边系数     （NA）" HorizontalAlignment="Right" Margin="5"></Label>
+					<TextBox Margin="5" viewModel:TuningItem.ItemName="stretchRatioL"></TextBox>
+				</UniformGrid>
+
+				<UniformGrid Columns="8">
+					<Label Content="拉边起始位置  （Right）" HorizontalAlignment="Right" Margin="5"></Label>
+					<TextBox Margin="5" viewModel:TuningItem.ItemName="stretchEdgeR"></TextBox>
+					<Label Content="拉边系数   （Right）" HorizontalAlignment="Right" Margin="5"></Label>
+					<TextBox Margin="5" viewModel:TuningItem.ItemName="stretchRatioR"></TextBox>
+				</UniformGrid>
+
+            </UniformGrid>
+        </GroupBox>
+		
+        <GroupBox Header="报点率" Grid.Row="3">
+            <UniformGrid Rows="1" Columns="8">
+                <Label Content="报点率" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="reportRate"></TextBox>
+				<Label Content="Hz" HorizontalAlignment="Left" Margin="5"></Label>
+            </UniformGrid>
+        </GroupBox>
+		
+        <GroupBox Header="坐标位移" Grid.Row="4">
+            <UniformGrid Rows="1" Columns="8">
+                <Label Content="LCD-X坐标位移" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="xShift"></TextBox>
+				<Label Content="可配(-127 ~ 127)" HorizontalAlignment="Left" Margin="5"></Label>
+                <Label Content="LCD-Y坐标位移" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="yShift"></TextBox>
+				<Label Content="可配(-127 ~ 127)" HorizontalAlignment="Left" Margin="5"></Label>
+            </UniformGrid>
+        </GroupBox>
+    </Grid>
+</UserControl>

@@ -1,0 +1,6 @@
+<menuRoot skin="_skin.sys.wnd.bkgnd" colorTextSel="#333333" trCtx="dlg_main" itemHeight="30dp" iconPos="4dp,40dp" textOffset="5dp" iconBarWidth="24dp" maxWidth="185dp" minWidth="100dp" margin="5,5,5,5" >
+    <menuItem id="1"  text="Single Tp Test"/>
+	<menuItem id="2"  text="Number 2"/>
+	<menuItem id="3"  text="Number 3"/>
+	<menuItem id="4"  text="Number 4"/>
+</menuRoot>

@@ -1,0 +1,84 @@
+ChipSemi_Tester_V8.8.8_20260318
+WorkStation: F01   ProjectName: 0508
+
+Time Stamp:	2026-05-18 21:48:38 073
+Mtk Version = 0xd1103
+
+Time Stamp:	2026-05-18 21:48:38 564
+
+------------------------------Project Test------------------------------
+Project = 310
+
+//Project Test is Pass
+
+Time Stamp:	2026-05-18 21:48:38 564
+
+------------------------------RESET Test------------------------------
+
+
+//Reset Test is Pass
+
+Time Stamp:	2026-05-18 21:48:38 737
+
+------------------------------OSC Trim Test------------------------------
+Target No1=52000  No2=62400  No3=62400 
+osc32k trim = 52 value = 31965	osc52m trim = 195 value = 51995532
+osc52.00m trim = 195	value = 51993772 
+osc41.60m trim = 283	value = 41619248
+osc62.40m trim = 135	value  = 62368036
+Temp1 65349	Temp2 65349	Temp3 65349	Temp4 65349	
+32K = 0x34, 52M=0xc3 
+
+//OSCTrim Test is Pass
+
+Time Stamp:	2026-05-18 21:48:38 989
+
+------------------------------OTP Test------------------------------
+Fail = 0 
+
+//OTP Test is Pass
+
+Time Stamp:	2026-05-18 21:48:39 032
+
+------------------------------Current Test------------------------------
+
+avdd_active = 17343(uA), avdd_idle = 2023(uA)£¬  avdd_sleep = 20(uA)
+
+
+//Current Test is Pass
+
+Time Stamp:	2026-05-18 21:48:40 345
+
+------------------------------IOVoltage Test------------------------------
+
+IOV = 1.8V  High : int0 vol = 1770  ,	int2 vol = 1770  
+IOV = 1.8V  Low  : int0 vol = 25    ,	int2 vol = 1     
+IOV = 1.2V  High : int0 vol = 1224  ,	int2 vol = 1226  
+IOV = 1.2V  Low  : int0 vol = 18    ,	int2 vol = 1     
+
+IOV 1.62V  & 1.08V trans test PASS
+
+
+//IOVoltage Test is Pass
+
+Time Stamp:	2026-05-18 21:48:41 736
+
+------------------------------SRF Test------------------------------
+[00] : 57	[01] : 58	[02] : 62	[03] : 62	
+[04] : 63	[05] : 59	[06] : 59	[07] : 60	
+[08] : 60	[09] : 60	[10] : 60	[11] : 60	
+[12] : 61	[13] : 60	[14] : 61	[15] : 62	
+[16] : 61	[17] : 61	[18] : 62	[19] : 61	
+[00] : 2584	[01] : 3936	[02] : 5019	[03] : 6439	
+[04] : 8312	[05] : 9441	[06] : 9845	[07] : 10219	
+[08] : 11870	[09] : 11862	[10] : 11791	[11] : 10735	
+[12] : 11422	[13] : 12330	[14] : 12329	[15] : 11936	
+[16] : 11429	[17] : 10229	[18] : 10248	[19] : 11550	
+
+SelfResonance Freq = 12.25 M
+
+
+//SRF Test is Pass
+
+
+//Final result is Pass

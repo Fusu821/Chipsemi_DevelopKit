@@ -1,0 +1,554 @@
+#pragma once
+//#include <tchar.h>
+#include "framework.h"
+#include "SEMITouch.h"
+#include "helper.h"
+#include "onlinelog.h"
+#include "Wait.h"
+#include "ResultStruct.h"
+#include "Graph/GraphTool.h"
+#include "Graph/GraphItemTest.h"
+#include "../Config/Config.h"
+#include "NativeTestInterface.h"
+#include <vector>
+
+#define navCallBack     m_pNativeIntr->GetCallBack()
+#define TestAppVersion  _T("ChipSemi_Tester_V8.8.5_20260127")
+
+#define align_2(x)     ((x + 1) & 0xfffe)
+#define align_4(x)     ((x + 3) & 0xfffc)
+
+#define DTestResultInfo(strResult, ...) \
+	({\
+	(do{\
+	static TCHAR szBuffer[MAX_PATH] = {0}; \
+	transformat( szBuffer,strResult, ##__VA_ARGS__);\
+	TestResultInfo(szBuffer);\
+	}while(0))\
+	(szBuffer);\
+	})\
+
+// 	bool m_bGameOver;
+// 	bool m_bInGraphing;
+// 	bool m_bIsTestRuning;
+// 	bool m_bExitRuningLoop;
+// 	bool m_bMtkBootUpdated;
+
+//00 no test; 01 normal test; 10 force paint 
+#define TEST_FLOW_TYPE                  (0x03 << 0)
+
+//0 data test; 1 graph test
+#define TEST_TARGET_KING                (1 << 2)
+
+//0 not stop; 1 stop
+#define STOP_RUNING_LOOP                (1 << 3)
+
+//0 flow is off; 1 flow is on
+#define ONE_TEST_FLOW_ON                (1 << 4)
+
+//0 not check; 1 checked
+#define CHECK_MKT_UPDATE                (1 << 5)
+
+//0 not over; 1 over
+#define TEST_GAME_OVER                  (1 << 6)
+
+  
+#define InitTestStatus()                (m_TestOperation = 0) 
+#define SetTestStatus(x)                (m_TestOperation |= x)              
+
+#define SetOperationEmpty(p)            do{p->m_TestOperation &= ~TEST_FLOW_TYPE; p->m_TestOperation |= 0x0000;}while(0)
+#define SetOperationNormal(p)           do{p->m_TestOperation &= ~TEST_FLOW_TYPE; p->m_TestOperation |= 0x0001;}while(0)
+#define SetOperationForcePaint(p)       do{p->m_TestOperation &= ~TEST_FLOW_TYPE; p->m_TestOperation |= 0x0002;}while(0)
+#define DoOperationNarmal(ptrTest)      (0x0001 == (ptrTest->m_TestOperation & TEST_FLOW_TYPE))
+#define DoOperationForcePaint(ptrTest)  (0x0002 == (ptrTest->m_TestOperation & TEST_FLOW_TYPE))
+#define DoOperationEmpty(ptrTest)       (0x0000 == (ptrTest->m_TestOperation & TEST_FLOW_TYPE))
+
+#define SetTestStatusInDataStep()       (m_TestOperation &= ~TEST_TARGET_KING)       
+#define SetTestStatusInGraphStep()      (m_TestOperation | TEST_TARGET_KING)
+#define IsTestInGraphStep()             ((m_TestOperation & TEST_TARGET_KING) > 0)
+
+#define SetLoopRuning()                 (m_TestOperation &= ~STOP_RUNING_LOOP)
+#define StopLoopRuning()                (m_TestOperation |= STOP_RUNING_LOOP)
+#define IsLoopStillRun()                (0 == (m_TestOperation & STOP_RUNING_LOOP))    
+
+#define SetTestFlowOnLine()             (m_TestOperation |= ONE_TEST_FLOW_ON)
+#define SetTestFlowOffLine()            (m_TestOperation &= ~ONE_TEST_FLOW_ON)
+#define IsTestStillOnLine(p)            ((p->m_TestOperation & ONE_TEST_FLOW_ON) > 0)
+
+// #define TestTriggerOn()                 (m_TestOperation |= WAIT_START_TRIGGER)  
+// #define TestTiggerOff()                 (m_TestOperation &= ~WAIT_START_TRIGGER)
+// #define TestTiggered()                  ((m_TestOperation & WAIT_START_TRIGGER) > 0)
+
+#define SetGameOver()                   (m_TestOperation |= (STOP_RUNING_LOOP | TEST_GAME_OVER))
+#define IsGameOver(p)                    ((p->m_TestOperation & TEST_GAME_OVER) > 0)
+
+#define SetMtkUpdatedMark()             (m_TestOperation |= CHECK_MKT_UPDATE)
+#define ClearMtkUpdatedMark()           (m_TestOperation &= (~CHECK_MKT_UPDATE))
+#define HasMtkUpdated()                 ((m_TestOperation & CHECK_MKT_UPDATE) > 0)
+//#define MAX_TEST_ITEMS                   25
+
+/*****************************************************/
+//常规测试ID    0 - 9
+//数值测试ID    10 - 14（可以进行模拟测试）
+//可选测试ID    15 - 19
+//划线测试ID    20 - 25
+/*****************************************************/
+#define TEST_ITEM_MTK_CONNECT            0
+#define TEST_ITEM_TP_WAIT                1
+#define TEST_ITEM_TP_REMOVE              2
+#define TEST_ITEM_INT_TEST               3
+#define TEST_ITEM_RESET_TEST             4
+#define TEST_ITEM_BOOT_TEST              5
+#define TEST_ITEM_CFG_TEST               6
+#define TEST_ITEM_CURRENT_TEST           7
+#define TEST_ITEM_PROJECT_CODE           8
+
+#define TEST_ITEM_FACTORY_REAL           TEST_ITEM_INT_TEST
+#define TEST_ITEM_SHARE_ALL              9
+/***************************************************************************/
+
+#define TEST_ITEM_OS_TEST_3535           10
+#define TEST_ITEM_FSD_TEST_3535          11
+
+#define TEST_ITEM_OS_TEST_3536           10
+#define TEST_ITEM_FSD_TEST_3536          11
+#define TEST_ITEM_FSDBK_TEST_3536        12
+
+#define TEST_ITEM_SCAP_RAWDATA_TEST_5472 10
+#define TEST_ITEM_STC_5472               11
+#define TEST_ITEM_MCAP_RAWDATA_5472      12
+
+#define TEST_ITEM_SCAP_RAWDATA_TEST_7449 10
+#define TEST_ITEM_STC_7449               11
+#define TEST_ITEM_MCAP_RAWDATA_7449      12
+
+#define TEST_ITEM_SCAP_RAWDATA_TEST_5816 10
+#define TEST_ITEM_STC_5816               11
+#define TEST_ITEM_MCAP_RAWDATA_5816      12
+
+#define TEST_ITEM_SCAP_RAWDATA_TEST_5562 10
+#define TEST_ITEM_STC_5562               11
+#define TEST_ITEM_MCAP_RAWDATA_5562      12
+
+#define TEST_ITEM_SCAP_RAWDATA_TEST_7126 10
+#define TEST_ITEM_STC_7126               11
+#define TEST_ITEM_MCAP_RAWDATA_7126      12
+
+#define TEST_ITEM_SCAP_RAWDATA_TEST_8006 10
+#define TEST_ITEM_STC_8006               11
+#define TEST_ITEM_MCAP_RAWDATA_8006      12
+
+#define TEST_ITEM_SCAP_RAWDATA_TEST_810 10
+#define TEST_ITEM_STC_810               11
+#define TEST_ITEM_MCAP_RAWDATA_810      12
+
+#define TEST_ITEM_SCAP_RAWDATA_TEST_570 10
+#define TEST_ITEM_STC_570               11
+#define TEST_ITEM_MCAP_RAWDATA_570      12
+/***************************************************************************/
+
+#define TEST_ITEM_SIMULATE_TEST_MAX      13
+#define TEST_ITEM_BASE_TEST_3535         (TEST_ITEM_SIMULATE_TEST_MAX + 0)
+
+#define TEST_ITEM_BASE_TEST_3536         (TEST_ITEM_SIMULATE_TEST_MAX + 0)
+#define TEST_ITEM_OSCTRIM_TEST_3536      (TEST_ITEM_SIMULATE_TEST_MAX + 1)
+#define TEST_ITEM_NOISE_TEST_3536        (TEST_ITEM_SIMULATE_TEST_MAX + 2)
+#define TEST_ITEM_IOVOL_TEST_3536        (TEST_ITEM_SIMULATE_TEST_MAX + 3)
+#define TEST_ITEM_VP_TEST_3536           (TEST_ITEM_SIMULATE_TEST_MAX + 4)
+#define TEST_ITEM_ALGORITHM_TEST_3536    (TEST_ITEM_SIMULATE_TEST_MAX + 5)
+#define TEST_ITEM_MISC_TEST_3536         (TEST_ITEM_SIMULATE_TEST_MAX + 6)
+
+#define TEST_ITEM_OSCTRIM_TEST_5472      (TEST_ITEM_SIMULATE_TEST_MAX + 0)
+#define TEST_ITEM_FRT_TEST_5472          (TEST_ITEM_SIMULATE_TEST_MAX + 1)
+#define TEST_ITEM_IOVOL_TEST_5472        (TEST_ITEM_SIMULATE_TEST_MAX + 2)
+#define TEST_ITEM_OS_TEST_5472           (TEST_ITEM_SIMULATE_TEST_MAX + 3)
+#define TEST_ITEM_VT_TEST_5472           (TEST_ITEM_SIMULATE_TEST_MAX + 4)
+#define TEST_ITEM_BASE_TEST_5472         (TEST_ITEM_SIMULATE_TEST_MAX + 5)
+#define TEST_ITEM_NOISE_TEST_5472        (TEST_ITEM_SIMULATE_TEST_MAX + 6)
+#define TEST_ITEM_MISC_TEST_5472         (TEST_ITEM_SIMULATE_TEST_MAX + 7)
+
+#define TEST_ITEM_OSCTRIM_TEST_7449      (TEST_ITEM_SIMULATE_TEST_MAX + 0)
+#define TEST_ITEM_FRT_TEST_7449          (TEST_ITEM_SIMULATE_TEST_MAX + 1)
+#define TEST_ITEM_IOVOL_TEST_7449        (TEST_ITEM_SIMULATE_TEST_MAX + 2)
+#define TEST_ITEM_OS_TEST_7449           (TEST_ITEM_SIMULATE_TEST_MAX + 3)
+#define TEST_ITEM_VT_TEST_7449           (TEST_ITEM_SIMULATE_TEST_MAX + 4)
+#define TEST_ITEM_BASE_TEST_7449         (TEST_ITEM_SIMULATE_TEST_MAX + 5)
+#define TEST_ITEM_NOISE_TEST_7449        (TEST_ITEM_SIMULATE_TEST_MAX + 6)
+#define TEST_ITEM_MISC_TEST_7449         (TEST_ITEM_SIMULATE_TEST_MAX + 7)
+#define TEST_ITEM_ENPIN_TEST_7449        (TEST_ITEM_SIMULATE_TEST_MAX + 8)
+
+#define TEST_ITEM_OSCTRIM_TEST_5816      (TEST_ITEM_SIMULATE_TEST_MAX + 0)
+#define TEST_ITEM_FRT_TEST_5816          (TEST_ITEM_SIMULATE_TEST_MAX + 1)
+#define TEST_ITEM_IOVOL_TEST_5816        (TEST_ITEM_SIMULATE_TEST_MAX + 2)
+#define TEST_ITEM_OS_TEST_5816           (TEST_ITEM_SIMULATE_TEST_MAX + 3)
+#define TEST_ITEM_VIH_TEST_5816          (TEST_ITEM_SIMULATE_TEST_MAX + 4)
+#define TEST_ITEM_MISC_TEST_5816         (TEST_ITEM_SIMULATE_TEST_MAX + 5)
+#define TEST_ITEM_NOISE_TEST_5816        (TEST_ITEM_SIMULATE_TEST_MAX + 6)
+
+#define TEST_ITEM_OSCTRIM_TEST_5562      (TEST_ITEM_SIMULATE_TEST_MAX + 0)
+#define TEST_ITEM_FRT_TEST_5562          (TEST_ITEM_SIMULATE_TEST_MAX + 1)
+#define TEST_ITEM_IOVOL_TEST_5562        (TEST_ITEM_SIMULATE_TEST_MAX + 2)
+#define TEST_ITEM_OS_TEST_5562           (TEST_ITEM_SIMULATE_TEST_MAX + 3)
+#define TEST_ITEM_WBASE_TEST_5562        (TEST_ITEM_SIMULATE_TEST_MAX + 4)
+#define TEST_ITEM_BASE_TEST_5562         (TEST_ITEM_SIMULATE_TEST_MAX + 5)
+#define TEST_ITEM_NOISE_TEST_5562        (TEST_ITEM_SIMULATE_TEST_MAX + 6)
+#define TEST_ITEM_MISC_TEST_5562         (TEST_ITEM_SIMULATE_TEST_MAX + 7)
+#define TEST_ITEM_FSD_TEST_5562          (TEST_ITEM_SIMULATE_TEST_MAX + 8)
+
+#define TEST_ITEM_OSCTRIM_TEST_7126      (TEST_ITEM_SIMULATE_TEST_MAX + 0)
+#define TEST_ITEM_FRT_TEST_7126          (TEST_ITEM_SIMULATE_TEST_MAX + 1)
+#define TEST_ITEM_IOVOL_TEST_7126      (TEST_ITEM_SIMULATE_TEST_MAX + 2)
+#define TEST_ITEM_OS_TEST_7126          (TEST_ITEM_SIMULATE_TEST_MAX + 3)
+#define TEST_ITEM_WBASE_TEST_7126        (TEST_ITEM_SIMULATE_TEST_MAX + 4)
+#define TEST_ITEM_BASE_TEST_7126         (TEST_ITEM_SIMULATE_TEST_MAX + 5)
+#define TEST_ITEM_NOISE_TEST_7126        (TEST_ITEM_SIMULATE_TEST_MAX + 6)
+#define TEST_ITEM_MISC_TEST_7126         (TEST_ITEM_SIMULATE_TEST_MAX + 7)
+#define TEST_ITEM_FSD_TEST_7126          (TEST_ITEM_SIMULATE_TEST_MAX + 8)
+#define TEST_ITEM_DOG_TEST_7126          (TEST_ITEM_SIMULATE_TEST_MAX + 8)
+
+#define TEST_ITEM_OSCTRIM_TEST_8006         (TEST_ITEM_SIMULATE_TEST_MAX + 0)
+#define TEST_ITEM_FRT_TEST_8006             (TEST_ITEM_SIMULATE_TEST_MAX + 1)
+#define TEST_ITEM_IOVOL_TEST_8006           (TEST_ITEM_SIMULATE_TEST_MAX + 2)
+#define TEST_ITEM_OS_TEST_8006              (TEST_ITEM_SIMULATE_TEST_MAX + 3)
+#define TEST_ITEM_BASE_TEST_8006            (TEST_ITEM_SIMULATE_TEST_MAX + 4)
+#define TEST_ITEM_NOISE_TEST_8006           (TEST_ITEM_SIMULATE_TEST_MAX + 5)
+#define TEST_ITEM_SDRockerCalib_TEST_8006   (TEST_ITEM_SIMULATE_TEST_MAX + 6)
+#define TEST_ITEM_CVDIFF_Y_8006             (TEST_ITEM_SIMULATE_TEST_MAX + 7)
+#define TEST_ITEM_CVDIFF_X_8006             (TEST_ITEM_SIMULATE_TEST_MAX + 8)
+
+#define TEST_ITEM_OSCTRIM_TEST_810          (TEST_ITEM_SIMULATE_TEST_MAX + 0)
+#define TEST_ITEM_FRT_TEST_810              (TEST_ITEM_SIMULATE_TEST_MAX + 1)
+#define TEST_ITEM_IOVOL_TEST_810            (TEST_ITEM_SIMULATE_TEST_MAX + 2)
+#define TEST_ITEM_OS_TEST_810               (TEST_ITEM_SIMULATE_TEST_MAX + 3)
+#define TEST_ITEM_BASE_TEST_810             (TEST_ITEM_SIMULATE_TEST_MAX + 4)
+#define TEST_ITEM_NOISE_TEST_810            (TEST_ITEM_SIMULATE_TEST_MAX + 5)
+#define TEST_ITEM_SDRockerCalib_TEST_810    (TEST_ITEM_SIMULATE_TEST_MAX + 6)
+#define TEST_ITEM_CVDIFF_Y_810              (TEST_ITEM_SIMULATE_TEST_MAX + 7)
+#define TEST_ITEM_CVDIFF_X_810              (TEST_ITEM_SIMULATE_TEST_MAX + 8)
+
+#define TEST_ITEM_OSCTRIM_TEST_570      (TEST_ITEM_SIMULATE_TEST_MAX + 0)
+#define TEST_ITEM_FRT_TEST_570          (TEST_ITEM_SIMULATE_TEST_MAX + 1)
+#define TEST_ITEM_IOVOL_TEST_570        (TEST_ITEM_SIMULATE_TEST_MAX + 2)
+#define TEST_ITEM_OS_TEST_570           (TEST_ITEM_SIMULATE_TEST_MAX + 3)
+#define TEST_ITEM_WBASE_TEST_570        (TEST_ITEM_SIMULATE_TEST_MAX + 4)
+#define TEST_ITEM_BASE_TEST_570         (TEST_ITEM_SIMULATE_TEST_MAX + 5)
+#define TEST_ITEM_NOISE_TEST_570        (TEST_ITEM_SIMULATE_TEST_MAX + 6)
+#define TEST_ITEM_MISC_TEST_570         (TEST_ITEM_SIMULATE_TEST_MAX + 7)
+#define TEST_ITEM_FSD_TEST_570          (TEST_ITEM_SIMULATE_TEST_MAX + 8)
+/***************************************************************************/
+
+#define TEST_ITEM_FREE_PAINT_TEST        (TEST_ITEM_GRAPH_TEST_START + 0)
+#define TEST_ITEM_BUTTON_TEST            (TEST_ITEM_GRAPH_TEST_START + 1)
+#define TEST_ITEM_LINEARLY_TEST          (TEST_ITEM_GRAPH_TEST_START + 2)
+#define TEST_ITEM_LINEARLY_TPAD_TEST     (TEST_ITEM_GRAPH_TEST_START + 3)
+#define TEST_ITEM_LINEARLY_ROCKER_TEST   (TEST_ITEM_GRAPH_TEST_START + 4)
+#define TEST_ITEM_EXP_LINEARLY_TEST      (TEST_ITEM_GRAPH_TEST_START + 5)
+
+#define MAX_GRAPH_ITEM                   (MAX_TEST_ITEMS - TEST_ITEM_GRAPH_TEST_START)
+
+class IDelegate
+{
+public:
+	IDelegate(){}
+	virtual ~IDelegate(){}
+
+	virtual unsigned int Invoke( NativeTestItem& item ){ return ITEM_STA_NONE; }
+};
+template<class T>
+class CRunTimeMethod : public IDelegate
+{
+public:
+	typedef unsigned int (T::*FunctionTest)( NativeTestItem& item );
+	CRunTimeMethod(T* object, FunctionTest method)
+		:object_copy(object)
+		,method_copy(method)
+	{
+
+	}
+	virtual ~CRunTimeMethod(){}
+	unsigned int Invoke( NativeTestItem& item )
+	{
+		return (object_copy->*method_copy)( item );
+	}
+private:
+	T* object_copy;
+	FunctionTest method_copy;
+};
+struct InternalItemInfo
+{
+	unsigned char bSelected;
+	NativeTestItem item;
+	IDelegate* funAddr;
+	bool jumpIfNG;
+	InternalItemInfo()
+		:funAddr(NULL)
+		,bSelected(0)
+		,jumpIfNG(true)
+	{
+
+	}
+	virtual ~InternalItemInfo()
+	{
+		if(funAddr) delete funAddr;
+	}
+
+};
+class CTestResultSave
+{
+	struct StcResult 
+	{
+		int finalResult;
+		unsigned char currentResult;
+		StcResult(int final, unsigned char item)
+			:finalResult(final)
+			,currentResult(item)
+		{
+
+		}
+		StcResult()
+		{
+
+		}
+	};
+public:
+	CTestResultSave()
+	{
+		m_lock.Lock();
+	}
+	virtual ~CTestResultSave()
+	{
+		m_lock.Unlock();
+	}
+
+protected:
+	void CheckAndCreateFolder( const tstring& strFilePath );
+	void ReplaceAllToken( tstring& strSource );
+	virtual tstring MakeFileNameToSave( const RecordData& rcDataMsg, unsigned char simulate = 0 );
+	virtual tstring MakeRelativePath(unsigned int testRet, InternalItemInfo (&itemResult)[MAX_TEST_ITEMS], LPCTSTR szWorkStation, unsigned char simulate = 0);
+	virtual tstring MakeAbsolutePath();
+	virtual tstring MakeAbsoluteBackUp();
+	
+	void MakeOneStatistic( LPCTSTR szSaveFileName, const RecordData& strDataMsg, InternalItemInfo (&itemResult)[MAX_TEST_ITEMS] );
+	static SYSTEMTIME StartUpTime();
+	BOOL CurrentFailed( InternalItemInfo (&itemResult)[MAX_TEST_ITEMS] );
+	void UpDateStatistic( const RecordData& strDataMsg, InternalItemInfo (&itemResult)[MAX_TEST_ITEMS] );
+public:
+	static void OnAppShutDown();
+	static LPCTSTR GetStatisticText();
+	virtual void SaveTestResult( const tstring& strContent, const RecordData& rcDataMsg, InternalItemInfo (&itemResult)[MAX_TEST_ITEMS], unsigned char simulate = 0 );
+	virtual tstring GetFailReason( InternalItemInfo (&itemResult)[MAX_TEST_ITEMS] );
+	virtual tstring GetFailReasonID( InternalItemInfo (&itemResult)[MAX_TEST_ITEMS] );
+private:
+	static SpinLock m_lock;
+	static SYSTEMTIME m_StampTime;
+	static SYSTEMTIME m_StartUpTime;
+	static map<UINT64, StcResult> m_mapItemStc;
+};
+
+class CTestResultSaveID : public CTestResultSave
+{
+public:
+	virtual tstring MakeFileNameToSave( const RecordData& rcDataMsg, unsigned char simulate = 0 );
+};
+
+class CTestResultSaveYY : public CTestResultSave
+{
+public:
+	virtual tstring MakeFileNameToSave( const RecordData& rcDataMsg, unsigned char simulate = 0 );
+};
+
+class CTestResultSaveXY : public CTestResultSave
+{
+public:
+	virtual tstring MakeRelativePath(unsigned int testRet, InternalItemInfo (&itemResult)[MAX_TEST_ITEMS], LPCTSTR szWorkStation, unsigned char simulate = 0);
+	virtual tstring MakeFileNameToSave( const RecordData& rcDataMsg, unsigned char simulate = 0 );
+};
+
+class CTestResultSaveVisionox : public CTestResultSave
+{
+public:
+	//virtual tstring MakeRelativePath(unsigned int testRet, InternalItemInfo (&itemResult)[MAX_TEST_ITEMS], LPCTSTR szWorkStation, unsigned char simulate = 0);
+	virtual tstring MakeFileNameToSave( const RecordData& rcDataMsg, unsigned char simulate = 0 );
+};
+
+class CTestResultSaveEDO : public CTestResultSave
+{
+public:
+	virtual tstring MakeFileNameToSave( const RecordData& rcDataMsg, unsigned char simulate = 0 );
+
+	//tstring MakeFileFoderToSave( unsigned int testRet, InternalItemInfo (&itemResult)[MAX_TEST_ITEMS], LPCTSTR szWorkStation, unsigned char simulate = 0 );
+};
+class CTestResultSaveCloud : public CTestResultSave
+{
+	virtual tstring MakeRelativePath(unsigned int testRet, InternalItemInfo (&itemResult)[MAX_TEST_ITEMS], LPCTSTR szWorkStation, unsigned char simulate = 0);
+	virtual tstring MakeFileNameToSave( const RecordData& rcDataMsg, unsigned char simulate = 0 );
+};
+class CTestResultSaveVSN : public CTestResultSave
+{
+	virtual tstring MakeRelativePath(unsigned int testRet, InternalItemInfo (&itemResult)[MAX_TEST_ITEMS], LPCTSTR szWorkStation, unsigned char simulate = 0);
+	virtual tstring MakeFileNameToSave( const RecordData& rcDataMsg, unsigned char simulate = 0 );
+};
+
+class CTestResultSaveEMS : public CTestResultSave
+{
+	//virtual tstring MakeRelativePath(unsigned int testRet, InternalItemInfo (&itemResult)[MAX_TEST_ITEMS], LPCTSTR szWorkStation, unsigned char simulate = 0);
+	//virtual tstring MakeFileNameToSave( const RecordData& rcDataMsg, unsigned char simulate = 0 );
+	int UploadEms(string codenum, string id, string station, string result);
+
+};
+
+class CTestResultSaveEmsOfilm : public CTestResultSave
+{
+	//virtual tstring MakeRelativePath(unsigned int testRet, InternalItemInfo (&itemResult)[MAX_TEST_ITEMS], LPCTSTR szWorkStation, unsigned char simulate = 0);
+	//virtual tstring MakeFileNameToSave( const RecordData& rcDataMsg, unsigned char simulate = 0 );
+};
+
+class CTestResultSavePbh : public CTestResultSave
+{
+	//virtual tstring MakeRelativePath(unsigned int testRet, InternalItemInfo (&itemResult)[MAX_TEST_ITEMS], LPCTSTR szWorkStation, unsigned char simulate = 0);
+	//virtual tstring MakeFileNameToSave( const RecordData& rcDataMsg, unsigned char simulate = 0 );
+};
+class CTestResultSaveChuangWei : public CTestResultSave
+{
+	//virtual tstring MakeRelativePath(unsigned int testRet, InternalItemInfo (&itemResult)[MAX_TEST_ITEMS], LPCTSTR szWorkStation, unsigned char simulate = 0);
+	virtual tstring MakeFileNameToSave( const RecordData& rcDataMsg, unsigned char simulate = 0 );
+};
+class CTestResultSaveJW : public CTestResultSave
+{
+public:
+	virtual tstring MakeFileNameToSave( const RecordData& rcDataMsg, unsigned char simulate = 0 );
+};
+class CTestResultSaveHes : public CTestResultSave
+{
+    //virtual tstring MakeRelativePath(unsigned int testRet, InternalItemInfo (&itemResult)[MAX_TEST_ITEMS], LPCTSTR szWorkStation, unsigned char simulate = 0);
+    //virtual tstring MakeFileNameToSave( const RecordData& rcDataMsg, unsigned char simulate = 0 );
+};
+struct ItemNotifyer
+{
+public:
+	ItemNotifyer( const NativeTestInterface*& client, NativeTestItem& item )
+		:m_pNativeIntr(client)
+		,m_itemCopy(item)
+	{
+		m_itemCopy.testResult = ITEM_STA_START;
+		navCallBack.onListItemChange( &m_itemCopy );
+		//const NativeCallBack& call = m_pNativeIntr->GetCallBack();
+		//OnListItemChangeCallBack back = call.onListItemChange;
+		//(*back)();
+	}
+	virtual ~ItemNotifyer()
+	{
+		navCallBack.onListItemChange( &m_itemCopy );
+		//NativeTestItem item = m_itemCopy;
+		//const NativeCallBack& call = m_pNativeIntr->GetCallBack();
+		//call.onListItemChange(m_itemCopy);
+	}
+	TEST_ITEM_STATUS UpdateItemResult( TEST_ITEM_STATUS status, LPCTSTR szMark = NULL )
+	{
+		if( m_pNativeIntr->FAEMode() )
+		    m_itemCopy.testResult = ( status > ITEM_STA_TBD ) ? ITEM_STA_TBD : status;
+		else
+			m_itemCopy.testResult = status;
+		if( szMark )
+		{
+			memcpy_s( m_itemCopy.testMark, sizeof(m_itemCopy.testMark), szMark, lengthof(szMark) );
+		}
+		else
+		{
+			memset( m_itemCopy.testMark, 0, sizeof(m_itemCopy.testMark) );
+		}
+
+		navCallBack.onListItemChange( &m_itemCopy );
+		return status;
+	}
+	operator TEST_ITEM_STATUS()
+	{
+		return (TEST_ITEM_STATUS)m_itemCopy.testResult;
+	}
+private:
+	NativeTestItem& m_itemCopy;
+	const NativeTestInterface*& m_pNativeIntr;
+};
+
+
+class CTestBase
+{
+public:
+	CTestBase();
+	virtual ~CTestBase();
+public:
+	bool MakeTestOver( unsigned char mustStopNow = 1 );
+	unsigned int StartTest( LPCTSTR szCode = NULL );
+	virtual unsigned int SimulateTest( int iDevice, SimulateData (&arraySimulate)[SIMULATE_TEST_DATA_CNT]  );
+	unsigned int ForcePaint( bool enterPaint );
+	ColorText& GetTestMessage();
+	//list<NativeTestItem>& GetAllTestItemLists();
+	NativeTestItem& GetNativeTestItemByIndex( int index );
+	unsigned int ActionToXmlConfig();
+	virtual void SetTestContext( unsigned char deviceNo, NativeTestInterface* native );
+	virtual void SetGraphTestContext( HDC hdc, RECT& rc );
+	virtual unsigned int MTKConnectTest( NativeTestItem& itemQuote );
+	virtual unsigned int TP_WaitTest( NativeTestItem& itemQuote );
+	virtual unsigned int TP_RemoveTest( NativeTestItem& itemQuote );
+	virtual unsigned int INT_Test( NativeTestItem& itemQuote );
+	virtual unsigned int Reset_Test( NativeTestItem& itemQuote );
+	//virtual unsigned int Current_Test( NativeTestItem& itemQuote );
+	virtual unsigned int Graph_Test( NativeTestItem& itemQuote );
+	virtual LPCTSTR GetSnNumber(){ return m_szSNCode; }
+private:
+	inline unsigned char DeviceNo(){ return m_deviceNo; }
+	virtual void PrepareSimulate( SimulateData& sm ) { return; }
+
+	//inline bool IsTestRuning(){ return m_bIsTestRuning; }
+	//inline void SetTestRuning( bool bRuning ){ m_bIsTestRuning = bRuning; }
+	virtual unsigned int WorkForGraphMode( bool bEnterGraphing = false );
+	virtual unsigned int SetClkInFctMode( unsigned short clkDiv );
+	virtual void CleanLastResult();
+	virtual TEST_ITEM_STATUS ItemTestByItemQuote( InternalItemInfo& itemQuote );
+	EN_TEST_RESULT FinalResult( );
+	void SaveResult( EN_TEST_RESULT& finalResult, unsigned char simulate = 0 );
+
+	void TestFlow( unsigned char simulate = 0 );
+	virtual void ForcePaintFlow();
+	bool CheckIfNeedUpdateMtkBoot();
+	static entry_type WINAPI TestThreadEntry( LPVOID lp );
+	//static entry_type WINAPI ForcePaintThreadEntry( LPVOID lp );
+	//static UINT32 WINAPI AutoTestThreadEntry( LPVOID lp );
+protected:
+	//bool ExitRuningLoop(){ return m_bExitRuningLoop; }
+	void TestResultInfo( LPCTSTR strResult, unsigned char ucColorType = 0xff );
+
+	TCHAR* TestResultInfoR( LPCTSTR strResult...);
+
+	TCHAR* StrFormat( LPCTSTR strResult...);
+
+public:
+	void TestResultInfo( const ColorText& text );
+	int SelectedItemCont();
+	InternalItemInfo* GetInternalItemInfoByID( unsigned char testCode );
+	BOOL MtkUpdateGate();
+
+	//unsigned char* record_buffer;
+
+friend class CTestManager;
+	
+protected:
+// 	bool m_bGameOver;
+// 	bool m_bInGraphing;
+// 	bool m_bIsTestRuning;
+// 	bool m_bExitRuningLoop;
+// 	bool m_bMtkBootUpdated;
+	UINT32 m_TestOperation;
+	TCHAR m_szSNCode[100];
+	ColorText m_ColorText;
+	unsigned char m_deviceNo;
+	RecordData m_stOneRecord;
+	//list<NativeTestItem> m_listTestItems;
+	const NativeTestInterface* m_pNativeIntr;
+	InternalItemInfo m_arrayItemInfo[MAX_TEST_ITEMS];
+	CGraphItemTest* m_vecGraphTest[MAX_GRAPH_ITEM];
+	CGraphTool m_GraphTestTool;
+    int m_iRealGraphIndex;
+	BOOL m_mtkUpdateGate;
+	thread_identity m_hThreadHandle;
+};

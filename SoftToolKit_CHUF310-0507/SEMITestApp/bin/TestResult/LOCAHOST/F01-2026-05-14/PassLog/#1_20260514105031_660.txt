@@ -1,0 +1,22 @@
+ChipSemi_Tester_V8.8.8_20260318
+WorkStation: F01   ProjectName: 0508
+
+Time Stamp:	2026-05-14 10:50:30 797
+Mtk Version = 0xd1103
+
+Time Stamp:	2026-05-14 10:50:31 290
+
+------------------------------RESET Test------------------------------
+
+
+//Reset Test is Pass
+
+Time Stamp:	2026-05-14 10:50:31 388
+
+------------------------------Project Test------------------------------
+
+
+//Project Test is Pass
+
+
+//Final result is Pass

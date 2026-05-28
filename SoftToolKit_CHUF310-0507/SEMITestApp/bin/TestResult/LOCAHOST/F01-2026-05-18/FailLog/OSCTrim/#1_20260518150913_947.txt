@@ -1,0 +1,36 @@
+ChipSemi_Tester_V8.8.8_20260318
+WorkStation: F01   ProjectName: 0508
+
+Time Stamp:	2026-05-18 15:08:00 734
+Mtk Version = 0xd1103
+
+Time Stamp:	2026-05-18 15:08:01 222
+
+------------------------------OSC Trim Test------------------------------
+Target No1=52000  No2=62400  No3=62400 
+osc32k trim = 50 value = 32140	osc52m trim = 0 value = 110622976
+osc52.00m trim = 196	value = 52034284 
+osc41.60m trim = 285	value = 41570812
+osc62.40m trim = 136	value  = 62423800
+[52M][FAIL] meter=110622976 target=52000000 err=58622976 limit=1560000 proportion=30бы
+Temp1 -181	Temp2 -182	Temp3 -181	Temp4 -182	
+32K = 0x32, 52M=0x00 
+
+//OSCTrim Test is Fail
+
+Time Stamp:	2026-05-18 15:08:03 270
+
+------------------------------Project Test------------------------------
+
+
+//Project Test is Pass
+
+Time Stamp:	2026-05-18 15:08:03 538
+
+------------------------------OTP Test------------------------------
+Fail = 0 
+
+//OTP Test is Pass
+
+
+//Final result is NG

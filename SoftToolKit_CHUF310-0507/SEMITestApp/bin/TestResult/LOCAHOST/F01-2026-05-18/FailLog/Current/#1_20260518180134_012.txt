@@ -1,0 +1,87 @@
+ChipSemi_Tester_V8.8.8_20260318
+WorkStation: F01   ProjectName: 0508
+
+Time Stamp:	2026-05-18 18:01:27 480
+Mtk Version = 0xd1103
+
+Time Stamp:	2026-05-18 18:01:27 965
+
+------------------------------Project Test------------------------------
+Project = 200
+
+//Project Test is Pass
+
+Time Stamp:	2026-05-18 18:01:28 247
+
+------------------------------RESET Test------------------------------
+
+
+//Reset Test is Pass
+
+Time Stamp:	2026-05-18 18:01:28 420
+
+------------------------------OSC Trim Test------------------------------
+Target No1=52000  No2=62400  No3=62400 
+osc32k trim = 52 value = 31905	osc52m trim = 196 value = 52066032
+osc52.00m trim = 196	value = 52067796 
+osc41.60m trim = 285	value = 41553944
+osc62.40m trim = 137	value  = 62302264
+Temp1 65406	Temp2 65406	Temp3 65406	Temp4 65406	
+32K = 0x34, 52M=0xc4 
+
+//OSCTrim Test is Pass
+
+Time Stamp:	2026-05-18 18:01:28 639
+
+------------------------------OTP Test------------------------------
+Fail = 0 
+
+//OTP Test is Pass
+
+Time Stamp:	2026-05-18 18:01:28 686
+
+------------------------------Current Test------------------------------
+
+avdd_active = 17800(uA), avdd_idle = 2044(uA)£¬  avdd_sleep = 27(uA)
+
+idle(2044) > setting max(2000)
+
+
+//Current Test is Fail
+
+------------------------------Current Test------------------------------
+
+avdd_active = 17818(uA), avdd_idle = 2044(uA)£¬  avdd_sleep = 32(uA)
+
+idle(2044) > setting max(2000)
+
+sleep(32) > setting max(30)
+
+
+//Current Test is Fail
+
+------------------------------Current Test------------------------------
+
+avdd_active = 17824(uA), avdd_idle = 2037(uA)£¬  avdd_sleep = 30(uA)
+
+idle(2037) > setting max(2000)
+
+
+//Current Test is Fail
+
+Time Stamp:	2026-05-18 18:01:32 629
+
+------------------------------IOVoltage Test------------------------------
+
+IOV = 1.8V  High : int0 vol = 1799  ,	int2 vol = 1799  
+IOV = 1.8V  Low  : int0 vol = 25    ,	int2 vol = 1     
+IOV = 1.2V  High : int0 vol = 1244  ,	int2 vol = 1245  
+IOV = 1.2V  Low  : int0 vol = 17    ,	int2 vol = 1     
+
+IOV 1.62V  & 1.08V trans test PASS
+
+
+//IOVoltage Test is Pass
+
+
+//Final result is NG

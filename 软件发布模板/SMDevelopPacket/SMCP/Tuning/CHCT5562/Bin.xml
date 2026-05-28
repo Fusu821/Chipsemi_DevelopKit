@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="GB2312"?><!DOCTYPE ControlWnd []>
+<ControlWnd>
+  <Parameters Size="0x800" Addr="0" VerXml="0x1" BinFile="cfg_def.bin">
+    <Para Name="sig_fw"      	Offset="0x00" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="cfg_version"    Offset="0x01" Type=" U8"  Num="  1" Dsp="HEX"/>
+	<Para Name="project_id"     Offset="0x02" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="vendor_id"      Offset="0x04" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="lcdX"      		Offset="0x06" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="lcdY"      		Offset="0x08" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="tuning_version" Offset="0x0A" Type="U16"  Num="  1" Dsp="HEX"/>
+
+	<Para Name="finger"      	Offset="0x18" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="tp_tx_n"      	Offset="0x19" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="tp_rx_n"      	Offset="0x1a" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="aa_tx_n"      	Offset="0x1b" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="aa_rx_n"      	Offset="0x1c" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="hd_len"       	Offset="0x1d" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="rpt_rate_active" Offset="0x1e" Type="U16" Num="  1" Dsp="DEC"/>
+	<Para Name="rpt_rate_Idle"  Offset="0x20" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="rpt_rate_gst"   Offset="0x22" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="rpt_rate_active_game" Offset="0x24" Type="U16" Num="  1" Dsp="DEC"/>
+	<Para Name="activeToIdle_T" Offset="0x2a" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="wakeup_back_T"  Offset="0x2c" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="funcCfg0"      	Offset="0x30" Type="U32"  Num="  1" Dsp="DEC"/>
+	<Para Name="funcCfg1"      	Offset="0x34" Type="U32"  Num="  1" Dsp="DEC"/>
+	<Para Name="funcCfg2"      	Offset="0x38" Type="U32"  Num="  1" Dsp="DEC"/>
+	<Para Name="funcCfg3"      	Offset="0x3c" Type="U32"  Num="  1" Dsp="DEC"/>
+	<Para Name="funcCfg4"      	Offset="0x40" Type="U32"  Num="  1" Dsp="DEC"/>
+	<Para Name="funcCfg5"      	Offset="0x44" Type="U32"  Num="  1" Dsp="DEC"/>
+	<Para Name="confirmTouch"   Offset="0x48" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="confirmLeave"   Offset="0x49" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="pitchSize"      Offset="0x4a" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="tx_map"      	Offset="0x50" Type=" U8"  Num=" 20" Dsp="MTX"/>
+	<Para Name="rx_map"      	Offset="0x64" Type=" U8"  Num=" 42" Dsp="MTX"/>
+
+	<Para Name="StrechPixelT"   Offset="0x00" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="StrechPixelB"   Offset="0x02" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="StrechPixelL"   Offset="0x04" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="StrechPixelR"   Offset="0x06" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="StrechRatioT"   Offset="0x08" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="StrechRatioB"   Offset="0x0a" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="StrechRatioL"   Offset="0x0c" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="StrechRatioR"   Offset="0x0e" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="StrechPixelT2"  Offset="0x10" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="StrechPixelB2"  Offset="0x12" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="StrechPixelL2"  Offset="0x14" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="StrechPixelR2"  Offset="0x16" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="StrechRatioT2"  Offset="0x18" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="StrechRatioB2"  Offset="0x1a" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="StrechRatioL2"  Offset="0x1c" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="StrechRatioR2"  Offset="0x1e" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="StrechCutT"   	Offset="0x20" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="StrechCutB"   	Offset="0x21" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="StrechCutL"   	Offset="0x22" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="StrechCutR"   	Offset="0x23" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="StrechX_shift"  Offset="0x24" Type=" S8"  Num="  1" Dsp="DEC"/>
+	<Para Name="StrechY_shift"  Offset="0x25" Type=" S8"  Num="  1" Dsp="DEC"/>
+	<Para Name="StrechMarginT"  Offset="0x26" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="StrechMarginB"  Offset="0x27" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="StrechMarginL"  Offset="0x28" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="StrechMarginR"  Offset="0x29" Type=" U8"  Num="  1" Dsp="DEC"/>
+	
+	<Para Name="c0_xy_div"      	Offset="0x00" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="c0_lpf_lut_num" 	Offset="0x02" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="c0_xy_num_noise"    Offset="0x04" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c0_self_inte_time"  Offset="0x05" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c0_f_rst_num"       Offset="0x06" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c0_tx_cnt"       	Offset="0x07" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c0_start_mode"      Offset="0x08" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c0_clk_sel"       	Offset="0x09" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c0_sample_mode"     Offset="0x0a" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c0_sdm_sign"       	Offset="0x0b" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c0_sync_mode"       Offset="0x0c" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c0_mix_num"       	Offset="0x0d" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c0_xy_num"       	Offset="0x0e" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c0_lpf_lut_step"    Offset="0x0f" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c0_lpf_sft"       	Offset="0x10" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c0_dec_sft"       	Offset="0x11" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c0_rst_num"       	Offset="0x12" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c0_lpf_lut_mode"    Offset="0x13" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c0_rx_rin_ctrl"     Offset="0x14" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c0_rx_conv_fb"     	Offset="0x15" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c0_rx_i2v_rfv"      Offset="0x16" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c0_mix_base"       	Offset="0x17" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c0_mix_quad"       	Offset="0x18" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c0_tx_drv_vol"     Offset="0x19" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c0_s_tx_max"       	Offset="0x1a" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c0_s_tx_step"       Offset="0x1b" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c0_s_tx_dac_man"    Offset="0x1c" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c0_s_tx_dac_man_en" Offset="0x1d" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c0_cusum"           Offset="0x1e" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c0_mcu_freq"        Offset="0x1f" Type=" U8"  Num="  1" Dsp="DEC"/>
+
+	<Para Name="c1_xy_div"      	Offset="0x20" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="c1_lpf_lut_num" 	Offset="0x22" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="c1_xy_num_noise"    Offset="0x24" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c1_self_inte_time"  Offset="0x25" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c1_f_rst_num"       Offset="0x26" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c1_tx_cnt"       	Offset="0x27" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c1_start_mode"      Offset="0x28" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c1_clk_sel"       	Offset="0x29" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c1_sample_mode"     Offset="0x2a" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c1_sdm_sign"       	Offset="0x2b" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c1_sync_mode"       Offset="0x2c" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c1_mix_num"       	Offset="0x2d" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c1_xy_num"       	Offset="0x2e" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c1_lpf_lut_step"    Offset="0x2f" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c1_lpf_sft"       	Offset="0x30" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c1_dec_sft"       	Offset="0x31" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c1_rst_num"       	Offset="0x32" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c1_lpf_lut_mode"    Offset="0x33" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c1_rx_rin_ctrl"     Offset="0x34" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c1_rx_conv_fb"     	Offset="0x35" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c1_rx_i2v_rfv"      Offset="0x36" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c1_mix_base"       	Offset="0x37" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c1_mix_quad"       	Offset="0x38" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c1_tx_drv_vol"     Offset="0x39" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c1_s_tx_max"       	Offset="0x3a" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c1_s_tx_step"       Offset="0x3b" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c1_s_tx_dac_man"    Offset="0x3c" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c1_s_tx_dac_man_en" Offset="0x3d" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c1_cusum"           Offset="0x3e" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c1_mcu_freq"        Offset="0x3f" Type=" U8"  Num="  1" Dsp="DEC"/>
+
+	<Para Name="c2_xy_div"      	Offset="0x40" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="c2_lpf_lut_num" 	Offset="0x42" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="c2_xy_num_noise"    Offset="0x44" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c2_self_inte_time"  Offset="0x45" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c2_f_rst_num"       Offset="0x46" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c2_tx_cnt"       	Offset="0x47" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c2_start_mode"      Offset="0x48" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c2_clk_sel"       	Offset="0x49" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c2_sample_mode"     Offset="0x4a" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c2_sdm_sign"       	Offset="0x4b" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c2_sync_mode"       Offset="0x4c" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c2_mix_num"       	Offset="0x4d" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c2_xy_num"       	Offset="0x4e" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c2_lpf_lut_step"    Offset="0x4f" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c2_lpf_sft"       	Offset="0x50" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c2_dec_sft"       	Offset="0x51" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c2_rst_num"       	Offset="0x52" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c2_lpf_lut_mode"    Offset="0x53" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c2_rx_rin_ctrl"     Offset="0x54" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c2_rx_conv_fb"     	Offset="0x55" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c2_rx_i2v_rfv"      Offset="0x56" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c2_mix_base"       	Offset="0x57" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c2_mix_quad"       	Offset="0x58" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c2_tx_drv_vol"     Offset="0x59" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c2_s_tx_max"       	Offset="0x5a" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c2_s_tx_step"       Offset="0x5b" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c2_s_tx_dac_man"    Offset="0x5c" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c2_s_tx_dac_man_en" Offset="0x5d" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c2_cusum"           Offset="0x5e" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="c2_mcu_freq"        Offset="0x5f" Type=" U8"  Num="  1" Dsp="DEC"/>
+	
+	<Para Name="thd0_mul_touch"     Offset="0x00" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="thd0_mul_leave"     Offset="0x02" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="thd0_slt_touch"     Offset="0x04" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="thd0_slt_leave"     Offset="0x06" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="thd0_slr_touch"     Offset="0x08" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="thd0_slr_leave"     Offset="0x0a" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="thd0_slt_idle"      Offset="0x0c" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="thd0_slr_idle"      Offset="0x0d" Type=" U8"  Num="  1" Dsp="DEC"/>
+	
+	<Para Name="thd_edge_t"         Offset="0x00" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="thd_edge_b"         Offset="0x01" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="thd_edge_l"         Offset="0x02" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="thd_edge_r"         Offset="0x03" Type=" U8"  Num="  1" Dsp="DEC"/>
+	
+	<Para Name="fh_noise_max"       Offset="0x00" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="fh_noise_sum"       Offset="0x02" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="fh_noise_diff"      Offset="0x04" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="fh_noise_try_cnt"   Offset="0x06" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="fh_noise_max_orig"  Offset="0x08" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="fh_noise_ave_orig"  Offset="0x0a" Type="U16"  Num="  1" Dsp="DEC"/>
+	
+	<Para Name="fh_freq_lock"       Offset="0x00" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="fh_freq_number"     Offset="0x01" Type=" U8"  Num="  1" Dsp="DEC"/>
+	
+	<Para Name="ms_edge_boundary"       Offset="0x00" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="ms_jitter_dist_center"  Offset="0x02" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="ms_jitter_dist_edge"    Offset="0x04" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="ms_jitter_weight"       Offset="0x06" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="ms_jitter_weight_ratio" Offset="0x08" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="ms_jitter_shake_frame"  Offset="0x0a" Type="U16"  Num="  1" Dsp="DEC"/>
+	<Para Name="ms_jitter_shake_ratio"  Offset="0x0c" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="ms_jitter_insert_frame" Offset="0x0d" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="ms_smooth_ratio_center" Offset="0x0e" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="ms_smooth_ratio_edge"   Offset="0x0f" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="ms_nml_fil_water_ratio_tx"  Offset="0x10" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="ms_nml_fil_water_ratio_rx"  Offset="0x11" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="ms_glv_confirmTouch"   		Offset="0x12" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="ms_glv_confirmLeave"  	    Offset="0x13" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="ms_glv_fil_peak_ratio"   	Offset="0x14" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="ms_glv_fil_water_ratio_tx"  Offset="0x15" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="ms_glv_fil_water_ratio_rx"  Offset="0x16" Type=" U8"  Num="  1" Dsp="DEC"/>
+	
+	<Para Name="ms_rolling_noise_type0"     Offset="0x27" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="ms_rolling_noise_type1"     Offset="0x28" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="ms_rolling_noise_type2"     Offset="0x29" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="ms_rolling_noise_type3"     Offset="0x2a" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="ms_rolling_noise_type4"     Offset="0x2b" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="ms_rolling_noise_type5"     Offset="0x2c" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="ms_rolling_noise_type6"     Offset="0x2d" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="ms_rolling_noise_type7"     Offset="0x2e" Type=" U8"  Num="  1" Dsp="DEC"/>
+
+	<Para Name="ms_palm_index_maybe"     	Offset="0x2f" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="ms_palm_index_confirm"     	Offset="0x30" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="ms_palm_ratio"     			Offset="0x31" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="ms_palm_point_confirm"      Offset="0x32" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="ms_palm_point_leave"     	Offset="0x33" Type=" U8"  Num="  1" Dsp="DEC"/>
+
+	<Para Name="glove_rect_thd_min0"    Offset="0x00" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="glove_rect_thd_palm0"   Offset="0x01" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="glove_rect_thd_min1"    Offset="0x02" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="glove_rect_thd_palm1"   Offset="0x03" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="glove_rect_thd_min2"    Offset="0x04" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="glove_rect_thd_palm2"   Offset="0x05" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="glove_rect_thd_min3"    Offset="0x06" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="glove_rect_thd_palm3"   Offset="0x07" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="glove_rect_thd_min4"    Offset="0x08" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="glove_rect_thd_palm4"   Offset="0x09" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="glove_rect_thd_min5"    Offset="0x0a" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="glove_rect_thd_palm5"   Offset="0x0b" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="glove_rect_thd_min6"    Offset="0x0c" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="glove_rect_thd_palm6"   Offset="0x0d" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="glove_rect_thd_min7"    Offset="0x0e" Type=" U8"  Num="  1" Dsp="DEC"/>
+	<Para Name="glove_rect_thd_palm7"   Offset="0x0f" Type=" U8"  Num="  1" Dsp="DEC"/>
+	
+	<Para Name="funcCfgTest"      	Offset="0x7F8" Type="U32"  Num="  1" Dsp="DEC"/>
+	<Para Name="test_v0"       		Offset="0x00"  Type="S16"  Num="  1" Dsp="DEC"/>
+	<Para Name="test_v1"       		Offset="0x02"  Type="S16"  Num="  1" Dsp="DEC"/>
+	<Para Name="test_v2"       		Offset="0x04"  Type="S16"  Num="  1" Dsp="DEC"/>
+	<Para Name="test_v3"       		Offset="0x06"  Type="S16"  Num="  1" Dsp="DEC"/>
+	<Para Name="test_v4"       		Offset="0x08"  Type="S16"  Num="  1" Dsp="DEC"/>
+	<Para Name="test_v5"       		Offset="0x0a"  Type="S16"  Num="  1" Dsp="DEC"/>
+	<Para Name="test_v6"       		Offset="0x0c"  Type="S16"  Num="  1" Dsp="DEC"/>
+	<Para Name="test_v7"       		Offset="0x0e"  Type="S16"  Num="  1" Dsp="DEC"/>	
+		
+  </Parameters>
+</ControlWnd>

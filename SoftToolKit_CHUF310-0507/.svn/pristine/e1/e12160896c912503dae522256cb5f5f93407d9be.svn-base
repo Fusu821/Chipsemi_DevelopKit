@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{212EC09F-4360-4475-86E8-A822C915CE9A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LibraryTools</RootNamespace>
+    <AssemblyName>LibraryTools</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MahApps.Metro, Version=1.2.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\MahApps.Metro.dll</HintPath>
+    </Reference>
+    <Reference Include="MahApps.Metro.Resources, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\MahApps.Metro.Resources.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BasicTools\LoadConfig.cs" />
+    <Compile Include="ToolRawData\DispalyRawDataView.cs" />
+    <Compile Include="ToolRawData\ModelToolRawData.cs" />
+    <Compile Include="ToolRawData\ToolRawData.xaml.cs">
+      <DependentUpon>ToolRawData.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ToolRawData\ToolRawDataViewModel.cs" />
+    <Compile Include="ToolTouch\RuningKernel.cs" />
+    <Compile Include="ToolTouch\ICDisplay.cs" />
+    <Compile Include="ToolTouch\DispalyView.cs" />
+    <Compile Include="ToolFilterTransform\ModelToolFilterTransform.cs" />
+    <Compile Include="ToolFilterTransform\ToolFilterTransform.xaml.cs">
+      <DependentUpon>ToolFilterTransform.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ToolFilterTransform\ToolFilterTransformViewModel.cs" />
+    <Compile Include="ToolMontageBin\ModeToolMontageBin.cs" />
+    <Compile Include="ToolMontageBin\ToolMontageBin.xaml.cs">
+      <DependentUpon>ToolMontageBin.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ToolMontageBin\ToolMontageBinViewMode.cs" />
+    <Compile Include="ToolProtocal\ModelToolProtocal.cs" />
+    <Compile Include="ToolProtocal\ToolProtocal.xaml.cs">
+      <DependentUpon>ToolProtocal.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ToolProtocal\ToolProtocalViewModel.cs" />
+    <Compile Include="Tools.cs" />
+    <Compile Include="Base.cs" />
+    <Compile Include="ToolCheckSum\ToolCheckSumViewModel.cs" />
+    <Compile Include="ToolCheckSum\ModelToolCheckSum.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ToolCheckSum\ToolCheckSum.xaml.cs">
+      <DependentUpon>ToolCheckSum.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ToolTouch\ModelToolTouch.cs" />
+    <Compile Include="ToolTouch\ToolTouch.xaml.cs">
+      <DependentUpon>ToolTouch.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ToolTouch\ToolTouchViewModel.cs" />
+    <Compile Include="ToolTouch\ToolTouchFrame.xaml.cs">
+      <DependentUpon>ToolTouchFrame.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ToolRawData\WpfRawDataView.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="ToolCheckSum\ToolCheckSum.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ToolFilterTransform\ToolFilterTransform.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ToolMontageBin\ToolMontageBin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ToolProtocal\ToolProtocal.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ToolRawData\ToolRawData.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ToolTouch\ToolTouch.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ToolTouch\ToolTouchFrame.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SEMI.Util\SEMI.Util.csproj">
+      <Project>{B9EFB495-DC9D-4900-B43C-23584D117755}</Project>
+      <Name>SEMI.Util</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SMInvokeBridge\SMTestBridge.vcxproj">
+      <Project>{6575EAC5-ADF6-4BB7-8745-AB3C0A7A33DD}</Project>
+      <Name>SMInvokeBridge</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy $(TargetDir)*.dll  $(SolutionDir)SEMIDevelopKit\bin\Debug
+copy $(TargetDir)*.dll ..\..\..\..\软件发布模板\SMDevelopPacket\SMCP</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

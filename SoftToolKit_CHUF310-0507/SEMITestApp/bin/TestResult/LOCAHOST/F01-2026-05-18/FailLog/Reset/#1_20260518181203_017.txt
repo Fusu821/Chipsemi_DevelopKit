@@ -1,0 +1,66 @@
+ChipSemi_Tester_V8.8.8_20260318
+WorkStation: F01   ProjectName: 0508
+
+Time Stamp:	2026-05-18 18:11:55 329
+Mtk Version = 0xd1103
+
+Time Stamp:	2026-05-18 18:11:55 821
+
+------------------------------Project Test------------------------------
+Project = 310
+
+//Project Test is Pass
+
+Time Stamp:	2026-05-18 18:11:55 821
+
+------------------------------RESET Test------------------------------
+
+
+//Reset Test is Fail
+
+Time Stamp:	2026-05-18 18:11:58 437
+
+------------------------------OSC Trim Test------------------------------
+Target No1=52000  No2=62400  No3=62400 
+osc32k trim = 50 value = 32035	osc52m trim = 192 value = 52076624
+osc52.00m trim = 192	value = 52076624 
+osc41.60m trim = 280	value = 41648592
+osc62.40m trim = 133	value  = 62299736
+Temp1 -184	Temp2 -183	Temp3 -182	Temp4 -182	
+32K = 0x32, 52M=0xc0 
+
+//OSCTrim Test is Pass
+
+Time Stamp:	2026-05-18 18:12:00 276
+
+------------------------------OTP Test------------------------------
+ATE/FCT is free & Only check 
+Fail = 1 
+
+//OTP Test is Fail
+
+Time Stamp:	2026-05-18 18:12:00 316
+
+------------------------------Current Test------------------------------
+
+avdd_active = 17299(uA), avdd_idle = 1459(uA)£¬  avdd_sleep = 19(uA)
+
+
+//Current Test is Pass
+
+Time Stamp:	2026-05-18 18:12:01 632
+
+------------------------------IOVoltage Test------------------------------
+
+IOV = 1.8V  High : int0 vol = 1786  ,	int2 vol = 1786  
+IOV = 1.8V  Low  : int0 vol = 25    ,	int2 vol = 1     
+IOV = 1.2V  High : int0 vol = 1234  ,	int2 vol = 1235  
+IOV = 1.2V  Low  : int0 vol = 18    ,	int2 vol = 0     
+
+IOV 1.62V  & 1.08V trans test PASS
+
+
+//IOVoltage Test is Pass
+
+
+//Final result is NG

@@ -1,0 +1,56 @@
+ChipSemi_Tester_V8.8.8_20260318
+WorkStation: F01   ProjectName: 0508
+
+Time Stamp:	2026-05-18 17:57:42 931
+Mtk Version = 0xd1103
+
+Time Stamp:	2026-05-18 17:57:43 432
+
+------------------------------Project Test------------------------------
+Project = 200
+
+//Project Test is Pass
+
+Time Stamp:	2026-05-18 17:57:43 698
+
+------------------------------RESET Test------------------------------
+
+
+//Reset Test is Pass
+
+Time Stamp:	2026-05-18 17:57:43 886
+
+------------------------------OSC Trim Test------------------------------
+Target No1=52000  No2=62400  No3=62400 
+osc32k trim = 52 value = 31906	osc52m trim = 196 value = 52062504
+osc52.00m trim = 196	value = 52062504 
+osc41.60m trim = 285	value = 41551696
+osc62.40m trim = 137	value  = 62297208
+Temp1 65406	Temp2 65406	Temp3 65406	Temp4 65406	
+32K = 0x34, 52M=0xc4 
+
+//OSCTrim Test is Pass
+
+Time Stamp:	2026-05-18 17:57:44 137
+
+------------------------------OTP Test------------------------------
+Fail = 0 
+
+//OTP Test is Pass
+
+Time Stamp:	2026-05-18 17:57:44 173
+
+------------------------------IOVoltage Test------------------------------
+
+IOV = 1.8V  High : int0 vol = 1799  ,	int2 vol = 1800  
+IOV = 1.8V  Low  : int0 vol = 24    ,	int2 vol = 1     
+IOV = 1.2V  High : int0 vol = 1244  ,	int2 vol = 1245  
+IOV = 1.2V  Low  : int0 vol = 18    ,	int2 vol = 1     
+
+IOV 1.62V  & 1.08V trans test PASS
+
+
+//IOVoltage Test is Pass
+
+
+//Final result is Pass

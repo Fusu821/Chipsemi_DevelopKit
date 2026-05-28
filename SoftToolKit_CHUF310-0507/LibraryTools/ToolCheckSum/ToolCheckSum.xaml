@@ -1,0 +1,37 @@
+﻿<UserControl x:Class="LibraryTools.ToolCheckSum"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:LibraryTools"         
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="850">
+    <UserControl.Resources>
+        <local:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
+    </UserControl.Resources>
+    <Grid Background="#AAAAAA">
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="120"></RowDefinition>
+            <RowDefinition Height="25"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <TextBox Name ="tbDataInput" Text="{Binding ModelToolCheckSum.CheckSumDataInput,Mode=TwoWay}"  AcceptsReturn="True" TextWrapping="Wrap"></TextBox>
+        <GroupBox Grid.Row="1" Header="CheckType">
+            <UniformGrid Rows="3" Columns="4">
+                <RadioButton Content="CheckSumU816" IsChecked="{Binding ModelToolCheckSum.CurSelCheckSum, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static local:CheckSumType.CheckSumU8}}"></RadioButton>
+                <RadioButton Content="CheckSumU16"  IsChecked="{Binding ModelToolCheckSum.CurSelCheckSum, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static local:CheckSumType.CheckSumU16}}"></RadioButton>
+                <RadioButton Content="CheckSumEx"   IsChecked="{Binding ModelToolCheckSum.CurSelCheckSum, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static local:CheckSumType.CheckSumEx}}"></RadioButton>
+                <RadioButton Content="CheckSumU8"   IsChecked="{Binding ModelToolCheckSum.CurSelCheckSum, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static local:CheckSumType.CheckSumU8}}"></RadioButton>
+                <RadioButton Content="CheckSumU32"   IsChecked="{Binding ModelToolCheckSum.CurSelCheckSum, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static local:CheckSumType.CheckSum32}}"></RadioButton>
+            </UniformGrid>
+        </GroupBox>
+        <UniformGrid Grid.Row="2" Rows="1" Columns="4">
+            <TextBox Name="tbCheckSum" Text="{Binding ModelToolCheckSum.CalcCheckSum, StringFormat={}{0:X4}}"  Margin="5, 2" Width="120" AcceptsReturn="False"></TextBox>
+            <Control></Control>
+            <Button Name="btnCalc" Command="{Binding ModelToolCheckSum.BtnCommand }"  Content="Calc" Background="Transparent" Margin="5, 2"></Button>
+        </UniformGrid>
+    </Grid>
+</UserControl>

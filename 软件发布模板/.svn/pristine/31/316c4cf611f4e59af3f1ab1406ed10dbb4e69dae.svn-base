@@ -1,0 +1,2 @@
+//1-进入suspend; 10-timer唤醒; 32-50ms,最大支持300ms
+invoke_command(99, 1, 10, 32)

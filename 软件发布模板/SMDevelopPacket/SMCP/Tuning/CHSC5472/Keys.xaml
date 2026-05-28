@@ -1,0 +1,89 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:viewModel="clr-namespace:SEMIDevelopKit.Src.WinSub"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+			<RowDefinition Height="525"></RowDefinition>
+        </Grid.RowDefinitions>
+		
+        <GroupBox Header="14：按键（Key）数量、坐标信息" Grid.Row="0">
+            <UniformGrid Rows="12">
+				<UniformGrid Columns="16">
+				<Label Content="key优先"  HorizontalAlignment="Right" Margin="5"></Label>
+				<CheckBox Content="Key Priority"   Tag="13" viewModel:TuningItem.ItemName="funcCfgEx1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>
+			
+				<UniformGrid Columns="16">
+				<Label Content="key坐标切换"  HorizontalAlignment="Right" Margin="5"></Label>
+				<CheckBox Content="Key XY Switch"          Tag="1" viewModel:TuningItem.ItemName="keyMode"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="Key竖排"  HorizontalAlignment="Right" Margin="5"></Label>
+				<CheckBox Content="Key Vertial Column"     Tag="0" viewModel:TuningItem.ItemName="keyMode"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+                <Label Content="通道个数" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="keyNum"></TextBox>
+                <Label Content="Y 坐标" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="keyPosY"></TextBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+                <Label Content="通道 0" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="keyChanel0"></TextBox>
+                <Label Content=" X坐标0" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="keyPosX0"></TextBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+                <Label Content="通道 1" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="keyChanel1"></TextBox>
+                <Label Content=" X坐标1" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="keyPosX1"></TextBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+                <Label Content="通道 2" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="keyChanel2"></TextBox>
+				<Label Content=" X坐标2" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="keyPosX2"></TextBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+                <Label Content="通道 3" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="keyChanel3"></TextBox>
+				<Label Content=" X坐标3" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="keyPosX3"></TextBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+                <Label Content="通道 4" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="keyChanel4"></TextBox>
+				<Label Content=" X坐标4" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="keyPosX4"></TextBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+                <Label Content="通道 5" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="keyChanel5"></TextBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+                <Label Content="通道 6" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="keyChanel6"></TextBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+                <Label Content="通道 7" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="keyChanel7"></TextBox>
+				</UniformGrid>
+            </UniformGrid>
+        </GroupBox>
+    </Grid>
+</UserControl>

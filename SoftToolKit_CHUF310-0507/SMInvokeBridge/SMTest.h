@@ -1,0 +1,262 @@
+#pragma once
+
+using namespace System;
+using namespace System::Collections::Generic;
+using namespace System::Runtime::InteropServices;
+#include <Windows.h>
+#include "../Include/SEMITouch.h"
+#include "../Include/NativeTestInterface.h"
+
+//#include <msclr\marshal_cppstd.h>
+// using namespace msclr::interop;
+// using namespace System;
+
+namespace SMInvokeBridge {
+
+	public ref class SMComplex
+	{
+	private:
+		NativeTestInterface* m_TestProxyAddr;
+	public:
+		SMComplex()
+			:m_TestProxyAddr(nullptr)
+		{
+			m_TestProxyAddr = GetTestWapperInterface();
+		}
+		virtual ~SMComplex()
+		{
+			ReleaseTestWrapperInterface(m_TestProxyAddr);
+			m_TestProxyAddr = nullptr;
+		}
+ 	public:
+ 		unsigned int StartTest( int iDevice )
+		{
+			return m_TestProxyAddr->StartTest( iDevice );
+		}
+		unsigned int StartTestBySn( int iDevice, String^ sn )
+		{
+			TCHAR szCode[MAX_PATH] = {0};
+			for( int index = 0; index < sn->Length; index++ )
+				szCode[index] = (TCHAR)sn[index];
+			return m_TestProxyAddr->StartTest( iDevice, szCode );
+		}
+        unsigned int SendTestRzForDisplay( int iDevice, String^ display )
+        {
+            if (display == nullptr || display->Length == 0)
+            {
+                return 1;
+            }
+            TCHAR sdCode[20] = {0};
+            for( int index = 0; index < display->Length; index++ )
+                sdCode[index] = (TCHAR)display[index];
+            return m_TestProxyAddr->SendTestRz( iDevice, sdCode );
+        }
+		unsigned int SimulateTest( int iDevice, Dictionary<int, array<int, 2>^>^ dcData )
+		{
+			SimulateData arraySimulate[SIMULATE_TEST_DATA_CNT];
+			memset( &arraySimulate, 0, sizeof(arraySimulate) );
+
+			int index = 0;
+			for each(System::Collections::Generic::KeyValuePair<int,array<int, 2>^> sd in dcData)
+			{
+				SimulateData& simu = arraySimulate[index++];
+				simu.itemID = sd.Key;
+				simu.rows = sd.Value->GetLength(0);
+				simu.cols = sd.Value->GetLength(1);
+				for( int iRow = 0; iRow < (int)simu.rows; iRow++ )
+				{
+					for( int iCol = 0; iCol < (int)simu.cols; iCol++ )
+					{
+						simu.itemData[iRow][iCol] = sd.Value[iRow, iCol];
+					}
+				}
+			}
+			
+			return m_TestProxyAddr->SimulateTest( iDevice, arraySimulate );
+		}
+		void GameOver( unsigned char mustStopNow )
+		{
+			return m_TestProxyAddr->GameOver( mustStopNow );
+		}
+		unsigned int ForcePaint( int device, bool enterPaint )
+		{
+			return m_TestProxyAddr->ForcePaint( device, enterPaint );
+		}
+		void SetContextForGraphTest( int iDevice, IntPtr dc, int width, int height )
+		{
+			RECT rc = { 0, 0, width, height };
+			m_TestProxyAddr->SetContextForGraphTest( iDevice, (HDC)(LPVOID)dc, rc );
+		}
+		void SetCommandLineParam( unsigned int commandLineMode )
+		{
+			m_TestProxyAddr->SetCommandLineParam( commandLineMode );
+		}
+		bool ParseTestSample( array<unsigned char>^ content, String^ name, array<int, 2>^ outSample )
+		{
+			TCHAR szName[MAX_PATH] = {0};
+			for( int index = 0; index < name->Length; index++ )
+				szName[index] = (TCHAR)name[index];
+
+			unsigned short outTemp[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+			BOOL bOk = m_TestProxyAddr->ParseTestSample( (unsigned char*)Marshal::UnsafeAddrOfPinnedArrayElement( content, 0 ).ToPointer(), content->Length, szName, outTemp );
+
+			for( int iRow = 0; iRow < outSample->GetLength(0); iRow++ )
+				for( int iCol = 0; iCol < outSample->GetLength(1); iCol++ )
+					outSample[iRow, iCol] = outTemp[iRow][iCol];
+
+			return bOk == TRUE;
+		}
+		void RegistSMTestCallBack(SMCallBack^ callBack)
+		{
+			NativeCallBack navCallBack;
+			//navCallBack.onListItemChange = callBack->onListItemChange;
+			IntPtr oneTestStartAddr = System::Runtime::InteropServices::Marshal::GetFunctionPointerForDelegate(callBack->onOneTestStart);
+			navCallBack.onOneTestStart = reinterpret_cast<OnOneTestStartCallBack>(oneTestStartAddr.ToInt32());
+
+			IntPtr itemChangeAddr = System::Runtime::InteropServices::Marshal::GetFunctionPointerForDelegate(callBack->onListItemChange);
+			navCallBack.onListItemChange = reinterpret_cast<OnListItemChangeCallBack>(itemChangeAddr.ToInt32());
+
+			IntPtr processBarChangeAddr = System::Runtime::InteropServices::Marshal::GetFunctionPointerForDelegate(callBack->onProcessBarChanging);
+			navCallBack.onProcssBarChanging = reinterpret_cast<OnProcessBarChangingCallBack>(processBarChangeAddr.ToInt32());
+
+			IntPtr oneTestOverAddr = System::Runtime::InteropServices::Marshal::GetFunctionPointerForDelegate(callBack->onOneTestOver);
+			navCallBack.onOneTestOver = reinterpret_cast<OnOneTestOverCallBack>(oneTestOverAddr.ToInt32());
+
+			IntPtr oneTouchReportAddr = System::Runtime::InteropServices::Marshal::GetFunctionPointerForDelegate(callBack->onTouchReport);
+			navCallBack.onTouchReport = reinterpret_cast<OnTouchReportCallBack>(oneTouchReportAddr.ToInt32());
+
+			if (callBack->OnInforUpload != nullptr)
+			{
+				IntPtr OnInfoUploadAddr =  System::Runtime::InteropServices::Marshal::GetFunctionPointerForDelegate(callBack->OnInforUpload);
+				navCallBack.onInforUpload = reinterpret_cast<OnInformationUploadCallBack>(OnInfoUploadAddr.ToInt32());
+			}
+			m_TestProxyAddr->RegistComplexCallBack(navCallBack);
+		}
+		unsigned int ReloadXmlConfig( )
+		{
+			return m_TestProxyAddr->ReloadXmlConfig();
+		}
+
+		unsigned int OnlyReloadXmlConfig()
+		{
+			return m_TestProxyAddr->ReloadXmlConfig( TRUE );
+		}
+
+		unsigned int SetCommContext(int index)
+		{
+			return m_TestProxyAddr->SetCommContext(index);
+		}
+
+		unsigned int OnLine(unsigned char option, IntPtr hwnd)
+		{
+			return m_TestProxyAddr->OnLine(option, (HWND)hwnd.ToInt64());
+		}
+
+		unsigned int Sign(unsigned char option, String^ lineID, String^ account, String^ password)
+		{
+			TCHAR szLine[MAX_PATH] = {0}, szAccount[MAX_PATH] = {0}, szPassword[MAX_PATH] = {0};
+			for( int index = 0; index < lineID->Length; index++ )
+				szLine[index] = (TCHAR)lineID[index];
+			for( int index = 0; index < account->Length; index++ )
+				szAccount[index] = (TCHAR)account[index];
+			for( int index = 0; index < password->Length; index++ )
+				szPassword[index] = (TCHAR)password[index];
+
+			return m_TestProxyAddr->Sign(option, szLine, szAccount, szPassword);
+		}
+
+		unsigned int UserOperationBeforeTest( int device )
+		{
+			return m_TestProxyAddr->UserOperationBeforeTest( device );
+		}
+
+		unsigned int UserOperationAfterTest( int device, int result )
+		{
+			return m_TestProxyAddr->UserOperationAfterTest( device, result );
+		}
+
+		unsigned int ActionToOnLineMessage(int msg, int wparam, int lparam)
+		{
+			return m_TestProxyAddr->ActionToOnLineMessage(msg, (unsigned int)wparam, (unsigned int)lparam);
+		}
+
+		String^ GetOnLineMessageInfo()
+		{
+			LPCTSTR szText = m_TestProxyAddr->GetOnLineMessageInfo();
+
+			String^ sCLRText = gcnew String(szText);
+
+			return sCLRText;
+		}
+
+		SMViewInfomation^ GetViewInfomation( )
+		{
+			unsigned short test_mode = 1;
+			unsigned short test_agent = 0;
+			unsigned char startWay = 0, snLen = 0, format = 0, needclickstart = 0, displaytest = 0;
+			TCHAR szStation[MAX_PATH], szProject[MAX_PATH], szSoftWare[MAX_PATH],snFilter[MAX_PATH];
+
+			if( ERROR_CODE_OK == m_TestProxyAddr->GetViewInfo( szStation, szProject, szSoftWare,snFilter, startWay, snLen, format, test_mode ,test_agent, needclickstart, displaytest) )
+			{
+				SMViewInfomation^ info = gcnew SMViewInfomation();
+
+				info->sn_len = snLen;
+				info->wayToStart = startWay;
+				info->format = format;
+				info->needclickstart = needclickstart;
+				info->displaytest = displaytest;
+
+				info->szStation = gcnew String( szStation );
+				info->szProjectInfo = gcnew String( szProject );
+				info->szSoftWare = gcnew String( szSoftWare );
+				info->snFilter = gcnew String( snFilter );
+				info->test_mode = test_mode;
+				info->test_agent= test_agent;
+				return info;
+			}
+			else
+			{
+				return nullptr;
+			}
+			
+		}
+
+		void GetAllTestItemLists(int deviceNo, List<SMTestItem^>^ listItems)
+		{
+			listItems->Clear();
+
+			for( int index = 0; index < MAX_TEST_ITEMS; index++ )
+			{
+				NativeTestItem& item = m_TestProxyAddr->GetNativeTestItemByIndex( deviceNo, index );
+				if( item.testCode < 0 )  continue;
+
+				SMTestItem^ newItem = (SMTestItem^)Marshal::PtrToStructure( (IntPtr)&(item), System::Type::GetType("SMInvokeBridge.SMTestItem"));
+				listItems->Add(newItem);
+			}
+		}
+		void GetTestMessage(int device, List<SMColorText^>^ listMessage)
+		{
+			listMessage->Clear();
+
+			ColorText& text = m_TestProxyAddr->GetTestMessage( device );
+
+			ColorText* nodeTail = text.next;
+			while (NULL != nodeTail)
+			{
+				SMColorText^ text = gcnew SMColorText(gcnew String(nodeTail->strText.c_str()), nodeTail->dwColor, nodeTail->iHeight, nodeTail->bBold);
+				listMessage->Add(text);
+
+				nodeTail = nodeTail->next;
+			}
+		}
+		String^ GetStatisticText()
+		{
+			LPCTSTR szText = m_TestProxyAddr->GetStatisticText();
+
+			String^ sCLRText = gcnew String(szText);
+
+			return sCLRText;
+		}
+	};
+
+}

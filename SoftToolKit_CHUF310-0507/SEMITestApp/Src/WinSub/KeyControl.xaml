@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="SEMITestApp.Src.WinSub.KeyControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="78" d:DesignWidth="175">
+    <Grid Height="78" Width="175">
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Label Name="X_Caption" Content="Key-x" VerticalAlignment="Center" HorizontalAlignment="Right"></Label>
+        <TextBox Name="X_Value" Grid.Row="0" Grid.Column="1"  Margin="5"></TextBox>
+        <Label Name="Y_Caption" Grid.Row="1" Content="Key-y" HorizontalAlignment="Right" VerticalAlignment="Center"></Label>
+        <TextBox Name="Y_Value" Grid.Row="1" Grid.Column="1"  Margin="5"></TextBox>
+    </Grid>
+</UserControl>

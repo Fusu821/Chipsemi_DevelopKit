@@ -1,0 +1,291 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Include">
+      <UniqueIdentifier>{9dfe8315-b522-4603-97a4-1df42a7878bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TestSrc">
+      <UniqueIdentifier>{f45a4771-4dc5-4b73-a5aa-fa9c0dc594b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{0eb10ffd-dc43-4d10-87c9-3bd0a90ecd8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Config">
+      <UniqueIdentifier>{1c2ff2e9-c32f-4725-9dbd-b2cbfce36605}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TestSrc\Graph">
+      <UniqueIdentifier>{970c9404-1dd0-4826-b78a-8a255b0c53df}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Macro.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\NativeTestInterface.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="TestSrc\TestBase.h">
+      <Filter>TestSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="TestSrc\Test3536.h">
+      <Filter>TestSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="TestSrc\TestManager.h">
+      <Filter>TestSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Util\Header\tinyxml.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="TestSrc\ToolKit.h">
+      <Filter>TestSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="Config\Config.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="Config\Config3536.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Util\Header\helper.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="TestSrc\Graph\GraphItemTest.h">
+      <Filter>TestSrc\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="TestSrc\Graph\GraphTool.h">
+      <Filter>TestSrc\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="TestSrc\Graph\VirtualButtonTest.h">
+      <Filter>TestSrc\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Util\Header\onlinelog.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="TestSrc\Graph\FreePaintTest.h">
+      <Filter>TestSrc\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="TestSrc\Graph\LinearityTest.h">
+      <Filter>TestSrc\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Util\Header\MiniDump.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="TestSrc\ResultStruct.h">
+      <Filter>TestSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="Config\Config3535.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="TestSrc\Test3535.h">
+      <Filter>TestSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Util\Header\lock.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="TestSrc\Test5816.h">
+      <Filter>TestSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="Config\Config5816.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="TestSrc\Test5472.h">
+      <Filter>TestSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="Config\Config5472.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="TestSrc\Test7449.h">
+      <Filter>TestSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="Config\Config7449.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="TestSrc\Test5562.h">
+      <Filter>TestSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="Config\Config5562.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="TestSrc\Graph\LinearityTPadTest.h">
+      <Filter>TestSrc\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="Config\Config8006.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="TestSrc\Test8006.h">
+      <Filter>TestSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="Config\Config810.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="TestSrc\Test810.h">
+      <Filter>TestSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="Config\Config7126.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="TestSrc\Test7126.h">
+      <Filter>TestSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="TestSrc\CRockerCalibration.h">
+      <Filter>TestSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="TestSrc\Graph\FreePaintRockerTest.h">
+      <Filter>TestSrc\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="TestSrc\Test570.h">
+      <Filter>TestSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="Config\Config570.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="TestSrc\Rolling.h">
+      <Filter>TestSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="TestSrc\Graph\ExplinearityTest.h">
+      <Filter>TestSrc\Graph</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SEMITest.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="TestSrc\TestBase.cpp">
+      <Filter>TestSrc</Filter>
+    </ClCompile>
+    <ClCompile Include="TestSrc\Test3536.cpp">
+      <Filter>TestSrc</Filter>
+    </ClCompile>
+    <ClCompile Include="TestSrc\TestManager.cpp">
+      <Filter>TestSrc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Util\Realize\tinyxml.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="TestSrc\ToolKit.cpp">
+      <Filter>TestSrc</Filter>
+    </ClCompile>
+    <ClCompile Include="Config\Config.cpp">
+      <Filter>Config</Filter>
+    </ClCompile>
+    <ClCompile Include="Config\Config3536.cpp">
+      <Filter>Config</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Util\Realize\helper.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="TestSrc\Graph\GraphItemTest.cpp">
+      <Filter>TestSrc\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="TestSrc\Graph\GraphTool.cpp">
+      <Filter>TestSrc\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="TestSrc\Graph\VirtualButtonTest.cpp">
+      <Filter>TestSrc\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Util\Realize\onlinelog.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="TestSrc\Graph\FreePaintTest.cpp">
+      <Filter>TestSrc\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="TestSrc\Graph\LinearityTest.cpp">
+      <Filter>TestSrc\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="Config\Config3535.cpp">
+      <Filter>Config</Filter>
+    </ClCompile>
+    <ClCompile Include="TestSrc\Test3535.cpp">
+      <Filter>TestSrc</Filter>
+    </ClCompile>
+    <ClCompile Include="TestSrc\Test5816.cpp">
+      <Filter>TestSrc</Filter>
+    </ClCompile>
+    <ClCompile Include="Config\Config5816.cpp">
+      <Filter>Config</Filter>
+    </ClCompile>
+    <ClCompile Include="TestSrc\Test5472.cpp">
+      <Filter>TestSrc</Filter>
+    </ClCompile>
+    <ClCompile Include="Config\Config5472.cpp">
+      <Filter>Config</Filter>
+    </ClCompile>
+    <ClCompile Include="TestSrc\Test7449.cpp">
+      <Filter>TestSrc</Filter>
+    </ClCompile>
+    <ClCompile Include="Config\Config7449.cpp">
+      <Filter>Config</Filter>
+    </ClCompile>
+    <ClCompile Include="TestSrc\Test5562.cpp">
+      <Filter>TestSrc</Filter>
+    </ClCompile>
+    <ClCompile Include="Config\Config5562.cpp">
+      <Filter>Config</Filter>
+    </ClCompile>
+    <ClCompile Include="TestSrc\Graph\LinearityTPadTest.cpp">
+      <Filter>TestSrc\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="Config\Config8006.cpp">
+      <Filter>Config</Filter>
+    </ClCompile>
+    <ClCompile Include="TestSrc\Test8006.cpp">
+      <Filter>TestSrc</Filter>
+    </ClCompile>
+    <ClCompile Include="Config\Config810.cpp">
+      <Filter>Config</Filter>
+    </ClCompile>
+    <ClCompile Include="TestSrc\Test810.cpp">
+      <Filter>TestSrc</Filter>
+    </ClCompile>
+    <ClCompile Include="Config\Config7126.cpp">
+      <Filter>Config</Filter>
+    </ClCompile>
+    <ClCompile Include="TestSrc\Test7126.cpp">
+      <Filter>TestSrc</Filter>
+    </ClCompile>
+    <ClCompile Include="TestSrc\CRockerCalibration.cpp">
+      <Filter>TestSrc</Filter>
+    </ClCompile>
+    <ClCompile Include="TestSrc\Graph\FreePaintRockerTest.cpp">
+      <Filter>TestSrc\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="TestSrc\Test570.cpp">
+      <Filter>TestSrc</Filter>
+    </ClCompile>
+    <ClCompile Include="Config\Config570.cpp">
+      <Filter>Config</Filter>
+    </ClCompile>
+    <ClCompile Include="TestSrc\Rolling.cpp">
+      <Filter>TestSrc</Filter>
+    </ClCompile>
+    <ClCompile Include="TestSrc\Graph\ExpLinearityTest.cpp">
+      <Filter>TestSrc\Graph</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

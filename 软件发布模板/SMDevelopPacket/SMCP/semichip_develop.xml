@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<semidevelop>
+  <params ic_type="0x500" protocal="0" vdd_votage="0x6E" iovdd_votage="0x6E" agent="0x1" i2c_addr="0x5C" i2c_speed="5" spi_speed="32" ip_addr="127.0.0.1" vih_votage="1800" not_reset="0" />
+</semidevelop>

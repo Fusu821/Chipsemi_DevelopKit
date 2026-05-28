@@ -1,0 +1,23 @@
+ChipSemi_Tester_V8.8.8_20260318
+WorkStation: F01   ProjectName: 0508
+
+Time Stamp:	2026-05-15 10:47:36 959
+Mtk Version = 0xd1103
+
+Time Stamp:	2026-05-15 10:47:37 461
+
+------------------------------OSC Trim Test------------------------------
+Start Trim 
+52.00M=0xc4
+41.60M=0x11d
+62.40M=0x00
+
+Time Stamp:	2026-05-15 10:48:27 468
+
+------------------------------Project Test------------------------------
+
+
+//Project Test is Pass
+
+
+//Final result is Pass

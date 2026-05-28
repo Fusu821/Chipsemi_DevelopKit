@@ -1,0 +1,120 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:viewModel="clr-namespace:SEMIDevelopKit.Src.WinSub"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="800">
+        <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="165"></RowDefinition>
+            <RowDefinition Height="125"></RowDefinition>
+            <RowDefinition Height="85"></RowDefinition>
+			<RowDefinition Height="85"></RowDefinition>
+            <RowDefinition Height="85"></RowDefinition>
+            <RowDefinition Height="125"></RowDefinition>
+			<RowDefinition Height="125"></RowDefinition>
+            <RowDefinition Height="165"></RowDefinition>
+        </Grid.RowDefinitions>
+        <GroupBox Header="分频" Grid.Row="0">
+            <UniformGrid Rows="3" Columns="8">
+                <Label Content="XY clk个数 mul" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="clkdiv_hd_mul"></TextBox>
+				<Label Content="XY CLK分频系数 mul" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="clkdiv_xy_mul"></TextBox>
+                <Control></Control>
+                <Control></Control>
+				<Control></Control>
+                <Control></Control>
+				
+				<Label Content="XY clk个数 self" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="clkdiv_hd_self"></TextBox>
+				<Label Content="XY CLK分频系数 self" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="clkdiv_self"></TextBox>
+                <Control></Control>
+                <Control></Control>
+				<Control></Control>
+                <Control></Control>
+				
+                <Label Content="HD 长度" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="hd_len"></TextBox>
+				<Control></Control>
+                <Control></Control>
+				<Control></Control>
+                <Control></Control>
+				<Control></Control>
+				<Control></Control>
+            </UniformGrid>
+        </GroupBox>
+
+        <GroupBox Header="输出截位" Grid.Row="1">
+            <UniformGrid Rows="2" Columns="8">
+                <Label Content="ADC截位 mul" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="shift_adc_mul"></TextBox>
+                <Label Content="数据截位 mul"  Margin="5" HorizontalAlignment="Right"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="shift_mutual"></TextBox>
+                <Control></Control>
+                <Control></Control>
+                <Control></Control>
+				<Control></Control>
+
+                <Label Content="ADC截位 self" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="shift_adc_self"></TextBox>
+            </UniformGrid>
+        </GroupBox>
+		
+        <GroupBox Header="积分次数" Grid.Row="2">
+            <UniformGrid Rows="1" Columns="8">
+                <Label Content="积分次数 self" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="self_int_n"></TextBox>
+            </UniformGrid>
+        </GroupBox>
+		
+		<GroupBox Header="自容模式配置" Grid.Row="3">
+            <UniformGrid Rows="1" Columns="8">
+                <Label Content="待添加" HorizontalAlignment="Right" Margin="5"></Label>
+			</UniformGrid>
+        </GroupBox>
+		
+        <GroupBox Header="滤点帧数" Grid.Row="4">
+			<UniformGrid Rows="1" Columns="8">
+                <Label Content="滤点帧数" Grid.Column="0" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" Grid.Column="1" viewModel:TuningItem.ItemName="confirmTime"></TextBox>
+                <Label Content="[3:0]:首次触摸滤点帧数；[7:4]:抬起补点帧数" Grid.Column="2" HorizontalAlignment="Left" Margin="5"></Label>
+            </UniformGrid>
+        </GroupBox>
+		
+        <GroupBox Header="抖动Jitter" Grid.Row="5">
+			<UniformGrid Rows="2" Columns="8">
+                <Label Content="触摸点物理像素距离" Grid.Column="0" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" Grid.Column="1" viewModel:TuningItem.ItemName="jitter_dis"></TextBox>
+                <Label Content="抖动基准压力值" Grid.Column="0" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" Grid.Column="1" viewModel:TuningItem.ItemName="jitter_weight"></TextBox>
+				<Control></Control>
+                <Control></Control>
+				<Control></Control>
+                <Control></Control>
+				
+                <Label Content="重复点不上报(LCD像素点内)" Grid.Column="0" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" Grid.Column="1" viewModel:TuningItem.ItemName="distanceStable"></TextBox>
+            </UniformGrid>
+        </GroupBox>
+		
+        <GroupBox Header="报点超时 重复上报间隔时间 超时未读报点数据时间" Grid.Row="6">
+			<UniformGrid Rows="2" Columns="8">
+                <Label Content="重复INT间隔时间" Grid.Column="0" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" Grid.Column="1" viewModel:TuningItem.ItemName="pointUpRepeatT"></TextBox>
+                <Label Content="0:关闭；单位ms" Grid.Column="2" HorizontalAlignment="Left" Margin="5"></Label>
+			    <Control></Control>
+                <Control></Control>
+                <Control></Control>
+                <Control></Control>
+				<Control></Control>
+				
+                <Label Content="未读数据包强制恢复INT时间" Grid.Column="0" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" Grid.Column="1" viewModel:TuningItem.ItemName="waiteRptRdTime"></TextBox>
+                <Label Content="0:关闭；单位ms" Grid.Column="2" HorizontalAlignment="Left" Margin="5"></Label>	
+            </UniformGrid>
+        </GroupBox>
+    </Grid>
+</UserControl>

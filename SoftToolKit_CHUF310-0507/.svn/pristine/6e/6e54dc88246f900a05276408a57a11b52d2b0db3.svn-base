@@ -1,0 +1,1171 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MesOnlineNetDll</name>
+    </assembly>
+    <members>
+        <member name="P:MesOnlineNetDll.CheckSnParam.SerialNumber">
+            <summary>
+            模组条码/二维码序列号
+            </summary>
+        </member>
+        <member name="T:MesOnlineNetDll.MesHelper">
+            <summary>
+            在线Mes帮助类
+            </summary>
+        </member>
+        <member name="M:MesOnlineNetDll.MesHelper.#ctor(System.ServiceModel.Channels.Binding,System.ServiceModel.EndpointAddress)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="binding"></param>
+            <param name="endpintAddress"></param>
+        </member>
+        <member name="M:MesOnlineNetDll.MesHelper.#ctor(System.String)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="webUrl">Web Service 地址</param>
+        </member>
+        <member name="M:MesOnlineNetDll.MesHelper.CheckSerialNum(MesOnlineNetDll.CheckSnParam,System.String@)">
+            <summary>
+            检测二维码信息
+            </summary>
+            <param name="param"></param>
+            <param name="errorMessage"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MesOnlineNetDll.MesHelper.UploadToMes(MesOnlineNetDll.UploadMesParam,System.String@)">
+            <summary>
+            上传测试结果至Mes系统
+            </summary>
+            <param name="param"></param>
+            <param name="errorMessage"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MesOnlineNetDll.MesHelper.CreateHead(MesOnlineNetDll.RequestParamBase)">
+            <summary>
+            创建请求头部
+            </summary>
+            <param name="param"></param>
+            <returns></returns>
+        </member>
+        <member name="T:MesOnlineNetDll.MesRespType">
+            <summary>
+            Mes系统响应结果类型
+            </summary>
+        </member>
+        <member name="F:MesOnlineNetDll.MesRespType.NoResp">
+            <summary>
+            无响应
+            </summary>
+        </member>
+        <member name="F:MesOnlineNetDll.MesRespType.OK">
+            <summary>
+            成功
+            </summary>
+        </member>
+        <member name="F:MesOnlineNetDll.MesRespType.Error">
+            <summary>
+            错误
+            </summary>
+        </member>
+        <member name="T:MesOnlineNetDll.RequestParamBase">
+            <summary>
+            请求参数基类
+            </summary>
+        </member>
+        <member name="P:MesOnlineNetDll.RequestParamBase.UserId">
+            <summary>
+            员工号
+            </summary>
+        </member>
+        <member name="P:MesOnlineNetDll.RequestParamBase.EqpId">
+            <summary>
+            机器代码
+            </summary>
+        </member>
+        <member name="P:MesOnlineNetDll.RequestParamBase.StepId">
+            <summary>
+            测试步骤(MT2 或 OTP) 
+            </summary>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.requestHead">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.requestHead.eqp_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.requestHead.step_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.requestHead.time_stamp">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.requestHead.trx_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.requestHead.user_id">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.EqpOnlineStatusBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.EqpOnlineStatusBody.status">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.EqpOnlineStatusBody.mac">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.EqpOnlineStatusBody.eqp_type">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.EqpOnlineStatusBody.mtype">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.WarferTrackingBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.WarferTrackingBody.item_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.WarferTrackingBody.mtl_lot_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.WarferTrackingBody.next_mtl_lot_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.WarferTrackingBody.plate_id">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.SMTTrackingRecordBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.SMTTrackingRecordBody.lot_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.SMTTrackingRecordBody.entityIdArr">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.SMTTrackingRecordBody.is_link">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.SPITestRecord">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.SPITestRecord.line_number">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.SPITestRecord.program_name">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.SPITestRecord.side">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.SPITestRecord.panel_barcode">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.SPITestRecord.equipment_name">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.SPITestRecord.operator_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.SPITestRecord.sn_no">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.SPITestRecord.test_date">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.SPITestRecord.test_time">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.SPITestRecord.inspection_time">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.SPITestRecord.pad_testresult">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.SPITestRecord.pad_reviseresult">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.SPITestRecord.test_error_code">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.SPITestRecord.array_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.SPITestRecord.comp_name">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.SPITestRecord.pin_num">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.SPITestRecord.pin_name">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.SPITestRecord.padsize_x">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.SPITestRecord.padsize_y">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.SPITestRecord.height">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.SPITestRecord.area">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.SPITestRecord.volume">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.SPITestRecord.xoffset">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.SPITestRecord.yoffset">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.SPITestRecord.total_test">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.SPITestRecord.ng_no">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.SPITestRecordBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.SPITestRecordBody.SPITestRecord_Body">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.AOITestRecord">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.AOITestRecord.program_name">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.AOITestRecord.barcode">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.AOITestRecord.equipment_name">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.AOITestRecord.array_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.AOITestRecord.operator_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.AOITestRecord.sn_no">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.AOITestRecord.test_time">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.AOITestRecord.revise_time">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.AOITestRecord.result">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.AOITestRecord.side">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.AOITestRecord.total_test">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.AOITestRecord.ng_comp_number">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.AOITestRecord.comp_name">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.AOITestRecord.comp_type">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.AOITestRecord.test_result">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.AOITestRecord.revise_result">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.AOITestRecord.ng_pcs">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.AOITestRecordBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.AOITestRecordBody.AOITestRecord_Body">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.CheckGlueBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.CheckGlueBody.b_code">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.CheckGlueBody.c_code">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.WoBandingEntity">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.WoBandingEntity.woId">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.WoBandingEntity.entityId">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.GetTFTLotInfoBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.GetTFTLotInfoBody.entity_id">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.CheckChipBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.CheckChipBody.sn">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.CheckChipBody.chip_id">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.CreateEntity2PlateBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.CreateEntity2PlateBody.wo_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.CreateEntity2PlateBody.mtl_lot_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.CreateEntity2PlateBody.user_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.CreateEntity2PlateBody.plate_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.CreateEntity2PlateBody.sn">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.CreateEntity2PlateBody.check_wms_issue">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.GetWoInfoBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.GetWoInfoBody.item_id">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.test_record">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.test_record.test_subitem_name">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.test_record.test_item_name">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.test_record.upper_limit">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.test_record.lower_limit">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.test_record.test_condition">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.test_record.test_unit">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.test_record.test_value">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.test_record.test_result">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.test_record.remark">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.test_record.del_flag">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.TestRecordRequestBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.TestRecordRequestBody.user_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.TestRecordRequestBody.no">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.TestRecordRequestBody.test_result">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.TestRecordRequestBody.file_name">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.TestRecordRequestBody.test_count">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.TestRecordRequestBody.line_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.TestRecordRequestBody.station_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.TestRecordRequestBody.location_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.TestRecordRequestBody.file_edit_date">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.TestRecordRequestBody.machine_no">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.TestRecordRequestBody.version">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.TestRecordRequestBody.vendor">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.TestRecordRequestBody.start_time">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.TestRecordRequestBody.stop_time">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.TestRecordRequestBody.test_type">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.TestRecordRequestBody.cus_station">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.TestRecordRequestBody.lot">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.TestRecordRequestBody.no_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.TestRecordRequestBody.ic_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.TestRecordRequestBody.fail_item">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.TestRecordRequestBody.remark">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.TestRecordRequestBody.del_flag">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.TestRecordRequestBody.record_details">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.CheckEntityBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.CheckEntityBody.report_dt">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.CheckEntityBody.user_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.CheckEntityBody.entity_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.CheckEntityBody.lot_id">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.CheckRadiumSnBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.CheckRadiumSnBody.report_dt">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.CheckRadiumSnBody.sn_infos">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.wipTrackingLotToPcsBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingLotToPcsBody.report_dt">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingLotToPcsBody.user_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingLotToPcsBody.entity_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingLotToPcsBody.sn_infos">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingLotToPcsBody.confirm_user_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingLotToPcsBody.tft_flag">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingLotToPcsBody.tagert_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingLotToPcsBody.test_result">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.CheckCarrierEmptyRequestBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.CheckCarrierEmptyRequestBody.report_dt">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.CheckCarrierEmptyRequestBody.carrier_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.CheckCarrierEmptyRequestBody.carrier_kind">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.CheckPlateToMagazineRequestBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.CheckPlateToMagazineRequestBody.plate_id">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.EDCReportByLocationRequestBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.EDCReportByLocationRequestBody.report_dt">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.EDCReportByLocationRequestBody.plate_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.EDCReportByLocationRequestBody.location_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.EDCReportByLocationRequestBody.edc_infos">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.edc">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.edc.item_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.edc.item_value">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.wipTrackingInSNRequestBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingInSNRequestBody.report_dt">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingInSNRequestBody.user_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingInSNRequestBody.sn">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.radiumFPCResponseBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.radiumFPCResponseBody.fpc_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.radiumFPCResponseBody.fpc_sns">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.radiumFPCResponse">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.radiumFPCResponse.response_head">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.radiumFPCResponse.response_body">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.responseHead">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.responseHead.result">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.responseHead.rtn_code">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.responseHead.rtn_msg">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.responseHead.trx_id">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.RadiumFPCBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.RadiumFPCBody.report_dt">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.RadiumFPCBody.user_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.RadiumFPCBody.prod_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.RadiumFPCBody.naming_ver">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.RadiumFPCBody.ok_qty">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.fpc_sn">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.fpc_sn.sn">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.fpc_sn.position">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.fpc_sn.ox">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.wipTrackingFPCLinkSNBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingFPCLinkSNBody.report_dt">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingFPCLinkSNBody.user_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingFPCLinkSNBody.fpc_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingFPCLinkSNBody.fpc_sn_infos">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.wipTrackingPlateBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingPlateBody.report_dt">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingPlateBody.user_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingPlateBody.plate_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingPlateBody.edc_infos">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.wipTrackingInPlateBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingInPlateBody.report_dt">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingInPlateBody.user_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingInPlateBody.plate_id">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.wipTrackingSNLINKRequestBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingSNLINKRequestBody.report_dt">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingSNLINKRequestBody.user_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingSNLINKRequestBody.sn">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingSNLINKRequestBody.customer_sn">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.wipTrackingSNRequestBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingSNRequestBody.report_dt">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingSNRequestBody.user_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingSNRequestBody.sn">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingSNRequestBody.chip_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingSNRequestBody.test_Result">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingSNRequestBody.test_step_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingSNRequestBody.fixture_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingSNRequestBody.log_file_name">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingSNRequestBody.mac">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingSNRequestBody.fail_bin">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingSNRequestBody.module_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingSNRequestBody.lot_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingSNRequestBody.solder_check">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingSNRequestBody.create_time_check">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingSNRequestBody.tft_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingSNRequestBody.edc_infos">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.wipTrackingPlate2MagazineRequestBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingPlate2MagazineRequestBody.report_dt">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingPlate2MagazineRequestBody.user_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingPlate2MagazineRequestBody.magazine_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingPlate2MagazineRequestBody.plate_Infos">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.plate">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.plate.plate_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.plate.location_infos">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.location">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.location.location_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.location.sn">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.wipTrackingSN2PlateRequestBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingSN2PlateRequestBody.report_dt">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingSN2PlateRequestBody.user_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingSN2PlateRequestBody.plate">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.wipTrackingSN2MagazineRequestBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingSN2MagazineRequestBody.report_dt">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingSN2MagazineRequestBody.user_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingSN2MagazineRequestBody.magazine_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingSN2MagazineRequestBody.plate_Infos">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.position">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.position.position_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.position.edc_infos">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.positionInfos">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.positionInfos.position">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.wipTrackingUnionRequestBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingUnionRequestBody.report_dt">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingUnionRequestBody.test_time">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingUnionRequestBody.entity_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wipTrackingUnionRequestBody.position_infos">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.materialStatusReportRequestBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.materialStatusReportRequestBody.mtrl_type">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.materialStatusReportRequestBody.mtrl_status_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.materialStatusReportRequestBody.mtrl_entity_id">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.recipe">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.recipe.item_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.recipe.item_value">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.recipeReportRequestBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.recipeReportRequestBody.report_dt">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.recipeReportRequestBody.recipe_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.recipeReportRequestBody.recipe_infos">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.recipeChangeReportRequestBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.recipeChangeReportRequestBody.report_dt">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.recipeChangeReportRequestBody.recipe_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.recipeChangeReportRequestBody.part_id">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.materialVerifyResponseBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.materialVerifyResponseBody.mtrl_type">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.materialVerifyResponseBody.mtrl_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.materialVerifyResponseBody.mtrl_entity_id">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.materialVerifyResponse">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.materialVerifyResponse.response_head">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.materialVerifyResponse.response_body">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.materialVerifyRequestBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.materialVerifyRequestBody.mtrl_type">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.materialVerifyRequestBody.mtrl_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.materialVerifyRequestBody.mtrl_entity_id">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.autoModeChangeReportRequestBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.autoModeChangeReportRequestBody.report_dt">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.autoModeChangeReportRequestBody.auto_mode">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.cimModeChangeReportRequestBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.cimModeChangeReportRequestBody.report_dt">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.cimModeChangeReportRequestBody.cim_mode">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.utl">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.utl.item_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.utl.item_value">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.utilityReportRequestBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.utilityReportRequestBody.report_dt">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.utilityReportRequestBody.utl_infos">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.EDCReportRequestBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.EDCReportRequestBody.report_dt">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.EDCReportRequestBody.entity_type">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.EDCReportRequestBody.entity_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.EDCReportRequestBody.edc_infos">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.alarmReportRequestBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.alarmReportRequestBody.report_dt">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.alarmReportRequestBody.alarm_type">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.alarmReportRequestBody.alarm_code">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.alarmReportRequestBody.alarm_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.alarmReportRequestBody.alarm_desc">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.statusChangeReportRequestBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.statusChangeReportRequestBody.report_dt">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.statusChangeReportRequestBody.status_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.statusChangeReportRequestBody.alarm_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.statusChangeReportRequestBody.alarm_desc">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.eqpInfoVerifyResponseBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.eqpInfoVerifyResponseBody.now">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.eqpInfoVerifyResponseBody.hold_flag">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.eqpInfoVerifyResponseBody.cim_msg">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.eqpInfoVerifyResponse">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.eqpInfoVerifyResponse.response_head">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.eqpInfoVerifyResponse.response_body">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.mapping">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.mapping.mapping_entity_type">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.mapping.mapping_entity_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.mapping.mapping_entity_pos_x">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.mapping.mapping_entity_pos_y">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.mapping.mapping_carrier_pos">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.mapping.mapping_ex_carrier_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.mapping.mapping_ex_carrier_pos">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.entityTrackOutRequestBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.entityTrackOutRequestBody.entity_type">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.entityTrackOutRequestBody.entity_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.entityTrackOutRequestBody.entity_result">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.entityTrackOutRequestBody.fixt_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.entityTrackOutRequestBody.mapping_infos">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.LotInfoBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.LotInfoBody.lot_qty">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.TFTLotInfoBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.TFTLotInfoBody.tft_lot_id">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.wo_info">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wo_info.wo_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.wo_info.wo_qty">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.WoInfoBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.WoInfoBody.wo_infos">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.response">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.response.response_head">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.responseLotInfo">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.responseLotInfo.lotInfoBody">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.responseTFTLotInfo">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.responseTFTLotInfo.tftLotInfoBody">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.responseWoInfo">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.responseWoInfo.woInfoBody">
+            <remarks/>
+        </member>
+        <member name="T:MesOnlineNetDll.MesOnline.entityTrackInRequestBody">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.entityTrackInRequestBody.entity_type">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.MesOnline.entityTrackInRequestBody.entity_id">
+            <remarks/>
+        </member>
+        <member name="P:MesOnlineNetDll.UploadMesParam.SerialNumber">
+            <summary>
+            产品二维码/条码序列号
+            </summary>
+        </member>
+        <member name="P:MesOnlineNetDll.UploadMesParam.ChipId">
+            <summary>
+            芯片唯一Id
+            </summary>
+        </member>
+        <member name="P:MesOnlineNetDll.UploadMesParam.TestStepId">
+            <summary>
+            测试工站 04（终检）或 07（OTP）
+            </summary>
+        </member>
+        <member name="P:MesOnlineNetDll.UploadMesParam.FixtureId">
+            <summary>
+            治具Id
+            </summary>
+        </member>
+        <member name="P:MesOnlineNetDll.UploadMesParam.MacAddress">
+            <summary>
+            电脑Mac地址
+            </summary>
+        </member>
+        <member name="P:MesOnlineNetDll.UploadMesParam.IsPass">
+            <summary>
+            测试是否通过
+            true - 测试通过，false - 测试失败
+            </summary>
+        </member>
+        <member name="P:MesOnlineNetDll.UploadMesParam.FailBin">
+            <summary>
+            失败码
+            </summary>
+        </member>
+        <member name="P:MesOnlineNetDll.UploadMesParam.CallbackItems">
+            <summary>
+            数据回传项字典
+            </summary>
+        </member>
+        <member name="M:MesOnlineNetDll.UploadMesParam.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:MesOnlineNetDll.UploadMesParam.AddCallbackItem(System.String,System.String)">
+            <summary>
+            添加数据回传项
+            </summary>
+            <param name="name"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

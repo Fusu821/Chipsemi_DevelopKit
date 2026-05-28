@@ -1,0 +1,131 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:viewModel="clr-namespace:SEMIDevelopKit.Src.WinSub"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+    <UserControl.Resources>
+        <XmlDataProvider x:Key="Ic_Type_List" XPath="XUnits">
+            <x:XData>
+                <XUnits xmlns="">
+                    <XUnit Name="CHSC5472"  HexValue="0x00" DecValue="0"></XUnit>
+                    <XUnit Name="CHSC5448"  HexValue="0x01" DecValue="1"></XUnit>
+					<XUnit Name="CHSC5448A" HexValue="0x02" DecValue="2"></XUnit>
+					<XUnit Name="CHSC5460"  HexValue="0x03" DecValue="3"></XUnit>
+					<XUnit Name="CHSC5468"  HexValue="0x04" DecValue="4"></XUnit>
+                </XUnits>
+            </x:XData>
+        </XmlDataProvider>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+			<RowDefinition Height="38"></RowDefinition>
+            <RowDefinition Height="125"></RowDefinition>
+            <RowDefinition Height="85"></RowDefinition>
+            <RowDefinition Height="165"></RowDefinition>
+			<RowDefinition Height="105"></RowDefinition>
+			<RowDefinition Height="105"></RowDefinition>
+			<RowDefinition Height="165"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+		
+        <GroupBox Header="Tuning版本：V11.7" Grid.Row="0">
+        </GroupBox>
+		
+        <GroupBox Header="1：项目、供应商、版本" Grid.Row="1">
+            <UniformGrid Rows="2">
+				<UniformGrid Columns="16">
+                <Label Content="IC类型"  HorizontalAlignment="Right" Margin="5"></Label>
+                <ComboBox Margin="5" viewModel:TuningItem.ItemName="sig_fw" ItemsSource="{Binding Source={StaticResource Ic_Type_List}, XPath=XUnit}" DisplayMemberPath="@Name" SelectedValuePath="@DecValue"></ComboBox>
+                <Label Content="Cfg版本" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="cfg_version"></TextBox>
+                </UniformGrid>
+
+				<UniformGrid Columns="16">
+                <Label Content="项目名称" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" x:Name="tb_project"  viewModel:TuningItem.ItemName="project_id"></TextBox>
+
+                    <DockPanel>
+                        <Label DockPanel.Dock="Left"  Content="{Binding ElementName=tb_project, Path=Text, Converter={StaticResource HexValueStringConverter}}" HorizontalAlignment="Left" Margin="0,5" Foreground="Blue"></Label>
+                        <Label DockPanel.Dock="Right" Content="供应商名称" HorizontalAlignment="Right" Margin="5"></Label>
+                    </DockPanel>
+                    <TextBox Margin="5" x:Name="tb_vendor"  viewModel:TuningItem.ItemName="vendor_id"></TextBox>
+                    <Label DockPanel.Dock="Left"  Content="{Binding ElementName=tb_vendor, Path=Text, Converter={StaticResource HexValueStringConverter}}" HorizontalAlignment="Left" Margin="0,5" Foreground="Blue"></Label>
+                </UniformGrid>
+            </UniformGrid>
+        </GroupBox>
+		
+        <GroupBox Header="2：LCD分辨率" Grid.Row="2">
+            <UniformGrid Columns="16">
+                <Label Content="X轴分辨率" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="lcdX"></TextBox>
+                <Label Content="Y轴分辨率" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="lcdY"></TextBox>
+            </UniformGrid>
+        </GroupBox>
+		
+        <GroupBox Header="3：TP通道" Grid.Row="3">
+            <UniformGrid Rows="3">
+				<UniformGrid Columns="16">
+                <Label Content="总通道 TX" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Margin="5" viewModel:TuningItem.ItemName="tp_tx_n" Name="t_tp_tx_n"></TextBox>
+                <Label Content="总通道 RX" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Margin="5" viewModel:TuningItem.ItemName="tp_rx_n" Name="t_tp_rx_n"></TextBox>
+                </UniformGrid>
+				
+				<UniformGrid Columns="16">
+                <Label Content="AA区通道 TX" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="aa_tx_n"></TextBox>
+                <Label Content="AA区通道 RX" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="aa_rx_n"></TextBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+                <Label Content="Pitch Size(0.1mm)" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="Pitch_size"></TextBox>
+				</UniformGrid>
+            </UniformGrid>
+        </GroupBox>
+		
+        <GroupBox Header="4：TX 线序" Grid.Row="4">
+            <WrapPanel>
+                <DataGrid viewModel:MaxtrixEx.Row="1" viewModel:MaxtrixEx.Col="{Binding ElementName=t_tp_tx_n, Path=Text}" viewModel:TuningItem.ItemName="tx_map" AutoGenerateColumns="False" CanUserReorderColumns="False" GridLinesVisibility="All" ColumnHeaderStyle="{x:Null}"></DataGrid>
+            </WrapPanel>
+        </GroupBox>
+		
+        <GroupBox Header="5：RX 线序" Grid.Row="5">
+            <WrapPanel>
+                <DataGrid viewModel:MaxtrixEx.Row="1" viewModel:MaxtrixEx.Col="{Binding ElementName=t_tp_rx_n, Path=Text}" viewModel:TuningItem.ItemName="rx_map" AutoGenerateColumns="False" CanUserReorderColumns="False" GridLinesVisibility="All" ColumnHeaderStyle="{x:Null}"></DataGrid>
+            </WrapPanel>
+        </GroupBox>
+		
+        <GroupBox Header="6：触摸点个数、报点率" Grid.Row="6">
+            <UniformGrid Rows="3">
+				<UniformGrid Columns="16">
+                <Label Content="触摸点个数" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="finger"></TextBox>
+				<Label Content="Active报点率" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="rpt_rate_active"></TextBox>
+				<Label Content="Hz（max 255）" HorizontalAlignment="Left" Margin="5"></Label>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+                <Label Content="Active To Idle(0.1s)" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="rpt_time_ATI"></TextBox>
+				<Label Content="Idle检测频率" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="rpt_rate_idle"></TextBox>
+				<Label Content="Hz（max 255）" HorizontalAlignment="Left" Margin="5"></Label>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+                <Control></Control>
+                <Control></Control>
+				<Label Content="Gesture检测频率" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="rpt_rate_gest"></TextBox>
+				<Label Content="Hz（max 255）" HorizontalAlignment="Left" Margin="5"></Label>
+				</UniformGrid>
+			</UniformGrid>
+        </GroupBox>
+    </Grid>
+</UserControl>

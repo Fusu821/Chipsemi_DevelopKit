@@ -1,0 +1,25 @@
+ChipSemi_Tester_V8.8.8_20260318
+WorkStation: F01   ProjectName: 0508
+
+Time Stamp:	2026-05-15 18:43:33 552
+Mtk Version = 0xd1103
+
+Time Stamp:	2026-05-15 18:43:34 045
+
+------------------------------OSC Trim Test------------------------------
+osc32k trim = 50 value = 32141	osc52m trim = 196 value = 52036044
+osc52.00m trim = 196	value = 52037808 
+osc41.60m trim = 285	value = 41573064
+osc62.40m trim = 136	value  = 62423800
+error 52mNo:Actual offset(478426936, 353576200, 624000177), offset(1560000, 1248000, 1872000), proportion(бы)(30)
+Temp1 -177	Temp2 -177	Temp3 -177	Temp4 -177	
+
+Time Stamp:	2026-05-15 18:43:39 757
+
+------------------------------Project Test------------------------------
+
+
+//Project Test is Pass
+
+
+//Final result is Pass

@@ -1,0 +1,22 @@
+ChipSemi_Tester_V8.8.8_20260318
+WorkStation: F01   ProjectName: 0508
+
+Time Stamp:	2026-05-18 14:23:47 090
+Mtk Version = 0xd1103
+
+Time Stamp:	2026-05-18 14:23:47 579
+
+------------------------------Project Test------------------------------
+
+
+//Project Test is Pass
+
+Time Stamp:	2026-05-18 14:23:47 856
+
+------------------------------OTP Test------------------------------
+
+
+//OTP Test is Fail
+
+
+//Final result is NG

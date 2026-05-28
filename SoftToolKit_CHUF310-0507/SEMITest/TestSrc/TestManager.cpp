@@ -1,0 +1,403 @@
+#include "TestManager.h"
+//#include "SEMITouch.h"
+#include "ToolKit.h"
+//#include "tinyxml.h"
+
+
+using namespace tinyxml2;
+#pragma comment(lib, "../Include/Lib/SEMITouch.lib")
+#pragma comment(lib, "../Include/Lib/Automatic.lib")
+
+
+CConfig* G_XMLConfig = NULL;
+CTestBase* CTestManager::m_TestPointer[MAX_DEVICE_NUM] = 
+{ 
+	NULL,  NULL,  NULL,  NULL, NULL,  NULL,  NULL,  NULL,
+};
+
+CTestManager::CTestManager(  )
+	:m_curIcType(0)
+	,m_iCommandLineMode(0)
+{
+	G_XMLConfig = NULL;
+	m_AutomaticInterface = NULL;
+	//////////////////////////////////////////////////////////////////////////
+#if LOG_SEMI_TEST_OPEN
+	for( int index = 0; index < MAX_DEVICE_NUM; index++ )
+	{
+		OnLineLogApp.OnInitLogParam( index );
+	}
+#endif
+}
+CTestManager::~CTestManager()
+{
+	CTestResultSave::OnAppShutDown();
+
+	MakeClean();
+}
+void CTestManager::MakeClean( BOOL onlyLoadXml/* = FALSE*/ )
+{
+	GameOver( 1 );
+
+	for( int index = 0; !onlyLoadXml && (index < MAX_DEVICE_NUM); index++ )
+	{
+		if( NULL == m_TestPointer[index] ) continue;
+
+		delete m_TestPointer[index];
+		m_TestPointer[index] = 0;
+	}
+
+	if( NULL != G_XMLConfig )
+	{
+		delete G_XMLConfig;
+		G_XMLConfig = NULL;
+	}
+}
+unsigned int CTestManager::GetViewInfo( TCHAR* szWorkStation, TCHAR* szProjInfo, TCHAR* softWare, TCHAR* snFilter,unsigned char& startWay, unsigned char& snLen, unsigned char& format, unsigned short& test_mode , unsigned short& agent, unsigned char& clickstart, unsigned char& displaytest )
+{
+	if( NULL == G_XMLConfig ) return ERROR_CODE_INVALID_FILE;
+
+	const static TCHAR* szSoftWareVer = TestAppVersion;
+
+	CToolKit::UTF8ToGBK( G_XMLConfig->szWorkStation, szWorkStation, MAX_PATH );
+	CToolKit::UTF8ToGBK( G_XMLConfig->szProjectName, szProjInfo, MAX_PATH );
+	CToolKit::UTF8ToGBK( szSoftWareVer, softWare, MAX_PATH );
+	CToolKit::UTF8ToGBK( G_XMLConfig->costom_snFilter, snFilter, MAX_PATH );
+
+	startWay = G_XMLConfig->way_to_start;
+	snLen = G_XMLConfig->sn_length;
+	format = G_XMLConfig->selected_format;
+	test_mode = G_XMLConfig->test_mode;
+	agent = G_XMLConfig->agent;
+	clickstart = G_XMLConfig->need_click_start;
+    displaytest = G_XMLConfig->costom_Ls_displaytest;
+	//copytextto( softWare, MAX_PATH, szSoftWareVer, lengthof(szSoftWareVer) );
+	
+	return ERROR_CODE_OK;
+}
+LPCTSTR CTestManager::GetStatisticText() 
+{
+	return CTestResultSave::GetStatisticText();
+}
+void CTestManager::RegistComplexCallBack(const NativeCallBack& callBack)
+{
+	m_callBack = callBack;
+}
+void CTestManager::SetCommandLineParam( unsigned int commandLineMode )
+{
+	m_iCommandLineMode = commandLineMode;
+}
+unsigned short CTestManager::GetICTypeFromConfig()
+{
+	unsigned short icType = 0;
+	tinyxml2::XMLDocument xmlDoc;
+	tstring szAppPath = tstring( CToolKit::GetExecutePath() );
+	tstring xmlPath = szAppPath.append( _T("/config/semichip_ctp_config.xml") );
+
+	XMLError xmlErr = xmlDoc.LoadFile( xmlPath.c_str() );
+	if( XML_SUCCESS == xmlErr )
+	{
+		XMLElement* pRoot = xmlDoc.RootElement();
+		const XMLAttribute* pAttr = pRoot ? pRoot->FindAttribute("ic_type") : NULL;
+		if( pAttr )
+		{
+			icType = GetContainerInterface()->GetIcCode( pAttr->Value() );
+		}
+	}
+
+	return icType;
+}
+unsigned int CTestManager::ReloadXmlConfig( BOOL onlyLoadXml /*= FALSE */)
+{
+	unsigned int iReCode = ERROR_CODE_INVALID_FILE;
+	tstring szAppPath = tstring( CToolKit::GetExecutePath() );
+	tstring xmlPath = szAppPath.append( _T("/config/semichip_ctp_config.xml") );
+
+	//static very important
+	//static XMLDocument xmlDoc;
+	XMLError xmlErr = m_xmlDoc.LoadFile( xmlPath.c_str() );
+	if( XML_SUCCESS == xmlErr )
+	{
+		XMLElement* pRoot = m_xmlDoc.RootElement();
+		const XMLAttribute* pAttr = pRoot ? pRoot->FindAttribute("ic_type") : NULL;
+		if( pAttr )
+		{
+			unsigned short icType = GetContainerInterface()->GetIcCode( pAttr->Value() );
+			iReCode = SetICTypeAndCreateComponent( icType, m_xmlDoc, onlyLoadXml );
+		}
+	}
+
+	return iReCode;
+}
+unsigned int CTestManager::SetICTypeAndCreateComponent( unsigned short icType, const tinyxml2::XMLDocument& xmlDoc, BOOL onlyLoadXml /*= FALSE*/ )
+{
+	unsigned int iReCode = ERROR_CODE_OK;
+
+	MakeClean( onlyLoadXml );
+
+	G_XMLConfig = (CConfig*)RunTimeClassFactoryInstEx(CONFIG_TYPE).CreateObject( (CONFIG_TYPE)(icType), (unsigned long)icType );
+	if( NULL == G_XMLConfig )
+	{
+		iReCode = ERROR_CODE_NO_KINDOF_IC;
+	}
+
+	if( !G_XMLConfig->Parse( xmlDoc ) )
+	{
+		iReCode = ERROR_CODE_INVALID_PARAM;
+	}
+
+	for( int index = 0; !onlyLoadXml && (index < MAX_DEVICE_NUM); index++ )
+	{
+		CtpHalCfg halCfg;
+		halCfg.protocalType = G_XMLConfig->protocalType;
+		halCfg.IIC.slaveAddr = G_XMLConfig->I2cAddr;
+		halCfg.speed = G_XMLConfig->Speed;
+		halCfg.vddVoltage = G_XMLConfig->vddVotage;
+		halCfg.iovddVotage = G_XMLConfig->ioVddVotage;
+		halCfg.vihVotage = G_XMLConfig->vihVotage;
+		halCfg.icType = G_XMLConfig->IcType;
+		GetChipWrapperAddr( index )->SetICTypeAndCreateComponent( icType );
+		GetChipWrapperAddr( index )->GetChipBaseInterface()->SetCommContext( halCfg );
+		m_TestPointer[index] = (CTestBase*)RunTimeClassFactoryInst(TEST_TYPE).CreateObject( (TEST_TYPE)(icType) );
+
+		if( NULL == m_TestPointer[index] )
+		{
+			iReCode = ERROR_CODE_NO_KINDOF_IC;
+			break;
+		}
+
+		m_TestPointer[index]->SetTestContext( (unsigned char)index, this );
+	}
+
+	return iReCode;
+}
+BOOL CTestManager::CheckReadyForTest( int device )
+{
+	if(device < 0 || device >= MAX_DEVICE_NUM) return FALSE;
+	if(NULL == SM_ChipBase(device)) return FALSE;
+	if(NULL == m_TestPointer[device]) return FALSE;
+
+	if(IsTestStillOnLine(m_TestPointer[device])) return FALSE;
+
+	return SM_ChipBase(device)->HaveTpLinked( 1 );
+}
+unsigned int CTestManager::SetCommContext( int index )
+{
+	if( NULL == G_XMLConfig )  return ERROR_CODE_INVALID_PARAM;
+	if( NULL == GetChipWrapperAddr( index )->GetChipBaseInterface() ) return ERROR_CODE_INVALID_PARAM;
+	if( m_TestPointer[index] && m_TestPointer[index]->MtkUpdateGate() ) return ERROR_CODE_OK;  //pass when update mtk board
+
+	CtpHalCfg halCfg;
+	halCfg.protocalType = G_XMLConfig->protocalType;
+	halCfg.IIC.slaveAddr = G_XMLConfig->I2cAddr;
+	halCfg.speed = G_XMLConfig->Speed;
+	halCfg.vddVoltage = G_XMLConfig->vddVotage;
+	halCfg.iovddVotage = G_XMLConfig->ioVddVotage;
+	halCfg.vihVotage = G_XMLConfig->vihVotage;
+	halCfg.icType = G_XMLConfig->IcType;
+
+	return GetChipWrapperAddr( index )->GetChipBaseInterface()->SetCommContext( halCfg );
+}
+NativeTestItem& CTestManager::GetNativeTestItemByIndex( int device, int index )
+{
+	static NativeTestItem emptyItem;
+
+	if( (device < 0) || (device >= MAX_DEVICE_NUM) )
+		return emptyItem;
+	else if( NULL == m_TestPointer[device] )
+		return emptyItem;
+	else
+		return m_TestPointer[device]->GetNativeTestItemByIndex( index );
+}
+ColorText& CTestManager::GetTestMessage( int device )
+{
+	static ColorText emptyText;
+	if( (device < 0) || (device >= MAX_DEVICE_NUM) )
+		return emptyText;
+	else if( NULL == m_TestPointer[device] )
+		return emptyText;
+	else
+		return m_TestPointer[device]->GetTestMessage();
+}
+void CTestManager::SetContextForGraphTest( int iDevice, HDC dc, RECT& rc )
+{
+	if( iDevice >= MAX_DEVICE_NUM )  return;
+	if( !m_TestPointer[iDevice] )     return;
+
+	m_TestPointer[iDevice]->SetGraphTestContext( dc, rc );
+}
+void CTestManager::GameOver( unsigned char mustStopNow )
+{
+	for( int index = 0; index < MAX_DEVICE_NUM; index++ )
+	{
+		if( NULL != m_TestPointer[index] )
+		{
+			m_TestPointer[index]->MakeTestOver( mustStopNow );
+		}
+	}
+}
+unsigned int CTestManager::ForcePaint( int iDevice, bool enterPaint )
+{
+	if( (iDevice < 0) || (iDevice >= MAX_DEVICE_NUM) )
+		return ERROR_CODE_NO_DEVICE;
+	else if( NULL == m_TestPointer[iDevice] )
+		return ERROR_CODE_NO_DEVICE;
+
+	return m_TestPointer[iDevice]->ForcePaint( enterPaint );
+}
+unsigned int CTestManager::StartTest( int iDevice, LPCTSTR szCode /*= NULL */)
+{
+	if( (iDevice < 0) || (iDevice >= MAX_DEVICE_NUM) )
+		return ERROR_CODE_NO_DEVICE;
+	else if( NULL == m_TestPointer[iDevice] )
+		return ERROR_CODE_NO_DEVICE;
+
+	return m_TestPointer[iDevice]->StartTest( szCode );
+}
+unsigned int CTestManager::SendTestRz( int iDevice, LPCTSTR sdCode /*= NULL */)
+{
+    if( (iDevice < 0) || (iDevice >= MAX_DEVICE_NUM) )
+        return ERROR_CODE_NO_DEVICE;
+    else if( NULL == m_TestPointer[iDevice] )
+        return ERROR_CODE_NO_DEVICE;
+
+    return m_TestPointer[iDevice]->SendTestRz( sdCode );
+}
+unsigned int CTestManager::SimulateTest( int iDevice, SimulateData (&arraySimulate)[SIMULATE_TEST_DATA_CNT] )
+{
+	if( (iDevice < 0) || (iDevice >= MAX_DEVICE_NUM) )
+		return ERROR_CODE_NO_DEVICE;
+	else if( NULL == m_TestPointer[iDevice] )
+		return ERROR_CODE_NO_DEVICE;
+
+	return m_TestPointer[iDevice]->SimulateTest( iDevice, arraySimulate );
+}
+unsigned int CTestManager::ParseTestSample( unsigned char* content, unsigned int len, TCHAR* szName, unsigned short (&lpMatrix)[MAX_SCAP_ROW][MAX_SCAP_COL] )
+{
+	BOOL bParseOk = TRUE;
+
+	if( len == sizeof(RecordData_V1) )
+	{
+		bParseOk = ParseRecordV1( content, len, szName, lpMatrix );
+	}
+	else
+	{
+		bParseOk = ParseRecordV4( content, len, szName, lpMatrix );
+	}
+
+	return bParseOk;
+}
+unsigned int CTestManager::OnLine( unsigned char option, HWND hwnd )
+{
+	if( 0 == option ){
+		if( m_AutomaticInterface ) m_AutomaticInterface->GameOver();
+		m_AutomaticInterface = NULL;
+		return 0;
+	}
+
+	LinkParam param;
+	if(LINK_USE_COM == G_XMLConfig->link_type){
+		param.com.port = G_XMLConfig->server_port_num;
+	}else if(LINK_USE_TCP == G_XMLConfig->link_type){
+		param.tcp.async = false;
+		param.tcp.port = G_XMLConfig->server_port_num;
+		param.tcp.pszIpAddress = G_XMLConfig->server_ip_addr;
+		param.tcp.nport = G_XMLConfig->source_port_num;
+	}else{
+		return ERROR_CODE_INVALID_PARAM;
+	}
+
+#ifdef _MSC_VER
+	m_AutomaticInterface = GetAutomaticInterface( G_XMLConfig->selected_format, hwnd, param);
+#endif
+
+	if(NULL == m_AutomaticInterface) return ERROR_CODE_NO_DEVICE;
+
+	::Sleep( 200 );
+
+	return m_AutomaticInterface->OnLine( option, G_XMLConfig->custom_line_id );
+}
+unsigned int CTestManager::Sign( unsigned char option, LPCTSTR szLine, LPCTSTR szAccount, LPCTSTR szPassword )
+{
+	if(NULL == m_AutomaticInterface) return ERROR_CODE_NO_DEVICE;
+	
+	return m_AutomaticInterface->AccountCheck(szLine, szAccount, szPassword);
+}
+unsigned int CTestManager::UserOperationBeforeTest( int device )
+{
+	if(NULL == m_AutomaticInterface) return ERROR_CODE_OK;
+
+	device = device % MAX_DEVICE_NUM;
+	if(OP_LIKE_EDO == G_XMLConfig->selected_format){
+		return m_AutomaticInterface->LogOnMessage( G_XMLConfig->custom_line_id, m_TestPointer[device]->GetSnNumber() );
+	}
+
+	return ERROR_CODE_OK;
+}
+unsigned int CTestManager::UserOperationAfterTest( int device, int result )
+{
+	if(NULL == m_AutomaticInterface) return ERROR_CODE_OK;
+
+	//if(OP_LIKE_EDO == G_XMLConfig->selected_format){
+	return m_AutomaticInterface->LogOffMessage( G_XMLConfig->custom_line_id, m_TestPointer[device]->GetSnNumber(), device, result );
+	//}
+
+	return ERROR_CODE_OK;
+}
+unsigned int CTestManager::ActionToOnLineMessage(int msg, unsigned int wparam, unsigned int lparam)
+{
+	if(NULL == m_AutomaticInterface) return ERROR_CODE_NO_DEVICE;
+
+	return m_AutomaticInterface->ActionToOnLineMessage( this, msg, wparam, lparam );
+}
+LPCTSTR CTestManager::GetOnLineMessageInfo( )
+{
+	if(NULL == m_AutomaticInterface) return _T("can not link to service, please check...");
+
+	return m_AutomaticInterface->GetOnLineMessageInfo();
+}
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////
+NativeTestInterface* GetTestWapperInterface()
+{
+	static CTestManager newManager;
+	return &newManager;
+}
+void ReleaseTestWrapperInterface(NativeTestInterface* addr)
+{
+	CTestManager* pManager = (CTestManager*)addr;
+
+	pManager->GameOver( 1 /*mustSopNow = 1*/ );
+
+	pManager = NULL;
+}
+void OnCopyBootCallBack( int dev, int pos, int max, LPCTSTR szText )
+{
+	ColorText colorText( szText, RGB( 0, 0, 255 ), TEXT_SIZE_SMALL );
+	GetTestWapperInterface()->GetTestMessage( dev ) += colorText;
+	GetTestWapperInterface()->GetCallBack().onProcssBarChanging( dev, pos, max );
+	GetTestWapperInterface()->GetCallBack().onOneTestOver( dev, 0 );
+}
+void __stdcall OnUpdateMtkCallBack( unsigned char devNo, int pos, int maxPos )
+{
+	TCHAR szBuffer[MAX_PATH] = {0};
+	transformat( szBuffer, _T("Update Mtk App, Addr = %04x, Max = %04x\r\n"), pos, maxPos );
+	ColorText colorText( szBuffer, RGB( 0, 0, 255 ), TEXT_SIZE_SMALL );
+	GetTestWapperInterface()->GetTestMessage( devNo ) += colorText;
+	GetTestWapperInterface()->GetCallBack().onOneTestOver( devNo, 0 );
+}
+// void RegistComplexCallBack( OnListItemChangeCallBack onListChage, 
+// 	OnInitProcessBarCallBack onProcessInit,
+// 	OnProcessBarChangingCallBack onProcessChange,
+// 	OnOneTestOverCallBack onTestOver )
+// {
+// 	NativeCallBack& callBack = const_cast<NativeCallBack&>( GetTestWapperInterface()->GetCallBack() );
+// 	callBack.onInitProcessBar = onProcessInit;
+// 	callBack.onListItemChange = onListChage;
+// 	callBack.onOneTestOver = onTestOver;
+// 	callBack.onProcssBarChanging = onProcessChange;
+// }

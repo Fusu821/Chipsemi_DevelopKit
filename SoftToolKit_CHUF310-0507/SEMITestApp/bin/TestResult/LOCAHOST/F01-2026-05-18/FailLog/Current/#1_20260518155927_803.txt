@@ -1,0 +1,84 @@
+ChipSemi_Tester_V8.8.8_20260318
+WorkStation: F01   ProjectName: 0508
+
+Time Stamp:	2026-05-18 15:59:21 680
+Mtk Version = 0xd1103
+
+Time Stamp:	2026-05-18 15:59:22 163
+
+------------------------------OSC Trim Test------------------------------
+Target No1=52000  No2=62400  No3=62400 
+osc32k trim = 52 value = 32114	osc52m trim = 197 value = 52034284
+osc52.00m trim = 197	value = 52034284 
+osc41.60m trim = 286	value = 41569688
+osc62.40m trim = 137	value  = 62423800
+Temp1 65344	Temp2 65345	Temp3 65345	Temp4 65345	
+32K = 0x34, 52M=0xc5 
+
+//OSCTrim Test is Pass
+
+Time Stamp:	2026-05-18 15:59:22 415
+
+------------------------------IOVoltage Test------------------------------
+
+IOV = 1.8V  High : int0 vol = 1785  ,	int2 vol = 1785  
+IOV = 1.8V  Low  : int0 vol = 24    ,	int2 vol = 1     
+IOV = 1.2V  High : int0 vol = 1233  ,	int2 vol = 1234  
+IOV = 1.2V  Low  : int0 vol = 18    ,	int2 vol = 1     
+
+IOV 1.62V  & 1.08V trans test PASS
+
+
+//IOVoltage Test is Pass
+
+Time Stamp:	2026-05-18 15:59:23 813
+
+------------------------------Current Test------------------------------
+
+avdd_active = 17774(uA), avdd_idle = 2194(uA)£¬  avdd_sleep = 175(uA)
+
+idle(2194) > setting max(2000)
+
+sleep(175) > setting max(30)
+
+
+//Current Test is Fail
+
+------------------------------Current Test------------------------------
+
+avdd_active = 17735(uA), avdd_idle = 2177(uA)£¬  avdd_sleep = 163(uA)
+
+idle(2177) > setting max(2000)
+
+sleep(163) > setting max(30)
+
+
+//Current Test is Fail
+
+------------------------------Current Test------------------------------
+
+avdd_active = 17760(uA), avdd_idle = 2149(uA)£¬  avdd_sleep = 156(uA)
+
+idle(2149) > setting max(2000)
+
+sleep(156) > setting max(30)
+
+
+//Current Test is Fail
+
+Time Stamp:	2026-05-18 15:59:27 504
+
+------------------------------Project Test------------------------------
+
+
+//Project Test is Pass
+
+Time Stamp:	2026-05-18 15:59:27 771
+
+------------------------------OTP Test------------------------------
+Fail = 0 
+
+//OTP Test is Pass
+
+
+//Final result is NG

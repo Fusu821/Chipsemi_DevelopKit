@@ -1,0 +1,56 @@
+﻿<UserControl x:Class="LibraryTools.ToolTouch"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+              xmlns:local="clr-namespace:LibraryTools"  
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="850">
+    <UserControl.Resources>
+        <local:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
+    </UserControl.Resources>
+    <Grid Background="#AAAAAA" AllowDrop="True">
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="150"></RowDefinition>
+            <RowDefinition Height="25"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <StackPanel Name="SPanel" Grid.Row="0" SizeChanged="SPanel_SizeChanged" >
+            <Image Source="{Binding ModelToolTouch.Image, UpdateSourceTrigger=PropertyChanged}" DataContext="{Binding}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="{Binding ModelToolTouch.DisplayWidth}" Height="{Binding ModelToolTouch.DisplayHeight}"/>
+        </StackPanel>
+
+        <GroupBox Grid.Row="1" Header=" Param" Margin="5,0,5,5">
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200" ></ColumnDefinition>
+                    <ColumnDefinition Width="auto" ></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <UniformGrid Grid.Column="0"  Rows="3" Columns="2" >
+                    <Label DockPanel.Dock="Left" Content="IC:" Margin="3" HorizontalContentAlignment="Right"></Label>
+                    <ComboBox Margin="3" ItemsSource="{Binding ModelToolTouch.ICType}" SelectedValuePath="TypeVal" DisplayMemberPath="TypeName" SelectedValue="{Binding ModelToolTouch.SelectedIC }"></ComboBox>
+                    <Label DockPanel.Dock="Left" Content="Packages:" Margin="3" HorizontalContentAlignment="Right"></Label>
+                    <ComboBox Margin="3" ItemsSource="{Binding ModelToolTouch.Packages}" SelectedValuePath="TypeVal" DisplayMemberPath="TypeName" SelectedValue="{Binding ModelToolTouch.SelectedPackages }"></ComboBox>
+                </UniformGrid>
+                <ScrollViewer  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Grid.Column="1">
+                    <ItemsControl  ItemsSource ="{Binding ModelToolTouch.ListPacket}"  VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling" ScrollViewer.CanContentScroll="True"  Background="#FEFADA" MinWidth="500">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" Margin="5"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+
+        </GroupBox>
+        <UniformGrid Grid.Row="2" Rows="1" Columns="8">
+            <Button Content="start" Command="{Binding ModelToolTouch.ctrlClickCommand}" CommandParameter="Start" Background="Transparent" Margin="5, 2" ></Button>
+            <Button Content="Stop" Command="{Binding ModelToolTouch.ctrlClickCommand}" CommandParameter="Stop" Background="Transparent" Margin="5, 2" ></Button>
+            <Button Content="Clear" Command="{Binding ModelToolTouch.ctrlClickCommand}" CommandParameter="Clear" Background="Transparent" Margin="5, 2" ></Button>
+            <Button Content="save" Command="{Binding ModelToolTouch.ctrlClickCommand}" CommandParameter="Save" Background="Transparent" Margin="5, 2" ></Button>
+        </UniformGrid>
+    </Grid>
+</UserControl>

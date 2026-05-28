@@ -1,0 +1,190 @@
+ChipSemi_Tester_V8.8.8_20260318
+WorkStation: F01   ProjectName: 0508
+
+Time Stamp:	2026-05-12 15:37:25 658
+Mtk Version = 0xd1103
+
+Time Stamp:	2026-05-12 15:37:26 147
+
+------------------------------Project Test------------------------------
+
+
+//Project Test is Pass
+
+Time Stamp:	2026-05-12 15:37:26 430
+
+------------------------------FlyTime Test------------------------------
+
+std_val(738.70) > setting max(100.00)
+Frame[00] : 60
+Frame[01] : 59
+Frame[02] : 60
+Frame[03] : 60
+Frame[04] : 60
+Frame[05] : 60
+Frame[06] : 60
+Frame[07] : 59
+Frame[08] : 59
+Frame[09] : 63
+Frame[10] : 59
+Frame[11] : 63
+Frame[12] : 59
+Frame[13] : 59
+Frame[14] : 59
+Frame[15] : 59
+Frame[16] : 59
+Frame[17] : 59
+Frame[18] : 59
+Frame[19] : 59
+Frame[20] : 59
+Frame[21] : 59
+Frame[22] : 59
+Frame[23] : 59
+Frame[24] : 59
+Frame[25] : 59
+Frame[26] : 59
+Frame[27] : 59
+Frame[28] : 59
+Frame[29] : 59
+Frame[30] : 59
+Frame[31] : 59
+Frame[32] : 59
+Frame[33] : 59
+Frame[34] : 59
+Frame[35] : 59
+Frame[36] : 59
+Frame[37] : 59
+Frame[38] : 59
+Frame[39] : 59
+Frame[40] : 59
+Frame[41] : 59
+Frame[42] : 59
+Frame[43] : 59
+Frame[44] : 59
+Frame[45] : 59
+Frame[46] : 59
+Frame[47] : 59
+Frame[48] : 59
+Frame[49] : 59
+Frame[50] : 59
+Frame[51] : 59
+Frame[52] : 59
+Frame[53] : 59
+Frame[54] : 59
+Frame[55] : 59
+Frame[56] : 59
+Frame[57] : 59
+Frame[58] : 59
+Frame[59] : 59
+Frame[60] : 59
+Frame[61] : 59
+Frame[62] : 59
+Frame[63] : 59
+Frame[64] : 59
+Frame[65] : 59
+Frame[66] : 59
+Frame[67] : 59
+Frame[68] : 59
+Frame[69] : 59
+Frame[70] : 59
+Frame[71] : 59
+Frame[72] : 59
+Frame[73] : 59
+Frame[74] : 60
+Frame[75] : 60
+Frame[76] : 60
+Frame[77] : 60
+Frame[78] : 60
+Frame[79] : 60
+Frame[00] : 10362
+Frame[01] : 8233
+Frame[02] : 9783
+Frame[03] : 8272
+Frame[04] : 9756
+Frame[05] : 8384
+Frame[06] : 8297
+Frame[07] : 10090
+Frame[08] : 8017
+Frame[09] : 10030
+Frame[10] : 11123
+Frame[11] : 10322
+Frame[12] : 11070
+Frame[13] : 8398
+Frame[14] : 8955
+Frame[15] : 7230
+Frame[16] : 8819
+Frame[17] : 8586
+Frame[18] : 9053
+Frame[19] : 8822
+Frame[20] : 9069
+Frame[21] : 9146
+Frame[22] : 9260
+Frame[23] : 9763
+Frame[24] : 9618
+Frame[25] : 9376
+Frame[26] : 8911
+Frame[27] : 8185
+Frame[28] : 8123
+Frame[29] : 8574
+Frame[30] : 9051
+Frame[31] : 9319
+Frame[32] : 9138
+Frame[33] : 9161
+Frame[34] : 9192
+Frame[35] : 8928
+Frame[36] : 9083
+Frame[37] : 9607
+Frame[38] : 10125
+Frame[39] : 9891
+Frame[40] : 8997
+Frame[41] : 7924
+Frame[42] : 7677
+Frame[43] : 8746
+Frame[44] : 9701
+Frame[45] : 9847
+Frame[46] : 9179
+Frame[47] : 8446
+Frame[48] : 8526
+Frame[49] : 9415
+Frame[50] : 9710
+Frame[51] : 9306
+Frame[52] : 8622
+Frame[53] : 8611
+Frame[54] : 9137
+Frame[55] : 9369
+Frame[56] : 9585
+Frame[57] : 9225
+Frame[58] : 9591
+Frame[59] : 9188
+Frame[60] : 9747
+Frame[61] : 8439
+Frame[62] : 9359
+Frame[63] : 7856
+Frame[64] : 9562
+Frame[65] : 8386
+Frame[66] : 10059
+Frame[67] : 9090
+Frame[68] : 9898
+Frame[69] : 10556
+Frame[70] : 10075
+Frame[71] : 10338
+Frame[72] : 8953
+Frame[73] : 9161
+Frame[74] : 8799
+Frame[75] : 9053
+Frame[76] : 8785
+Frame[77] : 9021
+Frame[78] : 8603
+Frame[79] : 8532
+
+//========= Out of Threshold in Flytime value Test: 
+Point(1 ,0 ): 10362.00(>10000.00)	Point(8 ,0 ): 10090.00(>10000.00)	Point(10,0 ): 10030.00(>10000.00)	
+Point(11,0 ): 11123.00(>10000.00)	Point(12,0 ): 10322.00(>10000.00)	Point(13,0 ): 11070.00(>10000.00)	
+Point(39,0 ): 10125.00(>10000.00)	Point(67,0 ): 10059.00(>10000.00)	Point(70,0 ): 10556.00(>10000.00)	
+Point(71,0 ): 10075.00(>10000.00)	Point(72,0 ): 10338.00(>10000.00)	
+
+
+//FlyTime Test is Fail
+
+
+//Final result is NG

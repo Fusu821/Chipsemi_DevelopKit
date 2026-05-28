@@ -1,0 +1,1060 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using SEMI.Util;
+using SMInvokeBridge;
+using SEMIDevelopKit.Src.WinSub;
+using System.Windows.Controls;
+using SEMIDevelopKit.Src.Util;
+using System.Windows.Input;
+using System.Reflection;
+using System.Windows;
+using System.Runtime.Serialization;
+using System.Runtime.InteropServices;
+using System.Xml;
+using System.Globalization;
+
+namespace SEMIDevelopKit.Src
+{
+    public class AppSetting
+    {
+        public static XmlDocument xml = new XmlDocument();
+        public static string GetXmlAttrbuteString(XmlNode parent, string node, string key, string defRet = "")
+        {
+            if (null == parent) return defRet;
+            XmlNode children = parent.SelectSingleNode(node);
+            if (null == children) return defRet;
+            if (null == children.Attributes[key]) return defRet;
+
+            return children.Attributes[key].Value;
+        }
+
+        public static int GetXmlAttrbuteValue(XmlNode parent, string node, string key, int defRet = 0)
+        {
+            string ret = GetXmlAttrbuteString(parent, node, key, defRet.ToString());
+            if (ret.Contains("0x"))
+                return int.Parse(ret.Replace("0x", ""), NumberStyles.HexNumber);
+            else
+                return int.Parse(ret);
+        }
+        public static void SaveXmlAttrbuteString(XmlNode parent, string node, string key, string val)
+        {
+            XmlNode sub = parent.SelectSingleNode(node);
+            if (null == sub)
+            {
+                sub = xml.CreateElement(node);
+                parent.AppendChild(sub);
+            }
+
+            XmlAttribute attr = sub.Attributes[key];
+            if (null == attr)
+            {
+                attr = xml.CreateAttribute(key);
+                sub.Attributes.Append(attr);
+            }
+            attr.Value = val;
+        }
+
+        public static void SaveXmlAttrbuteValue<T>(XmlNode parent, string node, string key, T val, string format = null)
+        {
+            string strValue = "";
+            if (string.IsNullOrEmpty(format))
+            {
+                strValue = val.ToString();
+            }
+            else
+            {
+                strValue = string.Format(format, val);
+            }
+            SaveXmlAttrbuteString(parent, node, key, strValue);
+        }
+        public static bool LoadXml(string path)
+        {
+            try
+            {
+                xml.RemoveAll();
+                xml.Load(path);
+            }
+            catch (Exception ex)
+            {
+                ex.ToString();
+                return false;
+            }
+
+            return true;
+        }
+
+        public static bool SaveXml(string path)
+        {
+            try
+            {
+                int endIndex = path.LastIndexOf('\\');
+                string dir = path.Substring(0, endIndex);
+                if (false == System.IO.Directory.Exists(dir))
+                    System.IO.Directory.CreateDirectory(dir);
+
+                xml.Save(path);
+            }
+            catch (Exception ex)
+            {
+                ex.ToString();
+                return false;
+            }
+
+            return true;
+        }
+        public static void CreateNewXmlDoc()
+        {
+            xml = new XmlDocument();
+            XmlDeclaration dec = xml.CreateXmlDeclaration("1.0", "utf-8", "yes");
+            xml.AppendChild(dec);
+
+            XmlElement tester = xml.CreateElement("semidevelop");
+            xml.AppendChild(tester);
+
+            //             XmlElement common = xml.CreateElement("common");
+            //             tester.AppendChild(common);
+        }
+    }
+
+    public class MainViewModel : CtrlEventDispacher
+    {
+        private MainWindow view = null;
+        private static MainViewModel single = null;
+        public MainViewModel(MainWindow v)
+        {
+            view = v;
+            single = this;
+
+            ProtocalList = new List<SMDefinition>()
+            {
+                new SMDefinition(0, "IIC"),
+                new SMDefinition(1, "SPI"),
+            };
+
+            byte icType = eChipTypeList.CLR_IC_TYPE_ALL;
+            int count = eChipTypeList.Count(icType);
+            for (int index = 0; index < count; index++)
+            {
+                SMDefinition node = new SMDefinition(eChipTypeList.GetIcCodeByIndex(index, icType), eChipTypeList.GetIcNameByIndex(index, icType));
+                icLists.Add(node);
+            }
+
+            LoadAndResolveAppSetting();
+            //SelectedIC = 0x0400;
+            //SlaveAddr = 0x5c;
+        }
+
+        public void LoadAndResolveAppSetting()
+        {
+            bool bOK = AppSetting.LoadXml(System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase + "semichip_develop.xml");
+            if (bOK)
+            {
+                XmlNode root = AppSetting.xml.SelectSingleNode("semidevelop");
+                if (null != root)
+                {
+                    int selectedIcID = AppSetting.GetXmlAttrbuteValue(root, "params", "ic_type", 0x400);
+                    SelectedIC = (ushort)selectedIcID;
+
+                    int protocal = AppSetting.GetXmlAttrbuteValue(root, "params", "protocal", 0);
+                    SelectedProtocal = (byte)protocal;
+
+                    int iicspeed = AppSetting.GetXmlAttrbuteValue(root, "params", "i2c_speed", 5);
+                    I2cSpeedIndex = (byte)iicspeed;
+
+                    int spispeed = AppSetting.GetXmlAttrbuteValue(root, "params", "spi_speed", 2 << 3);
+                    SpiSpeedDivision = (byte)spispeed;
+
+                    int slave = AppSetting.GetXmlAttrbuteValue(root, "params", "i2c_addr", 0x5c);
+                    SlaveAddr = (byte)slave;
+
+                    int vdd = AppSetting.GetXmlAttrbuteValue(root, "params", "vdd_votage", 0x6E);
+                    VddVotage = (byte)vdd;
+
+                    int iovdd = AppSetting.GetXmlAttrbuteValue(root, "params", "iovdd_votage", 0x47);
+                    IoVddVotage = (byte)iovdd;
+
+                    int agent = AppSetting.GetXmlAttrbuteValue(root, "params", "agent", 0x1);
+                    Agent = (byte)agent;
+
+                    int vihvdd = AppSetting.GetXmlAttrbuteValue(root, "params", "vih_votage", 1800);
+                    VIHVotage = (ushort)vihvdd;
+
+                    IpAddress = AppSetting.GetXmlAttrbuteString(root, "params", "ip_addr", "127.0.0.1");
+
+                    NotReset = AppSetting.GetXmlAttrbuteValue(root, "params", "not_reset", 0)>=1 ? true : false;
+                }
+            }
+            else
+            {
+                AppSetting.CreateNewXmlDoc();
+            }
+        }
+
+        ~MainViewModel()
+        {
+            XmlNode root = AppSetting.xml.SelectSingleNode("semidevelop");
+            AppSetting.SaveXmlAttrbuteValue(root, "params", "ic_type", SelectedIC, "0x{0:X}");
+            AppSetting.SaveXmlAttrbuteValue(root, "params", "protocal", SelectedProtocal);
+            AppSetting.SaveXmlAttrbuteValue(root, "params", "vdd_votage", VddVotage, "0x{0:X}");
+            AppSetting.SaveXmlAttrbuteValue(root, "params", "iovdd_votage", IoVddVotage, "0x{0:X}");
+            AppSetting.SaveXmlAttrbuteValue(root, "params", "agent", Agent, "0x{0:X}");
+            AppSetting.SaveXmlAttrbuteValue(root, "params", "i2c_addr", SlaveAddr, "0x{0:X}");
+            AppSetting.SaveXmlAttrbuteValue(root, "params", "i2c_speed", I2cSpeedIndex);
+            AppSetting.SaveXmlAttrbuteValue(root, "params", "spi_speed", SpiSpeedDivision);
+            AppSetting.SaveXmlAttrbuteString(root, "params", "ip_addr", IpAddress);
+
+            AppSetting.SaveXmlAttrbuteValue(root, "params", "vih_votage", VIHVotage);
+
+            AppSetting.SaveXmlAttrbuteValue(root, "params", "not_reset", NotReset ? 1 : 0);
+
+            AppSetting.SaveXml(System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase + "semichip_develop.xml");
+        }
+
+        public static MainViewModel Intr
+        {
+            get { return single; }
+        }
+
+        public Boolean RaiseException { get; set; }
+
+        private uint returnCode = 1;
+        public uint ReturnCode
+        {
+            get { return returnCode; }
+            set { if (value != returnCode) { returnCode = value; OnPropertyChanged("ReturnCode"); } if (RaiseException && value > 0) throw new Exception(ExportDeclares.CLRGetErrorMessage(value)); }
+        }
+
+        private uint processValue = 0;
+        public uint ProcessValue
+        {
+            get { return processValue; }
+            set { if (value != processValue) { processValue = value; OnPropertyChanged("ProcessValue"); } }
+        }
+
+        private uint processMax = 100;
+        public uint ProcessMax
+        {
+            get { return processMax; }
+            set { if (value != processMax) { processMax = value; OnPropertyChanged("ProcessMax"); } }
+        }
+
+        private byte[] deviceStates = new byte[ExportDeclares.MAX_DEVICE_NUMS];
+        public byte[] DeviceStates
+        {
+            get { return deviceStates; }
+            set
+            {
+                if (value != deviceStates)
+                {
+                    deviceStates = value;
+                    OnPropertyChanged("DeviceStates");
+                    var item = deviceStates.FirstOrDefault((t) => t > 0);
+
+                    SMCommBase.UpdateDevice((uint)deviceStates.ToList().IndexOf(item));
+                }
+            }
+        }
+
+        private IList<SMDefinition> icLists = new List<SMDefinition>();
+        public IList<SMDefinition> ICLists
+        {
+            get { return icLists; }
+            set { if (icLists != value) { icLists = value; OnPropertyChanged("ICLists"); } }
+        }
+
+        public ushort Accuracy = 16;
+        private ushort selectedIC = 0;
+        public ushort SelectedIC
+        {
+            get { return selectedIC; }
+            set
+            {
+                if (value != selectedIC)
+                {
+                    selectedIC = value;
+                    OnPropertyChanged("SelectedIC");
+
+                    RuningKernel.Instance().Work.AddWorkTemporary(() =>
+                    {
+                        RuningKernel.Instance().Work.Clear();
+                        SMChipBase.SetICTypeAndCreateComponent(selectedIC);
+                        CommContext ctx = new CommContext();
+                        ctx.icType = selectedIC;
+                        ctx.protocalType = (byte)SelectedProtocal;
+                        ctx.slaveAddr = SlaveAddr;
+                        ctx.i2cSpeed = I2cSpeedIndex;
+                        ctx.spiMode = 0;
+                        ctx.spiSpeed = SpiSpeedDivision;
+                        ctx.vdd = VddVotage;
+                        ctx.iovdd = IoVddVotage;
+                        ctx.vih = VIHVotage;
+                        SMChipBase.SetCommContext(ctx);
+                        Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                        {
+                            view.rawdataframe.Navigate(SMDevelopChipReflex.Instance.GetSemiModuleByChipAndType(SMDevelopChipReflex.SEMI_DEVLOP_RAWDATA, selectedIC));
+                            foreach (var item in ModeCatch.GetListModes(SelectedIC))
+                            {
+                                MethodInfo info = item.GetType().GetMethod("ActionOnICChanged");
+                                if (null != info)
+                                {
+                                    info.Invoke(item, null);
+                                }
+                            }
+
+                            foreach(Xceed.Wpf.AvalonDock.Layout.LayoutAnchorable child in view.AnchorPane.Children)
+                            {
+                                var frame = child.Content as Frame;
+                                if (null == frame.Content) continue;
+                                MethodInfo info = frame.Content.GetType().GetMethod("ActionOnICChanged");
+                                if (null != info)
+                                {
+                                    info.Invoke(frame.Content, null);
+                                }
+                            }
+                        })); 
+                    });
+                }
+            }
+        }
+
+        private IList<SMDefinition> protocalList = new List<SMDefinition>();
+        public IList<SMDefinition> ProtocalList
+        {
+            get { return protocalList; }
+            set { if (protocalList != value) { protocalList = value; OnPropertyChanged("ProtocalList"); } }
+        }
+
+        private ushort selectedProtocal = 0;
+        public ushort SelectedProtocal
+        {
+            get { return selectedProtocal; }
+            set
+            {
+                if (value != selectedProtocal)
+                {
+                    selectedProtocal = value;
+                    OnPropertyChanged("SelectedProtocal");
+                    RuningKernel.Instance().Work.AddWorkTemporary(() =>
+                    {
+                        CommContext ctx = new CommContext();
+                        ctx.icType = selectedIC;
+                        ctx.protocalType = (byte)SelectedProtocal;
+                        ctx.slaveAddr = SlaveAddr;
+                        ctx.i2cSpeed = I2cSpeedIndex;
+                        ctx.spiMode = 0;
+                        ctx.spiSpeed = SpiSpeedDivision;
+                        ctx.vdd = VddVotage;
+                        ctx.iovdd = IoVddVotage;
+                        ctx.vih = VIHVotage;
+                        SMChipBase.SetCommContext(ctx);
+                        SMCommBase.SyncWorkcInit();
+                    });
+                }
+            }
+        }
+
+        private IList<HexValue<byte>> slaveAddrList = new List<HexValue<byte>>() 
+        { 
+            new HexValue<byte>(0x1E),
+            new HexValue<byte>(0x38),
+            new HexValue<byte>(0x5c),
+            new HexValue<byte>(0x6c),
+            new HexValue<byte>(0x70),
+        };
+        public IList<HexValue<byte>> SlaveAddrList
+        {
+            get { return slaveAddrList; }
+            set { if (value != slaveAddrList) { slaveAddrList = value; OnPropertyChanged("SlaveAddrList"); } }
+        }
+
+        private byte slaveAddr = 0x5c;
+        public byte SlaveAddr
+        {
+            get { return slaveAddr; }
+            set
+            {
+                if (value != slaveAddr)
+                {
+                    slaveAddr = value;
+                    OnPropertyChanged("SlaveAddr");
+                    RuningKernel.Instance().Work.AddWorkTemporary(() =>
+                    {
+                        CommContext ctx = new CommContext();
+                        ctx.icType = selectedIC;
+                        ctx.protocalType = (byte)SelectedProtocal;
+                        ctx.slaveAddr = SlaveAddr;
+                        ctx.i2cSpeed = I2cSpeedIndex;
+                        ctx.spiMode = 0;
+                        ctx.spiSpeed = SpiSpeedDivision;
+                        ctx.vdd = VddVotage;
+                        ctx.iovdd = IoVddVotage;
+                        SMChipBase.SetCommContext(ctx);
+                        SMCommBase.SyncWorkcInit();
+                    });
+                    
+                }
+            }
+        }
+
+        private IList<SMDefinition> spiModeList = new List<SMDefinition>()
+        {
+            new SMDefinition(0x0000,   "PHA-0, POL-0"), 
+            new SMDefinition(0x0001,   "PHA-1, POL-0"), 
+            new SMDefinition(0x0002,   "PHA-0, POL-1"), 
+            new SMDefinition(0x0003,   "PHA-1, POL-1"), 
+        };
+
+        public IList<SMDefinition> SpiModeList
+        {
+            get { return spiModeList; }
+            private set { }
+        }
+
+        private ushort selectedSpiMode = 0;
+        public ushort SelectedsSpiMode
+        {
+            get { return selectedSpiMode; }
+            set
+            {
+                if (value != selectedSpiMode)
+                {
+                    selectedSpiMode = value;
+                    OnPropertyChanged("SelectedsSpiMode");
+                    RuningKernel.Instance().Work.AddWorkTemporary(() =>
+                    {
+                        CommContext ctx = new CommContext();
+                        ctx.icType = selectedIC;
+                        ctx.protocalType = (byte)SelectedProtocal;
+                        ctx.slaveAddr = SlaveAddr;
+                        ctx.i2cSpeed = I2cSpeedIndex;
+                        ctx.spiMode = (byte)SelectedsSpiMode;
+                        ctx.spiSpeed = SpiSpeedDivision;
+                        ctx.vdd = VddVotage;
+                        ctx.iovdd = IoVddVotage;
+                        ctx.vih = VIHVotage;
+                        SMChipBase.SetCommContext(ctx);
+                        SMCommBase.SyncWorkcInit();
+                    });
+                }
+            }
+        }
+
+        private IList<SMDefinition> spiSpeedList = new List<SMDefinition>()
+        {
+            new SMDefinition(0x0000,   "18M/16M(V8)"),
+            new SMDefinition((1 << 3), "9M/8M(V8)"),
+            new SMDefinition((2 << 3), "4.5M/4M(V8)"),
+            new SMDefinition((3 << 3), "2.25M/2M(V8)"),
+            new SMDefinition((4 << 3), "1.125M/1M(V8)"),
+        };
+
+        public IList<SMDefinition> SpiSpeedList
+        {
+            get { return spiSpeedList; }
+            private set { }
+        }
+
+        private ushort spiSpeedDivision = 2 << 3;
+        public ushort SpiSpeedDivision
+        {
+            get { return spiSpeedDivision; }
+            set
+            {
+                if (value != spiSpeedDivision)
+                {
+                    spiSpeedDivision = value;
+                    OnPropertyChanged("SpiSpeedDivision");
+                    RuningKernel.Instance().Work.AddWorkTemporary(() =>
+                    {
+                        CommContext ctx = new CommContext();
+                        ctx.icType = selectedIC;
+                        ctx.protocalType = (byte)SelectedProtocal;
+                        ctx.slaveAddr = SlaveAddr;
+                        ctx.i2cSpeed = I2cSpeedIndex;
+                        ctx.spiMode = 0;
+                        ctx.spiSpeed = SpiSpeedDivision;
+                        ctx.vdd = VddVotage;
+                        ctx.iovdd = IoVddVotage;
+                        ctx.vih = VIHVotage;
+                        SMChipBase.SetCommContext(ctx);
+                        SMCommBase.SyncWorkcInit();
+                    });
+                }
+            }
+        }
+
+        private IList<SMDefinition> i2cSpeedList = new List<SMDefinition>()
+        {
+            new SMDefinition(1,   "50k"),
+            new SMDefinition(2,   "100k"),
+            new SMDefinition(3,   "200k"),
+            new SMDefinition(4,   "300k"),
+            new SMDefinition(5,   "400k"),
+            new SMDefinition(6,   "1M"),
+        };
+
+        public IList<SMDefinition> I2cSpeedList
+        {
+            get { return i2cSpeedList; }
+            private set { }
+        }
+
+        private ushort i2cSpeedIndex = 5;
+        public ushort I2cSpeedIndex
+        {
+            get { return i2cSpeedIndex; }
+            set
+            {
+                if (value != i2cSpeedIndex)
+                {
+                    i2cSpeedIndex = value;
+                    OnPropertyChanged("I2cSpeedIndex");
+                    RuningKernel.Instance().Work.AddWorkTemporary(() =>
+                    {
+                        CommContext ctx = new CommContext();
+                        ctx.icType = selectedIC;
+                        ctx.protocalType = (byte)SelectedProtocal;
+                        ctx.slaveAddr = SlaveAddr;
+                        ctx.i2cSpeed = I2cSpeedIndex;
+                        ctx.spiMode = 0;
+                        ctx.spiSpeed = SpiSpeedDivision;
+                        ctx.vdd = VddVotage;
+                        ctx.iovdd = IoVddVotage;
+                        ctx.vih = VIHVotage;
+                        SMChipBase.SetCommContext(ctx);
+                        SMCommBase.SyncWorkcInit();
+                    });
+                }
+            }
+        }
+
+        public IList<SMDefinition> VddVoltageList
+        {
+            get
+            {
+                return new List<SMDefinition>()
+                {
+                    new SMDefinition(0x8E,   "3.6V"),
+                    new SMDefinition(0x81,   "3.3V"),
+                    new SMDefinition(0x76,   "3.0V"),
+                    new SMDefinition(0x6E,   "2.8V"),
+                    new SMDefinition(0x68,   "2.6V"),
+                };
+            }
+        }
+
+        private ushort vddVotage = 0x6E;
+        public ushort VddVotage
+        {
+            get { return vddVotage; }
+            set
+            {
+                if (value != vddVotage)
+                {
+                    vddVotage = value;
+                    OnPropertyChanged("VddVotage");
+                    RuningKernel.Instance().Work.AddWorkTemporary(() =>
+                    {
+                        SMCommBase.SetIoVoltage(VddVotage, IoVddVotage, VIHVotage);
+                    });
+                }
+            }
+        }
+
+
+        public IList<SMDefinition> IoVddVoltageList
+        {
+            get
+            {
+                return new List<SMDefinition>()
+                {
+                    new SMDefinition(0x8E,   "3.6V"),
+                    new SMDefinition(0x81,   "3.3V"),
+                    new SMDefinition(0x76,   "3.0V"),
+                    new SMDefinition(0x6E,   "2.8V"),
+                    new SMDefinition(0x68,   "2.6V"),
+                    new SMDefinition(0x47,   "1.8V"),
+                    new SMDefinition(0x2f,   "1.2V"),
+                };
+            }
+        }
+
+        private ushort ioVddVotage = 0x47;
+        public ushort IoVddVotage
+        {
+            get { return ioVddVotage; }
+            set
+            {
+                if (value != ioVddVotage)
+                { 
+                    ioVddVotage = value; 
+                    OnPropertyChanged("IoVddVotage");
+                    RuningKernel.Instance().Work.AddWorkTemporary(() =>
+                    {
+                        SMCommBase.SetIoVoltage(VddVotage, IoVddVotage, VIHVotage);
+                    });
+                }
+            }
+        }
+
+        private IList<SMDefinition> agentList = new List<SMDefinition>()
+        {
+            new SMDefinition(0x01,   "MTK"),
+            new SMDefinition(0x03,   "ADB"),
+            new SMDefinition(0x07,   "HID"),
+            new SMDefinition(0x08,   "HIDIIC"),
+            new SMDefinition(0x13,   "WIFI"),
+            new SMDefinition(0x9,    "HTP_TCP"),
+        };
+        public IList<SMDefinition> AgentList
+        {
+            get { return agentList; }
+            set { if (value != agentList) { agentList = value; OnPropertyChanged("AgentList"); } }
+        }
+
+        private ushort agent = 1;
+        public ushort Agent
+        {
+            get { return agent; }
+            set
+            {
+                if (value != agent)
+                {
+                    agent = value; 
+                    OnPropertyChanged("Agent");
+
+                    RuningKernel.Instance().Pause(false);
+                    RuningKernel.Instance().Work.AddWorkTemporary(() =>
+                    {
+                        SMCommBase.MtkBoardReBoot((uint)agent);
+                    });
+                    RuningKernel.Instance().Work.AddWorkTemporary(() =>
+                    {
+                        CLRLinkParam linkParam = new CLRLinkParam();
+                        if (0x13 == agent || 0x9 == agent)
+                        {
+                            linkParam.port = 3536;
+                        }
+                        else if (0x03 == agent) 
+                        {
+                            IpAddress = "127.0.0.1";
+                            linkParam.port = 3535;
+                        }
+                        linkParam.LinkType = (byte)(agent & 0x0F);
+                        linkParam.szIpAddress = IpAddress;
+
+                        bool bConnected = ExportDeclares.CLRHalLinkAndDoInit(linkParam);
+                        if (bConnected) DeviceStates = new byte[] { 1, 0, 0, 0 };
+                        else DeviceStates = new byte[ExportDeclares.MAX_DEVICE_NUMS];
+
+                        SMChipBase.SetICTypeAndCreateComponent(selectedIC);
+                    });
+                }
+            }
+        }
+
+        private string ipAddress = "127.0.0.1";
+        public string IpAddress
+        {
+            get { return ipAddress; }
+            set { if (value != ipAddress) { ipAddress = value; OnPropertyChanged("IpAddress"); } }
+        }
+
+        //0 rawdata; 1 touch point
+        private ushort displayType = (ushort)dtType.MODE_NONE;
+        public ushort DisplayType
+        {
+            get { return displayType; }
+            set
+            {
+                if (value != displayType)
+                {
+                    displayType = value;
+                    OnPropertyChanged("DisplayType");
+
+                    foreach (var item in ModeCatch.GetListModes(SelectedIC))
+                    {
+                        if (null != item as ModelBase)
+                        {
+                            (item as ModelBase).OnDisplayTypeChanged(displayType);
+                        }
+                    }
+                }
+            }
+        }
+
+        private ushort displayDataLen = 0;
+        public ushort DisplayDataLen
+        {
+            get { return displayDataLen; }
+            set
+            {
+                if (value != displayDataLen)
+                {
+                    displayDataLen = value;
+                    OnPropertyChanged("DisplayDataLen");
+
+                    foreach (var item in ModeCatch.GetListModes(SelectedIC))
+                    {
+                        if (null != item as ModelBase)
+                        {
+                            (item as ModelBase).OnDisplayLenChanged(displayDataLen);
+                        }
+                    }
+                }
+            }
+        }
+
+        private IList<SMDefinition> listDataType = new List<SMDefinition>()
+        {
+            new SMDefinition(dtType.MODE_RAWDATA, "RawData"),
+            new SMDefinition(dtType.MODE_DIFFER, "Differ"),
+            new SMDefinition(dtType.MODE_BASE, "Base"),
+            new SMDefinition(dtType.MODE_TOUCH, "Touch"),
+            new SMDefinition(dtType.MODE_SIMULATE_RAW, "Rawdata + Touch"),
+            new SMDefinition(dtType.MODE_SIMULATE_DIFF, "Differ + Touch"),
+            new SMDefinition(dtType.MODE_TWOICS_RAWDATA, "Double8006_Rawdata"),
+            new SMDefinition(dtType.MODE_TWOICS_TOUCH, "Double8006_Touch"),
+            new SMDefinition(dtType.MODE_810ANALOG_RAW, "Analog810_Rawdata"),
+            new SMDefinition(dtType.MODE_810ANALOG_TOUCH, "Analog810_Touch"),
+            new SMDefinition(dtType.MODE_NONE, "None"),
+        };
+        public IList<SMDefinition> ListDataType
+        {
+            get { return listDataType; }
+            set
+            {
+                if (value != listDataType)
+                {
+                    listDataType = value;
+                    OnPropertyChanged("ListDataType");
+                }
+            }
+        }
+
+        private int rowNum = 0;
+        public int RowNum
+        {
+            get { return rowNum; }
+            set
+            {
+                if (value != rowNum)
+                {
+                    rowNum = value;
+                    OnPropertyChanged("RowNum");
+
+                    foreach (var item in ModeCatch.GetListModes(SelectedIC))
+                    {
+                        MethodInfo info = item.GetType().GetMethod("ActionOnChannelNumChange");
+                        if (null != info)
+                        {
+                            info.Invoke(item, null);
+                        }
+                    }
+                }
+            }
+        }
+
+        private int colNum = 0;
+        public int ColNum
+        {
+            get { return colNum; }
+            set
+            {
+                if (value != colNum)
+                {
+                    colNum = value;
+                    OnPropertyChanged("ColNum");
+
+                    foreach (var item in ModeCatch.GetListModes(SelectedIC))
+                    {
+                        MethodInfo info = item.GetType().GetMethod("ActionOnChannelNumChange");
+                        if (null != info)
+                        {
+                            info.Invoke(item, null);
+                        }
+                    }
+                }
+            }
+        }
+
+        private IList<SMDefinition> timerIntervalList = new List<SMDefinition>()
+        {
+            new SMDefinition(10, "10ms"),
+            new SMDefinition(20, "20ms"),
+            new SMDefinition(50, "50ms"),
+            new SMDefinition(70, "70ms"),
+            new SMDefinition(100, "100ms"),
+            new SMDefinition(150, "150ms"),
+            new SMDefinition(200, "200ms"),
+        };
+
+        public IList<SMDefinition> TimerIntervalList
+        {
+            get { return timerIntervalList; }
+            set
+            {
+                if (value != timerIntervalList)
+                {
+                    timerIntervalList = value;
+                    OnPropertyChanged("TimerIntervalList");
+                }
+            }
+        }
+
+        private ushort timerInterval = 70;
+        public ushort TimerInterval
+        {
+            get { return timerInterval; }
+            set
+            {
+                if (value != timerInterval)
+                {
+                    timerInterval = value;
+                    OnPropertyChanged("TimerInterval");
+                    RuningKernel.Instance().RefreshTimer.Interval = timerInterval;
+                }
+            }
+        }
+
+        private bool filterOff = false;
+        public bool FilterOff
+        {
+            get { return filterOff; }
+            set
+            {
+                if (value != filterOff)
+                {
+                    filterOff = value;
+                    OnPropertyChanged("FilterOff");
+
+                    var mdBase = ModeCatch.GetModeByIdAndICType(SMDevelopChipReflex.SEMI_DEVLOP_RAWDATA, MainViewModel.Intr.SelectedIC) as ModelBase;
+                    if (null != mdBase)
+                        RuningKernel.Instance().Work.AddWorkTemporary(new Action(mdBase.SwitchModeEx));
+                }
+            }
+        }
+
+        private bool notReset = false;
+        public bool NotReset
+        {
+            get { return notReset; }
+            set
+            {
+                if (value != notReset)
+                {
+                    notReset = value;
+                    OnPropertyChanged("NotReset");
+                }
+            }
+        }
+
+        private uint directAddr = 0x0000;
+        public uint DirectAddr
+        {
+            get { return directAddr; }
+            set { if (value != directAddr) { directAddr = value; OnPropertyChanged("DirectAddr"); } }
+        }
+
+        private uint directValue = 0x0000;
+        public uint DirectValue
+        {
+            get { return directValue; }
+            set { if (value != directValue) { directValue = value; OnPropertyChanged("DirectValue"); } }
+        }
+
+        private uint dedicateAddr = 0x0000;
+        public uint DedicateAddr
+        {
+            get { return dedicateAddr; }
+            set { if (value != dedicateAddr) { dedicateAddr = value; OnPropertyChanged("DedicateAddr"); } }
+        }
+
+        private uint dedicateValue = 0x0000;
+        public uint DedicateValue
+        {
+            get { return dedicateValue; }
+            set { if (value != dedicateValue) { dedicateValue = value; OnPropertyChanged("DedicateValue"); } }
+        }
+
+        private ushort workClk = 0;
+        public ushort WorkClk
+        {
+            get { return workClk; }
+            set
+            {
+                bool userUpdate = workClk > 0 ? true : false;
+                if (value != workClk)
+                {
+                    workClk = value;
+                    OnPropertyChanged("WorkClk");
+
+                    if (userUpdate)
+                    {
+                        var mdBase = ModeCatch.GetModeByIdAndICType(SMDevelopChipReflex.SEMI_DEVLOP_RAWDATA, MainViewModel.Intr.SelectedIC) as ModelBase;
+                        if (null != mdBase)
+                            RuningKernel.Instance().Work.AddWorkTemporary(new Action(mdBase.SwitchModeEx));
+                    }
+                } 
+            }
+        }
+
+        private ushort vihVotage = 1800;
+        public ushort VIHVotage
+        {
+            get { return vihVotage; }
+            set 
+            { 
+                if (value != vihVotage)
+                { 
+                    vihVotage = value; OnPropertyChanged("VIHVotage");
+                    RuningKernel.Instance().Work.AddWorkTemporary(() =>
+                    {
+                        SMCommBase.SetIoVoltage(VddVotage, IoVddVotage, VIHVotage);
+                    });
+                } 
+            }
+        }
+
+        private string textScriptIn = "";
+        public string TextScriptIn
+        {
+            get { return textScriptIn; }
+            set { textScriptIn = value; OnPropertyChanged("TextScriptIn"); }
+        }
+
+        private string textScriptOut = "";
+        public string TextScriptOut
+        {
+            get { return textScriptOut; }
+            set { if (value != textScriptOut) { textScriptOut = value; OnPropertyChanged("TextScriptOut"); } }
+        }
+
+        public override void OnCtrlClickCommand(object param)
+        {
+            string strParam = param as string;
+            if (null == strParam) return;
+
+            if ("direct-write-click" == strParam)
+            {
+                RuningKernel.Instance().Work.AddWorkTemporary(() =>
+                {
+                    MainViewModel.Intr.ReturnCode = SMChipBase.HalAccessMode(0);
+                    if (0 == MainViewModel.Intr.ReturnCode)
+                    {
+                        MainViewModel.Intr.ReturnCode = SMChipBase.WriteRegister( DirectAddr, DirectValue );
+                    }
+                });
+            }
+            else if ("direct-read-click" == strParam)
+            {
+                RuningKernel.Instance().Work.AddWorkTemporary(() =>
+                {
+                    MainViewModel.Intr.ReturnCode = SMChipBase.HalAccessMode(0);
+                    if (0 == MainViewModel.Intr.ReturnCode)
+                    {
+                        uint readVal = 0;
+                        MainViewModel.Intr.ReturnCode = SMChipBase.ReadRegister(DirectAddr, ref readVal);
+                        DirectValue = readVal;
+                    }
+                });
+            }
+            else if ("dedicate-write-click" == strParam)
+            {
+                RuningKernel.Instance().Work.AddWorkTemporary(() =>
+                {
+                    MainViewModel.Intr.ReturnCode = SMChipBase.HalAccessMode(1);
+                    if (0 == MainViewModel.Intr.ReturnCode)
+                    {
+                        MainViewModel.Intr.ReturnCode = SMChipBase.WriteRegister(DedicateAddr, DedicateValue);
+                    }
+                });
+            }
+            else if ("dedicate-read-click" == strParam)
+            {
+                RuningKernel.Instance().Work.AddWorkTemporary(() =>
+                {
+                    MainViewModel.Intr.ReturnCode = SMChipBase.HalAccessMode(0);
+                    if (0 == MainViewModel.Intr.ReturnCode)
+                    {
+                        uint readVal = 0;
+                        MainViewModel.Intr.ReturnCode = SMChipBase.ReadRegister(DedicateAddr, ref readVal);
+                        DedicateValue = readVal;
+                    }
+                });
+            }
+            else if ("script-all-click" == strParam)
+            {
+                RuningKernel.Instance().Work.AddWorkTemporary(() =>
+                {
+                    TextScriptOut = "";
+                    string[] vecCommmand = System.Text.RegularExpressions.Regex.Split(textScriptIn, "\r\n", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                    List<string> lsCommandLoop = new List<string>();
+                    bool loopTriger = false;
+                    uint loopCount = 0, ret = 0;
+                    string commandResult = "";
+
+                    foreach (var commnad in vecCommmand)
+                    {
+                        if (commnad.Contains("endloop"))
+                        {
+                            loopTriger = false;
+                            for (int index = 0; index < loopCount; index++)
+                            {
+                                foreach (var cmd in lsCommandLoop)
+                                {
+                                    ret = IOCommand.DoCommand(cmd, ref commandResult);
+                                    TextScriptOut = TextScriptOut + commandResult;
+
+                                    if (ret > 0) return;
+                                }
+                            }
+                            continue;
+                        }
+                        else if (commnad.Contains("loop"))
+                        {
+                            loopTriger = true;
+                            loopCount = uint.Parse(commnad.Replace("loop", "").Trim());
+                            continue;
+                        }
+
+                        if (loopTriger)
+                        {
+                            lsCommandLoop.Add(commnad);
+                            continue;
+                        }
+
+                        ret = IOCommand.DoCommand(commnad, ref commandResult);
+                        TextScriptOut = TextScriptOut + commandResult;
+                        
+
+                        if (ret > 0) return;
+                    }
+                });
+            }
+            else if ("script-clp-click" == strParam)
+            {
+                string strText = Clipboard.GetText();
+                TextScriptOut = "";
+                string[] vecCommmand = strText.Split("\r\n".ToCharArray());
+
+                foreach (var commnad in vecCommmand)
+                {
+                    string commandResult = "";
+                    uint ret = IOCommand.DoCommand(commnad, ref commandResult);
+                    TextScriptOut = TextScriptOut + commandResult;
+
+                    if (ret > 0) break;
+                }
+            }
+            else if ("short-cut-click" == strParam)
+            {
+                view.ShowFlyout(this);
+            }
+        }
+
+    }
+
+}

@@ -1,0 +1,32 @@
+//运行烧录代码
+run_ram_code(chsc_venus_burn.bin)
+
+//擦除mtp
+invoke_command(32, 4)
+
+//复位TP
+reset_pin
+
+//延时
+d 100
+
+//5a喂狗
+w 40 00 70 10     5a 92 00 00
+
+//bit4=0 osc_clk=24M;bit2=1 TRX模拟pin;bit28=0 key io disable	
+w 40 00 70 00     05 40 04 02	
+
+//bit[16:2]=0b1_0011_1001_1101_00校准24M & 32K;bit[27:25]=101 lcldo12=0.95v
+w 40 00 70 04     d1 39 49 1b	
+
+//f0 active;bit18=1 clk_div_en=1 enable分频；bit[20:19]=00二分频实测：2.98mA
+w 40 00 70 0c     f0 0f 04 00
+
+//mtp power down
+w 40 00 10 00     bd 00 00 00	
+
+//bit30=1 i2c唤醒
+w 40 00 70 08     5c 00 00 42
+
+//f2-retention
+w 40 00 70 0c     f2 0f 04 00

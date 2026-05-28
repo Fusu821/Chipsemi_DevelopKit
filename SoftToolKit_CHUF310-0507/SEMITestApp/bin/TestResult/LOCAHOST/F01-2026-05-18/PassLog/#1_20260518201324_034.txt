@@ -1,0 +1,38 @@
+ChipSemi_Tester_V8.8.8_20260318
+WorkStation: F01   ProjectName: 0508
+
+Time Stamp:	2026-05-18 20:13:20 833
+Mtk Version = 0xd1103
+
+Time Stamp:	2026-05-18 20:13:21 325
+
+------------------------------Project Test------------------------------
+Project = 310
+
+//Project Test is Pass
+
+Time Stamp:	2026-05-18 20:13:21 325
+
+------------------------------Current Test------------------------------
+
+avdd_active = 17343(uA), avdd_idle = 1427(uA)£¬  avdd_sleep = 19(uA)
+
+
+//Current Test is Pass
+
+Time Stamp:	2026-05-18 20:13:22 645
+
+------------------------------IOVoltage Test------------------------------
+
+IOV = 1.8V  High : int0 vol = 1716  ,	int2 vol = 1705  
+IOV = 1.8V  Low  : int0 vol = 27    ,	int2 vol = 1     
+IOV = 1.2V  High : int0 vol = 1224  ,	int2 vol = 1225  
+IOV = 1.2V  Low  : int0 vol = 17    ,	int2 vol = 1     
+
+IOV 1.62V  & 1.08V trans test PASS
+
+
+//IOVoltage Test is Pass
+
+
+//Final result is Pass

@@ -1,0 +1,502 @@
+#pragma once
+#include <tchar.h>
+#include <windows.h>
+#include "../Include/SEMITouch.h"
+#include "../Include/NativeTestInterface.h"
+#include "../Include/Algorithm.h"
+using namespace System;
+using namespace System::Runtime::InteropServices;
+
+namespace SMInvokeBridge{
+
+	public enum class cmdTypeID
+	{
+		CMD_NA              = 0x0f,
+		CMD_IDENTITY        = 0x01,
+		CMD_CTP_SSCAN       = 0x02,
+		CMD_CTP_FREQ        = 0x04,
+		CMD_CTP_RST         = 0x10,
+		CMD_OPEN_TST        = 0x20,
+		CMD_SHORT_TST       = 0x21,
+		CMD_INT_TST         = 0x22,
+		CMD_RST_TST         = 0x23, 
+		CMD_FSD_TST         = 0x24,
+		CMD_CHK_CFG         = 0x26,
+		CMD_HOLD_MTK        = 0x27,
+		CMD_DATA_SYNC       = 0x28,
+
+		CMD_MEM_WR          = 0x30,
+		CMD_MEM_RD          = 0x31,
+		CMD_FLASH_ERASE     = 0x32,
+		CMD_FW_SUM          = 0x33,
+		CMD_ENTER_UPGRADE_MODE = 0x34,
+		CMD_WRITE_REGISTER  = 0X35,
+		CMD_READ_REGISTER   = 0X36,
+		CMD_BSPR_WRITE      = 0x37,
+		CMD_BSPR_READ       = 0x38,
+
+		CMD_MTK_UPGRADE_ENTER = 0x39,
+		CMD_JUMP_RAMCODE = 0x3A,
+		CMD_CFG_IIC         = 0x42,
+
+		CMD_SWITCH_IIC      = 0x50,
+		CMD_ENTER_FW_BOOT_LOADER = 0x51,
+
+		CMD_NEW_ENCRY_PRJ   = 0x80,
+		CMD_GET_ENCRY_INF   = 0x81,
+		CMD_MTK_NEW_DONE    = 0x82,
+		CMD_MTK_FBOOT_CHK   = 0x83,
+		CMD_MTK_MEM_MOVE    = 0x84, 
+		CMD_MTK_MEM_WR      = 0x85,
+		CMD_MTK_MEM_RD      = 0x86,
+		CMD_MTK_FLASH_ERASE = 0x87,
+		CMD_SEND_ENCRY_KEY  = 0x88,
+		CMD_MTK_EXT_OUTPUT  = 0x89,
+		CMD_MTK_VDD_LEVEL   = 0x90,
+		CMD_DUT_SUSPEND     = 0x94,
+		CMD_DUT_CLK_CALIB   = 0x95,
+		CMD_DUT_HOLD        = 0x96,
+		CMD_SCAN_ID         = 0x97,
+		CMD_CFG_INIT        = 0x98,
+		CMD_SET_FEATURE     = 0x99,
+		CMD_SET_SYNC_T      = 0x9A,
+		CMD_MTK_CLK_CALIB   = 0x9B,
+		CMD_MTK_SET_VOLTAGE = 0x9C,
+		CMD_MTK_TEST_PINS_LEAK = 0x9D,
+	};
+
+	public ref class dtType
+	{ 
+	public:
+		static const USHORT MODE_RAWDATA = 0;
+		static const USHORT MODE_DIFFER = 1;
+		static const USHORT MODE_TOUCH = 2;
+		static const USHORT MODE_BASE = 3;
+		static const USHORT MODE_SIMULATE_RAW = 4;
+		static const USHORT MODE_SIMULATE_DIFF = 5;
+		static const USHORT MODE_TWOICS_RAWDATA = 6;
+		static const USHORT MODE_TWOICS_TOUCH = 7;
+		static const USHORT MODE_810ANALOG_RAW = 8;
+		static const USHORT MODE_810ANALOG_TOUCH = 9;
+		static const USHORT MODE_NONE = 10; 
+	};
+
+	[System::Runtime::InteropServices::StructLayoutAttribute(System::Runtime::InteropServices::LayoutKind::Sequential, CharSet = System::Runtime::InteropServices::CharSet::Ansi, Pack = 1)]
+	public ref struct SMTestItem
+	{
+	public:
+		unsigned char ucDevice;
+		int           testCode;
+		int           testResult;
+  		[System::Runtime::InteropServices::MarshalAs(System::Runtime::InteropServices::UnmanagedType::ByValTStr, SizeConst = 128)]
+  		String^ testName;
+ 		[System::Runtime::InteropServices::MarshalAs(System::Runtime::InteropServices::UnmanagedType::ByValTStr, SizeConst = 128)]
+ 		String^ testMark;
+	public:
+		SMTestItem()
+		{
+		}
+	};
+
+	[System::Runtime::InteropServices::StructLayoutAttribute(System::Runtime::InteropServices::LayoutKind::Sequential, CharSet = System::Runtime::InteropServices::CharSet::Ansi, Pack = 1)]
+	public ref struct SMUpLoadInfo
+	{
+	public:
+		int           codenum;
+		[System::Runtime::InteropServices::MarshalAs(System::Runtime::InteropServices::UnmanagedType::ByValTStr, SizeConst = 256)]
+		String^ str;
+	public:
+		SMUpLoadInfo()
+		{
+		}
+	};
+
+	public ref class SMColorText
+	{
+	public:
+		unsigned int dwColor;
+		String^ strText;
+		int iHeight;
+		bool bBold;
+		SMColorText(String^ text, unsigned int color, int height, bool bold)
+			:strText(text)
+			,dwColor(color)
+			,iHeight(height)
+			,bBold(bold)
+		{
+
+		}
+	};
+
+    public ref class SMViewInfomation
+	{
+	public:
+		String^ szStation;
+		String^ szProjectInfo;
+		String^ szSoftWare;
+		String^ snFilter;
+		unsigned char wayToStart;
+		unsigned char sn_len;
+		unsigned char format;
+		unsigned char needclickstart;
+		unsigned short test_mode;
+		unsigned short test_agent;
+		SMViewInfomation()
+		{
+// 			szStation = gcnew String(_T(""));
+// 			szSoftWare = gcnew String(_T(""));
+// 			szProjectInfo = gcnew String(_T(""));
+		}
+	};
+
+	//[System::Runtime::InteropServices::UnmanagedFunctionPointerAttribute(System::Runtime::InteropServices::CallingConvention::StdCall, CharSet = System::Runtime::InteropServices::CharSet::Ansi)]
+    public delegate unsigned int OnOneTestStart(int deviceID);
+	public delegate void OnListItemChange(SMTestItem^ item);
+
+    //public delegate void OnProcessBarChanging(int pos);
+	public delegate void OnRefleshProcessBar(int deviceID, int pos, int max = 100);
+	public delegate unsigned int OnOneTestOver(int deviceID, unsigned int finalResult);
+    public delegate void OnTouchReport(int deviceID);
+	public delegate SMUpLoadInfo^ OnInformationUpload(SMUpLoadInfo^ info);
+
+
+	public ref class SMCallBack
+	{
+	private:
+		static SMCallBack^ callBack = nullptr;
+	public:
+		OnOneTestStart^           onOneTestStart;
+		OnListItemChange^         onListItemChange;
+		OnRefleshProcessBar^      onProcessBarChanging;
+		//OnInitProcessBar^         onInitProcessBar;
+		OnOneTestOver^            onOneTestOver;
+		OnTouchReport^            onTouchReport;
+
+		OnInformationUpload^      OnInforUpload;  
+
+	public:
+		static SMCallBack^ GetInstance()
+		{
+			if( callBack == nullptr )
+			{
+				callBack = gcnew SMCallBack();
+			}
+			return callBack;
+		}
+	private:
+		SMCallBack(){}
+	};
+
+// 	public ref class SMChipNode
+// 	{
+// 	public:
+// 		unsigned short ChipId;
+// 		String^ ChipName;
+// 
+// 		SMChipNode(unsigned short id, String^ szName)
+// 		{
+// 			ChipId = id;
+// 			ChipName = szName;
+// 		}
+// 	};
+
+	public ref class eChipTypeList
+	{
+	public:
+		static const unsigned char  CLR_IC_TYPE_SCAP = IC_TYPE_SCAP;
+		static const unsigned char  CLR_IC_TYPE_MCAP = IC_TYPE_MCAP;
+		static const unsigned char  CLR_IC_TYPE_ALL  = 0XFF;
+		//////////////////////////////////////////////////////////////////////////
+		static const unsigned short SM_CHIPALL = 0xffff;
+
+		static const unsigned short SM_IC_3535 = SEMI_IC_3535;
+		static const unsigned short SM_IC_3536 = SEMI_IC_3536;
+
+		static const unsigned short SM_IC_5472 = SEMI_IC_5472;
+		static const unsigned short SM_IC_5448 = SEMI_IC_5448;
+
+		static const unsigned short SM_IC_5562 = SEMI_IC_5562;
+
+		static const unsigned short SM_IC_5816 = SEMI_IC_5816;
+
+		static const unsigned short SM_IC_7449 = SEMI_IC_7449;
+
+		static const unsigned short SM_IC_810 = SEMI_IC_CHGA810;
+
+		static const unsigned short SM_IC_8006 = SEMI_IC_CHGA8006;
+
+		static const unsigned short SM_IC_7126 = SEMI_IC_7126;
+
+		static const unsigned short SM_IC_570 = SEMI_IC_570;
+
+		static bool IsSameKind( const unsigned short compared, const unsigned short compareto )
+		{
+			ISMChipNodeContainer* iContainer = GetContainerInterface();
+		    return TRUE == iContainer->IsSameKind( compared, compareto );
+		}
+
+		static int Count( unsigned char type )
+		{
+			ISMChipNodeContainer* iContainer = GetContainerInterface();
+			return iContainer->Count( type );
+		}
+
+		static unsigned short GetIcCodeByIndex( int index, unsigned char type )
+		{
+			ISMChipNodeContainer* iContainer = GetContainerInterface();
+			return iContainer->GetIcCodeByIndex( index, type );
+		}
+
+		static String^ GetIcNameByIndex( int index, unsigned char type )
+		{
+			ISMChipNodeContainer* iContainer = GetContainerInterface();
+			return gcnew String( iContainer->GetIcNameByIndex( index, type ) );
+		}
+
+		static unsigned short GetIcCode( String^ icName )
+		{
+			ISMChipNodeContainer* iContainer = GetContainerInterface();
+			TCHAR szICName[MAX_PATH] = {0};
+			for( int index = 0; index < icName->Length; index++ )
+				szICName[index] = (TCHAR)icName[index];
+
+			return iContainer->GetIcCode( szICName );
+		}
+
+		static String^ GetIcName( unsigned short icCode )
+		{
+			ISMChipNodeContainer* iContainer = GetContainerInterface();
+			return gcnew String( iContainer->GetIcName( icCode ) );
+		}
+
+		static byte GetSubType(unsigned short icID)
+		{
+			ISMChipNodeContainer* iContainer = GetContainerInterface();
+			return iContainer->GetSubType( icID );
+		}
+// 		static System::Collections::Generic::IList<SMChipNode^>^ GetICNodes( unsigned char type ) 
+// 		{
+// 			System::Collections::Generic::IList<SMChipNode^>^ icList = gcnew System::Collections::Generic::List<SMChipNode^>();
+// 			ISMChipNodeContainer* iContainer = GetContainerInterface();
+// 			int count = iContainer->Count( type );
+// 
+// 			for( int index = 0; index < count; index++ )
+// 			{
+// 				SMChipNode^ node = gcnew SMChipNode( iContainer->GetIcCodeByIndex( index, type ), gcnew String( iContainer->GetIcNameByIndex( index, type ) ) );
+// 				icList->Add( node );
+// 			}
+// 
+// 			return icList;
+// 		}
+	};
+
+	[Serializable]  
+	public ref struct CLRLinkParam
+	{
+		static const byte CLRLINK_TYPE_USB  = LINK_TYPE_USB;
+		static const byte CLRLINK_TYPE_COM  = LINK_TYPE_COM;
+		static const byte CLRLINK_TYPE_TCP  = LINK_TYPE_TCP;
+		static const byte CLRLINK_TYPE_UDP  = LINK_TYPE_UDP;
+		static const byte CLRLINK_TYPE_FAKE = LINK_TYPE_FAKE; 
+		static const byte CLRLINK_TYPE_HID  = LINK_TYPE_HID;
+		static const byte CLRLINK_TYPE_THP  = LINK_TYPE_THP;
+		String^ szCurMsg;
+		unsigned short vid;
+		unsigned short pid;
+		unsigned short devID;
+		byte   LinkType;
+
+		String^ szIpAddress;
+		unsigned short port;
+		unsigned char async;
+	};
+	public ref class ExportDeclares
+	{
+	public:
+		static const Int32 MAX_DEVICE_NUMS   = MAX_DEVICE_NUM;
+
+		static const Int32 SM_TEXT_SIZE_SMALL = TEXT_SIZE_SMALL;
+		static const Int32 SM_TEXT_SIZE_LARGE = TEXT_SIZE_LARGE;
+
+		static const Int32 SM_ITEM_STA_NONE  = ITEM_STA_NONE;
+		static const Int32 SM_ITEM_STA_PASS  = ITEM_STA_PASS;
+		static const Int32 SM_ITEM_STA_FAIL  = ITEM_STA_FAIL;
+		static const Int32 SM_ITEM_STA_START = ITEM_STA_START;
+		static const Int32 SM_ITEM_STA_WAIT  = ITEM_STA_WAIT;
+		static const Int32 SM_ITEM_STA_TBD   = ITEM_STA_TBD;
+		static const Int32 SM_ITEM_STA_EXCEPTION = ITEM_STA_EXCEPTION;
+		static const Int32 SM_ITEM_STA_PRESS = ITEM_STA_PRESS;
+
+		static const Int32 SM_TEST_NONE      = TEST_NONE;
+		static const Int32 SM_TEST_PASS      = TEST_PASS;
+		static const Int32 SM_TEST_NG        = TEST_NG;
+		static const Int32 SM_TEST_TBD       = TEST_TBD;
+		static const Int32 SM_TEST_GOING     = TEST_GOING;
+
+		static const UINT32 SM_COMMAND_NONE  = COMMAND_LINE_NONE;
+		static const UINT32 SM_COMMAND_DEBUG = COMMAND_LINE_DEBUG;
+		static const UINT32 SM_COMMAND_FAE   = COMMAND_LINE_FAE;
+		static const UINT32 SM_COMMAND_STOP   = COMMAND_LINE_STOP;
+		static const UINT32 SM_COMMAND_LINE_SHUT_DOWN = COMMAND_LINE_SHUT_DOWN;
+
+		static const Int32 SM_MIN_GRAPH_ID   = TEST_ITEM_GRAPH_TEST_START;
+
+		static const Int32 SM_MAX_NUM_POINT    = 10;
+
+		static const Int32 SM_OTHER_NUM_POINT    = 1;
+
+	    static const Int32 SM_MAX_ROWS         = MAX_MCAP_ROW;
+		static const Int32 SM_MAX_COLS         = MAX_MCAP_COL; 
+
+		static bool CLRRegisterNotification(IntPtr wnd, array<unsigned char>^ arrayUID)
+		{
+			GUID managedID;
+			managedID.Data1 = (arrayUID[3] << 24) |  (arrayUID[2] << 16) | (arrayUID[1] << 8) | (arrayUID[0] << 0);
+			managedID.Data2 = (arrayUID[5] << 8) |  (arrayUID[4] << 0);
+			managedID.Data3 = (arrayUID[7] << 8) |  (arrayUID[6] << 0);
+			managedID.Data4[0] = arrayUID[8];
+			managedID.Data4[1] = arrayUID[9];
+			managedID.Data4[2] = arrayUID[10];
+			managedID.Data4[3] = arrayUID[11];
+			managedID.Data4[4] = arrayUID[12];
+			managedID.Data4[5] = arrayUID[13];
+			managedID.Data4[6] = arrayUID[14];
+			managedID.Data4[7] = arrayUID[15];
+
+			return ERROR_CODE_OK == RegisterNotification( (HWND)wnd.ToInt64(), managedID );
+		}
+		static bool CLRUnRegisterNotification()
+		{
+			return ERROR_CODE_OK == UnRegisterNotification();
+		}
+		static bool CLRHalLinkAndDoInit( CLRLinkParam^ pm )
+		{
+			LinkParam param;
+			param.usb.devID =0;
+			param.LinkType = pm->LinkType;
+
+			if(LINK_TYPE_TCP == pm->LinkType||LINK_TYPE_THP == pm->LinkType)
+			{
+				if( String::IsNullOrEmpty(pm->szIpAddress) )
+				{
+					param.tcp.pszIpAddress = _T("127.0.0.1");
+					//param.tcp.pszIpAddress = _T("192.168.5.1");
+					//pm->port = 3536;
+				}
+				else 
+				{
+					TCHAR arrayPath[MAX_PATH] = {0};
+					for( int index = 0; index < pm->szIpAddress->Length; ++index ){
+						arrayPath[index] = (TCHAR)pm->szIpAddress[index];
+					}
+					param.tcp.pszIpAddress = arrayPath;
+				}
+
+				param.tcp.port = pm->port ? pm->port : 3535;
+				param.tcp.async = pm->async;
+			}
+			else
+			{
+				if( String::IsNullOrEmpty(pm->szCurMsg) )
+				{
+					param.usb.pszLinkName = NULL;
+				}
+				else 
+				{
+					TCHAR arrayPath[MAX_PATH] = {0};
+					for( int index = 0; index < pm->szCurMsg->Length; ++index )
+						arrayPath[index] = (TCHAR)pm->szCurMsg[index];
+
+					param.usb.pszLinkName = arrayPath;
+				}
+			}
+
+			unsigned int iReCode =  HalLinkAndDoInit( param );
+			pm->devID = param.usb.devID;
+
+			return ERROR_CODE_OK == iReCode;
+		}
+		static int GetNumDeviceAttached( array<unsigned char>^ arrayState )
+		{
+			int iDeviceNum = NumOfDeviceAttached();
+
+			for( int index = 0; index < MAX_DEVICE_NUM; index++ )
+			{
+				if( HaveDeviceAttached( index ) )
+					arrayState[index] = 1;
+				else
+					arrayState[index] = 0;
+			}
+			return iDeviceNum;
+		}
+		static bool CLRHalDetachAndClean( CLRLinkParam^ pm)
+		{
+			LinkParam param;
+			param.LinkType = pm->LinkType;
+			if( String::IsNullOrEmpty(pm->szCurMsg) )
+				param.usb.pszLinkName = NULL;
+			else 
+			{
+				TCHAR arrayPath[MAX_PATH] = {0};
+				for( int index = 0; index < pm->szCurMsg->Length; ++index )
+					arrayPath[index] = (TCHAR)pm->szCurMsg[index];
+
+				param.usb.pszLinkName = arrayPath;
+			}
+			return ERROR_CODE_OK == HalDetachAndClean( param );
+		}
+		static String^ CLRGetErrorMessage( unsigned int code )
+		{
+			LPCTSTR pszMessage = GetErrorMessage( code );
+			
+			String^ strTemp = gcnew String(pszMessage);
+// 			for( int index = 0; index < (int)lengthof(pszMessage); ++index )
+// 			{
+// 				strTemp += *(pszMessage + index);
+// 			}
+			return strTemp;
+		}
+		static String^ CLRGetProgramErrorMessage( unsigned char code )
+		{
+			LPCTSTR pszMessage = GetProgramErrorMessage( code );
+			String^ strTemp = gcnew String(pszMessage);
+// 			for( int index = 0; index < (int)lengthof(pszMessage); ++index )
+// 			{
+// 				strTemp += *(pszMessage + index);
+// 			}
+			return strTemp;
+		}
+	};
+
+	public ref class DeviceManagement
+	{
+	public:
+		static const Int32 WM_DEVICECHANGED = 0X219;
+		static const Int32 DBT_DEVICEARRIVAL = 0X8000;
+		static const Int32 DBT_DEVICEREMOVECOMPLETE = 0X8004;
+
+		static const int DCS_USB_CONNECT = 1;
+		static const int DCS_USB_REMOVE = 2;
+		static const int DCS_ADB_CONNECT = 3;
+		static const int DCS_ADB_REMOVE = 4;
+		static const int DCS_WIFI_CONNECT = 5;
+		static const int DCS_WIFI_REMOVE = 6;
+ 		//static const Int32 DEVICE_NOTIFY_ALL_INTERFACE_CLASSES = 4;
+ 		//static const Int32 DEVICE_NOTIFY_SERVICE_HANDLE = 1;
+ 		//static const Int32 DEVICE_NOTIFY_WINDOW_HANDLE = 0;
+ 		
+	};
+
+	[System::Runtime::InteropServices::StructLayoutAttribute(System::Runtime::InteropServices::LayoutKind::Sequential, CharSet = System::Runtime::InteropServices::CharSet::Unicode, Pack = 1)]
+	public ref class DEV_BROADCAST_DEVICEINTERFACE
+	{
+	public:
+		int dbcc_size;
+		int dbcc_devicetype;
+		int dbcc_reserved;
+		[System::Runtime::InteropServices::MarshalAs(System::Runtime::InteropServices::UnmanagedType::ByValArray, ArraySubType = System::Runtime::InteropServices::UnmanagedType::U1, SizeConst = 16)]
+		array<unsigned char>^ dbcc_classguid;
+		[System::Runtime::InteropServices::MarshalAs(System::Runtime::InteropServices::UnmanagedType::ByValTStr, SizeConst = 128)]
+		String^ dbcc_name;
+	};
+}

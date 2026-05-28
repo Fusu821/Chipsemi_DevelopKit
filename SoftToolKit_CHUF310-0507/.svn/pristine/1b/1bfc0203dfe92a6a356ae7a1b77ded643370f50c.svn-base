@@ -1,0 +1,59 @@
+#pragma once
+#include "NativeTestInterface.h"
+#include "TestBase.h"
+#include "SEMITouch.h"
+#include "automaticInterface.h"
+
+
+class CTestManager : public NativeTestInterface
+{
+public:
+	CTestManager( );
+	virtual ~CTestManager();
+	unsigned int ReloadXmlConfig( BOOL onlyLoadXml = FALSE );
+	void SetContextForGraphTest( int iDevice, HDC dc, RECT& rc );
+	void RegistComplexCallBack( const NativeCallBack& callBack );
+	unsigned int StartTest( int iDevice, LPCTSTR szCode = NULL );
+	unsigned int SimulateTest( int iDevice, SimulateData (&arraySimulate)[SIMULATE_TEST_DATA_CNT]  );
+	NativeTestItem& GetNativeTestItemByIndex( int device, int index );
+	ColorText& GetTestMessage( int device );
+	unsigned int ForcePaint( int iDevice, bool enterPaint );
+	void GameOver( unsigned char mustStopNow );
+	void SetCommandLineParam( unsigned int commandLineMode );
+	unsigned int GetViewInfo( TCHAR* szWorkStation, TCHAR* szProjInfo, TCHAR* softWare, TCHAR* snFilter,unsigned char& startWay, unsigned char& snLen, unsigned char& format, unsigned short& test_mode , unsigned short& agent ,unsigned char& clickstart  );
+	unsigned int ParseTestSample( unsigned char* content, unsigned int len, TCHAR* szName, unsigned short (&lpMatrix)[MAX_SCAP_ROW][MAX_SCAP_COL] );
+	LPCTSTR GetStatisticText();
+	unsigned short GetICTypeFromConfig();
+	BOOL CheckReadyForTest( int device );
+
+	unsigned int SetCommContext( int index );
+	unsigned int OnLine( unsigned char option, HWND hwnd );
+	unsigned int Sign( unsigned char option, LPCTSTR szLine, LPCTSTR szAccount, LPCTSTR szPassword );
+	unsigned int UserOperationBeforeTest( int device );
+	unsigned int UserOperationAfterTest( int device, int result );
+	unsigned int ActionToOnLineMessage(int msg, unsigned int wparam, unsigned int lparam);
+	LPCTSTR GetOnLineMessageInfo( );
+
+
+	friend class CTestBase;
+protected:
+	inline const NativeCallBack& GetCallBack() const { return m_callBack; }
+	inline const bool DebugMode() const { return ( m_iCommandLineMode & COMMAND_LINE_DEBUG ) > 0; }
+	inline const bool FAEMode() const { return ( m_iCommandLineMode & COMMAND_LINE_FAE ) > 0; }
+	inline const bool ErrStop() const { return ( m_iCommandLineMode & COMMAND_LINE_STOP ) > 0; }
+private:
+	void MakeClean( BOOL onlyLoadXml = FALSE );
+	unsigned int SetICTypeAndCreateComponent( unsigned short icType, const tinyxml2::XMLDocument& xmlDoc, BOOL onlyLoadXml = FALSE );
+private:
+	NativeCallBack m_callBack;
+private:
+	unsigned short m_curIcType;
+	unsigned int m_iCommandLineMode;
+	//OnListItemChangeCallBack m_pListItemChangeAddr;
+	//CConfig* m_ptrConfig;
+	tinyxml2::XMLDocument m_xmlDoc;
+	static CTestBase* m_TestPointer[MAX_DEVICE_NUM];
+
+	IAutomaticInterface* m_AutomaticInterface;
+};
+

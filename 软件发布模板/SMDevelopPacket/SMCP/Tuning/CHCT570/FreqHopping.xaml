@@ -1,0 +1,125 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:viewModel="clr-namespace:SEMIDevelopKit.Src.WinSub"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+			<RowDefinition Height="525"></RowDefinition>
+        </Grid.RowDefinitions>
+		
+		<GroupBox Header="4.1 跳频" Grid.Row="0">
+			<UniformGrid Rows="12">
+				<UniformGrid Columns="16">
+				<Label Content="频率数量" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemBase="0x500" viewModel:TuningItem.ItemName="fh_freq_number"></TextBox>
+				<Label Content="频率锁定" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemBase="0x500" viewModel:TuningItem.ItemName="fh_freq_lock"></TextBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="" HorizontalAlignment="Right" Margin="5"></Label>
+				<CheckBox Content="Fh software" Tag="14" viewModel:TuningItem.ItemName="funcCfg1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				<Label Content="" HorizontalAlignment="Right" Margin="5"></Label>
+				<CheckBox Content="Auto High Rpt" Tag="15" viewModel:TuningItem.ItemName="funcCfg1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="" HorizontalAlignment="Right" Margin="5"></Label>
+				</UniformGrid>
+			
+				<UniformGrid Columns="16">
+				<Label Content="" HorizontalAlignment="Right" Margin="5"></Label>
+				<Label Content="Max" HorizontalAlignment="Center" Margin="5"></Label>
+				<Label Content="Sum" HorizontalAlignment="Center" Margin="5"></Label>
+				<Label Content="Diff" HorizontalAlignment="Center" Margin="5"></Label>
+				<Label Content="Max Orig" HorizontalAlignment="Center" Margin="5"></Label>
+				<Label Content="Ave Orig" HorizontalAlignment="Center" Margin="5"></Label>
+				<Label Content="Try Cnt" HorizontalAlignment="Center" Margin="5"></Label>
+				</UniformGrid>
+			
+				<UniformGrid Columns="16">
+				<Label Content="Fh0" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemBase="0x480" viewModel:TuningItem.ItemName="fh_noise_max"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x480" viewModel:TuningItem.ItemName="fh_noise_sum"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x480" viewModel:TuningItem.ItemName="fh_noise_diff"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x480" viewModel:TuningItem.ItemName="fh_noise_max_orig"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x480" viewModel:TuningItem.ItemName="fh_noise_ave_orig"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x480" viewModel:TuningItem.ItemName="fh_noise_try_cnt"></TextBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="Fh1" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemBase="0x490" viewModel:TuningItem.ItemName="fh_noise_max"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x490" viewModel:TuningItem.ItemName="fh_noise_sum"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x490" viewModel:TuningItem.ItemName="fh_noise_diff"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x490" viewModel:TuningItem.ItemName="fh_noise_max_orig"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x490" viewModel:TuningItem.ItemName="fh_noise_ave_orig"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x490" viewModel:TuningItem.ItemName="fh_noise_try_cnt"></TextBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="Fh2" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4A0" viewModel:TuningItem.ItemName="fh_noise_max"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4A0" viewModel:TuningItem.ItemName="fh_noise_sum"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4A0" viewModel:TuningItem.ItemName="fh_noise_diff"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4A0" viewModel:TuningItem.ItemName="fh_noise_max_orig"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4A0" viewModel:TuningItem.ItemName="fh_noise_ave_orig"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4A0" viewModel:TuningItem.ItemName="fh_noise_try_cnt"></TextBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="Fh3" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4B0" viewModel:TuningItem.ItemName="fh_noise_max"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4B0" viewModel:TuningItem.ItemName="fh_noise_sum"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4B0" viewModel:TuningItem.ItemName="fh_noise_diff"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4B0" viewModel:TuningItem.ItemName="fh_noise_max_orig"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4B0" viewModel:TuningItem.ItemName="fh_noise_ave_orig"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4B0" viewModel:TuningItem.ItemName="fh_noise_try_cnt"></TextBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="Fh4" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4C0" viewModel:TuningItem.ItemName="fh_noise_max"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4C0" viewModel:TuningItem.ItemName="fh_noise_sum"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4C0" viewModel:TuningItem.ItemName="fh_noise_diff"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4C0" viewModel:TuningItem.ItemName="fh_noise_max_orig"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4C0" viewModel:TuningItem.ItemName="fh_noise_ave_orig"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4C0" viewModel:TuningItem.ItemName="fh_noise_try_cnt"></TextBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="Fh5" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4D0" viewModel:TuningItem.ItemName="fh_noise_max"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4D0" viewModel:TuningItem.ItemName="fh_noise_sum"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4D0" viewModel:TuningItem.ItemName="fh_noise_diff"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4D0" viewModel:TuningItem.ItemName="fh_noise_max_orig"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4D0" viewModel:TuningItem.ItemName="fh_noise_ave_orig"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4D0" viewModel:TuningItem.ItemName="fh_noise_try_cnt"></TextBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="Fh6" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4E0" viewModel:TuningItem.ItemName="fh_noise_max"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4E0" viewModel:TuningItem.ItemName="fh_noise_sum"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4E0" viewModel:TuningItem.ItemName="fh_noise_diff"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4E0" viewModel:TuningItem.ItemName="fh_noise_max_orig"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4E0" viewModel:TuningItem.ItemName="fh_noise_ave_orig"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4E0" viewModel:TuningItem.ItemName="fh_noise_try_cnt"></TextBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="Fh7" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4F0" viewModel:TuningItem.ItemName="fh_noise_max"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4F0" viewModel:TuningItem.ItemName="fh_noise_sum"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4F0" viewModel:TuningItem.ItemName="fh_noise_diff"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4F0" viewModel:TuningItem.ItemName="fh_noise_max_orig"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4F0" viewModel:TuningItem.ItemName="fh_noise_ave_orig"></TextBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemBase="0x4F0" viewModel:TuningItem.ItemName="fh_noise_try_cnt"></TextBox>
+				</UniformGrid>
+			</UniformGrid>
+        </GroupBox>
+    </Grid>
+</UserControl>

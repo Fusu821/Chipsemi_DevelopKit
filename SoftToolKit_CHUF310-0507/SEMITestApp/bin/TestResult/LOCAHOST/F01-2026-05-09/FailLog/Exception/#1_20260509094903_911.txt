@@ -1,0 +1,93 @@
+ChipSemi_Tester_V8.8.8_20260318
+WorkStation: F01   ProjectName: 0508
+
+Time Stamp:	2026-05-09 09:48:40 583
+Mtk Version = 0xd1103
+
+Time Stamp:	2026-05-09 09:48:41 064
+
+------------------------------IOVoltage Test------------------------------
+
+Time Stamp:	2026-05-09 09:48:41 450
+
+------------------------------IOVoltage Test------------------------------
+
+Time Stamp:	2026-05-09 09:48:41 837
+
+------------------------------IOVoltage Test------------------------------
+
+Time Stamp:	2026-05-09 09:48:41 873
+
+------------------------------Current Test------------------------------
+
+avdd_active = 1(mA), avdd_sleep = 1439(uA), avdd_deep = 1439(uA)
+
+vbus_active = 0(mA), vbus_sleep = 0(uA), vbus_deep = 0(uA)
+
+active(1) < setting min(5)
+
+sleep(1439) > setting max(240)
+
+deep(1439) > setting max(100)
+
+vbus_active(0) < setting min(10)
+
+
+//Current Test is Fail
+
+------------------------------Current Test------------------------------
+
+avdd_active = 1(mA), avdd_sleep = 1439(uA), avdd_deep = 1439(uA)
+
+vbus_active = 0(mA), vbus_sleep = 0(uA), vbus_deep = 0(uA)
+
+active(1) < setting min(5)
+
+sleep(1439) > setting max(240)
+
+deep(1439) > setting max(100)
+
+vbus_active(0) < setting min(10)
+
+
+//Current Test is Fail
+
+------------------------------Current Test------------------------------
+
+avdd_active = 1(mA), avdd_sleep = 1439(uA), avdd_deep = 1439(uA)
+
+vbus_active = 0(mA), vbus_sleep = 0(uA), vbus_deep = 0(uA)
+
+active(1) < setting min(5)
+
+sleep(1439) > setting max(240)
+
+deep(1439) > setting max(100)
+
+vbus_active(0) < setting min(10)
+
+
+//Current Test is Fail
+
+Time Stamp:	2026-05-09 09:48:57 493
+
+------------------------------Project Test------------------------------
+SoftWare Ver = 22, ProjectCode = 0, VenderID = 5887
+
+
+//Project Test is Fail
+
+Time Stamp:	2026-05-09 09:48:59 105
+
+------------------------------Noise Test------------------------------
+
+Time Stamp:	2026-05-09 09:49:01 262
+
+------------------------------Noise Test------------------------------
+
+Time Stamp:	2026-05-09 09:49:03 851
+
+------------------------------Noise Test------------------------------
+
+
+//Final result is NG

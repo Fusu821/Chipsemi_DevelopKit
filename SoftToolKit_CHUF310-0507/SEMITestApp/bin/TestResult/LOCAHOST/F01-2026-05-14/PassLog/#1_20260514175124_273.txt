@@ -1,0 +1,42 @@
+ChipSemi_Tester_V8.8.8_20260318
+WorkStation: F01   ProjectName: 0508
+
+Time Stamp:	2026-05-14 17:51:03 657
+Mtk Version = 0xd1103
+
+Time Stamp:	2026-05-14 17:51:04 154
+
+------------------------------IOVoltage Test------------------------------
+
+IOV = 1.8V  High : int0 vol = 1761  ,	int2 vol = 1778  
+
+
+IOV = 1.8V  Low  : int0 vol = 25    ,	int2 vol = 1     
+
+IOV = 1.2V  High : int0 vol = 1213  ,	int2 vol = 1229  
+
+IOV = 1.2V  Low  : int0 vol = 17    ,	int2 vol = 1     
+int0 vol = 1, th = [2000 - 2000]
+int2 vol = 1, th = [2000 - 2000]
+int0 vol = 1, th = [1400 - 1400]
+int2 vol = 1, th = [1400 - 1400]
+
+
+//IOVoltage Test is Fail
+
+Time Stamp:	2026-05-14 17:51:23 898
+
+------------------------------RESET Test------------------------------
+
+
+//Reset Test is Pass
+
+Time Stamp:	2026-05-14 17:51:23 999
+
+------------------------------Project Test------------------------------
+
+
+//Project Test is Pass
+
+
+//Final result is Pass

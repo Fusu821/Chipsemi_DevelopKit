@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="HalHIDLayerSrv.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="..\Util\Realize\RefBase.cpp" />
+    <ClCompile Include="HalHIDLayer\HalHIDLayerService.cpp">
+      <Filter>HalHIDLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="HalHIDLayer\HalHIDServiceProxy.cpp">
+      <Filter>HalHIDLayer</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Include\BaseService.h" />
+    <ClInclude Include="..\Include\Macro.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="..\Util\Header\Wait.h" />
+    <ClInclude Include="..\Include\HalServiceInterface.h" />
+    <ClInclude Include="..\Util\Header\RefBase.h" />
+    <ClInclude Include="HalHIDLayer\HalHIDLayerService.h">
+      <Filter>HalHIDLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="HalHIDLayer\HalHIDServiceParam.h">
+      <Filter>HalHIDLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="HalHIDLayer\HalHIDServiceProxy.h">
+      <Filter>HalHIDLayer</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="HalHIDLayerSrv.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="HalHIDLayer">
+      <UniqueIdentifier>{0f6cc77e-a99d-438d-875c-016d413ca26e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

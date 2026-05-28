@@ -1,0 +1,274 @@
+﻿<Page x:Class="SEMITestApp.Src.WinSet.BasicSet310"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SEMITestApp.Src.WinSet"
+      xmlns:util="clr-namespace:SEMI.Util;assembly=SEMI.Util"
+      mc:Ignorable="d" 
+      KeepAlive="True"
+      d:DesignHeight="2350" d:DesignWidth="900"
+      Title="BasicSet" IsVisibleChanged="Basic_IsVisibleChanged">
+
+    <ScrollViewer  VerticalScrollBarVisibility="Visible"  HorizontalScrollBarVisibility="Hidden" >
+        <StackPanel Orientation="Vertical" Height="2350">
+            <GroupBox DataContext="{Binding TestItemList, Converter={StaticResource ItemListToItemConverter}, ConverterParameter=1}" Header="{Binding ItemText}" Visibility="{Binding Checked, Converter={StaticResource CheckToVisibleConverter}}">
+                <UniformGrid Rows="1" Columns="8">
+                    <Label Content="MTKVersion" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding MTKVersion, Converter={StaticResource HexValueStringConverter}}" Margin="5"></TextBox>
+                    <Label Content="UpdateMode:" HorizontalAlignment="Right" Margin="5"></Label>
+                    <ComboBox ItemsSource="{Binding UpgradeMode}" DisplayMemberPath="TypeName" SelectedValue="{Binding AutoUpdate}" SelectedValuePath="TypeVal" Margin="2"></ComboBox>
+                    <!--<CheckBox Margin="5"  Content="Auto Update" IsChecked="{Binding AutoUpdate}"></CheckBox>-->
+                </UniformGrid>
+            </GroupBox>
+            <GroupBox DataContext="{Binding TestItemList, Converter={StaticResource ItemListToItemConverter}, ConverterParameter=4}" Header="{Binding ItemText}" Visibility="{Binding Checked, Converter={StaticResource CheckToVisibleConverter}}">
+                <UniformGrid Rows="1" Columns="8">
+                    <Control></Control>
+                    <CheckBox Margin="5" Content="Only Check" IsChecked="{Binding OnlyCheck}"></CheckBox>
+                    <Control></Control>
+                    <CheckBox Margin="5" Content="Simple LOG" IsChecked="{Binding Simplelog}"></CheckBox>
+                </UniformGrid>
+            </GroupBox>
+            <GroupBox DataContext="{Binding TestItemList, Converter={StaticResource ItemListToItemConverter}, ConverterParameter=3}" Header="{Binding ItemText}" Visibility="{Binding Checked, Converter={StaticResource CheckToVisibleConverter}}">
+                <UniformGrid Rows="4" Columns="8">
+                    <Control></Control>
+                    <CheckBox Margin="5" Content="Only Check" IsChecked="{Binding OnlyCheck}"></CheckBox>
+                    <Control></Control>
+                    <Control></Control>
+                    <Control></Control>
+                    <Control></Control>
+                    <Control></Control>
+                    <Control></Control>
+
+                    <Label Content="32k" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding Trim32KStandard}" Margin="5" TextAlignment="Right"></TextBox>
+                    <Label Content="min" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding Trim32KMin, Converter={StaticResource HexValueStringConverter}}" Margin="5"></TextBox>
+                    <Label Content="max" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding Trim32KMax, Converter={StaticResource HexValueStringConverter}}" Margin="5"></TextBox>
+                    <Label Content="offset(‰)" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding Offset32K}" Margin="5"></TextBox>
+
+                    <Label Content="52M" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding Trim52MStandard, Converter={StaticResource UnitValueStringConverter}, ConverterParameter={x:Static util:EnUnitType.EnUnitM}}" Margin="5" TextAlignment="Right"></TextBox>
+                    <Label Content="No.1" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding Trim52MStandardNo1, Converter={StaticResource UnitValueStringConverter}, ConverterParameter={x:Static util:EnUnitType.EnUnitM}}" Margin="5"></TextBox>
+                    <Label Content="No.2" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding Trim52MStandardNo2, Converter={StaticResource UnitValueStringConverter}, ConverterParameter={x:Static util:EnUnitType.EnUnitM}}" Margin="5"></TextBox>
+                    <Label Content="No.3" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding Trim52MStandardNo3, Converter={StaticResource UnitValueStringConverter}, ConverterParameter={x:Static util:EnUnitType.EnUnitM}}" Margin="5"></TextBox>
+
+
+                    <Control></Control>
+                    <Control></Control>
+                    <Label Content="min" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding Trim52MMin, Converter={StaticResource HexValueStringConverter}}" Margin="5"></TextBox>
+                    <Label Content="max" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding Trim52MMax, Converter={StaticResource HexValueStringConverter}}" Margin="5"></TextBox>
+                    <Label Content="offset(‰)" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding Offset52M}" Margin="5"></TextBox>
+
+                </UniformGrid>
+            </GroupBox>
+
+            <GroupBox DataContext="{Binding TestItemList, Converter={StaticResource ItemListToItemConverter}, ConverterParameter=5}" Header="{Binding ItemText}" Visibility="{Binding Checked, Converter={StaticResource CheckToVisibleConverter}}">
+                <UniformGrid Rows="3" Columns="8">
+                    <Label Content="AVDD" Margin="5"></Label>
+                    <Label Content="active(uA)" Margin="5"></Label>
+                    <Label Content="min" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding ActiveCurrentMin}" Margin="5"></TextBox>
+                    <Label Content="max" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding ActiveCurrentMax}" Margin="5"></TextBox>
+                    <Control></Control>
+                    <Control></Control>
+
+                    <Control></Control>
+                    <Label Content="idle(uA)" Margin="5"></Label>
+                    <Label Content="min" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding IdleCurrentMin}" Margin="5"></TextBox>
+                    <Label Content="max" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding IdleCurrentMax}" Margin="5"></TextBox>
+                    <Control></Control>
+                    <Control></Control>
+                    
+                    <Control></Control>
+                    <Label Content="sleep(uA)" Margin="5"></Label>
+                    <Label Content="min" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding SleepCurrentMin}" Margin="5"></TextBox>
+                    <Label Content="max" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding SleepCurrentMax}" Margin="5"></TextBox>
+                    <Control></Control>
+                    <Control></Control>
+
+                </UniformGrid>
+            </GroupBox>
+
+            <GroupBox DataContext="{Binding TestItemList, Converter={StaticResource ItemListToItemConverter}, ConverterParameter=6}" Header="{Binding ItemText}" Visibility="{Binding Checked, Converter={StaticResource CheckToVisibleConverter}}">
+                <StackPanel Orientation="Vertical">
+                    <UniformGrid Rows="2" Columns="8">
+                        <Control></Control>
+                        <Label Content="Int0 1p2 Low" Margin="5"></Label>
+                        <Label Content="min" HorizontalAlignment="Right" Margin="5"></Label>
+                        <TextBox Text="{Binding LowInt0_1p2_Min}" Margin="5" TextAlignment="Left"></TextBox>
+                        <Label Content="max" HorizontalAlignment="Right" Margin="5"></Label>
+                        <TextBox Text="{Binding LowInt0_1p2_Max}" Margin="5" TextAlignment="Left"></TextBox>
+                        <Control></Control>
+                        <Control></Control>
+                        <Control></Control>
+                        <Label Content="Int0 1p2 High" Margin="5"></Label>
+                        <Label Content="min" HorizontalAlignment="Right" Margin="5"></Label>
+                        <TextBox Text="{Binding HighInt0_1p2_Min}" Margin="5" TextAlignment="Left"></TextBox>
+                        <Label Content="max" HorizontalAlignment="Right" Margin="5"></Label>
+                        <TextBox Text="{Binding HighInt0_1p2_Max}" Margin="5" TextAlignment="Left"></TextBox>
+                    </UniformGrid>
+                    <UniformGrid Rows="2" Columns="8">
+                        <Control></Control>
+                        <Label Content="Int0 1p8 Low" Margin="5"></Label>
+                        <Label Content="min" HorizontalAlignment="Right" Margin="5"></Label>
+                        <TextBox Text="{Binding LowInt0_1p8_Min}" Margin="5" TextAlignment="Left"></TextBox>
+                        <Label Content="max" HorizontalAlignment="Right" Margin="5"></Label>
+                        <TextBox Text="{Binding LowInt0_1p8_Max}" Margin="5" TextAlignment="Left"></TextBox>
+                        <Control></Control>
+                        <Control></Control>
+                        <Control></Control>
+                        <Label Content="Int0 1p8 High" Margin="5"></Label>
+                        <Label Content="min" HorizontalAlignment="Right" Margin="5"></Label>
+                        <TextBox Text="{Binding HighInt0_1p8_Min}" Margin="5" TextAlignment="Left"></TextBox>
+                        <Label Content="max" HorizontalAlignment="Right" Margin="5"></Label>
+                        <TextBox Text="{Binding HighInt0_1p8_Max}" Margin="5" TextAlignment="Left"></TextBox>
+                    </UniformGrid>
+
+                    <UniformGrid Rows="2" Columns="8">
+                        <Control></Control>
+                        <Label Content="Int2 1p2 Low" Margin="5"></Label>
+                        <Label Content="min" HorizontalAlignment="Right" Margin="5"></Label>
+                        <TextBox Text="{Binding LowInt2_1p2_Min}" Margin="5" TextAlignment="Left"></TextBox>
+                        <Label Content="max" HorizontalAlignment="Right" Margin="5"></Label>
+                        <TextBox Text="{Binding LowInt2_1p2_Max}" Margin="5" TextAlignment="Left"></TextBox>
+                        <Control></Control>
+                        <Control></Control>
+                        <Control></Control>
+                        <Label Content="Int2 1p2 High" Margin="5"></Label>
+                        <Label Content="min" HorizontalAlignment="Right" Margin="5"></Label>
+                        <TextBox Text="{Binding HighInt2_1p2_Min}" Margin="5" TextAlignment="Left"></TextBox>
+                        <Label Content="max" HorizontalAlignment="Right" Margin="5"></Label>
+                        <TextBox Text="{Binding HighInt2_1p2_Max}" Margin="5" TextAlignment="Left"></TextBox>
+                    </UniformGrid>
+                    <UniformGrid Rows="2" Columns="8">
+                        <Control></Control>
+                        <Label Content="Int2 1p8 Low" Margin="5"></Label>
+                        <Label Content="min" HorizontalAlignment="Right" Margin="5"></Label>
+                        <TextBox Text="{Binding LowInt2_1p8_Min}" Margin="5" TextAlignment="Left"></TextBox>
+                        <Label Content="max" HorizontalAlignment="Right" Margin="5"></Label>
+                        <TextBox Text="{Binding LowInt2_1p8_Max}" Margin="5" TextAlignment="Left"></TextBox>
+                        <Control></Control>
+                        <Control></Control>
+                        <Control></Control>
+                        <Label Content="Int2 1p8 High" Margin="5"></Label>
+                        <Label Content="min" HorizontalAlignment="Right" Margin="5"></Label>
+                        <TextBox Text="{Binding HighInt2_1p8_Min}" Margin="5" TextAlignment="Left"></TextBox>
+                        <Label Content="max" HorizontalAlignment="Right" Margin="5"></Label>
+                        <TextBox Text="{Binding HighInt2_1p8_Max}" Margin="5" TextAlignment="Left"></TextBox>
+                    </UniformGrid>
+                </StackPanel>
+            </GroupBox>
+
+            
+            <GroupBox DataContext="{Binding TestItemList, Converter={StaticResource ItemListToItemConverter}, ConverterParameter=7}" Header="{Binding ItemText}" Visibility="{Binding Checked, Converter={StaticResource CheckToVisibleConverter}}">
+                <UniformGrid Rows="2" Columns="8">
+                    <Label Content="ADC Tx Max" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding Adc_tx_max}" Margin="5"></TextBox>
+                    <Label Content=" ADC Tx Min" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding Adc_tx_min}" Margin="5"></TextBox>
+                    <Control></Control>
+                    <Control></Control>
+                    <Control></Control>
+                    <Control></Control>
+                    <Label Content="ADC Notx Max" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding Adc_notx_max}" Margin="5"></TextBox>
+                    <Label Content=" ADC Notx Min" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding Adc_notx_min}" Margin="5"></TextBox>
+                </UniformGrid>
+            </GroupBox>
+            <GroupBox DataContext="{Binding TestItemList, Converter={StaticResource ItemListToItemConverter}, ConverterParameter=8}" Header="{Binding ItemText}" Visibility="{Binding Checked, Converter={StaticResource CheckToVisibleConverter}}">
+                <UniformGrid Rows="2" Columns="8">
+                    <Label Content="Frames" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding NoiseTestFrames}" Margin="5"></TextBox>
+                    <Label Content=" A_Time Max" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding NoiseTestMaxTime_A}" Margin="5"></TextBox>
+                    <Label Content="A_Space Max" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding NoiseTestMaxSpace_A}" Margin="5"></TextBox>
+                    <Control></Control>
+                    <Control></Control>
+                    <Control></Control>
+                    <Control></Control>
+                    <Label Content="P_Time Max" HorizontalAlignment="Right" Margin="5" ></Label>
+                    <TextBox Text="{Binding NoiseTestMaxTime_P}" Margin="5"></TextBox>
+                    <Label Content="P_Space Max" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding NoiseTestMaxSpace_P}" Margin="5"></TextBox>
+                </UniformGrid>     
+            </GroupBox>
+            <GroupBox DataContext="{Binding TestItemList, Converter={StaticResource ItemListToItemConverter}, ConverterParameter=9}" Header="{Binding ItemText}" Visibility="{Binding Checked, Converter={StaticResource CheckToVisibleConverter}}">
+                <UniformGrid Rows="2" Columns="8">
+                    <Label Content="Pixel max" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding Pixel_raw_max}" Margin="5"></TextBox>
+                    <Label Content="gain10 max" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding Gain1_0_max}" Margin="5"></TextBox>
+                    <Label Content="gain21 max" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding Gain2_1_max}" Margin="5"></TextBox>
+                    <Control></Control>
+                    <Control></Control>
+                    <Label Content="Pixel min" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding Pixel_raw_min}" Margin="5"></TextBox>
+                    <Label Content="gain10 min" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding Gain1_0_min}" Margin="5"></TextBox>
+                    <Label Content="gain21 min" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding Gain2_1_min}" Margin="5"></TextBox>
+                </UniformGrid>
+            </GroupBox>
+            
+            <GroupBox DataContext="{Binding TestItemList, Converter={StaticResource ItemListToItemConverter}, ConverterParameter=10}" Header="{Binding ItemText}" Visibility="{Binding Checked, Converter={StaticResource CheckToVisibleConverter}}">
+                <UniformGrid Rows="2" Columns="8">
+                    <Label Content="Code Max" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding Flytime_code_max}" Margin="5"></TextBox>
+                    <Label Content="Val Max" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding Flytime_val_max}" Margin="5"></TextBox>
+                    <Label Content="Std Max" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding Flytime_std_max}" Margin="5"></TextBox>
+                    <Control></Control>
+                    <Control></Control>
+                    <Label Content="Code Min" HorizontalAlignment="Right" Margin="5" ></Label>
+                    <TextBox Text="{Binding Flytime_code_min}" Margin="5"></TextBox>
+                    <Label Content="Val Min" HorizontalAlignment="Right" Margin="5" ></Label>
+                    <TextBox Text="{Binding Flytime_val_min}" Margin="5"></TextBox>
+                    <Label Content="Std Min" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding Flytime_std_min}" Margin="5"></TextBox>
+                </UniformGrid>
+            </GroupBox>
+            <GroupBox DataContext="{Binding TestItemList, Converter={StaticResource ItemListToItemConverter}, ConverterParameter=11}" Header="{Binding ItemText}" Visibility="{Binding Checked, Converter={StaticResource CheckToVisibleConverter}}">
+                <UniformGrid Rows="1" Columns="8">
+                    <Label Content="SRFreq Max" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding Srfreq_max}" Margin="5"></TextBox>
+                    <Label Content="SRFreq Min" HorizontalAlignment="Right" Margin="5"></Label>
+                    <TextBox Text="{Binding Srfreq_min}" Margin="5"></TextBox>
+
+                    <Control></Control>
+                    <Control></Control>
+
+                </UniformGrid>
+            </GroupBox>
+            <GroupBox DataContext="{Binding TestItemList, Converter={StaticResource ItemListToItemConverter}, ConverterParameter=12}" Header="{Binding ItemText}" Visibility="{Binding Checked, Converter={StaticResource CheckToVisibleConverter}}">
+                <UniformGrid Rows="1" Columns="8">
+                    <Control></Control>
+                    <CheckBox Margin="5" Content="Only Check" IsChecked="{Binding OnlyCheck}"></CheckBox>
+                </UniformGrid>
+            </GroupBox>
+            <GroupBox DataContext="{Binding TestItemList, Converter={StaticResource ItemListToItemConverter}, ConverterParameter=13}" Header="{Binding ItemText}" Visibility="{Binding Checked, Converter={StaticResource CheckToVisibleConverter}}">
+                <UniformGrid Rows="1" Columns="8">
+                    <Control></Control>
+                    <CheckBox Margin="5" Content="Only Check" IsChecked="{Binding OnlyCheck}"></CheckBox>
+                </UniformGrid>
+            </GroupBox>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

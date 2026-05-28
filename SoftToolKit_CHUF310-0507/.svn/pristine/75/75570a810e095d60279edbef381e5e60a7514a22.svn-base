@@ -1,0 +1,3927 @@
+#include "checksum.h"
+#include "Test3536.h"
+#include "../Config/Config3536.h"
+
+#include <list>
+//#include <numeric>
+
+extern CConfig* G_XMLConfig;
+#define pCfg3536   (( const CConfig3536*)G_XMLConfig)
+REGIST_RUNTIME_CLASS(TEST_TYPE, (TEST_TYPE)SEMI_IC_3536, CTest3536)
+
+typedef CTest3536  CTest6440;
+REGIST_RUNTIME_CLASS(TEST_TYPE, (TEST_TYPE)SEMI_IC_6440, CTest6440)
+typedef CTest3536  CTest6448;
+REGIST_RUNTIME_CLASS(TEST_TYPE, (TEST_TYPE)SEMI_IC_6448, CTest6448)
+typedef CTest3536  CTest6413;
+REGIST_RUNTIME_CLASS(TEST_TYPE, (TEST_TYPE)SEMI_IC_6413, CTest6413)
+typedef CTest3536  CTest6417;
+REGIST_RUNTIME_CLASS(TEST_TYPE, (TEST_TYPE)SEMI_IC_6417, CTest6417)
+typedef CTest3536  CTest6540;
+REGIST_RUNTIME_CLASS(TEST_TYPE, (TEST_TYPE)SEMI_IC_6540, CTest6540)
+typedef CTest3536  CTest6545;
+REGIST_RUNTIME_CLASS(TEST_TYPE, (TEST_TYPE)SEMI_IC_6545, CTest6545)
+typedef CTest3536  CTest6410;
+REGIST_RUNTIME_CLASS(TEST_TYPE, (TEST_TYPE)SEMI_IC_6410, CTest6410)
+typedef CTest3536  CTest6430;
+REGIST_RUNTIME_CLASS(TEST_TYPE, (TEST_TYPE)SEMI_IC_6430, CTest6430)
+typedef CTest3536  CTest6448S;
+REGIST_RUNTIME_CLASS(TEST_TYPE, (TEST_TYPE)SEMI_IC_6448S, CTest6448S)
+
+const unsigned char ramTestCodeBin[] = {
+	0x3B,0x0E,0x3E,0x0F,0xF7,0xE9,0x01,0xA5,0x39,0x08,0x00,0xA2,0x01,0x58,0x8A,0xE8,
+	0x04,0xB0,0xB8,0x02,0xFA,0xCB,0x01,0x58,0x91,0x02,0x63,0xC1,0x02,0xA5,0x38,0xEC,
+	0x34,0x09,0x37,0x0A,0x02,0x50,0x04,0xB0,0x88,0x02,0xFB,0xCB,0x38,0xEC,0x03,0x58,
+	0x93,0x02,0x57,0xC1,0x04,0xB0,0x88,0x02,0xF9,0xCB,0x03,0xA5,0x38,0xEC,0x2D,0x09,
+	0x30,0x0A,0x02,0x50,0x04,0xB0,0x88,0x02,0xFB,0xCB,0x38,0xEC,0x03,0x58,0x93,0x02,
+	0x48,0xC1,0x04,0xB0,0x88,0x02,0xF9,0xCB,0x04,0xA5,0x38,0xEC,0x25,0x09,0x29,0x0A,
+	0x02,0x50,0x04,0xB0,0xD2,0x03,0x88,0x02,0xFA,0xCB,0x38,0xEC,0x25,0x0A,0x03,0x58,
+	0x93,0x02,0x37,0xC1,0x04,0xB0,0xD2,0x03,0x88,0x02,0xF8,0xCB,0x05,0xA5,0x22,0x08,
+	0x22,0x09,0x23,0x0A,0x02,0x50,0x04,0xB0,0x88,0x02,0xFB,0xCB,0x1E,0x08,0x03,0x58,
+	0x93,0x02,0x27,0xC1,0x04,0xB0,0x88,0x02,0xF9,0xCB,0x06,0xA5,0x1A,0x08,0x1B,0x09,
+	0x1C,0x0A,0x02,0x50,0x04,0xB0,0x88,0x02,0xFB,0xCB,0x17,0x08,0x03,0x58,0x93,0x02,
+	0x18,0xC1,0x04,0xB0,0x88,0x02,0xF9,0xCB,0x07,0xA5,0x13,0x08,0x13,0x09,0x14,0x0A,
+	0x15,0x0C,0x02,0x50,0x04,0xB0,0xD2,0x03,0x22,0x00,0x88,0x02,0xF9,0xCB,0x0E,0x08,
+	0x0F,0x0A,0x03,0x58,0x93,0x02,0x05,0xC1,0x04,0xB0,0xD2,0x03,0x22,0x00,0x88,0x02,
+	0xF7,0xCB,0x00,0xA5,0x70,0x50,0x04,0x08,0x2D,0xE8,0x35,0x50,0xFF,0x97,0xFE,0x9F,
+	0x00,0x80,0x80,0x00,0x00,0xA0,0x80,0x00,0x00,0x00,0x00,0x54,0x1C,0x01,0x00,0x00,
+	0xAA,0x55,0xAA,0x55,0x55,0xAA,0x55,0xAA,0x00,0xE0,0x80,0x00,0xC0,0xE3,0x80,0x00,
+	0xAA,0x55,0xAA,0x01,0x55,0xAA,0x55,0x02,0xFF,0xFF,0xFF,0x03,0xB1,0x03,0x6C,0x8F,
+};
+
+const unsigned char flashTestCodeBin[] = {
+	0x08,0x80,0x6F,0x6D,0x00,0x00,0xFC,0x06,0x4B,0x4E,0x4C,0x54,0x80,0x01,0x88,0x00,
+	0x34,0x80,0xC0,0x46,0x00,0xA0,0x17,0x09,0x17,0x0A,0x08,0x50,0x04,0xB1,0x91,0x02,
+	0xFB,0xCB,0x0C,0x08,0xC0,0x6B,0x0D,0x08,0x85,0x06,0x0B,0x08,0xC0,0x6B,0x0C,0x08,
+	0x85,0x06,0x0C,0x09,0x40,0xA0,0x08,0x40,0x40,0xA0,0x48,0x40,0x0A,0x09,0x0B,0x0A,
+	0x0B,0x0B,0x08,0x58,0x10,0x50,0x04,0xB1,0x04,0xB2,0x9A,0x02,0xF9,0xCB,0x00,0x90,
+	0x51,0x9A,0xC0,0x46,0x12,0x00,0x00,0x00,0x13,0x00,0x00,0x00,0xF0,0x9D,0x80,0x00,
+	0xF0,0x9C,0x80,0x00,0x0C,0x06,0x80,0x00,0xFC,0x06,0x00,0x00,0x04,0x8D,0x80,0x00,
+	0x04,0x8D,0x80,0x00,0x04,0x8D,0x80,0x00,0x00,0xA0,0x80,0x00,0x30,0x65,0x07,0x0C,
+	0x01,0xA3,0x23,0x40,0x05,0xF6,0x1C,0xA0,0x00,0x90,0x9E,0x98,0x00,0xA3,0x23,0x40,
+	0x03,0x0B,0x2D,0xFE,0x1D,0x40,0x00,0x90,0xC7,0x98,0x30,0x6D,0x0D,0x00,0x80,0x00,
+	0x0C,0x00,0x80,0x00,0xF0,0x65,0x05,0xA0,0xFF,0x97,0xE8,0x9F,0x0A,0x0C,0x0B,0x0D,
+	0x00,0xA6,0x01,0xA7,0x05,0x80,0xC8,0xA0,0x01,0xBC,0x00,0x90,0x85,0x98,0x00,0xAC,
+	0x05,0xC0,0x2E,0x40,0x00,0x90,0xB0,0x98,0x2B,0x48,0x1F,0x02,0xF3,0xC1,0x04,0x0B,
+	0x01,0xA2,0x1A,0x40,0xF0,0x6D,0xC0,0x46,0x80,0x96,0x98,0x00,0x0C,0x00,0x80,0x00,
+	0x0D,0x00,0x80,0x00,0x30,0x65,0x03,0xF2,0x08,0x0C,0x1B,0xFE,0x05,0xEC,0x23,0x40,
+	0x00,0x90,0x9A,0x98,0x2B,0xF4,0x1B,0xFE,0x2D,0xF6,0x23,0x40,0x2D,0xFE,0x00,0x90,
+	0x93,0x98,0x25,0x40,0x00,0x90,0x90,0x98,0x30,0x6D,0xC0,0x46,0x0C,0x00,0x80,0x00,
+	0x10,0x65,0x04,0xEC,0x06,0xA0,0xFF,0x97,0xB1,0x9F,0x20,0xA0,0xFF,0x97,0xAE,0x9F,
+	0x20,0xEC,0xFF,0x97,0xDF,0x9F,0x03,0x0B,0x01,0xA2,0x1A,0x40,0xFF,0x97,0xBA,0x9F,
+	0x10,0x6D,0xC0,0x46,0x0D,0x00,0x80,0x00,0xF0,0x65,0x04,0xEC,0x03,0xA0,0x0D,0xEC,
+	0x16,0xEC,0x0E,0x0F,0xFF,0x97,0x9A,0x9F,0x20,0xEC,0xFF,0x97,0xCB,0x9F,0x00,0xA3,
+	0x3B,0x40,0x00,0x90,0x69,0x98,0x0A,0x0B,0x0A,0xA2,0x1A,0x40,0x00,0x90,0x64,0x98,
+	0x00,0xAD,0x07,0xC0,0x00,0xA4,0x3B,0x48,0x33,0x15,0x01,0xB4,0x00,0x90,0x5C,0x98,
+	0xAC,0x02,0xF8,0xC1,0x02,0x0B,0x01,0xA2,0x1A,0x40,0xF0,0x6D,0x0C,0x00,0x80,0x00,
+	0x0D,0x00,0x80,0x00,0xF0,0x65,0x04,0xEC,0x06,0xA0,0x0D,0xEC,0x16,0xEC,0xFF,0x97,
+	0x75,0x9F,0x02,0xA0,0xFF,0x97,0x72,0x9F,0x20,0xEC,0xFF,0x97,0xA3,0x9F,0x00,0xAD,
+	0x08,0xC0,0x07,0x0F,0x00,0xA4,0x33,0x1D,0x01,0xB4,0x3B,0x40,0x00,0x90,0x3C,0x98,
+	0xA5,0x02,0xF8,0xC8,0x03,0x0B,0x01,0xA2,0x1A,0x40,0xFF,0x97,0x73,0x9F,0xF0,0x6D,
+	0x0C,0x00,0x80,0x00,0x0D,0x00,0x80,0x00,0x06,0x09,0x0B,0x58,0x81,0x60,0x00,0x33,
+	0x43,0xF0,0x18,0xE8,0xC0,0xF0,0x0A,0x58,0x00,0x3B,0xD3,0xEA,0x83,0x02,0xFA,0xC9,
+	0x01,0x60,0x70,0x07,0x30,0x06,0x80,0x00,0x10,0x65,0x94,0xE0,0x00,0xAC,0x05,0xCD,
+	0x00,0xA3,0x04,0xD9,0x01,0xB3,0x04,0xD0,0xA3,0x02,0xFA,0xC1,0x10,0x6D,0xC0,0x46,
+	0x10,0x65,0x09,0xF4,0x49,0xFC,0x03,0xEC,0x00,0xA0,0x00,0xA9,0x0B,0xC0,0x4C,0xEE,
+	0x24,0xF4,0xE4,0xFB,0x02,0xB4,0x00,0xA2,0x99,0x1A,0x40,0xE8,0x00,0xF4,0x02,0xB2,
+	0x00,0xFC,0xA2,0x02,0xF8,0xC1,0x10,0x6D,0x30,0x65,0x06,0x0D,0x2B,0x48,0xDA,0xF6,
+	0x06,0xC5,0x10,0xA4,0x1C,0xA0,0xFF,0x97,0xC7,0x9F,0x2B,0x48,0x1C,0x02,0xF9,0xC1,
+	0x30,0x6D,0xC0,0x46,0x0D,0x00,0x80,0x00,0x01,0x0B,0x01,0xA2,0x1A,0x40,0x70,0x07,
+	0x0D,0x00,0x80,0x00,0x01,0x0B,0x00,0xA2,0x1A,0x40,0x70,0x07,0x0D,0x00,0x80,0x00,
+	0x02,0x0B,0x00,0xF6,0x00,0xFE,0x18,0x40,0x70,0x07,0xC0,0x46,0x0C,0x00,0x80,0x00,
+	0x02,0x0B,0x00,0xF6,0x00,0xFE,0x18,0x40,0x70,0x07,0xC0,0x46,0x0D,0x00,0x80,0x00,
+	0x01,0x0B,0x18,0x48,0x70,0x07,0xC0,0x46,0x0C,0x00,0x80,0x00,0x10,0x65,0x03,0x0C,
+	0x00,0xA3,0x23,0x40,0xFF,0x97,0xC8,0x9F,0x20,0x48,0x10,0x6D,0x0C,0x00,0x80,0x00,
+	0x10,0x65,0x04,0x0C,0x00,0xA3,0x23,0x40,0xFF,0x97,0xBE,0x9F,0x23,0x48,0x01,0xA0,
+	0x18,0x00,0x10,0x6D,0x0C,0x00,0x80,0x00,0x70,0x65,0x05,0xEC,0xFF,0x97,0x28,0x9F,
+	0xF0,0xA3,0x1B,0xF1,0x0B,0x0C,0xEE,0xE8,0x80,0xA1,0x28,0xEC,0x49,0xF0,0x0A,0x0A,
+	0xFF,0x97,0x32,0x9F,0x08,0x0B,0x02,0x80,0x04,0xB3,0xA3,0x02,0x05,0xC0,0x1A,0x58,
+	0x01,0xB2,0xF9,0xC0,0x05,0x0B,0x1D,0x50,0x70,0x6D,0xB5,0x02,0xFC,0xC0,0x01,0xB5,
+	0xFF,0xB5,0xE9,0x87,0x80,0x95,0x80,0x00,0x80,0x94,0x80,0x00,0x04,0x8D,0x80,0x00,
+	0x70,0x65,0x90,0xA5,0x00,0xA4,0x0A,0x0E,0x2D,0xF2,0x04,0x80,0x80,0xA3,0x5B,0xF1,
+	0xE4,0xE8,0xAC,0x02,0x0A,0xC0,0x33,0x58,0x01,0xB3,0xF7,0xC1,0x20,0xEC,0xFF,0x97,
+	0xCB,0x9F,0x80,0xA3,0x5B,0xF1,0xE4,0xE8,0xAC,0x02,0xF4,0xC1,0x70,0x6D,0xC0,0x46,
+	0x04,0x8D,0x80,0x00,0xF0,0x65,0x90,0xA7,0x1D,0x0A,0x1E,0x0C,0x81,0x60,0x00,0xA5,
+	0x3F,0xF2,0x1D,0x0B,0xD6,0x03,0x04,0xD3,0xD2,0x03,0xA3,0x02,0xFB,0xC1,0x28,0xEC,
+	0x80,0xA1,0x01,0xB5,0x49,0xF0,0x18,0x0A,0xFF,0xB5,0xFF,0x97,0x13,0x9F,0xBD,0x02,
+	0x01,0xC0,0x32,0xEC,0xED,0x87,0x80,0xA5,0x90,0xA7,0x11,0x0E,0x00,0xA4,0x6D,0xF0,
+	0x3F,0xF2,0xF1,0x03,0x00,0x31,0x80,0xA1,0x20,0xEC,0x49,0xF0,0x0E,0x0A,0xFF,0x97,
+	0xDB,0x9E,0x00,0xA3,0x03,0x80,0x04,0xB3,0xAB,0x02,0x0A,0xC0,0xF6,0x03,0x0A,0x09,
+	0x5A,0xE8,0x12,0x58,0xB2,0x02,0xF6,0xC0,0x08,0x0A,0x1B,0xE9,0x53,0x50,0x01,0x60,
+	0xF0,0x6D,0x01,0xB4,0xFF,0xB4,0xBC,0x02,0xF9,0xC0,0x00,0x3E,0xE1,0x87,0xC0,0x46,
+	0xA5,0x5A,0xA5,0x5A,0x80,0x95,0x80,0x00,0x80,0x94,0x80,0x00,0x04,0x8D,0x80,0x00,
+	0x70,0x65,0x9F,0xA0,0x10,0x0D,0xFF,0x97,0x59,0x9E,0x00,0xA3,0x2B,0x40,0x0F,0x0E,
+	0xFF,0x97,0x2A,0x9F,0x0A,0xA3,0x33,0x40,0xFF,0x97,0x26,0x9F,0x0C,0x0C,0x2B,0x48,
+	0x23,0x50,0xFF,0x97,0x21,0x9F,0x2B,0x48,0x22,0x58,0x1B,0xF2,0x9B,0xE8,0x23,0x50,
+	0xFF,0x97,0x1A,0x9F,0x2B,0x48,0x22,0x58,0x1B,0xF4,0x9B,0xE8,0x23,0x50,0xFF,0x97,
+	0x13,0x9F,0x01,0xA3,0x33,0x40,0x70,0x6D,0x0C,0x00,0x80,0x00,0x0D,0x00,0x80,0x00,
+	0x20,0x8D,0x80,0x00,0x70,0x65,0x4B,0xA0,0x0F,0x0D,0xFF,0x97,0x2F,0x9E,0x00,0xA4,
+	0x00,0xA0,0xFF,0x97,0x5F,0x9E,0x2C,0x40,0xFF,0x97,0xFE,0x9E,0x2C,0x40,0xFF,0x97,
+	0xFB,0x9E,0x0A,0x0B,0x0A,0xA2,0x1A,0x40,0xFF,0x97,0xF6,0x9E,0x08,0x0C,0x26,0xEC,
+	0x10,0xB6,0x2B,0x48,0x23,0x40,0x01,0xB4,0xFF,0x97,0xEE,0x9E,0xB4,0x02,0xF8,0xC1,
+	0x02,0x0B,0x01,0xA2,0x1A,0x40,0x70,0x6D,0x0C,0x00,0x80,0x00,0x0D,0x00,0x80,0x00,
+	0x10,0x8D,0x80,0x00,0xF0,0x65,0x82,0x60,0x00,0x31,0x17,0xEC,0x01,0x33,0xFF,0x97,
+	0x23,0x9F,0x00,0x39,0x7F,0xE8,0x8F,0x02,0x2E,0xC9,0x01,0x3A,0x1A,0x0C,0x0D,0xEC,
+	0x1A,0x0B,0xD6,0x03,0x04,0xD3,0xD2,0x03,0xA3,0x02,0xFB,0xC1,0x28,0xEC,0x80,0xA1,
+	0x01,0xB5,0x49,0xF0,0x15,0x0A,0xFF,0xB5,0xFF,0x97,0x74,0x9E,0xAF,0x02,0x01,0xC9,
+	0x32,0xEC,0xED,0x87,0x80,0xA4,0x01,0x3E,0x00,0x3D,0x64,0xF0,0x80,0xA1,0xF3,0x03,
+	0x28,0xEC,0x49,0xF0,0x0D,0x0A,0x00,0x33,0xFF,0x97,0x3E,0x9E,0x00,0xA3,0x03,0x80,
+	0x04,0xB3,0xA3,0x02,0x0A,0xC0,0xF6,0x03,0x08,0x09,0x5A,0xE8,0x12,0x58,0xB2,0x02,
+	0xF6,0xC0,0x07,0x0A,0xEB,0xE8,0x53,0x50,0x02,0x60,0xF0,0x6D,0x01,0xB5,0xFF,0xB5,
+	0xAF,0x02,0xF9,0xC9,0x00,0x3E,0xE1,0x87,0x80,0x95,0x80,0x00,0x80,0x94,0x80,0x00,
+	0x04,0x8D,0x80,0x00,0x70,0x65,0x5A,0x0B,0x00,0xA4,0x1C,0x50,0x59,0x0B,0x5A,0x0A,
+	0x19,0x58,0x0A,0x00,0x1A,0x50,0x59,0x0B,0x55,0xA2,0x1A,0x40,0x58,0x0A,0x59,0x0B,
+	0x1A,0x20,0x59,0x0A,0x59,0x0B,0x1A,0x50,0x59,0x0A,0x08,0xA3,0x59,0x09,0x5A,0x0E,
+	0x13,0x40,0x04,0xBA,0x11,0x20,0x33,0x40,0xFF,0xA3,0x1B,0xF6,0x22,0xBA,0x13,0x50,
+	0x01,0xA3,0x5B,0x02,0x04,0xB2,0x13,0x20,0x54,0x0B,0x1C,0x40,0x54,0x0B,0x01,0xA5,
+	0x1D,0x40,0x10,0xB3,0x1C,0x50,0x53,0x0B,0x1D,0x40,0x80,0xA3,0x1B,0xF4,0x1F,0xA2,
+	0x1A,0x40,0xFF,0x97,0x35,0x9F,0xFF,0x97,0x5D,0x9F,0x34,0x40,0x4E,0x0E,0x33,0x48,
+	0x85,0xAB,0x13,0xC0,0x5E,0xAB,0x15,0xC1,0x4C,0x0B,0x1A,0x58,0x0F,0xA3,0x13,0x00,
+	0x5A,0xEF,0x95,0x02,0x0E,0xC2,0x09,0xAB,0x0C,0xC0,0x0A,0xAB,0x0A,0xC0,0x48,0x0B,
+	0x41,0x0A,0x08,0xA1,0x11,0x40,0x36,0x0A,0x13,0x50,0xFE,0x87,0x43,0x0B,0xDB,0x4B,
+	0x78,0xAB,0xF4,0xC1,0x43,0x0C,0x44,0x0D,0x01,0xA3,0x5B,0x02,0x80,0xA1,0x23,0x50,
+	0x63,0x50,0x00,0xA0,0x49,0xF0,0x2A,0xEC,0xFF,0x97,0xC6,0x9D,0x2B,0x58,0x01,0xB3,
+	0x03,0xC1,0x3E,0x0B,0x1B,0x58,0x01,0xB3,0x2F,0xC0,0xD0,0xA0,0x00,0xF2,0x80,0xA2,
+	0x01,0xEC,0x52,0xF1,0x3A,0x0B,0xFF,0x97,0x4D,0x9F,0xD0,0xA0,0x00,0xF2,0x80,0xA2,
+	0x01,0xEC,0x52,0xF1,0x37,0x0B,0xFF,0x97,0x45,0x9F,0xF0,0xA0,0xF7,0xA1,0x80,0xA2,
+	0x40,0xF2,0x49,0xF2,0x92,0xF0,0x33,0x0B,0xFF,0x97,0x3C,0x9F,0xF8,0xA0,0xFF,0xA1,
+	0x80,0xA2,0x40,0xF2,0x49,0xF2,0x92,0xF0,0x2D,0x0B,0xFF,0x97,0x33,0x9F,0x22,0x58,
+	0x2D,0x0B,0x1A,0x50,0x2D,0x0A,0x63,0x58,0x31,0x58,0x13,0x50,0x04,0xB2,0x11,0x50,
+	0x01,0xB3,0xB4,0xC1,0xA8,0xA3,0xDB,0xF5,0xB2,0x87,0xF0,0xA0,0xF7,0xA1,0x80,0xA2,
+	0x40,0xF2,0x49,0xF2,0x92,0xF0,0x22,0x0B,0xFF,0x97,0x1C,0x9F,0xF8,0xA0,0xFF,0xA1,
+	0x80,0xA2,0x40,0xF2,0x49,0xF2,0x92,0xF0,0x1E,0x0B,0xFF,0x97,0x13,0x9F,0xFF,0x97,
+	0x5F,0x9E,0xFF,0x97,0x77,0x9E,0xF0,0xA0,0x00,0xF2,0x80,0xA2,0x01,0xEC,0x92,0xF0,
+	0x17,0x0B,0xFF,0x97,0x07,0x9F,0x00,0xA0,0xFF,0x97,0x2E,0x9E,0xCF,0x87,0xC0,0x46,
+	0x00,0x80,0x80,0x00,0x40,0x06,0x80,0x00,0xFF,0xFF,0xFF,0xFE,0x10,0x04,0x80,0x00,
+	0x00,0x9E,0xFF,0xFF,0x28,0x00,0x80,0x00,0xC0,0x9F,0x80,0x00,0x0C,0x8D,0x80,0x00,
+	0x86,0x00,0x80,0x00,0x07,0x08,0x00,0x00,0x83,0x00,0x80,0x00,0x68,0x00,0x80,0x00,
+	0x20,0x06,0x80,0x00,0x03,0x00,0x80,0x00,0x20,0x8D,0x80,0x00,0x10,0x8D,0x80,0x00,
+	0x0E,0x00,0x00,0x54,0x04,0x8D,0x80,0x00,0x80,0x94,0x80,0x00,0x84,0x94,0x80,0x00,
+	0xA5,0x5A,0xA5,0x5A,0x5A,0xA5,0x5A,0xA5,0x04,0x80,0x80,0x00,0x08,0x80,0x80,0x00,
+	0x30,0x65,0x0D,0xF4,0x2D,0xFC,0x03,0xEC,0x00,0xA0,0x00,0xAD,0x14,0xC0,0x19,0x48,
+	0x00,0xA4,0x01,0xB3,0x00,0xA2,0x01,0x80,0x19,0x48,0x01,0xB3,0x08,0xE8,0x51,0x03,
+	0x01,0xB2,0x64,0xE8,0x12,0xF4,0x00,0xF4,0x24,0xF4,0x12,0xFC,0x00,0xFC,0x24,0xFC,
+	0x95,0x02,0xF1,0xC8,0x24,0xF4,0x20,0x03,0x30,0x6D,0xC0,0x46,
+};
+
+const unsigned char ramAlgorithmTestCodeBin[] = {
+	0x08, 0x80, 0x6f, 0x6d, 0x00, 0x00, 0x94, 0x08,0x4b, 0x4e, 0x4c, 0x54, 0x80, 0x01, 0x88, 0x00,
+	0x34, 0x80, 0xc0, 0x46, 0x00, 0xa0, 0x17, 0x09,0x17, 0x0a, 0x08, 0x50, 0x04, 0xb1, 0x91, 0x02,
+	0xfb, 0xcb, 0x0c, 0x08, 0xc0, 0x6b, 0x0d, 0x08,0x85, 0x06, 0x0b, 0x08, 0xc0, 0x6b, 0x0c, 0x08,
+	0x85, 0x06, 0x0c, 0x09, 0x40, 0xa0, 0x08, 0x40,0x40, 0xa0, 0x48, 0x40, 0x0a, 0x09, 0x0b, 0x0a,
+	0x0b, 0x0b, 0x08, 0x58, 0x10, 0x50, 0x04, 0xb1,0x04, 0xb2, 0x9a, 0x02, 0xf9, 0xcb, 0x00, 0x90,
+	0x39, 0x9b, 0xc0, 0x46, 0x12, 0x00, 0x00, 0x00,0x13, 0x00, 0x00, 0x00, 0xf0, 0x9d, 0x80, 0x00,
+	0xf0, 0x9c, 0x80, 0x00, 0x0c, 0x06, 0x80, 0x00,0x54, 0x08, 0x00, 0x00, 0x04, 0x8d, 0x80, 0x00,
+	0x44, 0x8d, 0x80, 0x00, 0x04, 0x8d, 0x80, 0x00,0x00, 0xa0, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x03, 0xa2, 0x05, 0x80, 0x01, 0xa2, 0x03, 0x80,0x02, 0xa2, 0x01, 0x80, 0x00, 0xa2, 0xff, 0x87,
+	0xcb, 0x6b, 0x18, 0x64, 0x80, 0xa4, 0x23, 0x03,0xc3, 0x6b, 0x09, 0x0b, 0x18, 0x50, 0x04, 0xb3,
+	0x19, 0x50, 0x08, 0xbb, 0x1a, 0x40, 0x18, 0x48,0x00, 0xa8, 0xfc, 0xc1, 0x01, 0xaa, 0x02, 0xc9,
+	0x08, 0xb3, 0x18, 0x58, 0x01, 0x80, 0x04, 0xb3,0x18, 0x58, 0x18, 0x6c, 0xc3, 0x6b, 0x70, 0x07,
+	0x64, 0x06, 0x80, 0x00, 0x60, 0x06, 0x80, 0x00,0x68, 0x06, 0x80, 0x00, 0xc0, 0x46, 0xc0, 0x46,
+	0x30, 0x00, 0x00, 0x00, 0xa5, 0x01, 0x00, 0x00,0x31, 0x00, 0x00, 0x00, 0xa9, 0x01, 0x00, 0x00,
+	0x33, 0x00, 0x00, 0x00, 0xb1, 0x01, 0x00, 0x00,0x32, 0x00, 0x00, 0x00, 0xad, 0x01, 0x00, 0x00,
+	0x0b, 0xf6, 0x02, 0xf6, 0xc0, 0xa1, 0xc9, 0xf3,0x12, 0xfe, 0x52, 0xe8, 0x1b, 0xfc, 0xd2, 0xe8,
+	0x03, 0x0b, 0x04, 0x09, 0x1a, 0x50, 0x01, 0xa2,0x0b, 0x48, 0x1a, 0x02, 0xfc, 0xc1, 0x70, 0x07,
+	0xb8, 0x00, 0x80, 0x00, 0xba, 0x00, 0x80, 0x00,0x02, 0xf6, 0x80, 0xa3, 0xdb, 0xf3, 0x12, 0xfe,
+	0xd2, 0xe8, 0x05, 0x0b, 0x05, 0x09, 0x1a, 0x50,0x01, 0xa2, 0x0b, 0x48, 0x1a, 0x02, 0xfc, 0xc1,
+	0x03, 0x0b, 0x18, 0x48, 0x70, 0x07, 0xc0, 0x46,0xb8, 0x00, 0x80, 0x00, 0xba, 0x00, 0x80, 0x00,
+	0xb9, 0x00, 0x80, 0x00, 0x06, 0x09, 0x0b, 0x58,0x81, 0x60, 0x00, 0x33, 0x43, 0xf0, 0x18, 0xe8,
+	0xc0, 0xf0, 0x0a, 0x58, 0x00, 0x3b, 0xd3, 0xea,0x83, 0x02, 0xfa, 0xc9, 0x01, 0x60, 0x70, 0x07,
+	0x30, 0x06, 0x80, 0x00, 0x10, 0x65, 0x94, 0xe0,0x00, 0xac, 0x05, 0xcd, 0x00, 0xa3, 0x04, 0xd9,
+	0x01, 0xb3, 0x04, 0xd0, 0xa3, 0x02, 0xfa, 0xc1,0x10, 0x6d, 0xc0, 0x46, 0x10, 0x65, 0x09, 0xf4,
+	0x49, 0xfc, 0x03, 0xec, 0x00, 0xa0, 0x00, 0xa9,0x0b, 0xc0, 0x4c, 0xee, 0x24, 0xf4, 0xe4, 0xfb,
+	0x02, 0xb4, 0x00, 0xa2, 0x99, 0x1a, 0x40, 0xe8,0x00, 0xf4, 0x02, 0xb2, 0x00, 0xfc, 0xa2, 0x02,
+	0xf8, 0xc1, 0x10, 0x6d, 0x70, 0x07, 0xc0, 0x46,0x70, 0x07, 0xc0, 0x46, 0x70, 0x07, 0xc0, 0x46,
+	0x70, 0x07, 0xc0, 0x46, 0x70, 0x65, 0x22, 0x0d,0x2b, 0x58, 0x0f, 0xa2, 0x1a, 0x40, 0x09, 0xa2,
+	0x5a, 0x40, 0x0c, 0xa1, 0x04, 0xec, 0xff, 0x97,0xd9, 0x9f, 0x23, 0x48, 0x00, 0xa8, 0x13, 0xc1,
+	0x62, 0x48, 0xd2, 0xe8, 0xff, 0xaa, 0x0f, 0xc1,0x1a, 0x0a, 0x11, 0x48, 0x99, 0x02, 0x2b, 0xc0,
+	0x11, 0x4a, 0x99, 0x02, 0x2a, 0xc0, 0x11, 0x4c,0x99, 0x02, 0x11, 0xc0, 0x11, 0x4e, 0x03, 0xa0,
+	0x99, 0x02, 0x0e, 0xc0, 0x28, 0x58, 0x03, 0x80,0x28, 0x58, 0x03, 0xa3, 0x43, 0x40, 0x23, 0x48,
+	0x03, 0x40, 0x06, 0xa1, 0xff, 0x97, 0xba, 0x9f,0x2b, 0x58, 0x40, 0x02, 0xd8, 0x20, 0x70, 0x6d,
+	0x02, 0xa0, 0x0d, 0x09, 0x00, 0xa3, 0x0b, 0x40,0x80, 0xb1, 0x0b, 0x40, 0x0b, 0x0e, 0xc3, 0xf0,
+	0x05, 0xa1, 0xd2, 0xe8, 0x53, 0x58, 0x20, 0xec,0x31, 0x40, 0x00, 0x90, 0xf3, 0x9a, 0x01, 0xa3,
+	0x33, 0x40, 0x28, 0x58, 0x23, 0x48, 0xe3, 0x87,0x00, 0xa0, 0xea, 0x87, 0x01, 0xa0, 0xe8, 0x87,
+	0xc4, 0x8d, 0x80, 0x00, 0xd0, 0x00, 0x00, 0x00,0x00, 0x9e, 0x80, 0x00, 0x03, 0x00, 0x80, 0x00,
+	0x30, 0x65, 0x0d, 0x0c, 0x63, 0x4a, 0x35, 0xab,0x00, 0xc0, 0x30, 0x6d, 0xfa, 0xa0, 0x80, 0xf0,
+	0xff, 0x97, 0x70, 0x9f, 0x09, 0x0d, 0x21, 0xec,0x10, 0xa2, 0x28, 0xec, 0xff, 0x97, 0x7a, 0x9f,
+	0x28, 0xec, 0xff, 0x97, 0x9f, 0x9f, 0x06, 0x08,0x06, 0x09, 0x10, 0xa2, 0xff, 0x97, 0x72, 0x9f,
+	0x30, 0xa3, 0x63, 0x42, 0xe9, 0x87, 0xc0, 0x46,0x00, 0x9f, 0x80, 0x00, 0x80, 0x9f, 0x80, 0x00,
+	0x40, 0x9f, 0x80, 0x00, 0xc0, 0x9f, 0x80, 0x00,0x30, 0x65, 0x8b, 0x58, 0x44, 0x58, 0x05, 0x58,
+	0x5c, 0x03, 0x0b, 0x58, 0x6b, 0x03, 0xe3, 0xe8,0x13, 0x50, 0xcb, 0x58, 0x44, 0x58, 0x05, 0x58,
+	0x5c, 0x03, 0x4b, 0x58, 0x6b, 0x03, 0xe3, 0xe8,0x53, 0x50, 0x8b, 0x58, 0xc4, 0x58, 0x85, 0x58,
+	0x5c, 0x03, 0x0b, 0x58, 0x6b, 0x03, 0xe3, 0xe8,0x93, 0x50, 0xcb, 0x58, 0xc4, 0x58, 0x5c, 0x03,
+	0x4b, 0x58, 0x81, 0x58, 0x4b, 0x03, 0xe3, 0xe8,0xd3, 0x50, 0x30, 0x6d, 0x70, 0x65, 0x15, 0xee,
+	0x0a, 0xc0, 0x06, 0xec, 0x04, 0xec, 0x10, 0xb6,0x20, 0x58, 0x29, 0xec, 0xff, 0x97, 0xca, 0x9e,
+	0x01, 0xd4, 0xb4, 0x02, 0xf8, 0xc1, 0x70, 0x6d,0x02, 0xec, 0x10, 0xb2, 0x03, 0x58, 0x4b, 0x03,
+	0x08, 0xd0, 0x90, 0x02, 0xfa, 0xc1, 0xf6, 0x87,0x70, 0x65, 0x00, 0xa4, 0x20, 0xd9, 0x5d, 0x03,
+	0x40, 0xd8, 0x01, 0xb4, 0xad, 0xe9, 0x20, 0xd2,0x04, 0xac, 0xf7, 0xc1, 0x70, 0x6d, 0xc0, 0x46,
+	0xf0, 0x65, 0x47, 0x06, 0x80, 0x64, 0x1d, 0x0b,0x4b, 0xa4, 0x1c, 0x20, 0x1c, 0x0c, 0x0a, 0xa3,
+	0x23, 0x50, 0x01, 0xa3, 0xe3, 0x50, 0x1b, 0x0c,0x23, 0x50, 0x1b, 0x0c, 0xe3, 0x50, 0x23, 0x50,
+	0x63, 0x50, 0x1a, 0x0c, 0x1a, 0x0d, 0xe3, 0x50,0xa3, 0x50, 0x23, 0x50, 0x19, 0x0c, 0xfa, 0xa3,
+	0x19, 0x0e, 0x17, 0xf1, 0x9b, 0xf0, 0xe3, 0x50,0x23, 0x50, 0x00, 0xa3, 0xec, 0xe9, 0xe6, 0x50,
+	0xa3, 0x50, 0x63, 0x50, 0x88, 0x06, 0x15, 0x0c,0x00, 0xa1, 0x40, 0x1e, 0x01, 0xb2, 0x12, 0xf1,
+	0x38, 0x11, 0xa8, 0xe8, 0x7e, 0x11, 0xc6, 0x50,0x83, 0x50, 0x43, 0x50, 0x56, 0x11, 0x45, 0x06,
+	0x00, 0xa0, 0x29, 0x1e, 0xe7, 0xe9, 0xfb, 0x50,0xbb, 0x50, 0x7b, 0x50, 0x11, 0x11, 0xa2, 0xe8,
+	0xd3, 0x50, 0x93, 0x50, 0x53, 0x50, 0x04, 0x6c,0x90, 0x06, 0xf0, 0x6d, 0xc0, 0x8d, 0x80, 0x00,
+	0x70, 0x8d, 0x80, 0x00, 0xd8, 0x8d, 0x80, 0x00,0x28, 0x8e, 0x80, 0x00, 0x48, 0x8e, 0x80, 0x00,
+	0xe8, 0x8d, 0x80, 0x00, 0xc8, 0x8d, 0x80, 0x00,0x30, 0x75, 0x00, 0x00, 0x80, 0x8d, 0x80, 0x00,
+	0xf0, 0x65, 0x5f, 0x06, 0x56, 0x06, 0x4d, 0x06,0x44, 0x06, 0xf0, 0x64, 0x0f, 0xf1, 0x48, 0x09,
+	0x48, 0x0d, 0x49, 0x0c, 0x8a, 0x06, 0xbb, 0x06,0x82, 0x60, 0xd3, 0x04, 0x01, 0x30, 0x59, 0x06,
+	0x20, 0xec, 0x2a, 0xec, 0xff, 0x97, 0x58, 0x9f,0x44, 0x0b, 0xdb, 0xe9, 0x00, 0x33, 0x44, 0x0b,
+	0x20, 0xec, 0x1a, 0xec, 0x00, 0x39, 0x98, 0x06,0xff, 0x97, 0x4e, 0x9f, 0x41, 0x0e, 0x40, 0x06,
+	0x32, 0xec, 0x41, 0x09, 0xff, 0x97, 0x48, 0x9f,0x30, 0xec, 0x01, 0xa3, 0x3f, 0x09, 0x42, 0x06,
+	0xff, 0x97, 0x7a, 0x9f, 0x3e, 0x0c, 0x3f, 0x09,0x40, 0x06, 0x22, 0xec, 0x89, 0x06, 0xff, 0x97,
+	0x3b, 0x9f, 0x00, 0xa3, 0xe3, 0x50, 0x63, 0x50,0x32, 0xec, 0x48, 0x06, 0x21, 0xec, 0xff, 0x97,
+	0x33, 0x9f, 0xfa, 0xa1, 0x89, 0xf0, 0x20, 0xec,0x00, 0xa2, 0xff, 0x97, 0x4f, 0x9f, 0x36, 0x0b,
+	0x00, 0xa1, 0x5a, 0x1e, 0x33, 0x58, 0x20, 0xec,0xd2, 0xe8, 0x00, 0xa1, 0xff, 0x97, 0x46, 0x9f,
+	0x29, 0xec, 0x32, 0xec, 0x48, 0x06, 0xff, 0x97,0x1f, 0x9f, 0x01, 0x3b, 0x00, 0xa1, 0x5a, 0x1e,
+	0x33, 0x58, 0xfa, 0xa1, 0xd6, 0xea, 0x28, 0xec,0x89, 0xf0, 0x00, 0xa2, 0xff, 0x97, 0x36, 0x9f,
+	0x28, 0xec, 0x21, 0xec, 0x5a, 0x06, 0x33, 0xec,0xff, 0x97, 0x46, 0x9f, 0x00, 0xae, 0x0a, 0xcd,
+	0x23, 0x58, 0x5e, 0x03, 0x25, 0x0b, 0x9e, 0x02,0x05, 0xcc, 0x52, 0x06, 0xd3, 0x19, 0xfa, 0xa1,
+	0x89, 0xf0, 0x5b, 0xe8, 0xd3, 0x11, 0x3b, 0xec,0x53, 0x04, 0x00, 0xa2, 0xda, 0x50, 0x5a, 0x50,
+	0xfa, 0xa2, 0x92, 0xf0, 0x58, 0x06, 0x00, 0xa1,0xff, 0x97, 0x18, 0x9f, 0x52, 0x06, 0xd3, 0x19,
+	0x00, 0xab, 0x1a, 0xcd, 0x01, 0x39, 0x0b, 0x20,0x01, 0xa3, 0x2a, 0xec, 0x5b, 0x02, 0x21, 0xec,
+	0x17, 0x08, 0xff, 0x97, 0x21, 0x9f, 0x28, 0xec,0x41, 0x06, 0x00, 0x3a, 0xff, 0x97, 0xe4, 0x9e,
+	0xfa, 0xa2, 0x00, 0x38, 0x00, 0xa1, 0x92, 0xf0,0xff, 0x97, 0x00, 0x9f, 0x02, 0x60, 0x3c, 0x6c,
+	0x90, 0x06, 0x99, 0x06, 0xa2, 0x06, 0xab, 0x06,0xf0, 0x6d, 0x01, 0xa3, 0xe2, 0x87, 0xc0, 0x46,
+	0x80, 0x8d, 0x80, 0x00, 0x38, 0x8e, 0x80, 0x00,0x28, 0x8e, 0x80, 0x00, 0xe8, 0x8d, 0x80, 0x00,
+	0x68, 0x8e, 0x80, 0x00, 0x58, 0x8e, 0x80, 0x00,0x48, 0x8e, 0x80, 0x00, 0x70, 0x8d, 0x80, 0x00,
+	0x5c, 0x8d, 0x80, 0x00, 0xd8, 0x8d, 0x80, 0x00,0xc0, 0x8d, 0x80, 0x00, 0xe7, 0x03, 0x00, 0x00,
+	0xc8, 0x8d, 0x80, 0x00, 0xf0, 0x65, 0x5f, 0x06,0x56, 0x06, 0x4d, 0x06, 0x44, 0x06, 0xf0, 0x64,
+	0x1f, 0xf4, 0x03, 0x28, 0x1b, 0xf4, 0x1b, 0xe4,0x81, 0x60, 0x04, 0xec, 0x0d, 0xec, 0x16, 0xec,
+	0x3f, 0xfc, 0x00, 0xab, 0x72, 0xcd, 0x00, 0xaf,0x00, 0xc1, 0x76, 0x80, 0x5a, 0x09, 0x57, 0xf0,
+	0x8a, 0x06, 0x79, 0x1e, 0x8c, 0x06, 0x63, 0x04,0x68, 0x06, 0x02, 0xb0, 0x5b, 0xe0, 0x57, 0x09,
+	0x03, 0x20, 0x89, 0x06, 0x7a, 0x1e, 0x00, 0xa1,0x6b, 0x1e, 0x76, 0xf6, 0xd3, 0xe8, 0x5b, 0xe0,
+	0x6a, 0x06, 0x36, 0xfe, 0x13, 0x20, 0x31, 0xec,0xff, 0x97, 0x22, 0x9f, 0x71, 0xec, 0x09, 0xf6,
+	0x09, 0xfe, 0x68, 0x06, 0xff, 0x97, 0x1c, 0x9f,0x23, 0x28, 0x50, 0x06, 0x3b, 0x12, 0x2b, 0x28,
+	0x49, 0x06, 0x7b, 0x12, 0x20, 0xec, 0x39, 0xec,0xff, 0x97, 0x12, 0x9f, 0x79, 0xec, 0x28, 0xec,
+	0xff, 0x97, 0x0e, 0x9f, 0x46, 0x0e, 0x7f, 0xe0,0xf2, 0xe9, 0x11, 0x4d, 0x00, 0xa3, 0x9c, 0x06,
+	0x00, 0xa9, 0x01, 0xc0, 0x12, 0x4c, 0x94, 0x06,0x21, 0x28, 0x08, 0xf4, 0x00, 0xe4, 0x83, 0x06,
+	0xb8, 0xf0, 0x80, 0x06, 0x63, 0x06, 0x43, 0x04,0x5b, 0xf0, 0x99, 0x06, 0xb4, 0x06, 0xcc, 0x04,
+	0x60, 0x06, 0x08, 0xa3, 0xc0, 0x1e, 0x2a, 0x28,0x82, 0x06, 0x10, 0xf4, 0x00, 0xe4, 0x53, 0x06,
+	0x1b, 0xea, 0xd8, 0xe7, 0x1b, 0xe8, 0x43, 0x00,0x9c, 0x06, 0x4b, 0x06, 0xf3, 0x1e, 0x58, 0x06,
+	0x1b, 0xea, 0xd8, 0xe7, 0x1b, 0xe8, 0x43, 0x00,0x9a, 0x06, 0xd4, 0x04, 0x60, 0x06, 0x00, 0xf4,
+	0x8c, 0xa3, 0x00, 0xfc, 0x5b, 0xf0, 0x84, 0x06,0x9c, 0x05, 0x30, 0xc8, 0xf7, 0xe9, 0x3b, 0x4c,
+	0x18, 0xec, 0x40, 0x04, 0x40, 0xf0, 0x31, 0x12,0x36, 0xe8, 0x32, 0x21, 0x01, 0xb3, 0x03, 0xa2,
+	0x13, 0x00, 0x3b, 0x44, 0x00, 0xab, 0x01, 0xc1,0x01, 0xa3, 0x3b, 0x45, 0x01, 0x60, 0x3c, 0x6c,
+	0x90, 0x06, 0x99, 0x06, 0xa2, 0x06, 0xab, 0x06,0xf0, 0x6d, 0x50, 0xf0, 0x80, 0x06, 0x42, 0x06,
+	0x20, 0xec, 0xff, 0x97, 0x6d, 0x9e, 0x22, 0x28,0x1b, 0x0b, 0x41, 0x06, 0xca, 0x12, 0x1b, 0x0b,
+	0x2a, 0x28, 0x40, 0x06, 0xc2, 0x12, 0x1a, 0x0b,0x21, 0x28, 0xf2, 0xf0, 0xd1, 0x12, 0x29, 0x28,
+	0x9e, 0xe9, 0x9a, 0xe8, 0x01, 0xa3, 0x11, 0x21,0x33, 0x44, 0x37, 0x45, 0xde, 0x87, 0xf3, 0xe9,
+	0x1b, 0x4c, 0x03, 0xa2, 0x03, 0xb3, 0x13, 0x00,0x43, 0x04, 0x5b, 0xf0, 0x9a, 0x1f, 0x58, 0x06,
+	0x51, 0xf0, 0x8a, 0xe8, 0x81, 0xf0, 0x08, 0xec,0x58, 0x04, 0x12, 0xe8, 0xd2, 0xe0, 0x22, 0x20,
+	0xf3, 0xe8, 0x08, 0xa1, 0x5b, 0x1e, 0x5a, 0xf0,0xd2, 0xe8, 0x00, 0xa0, 0x2b, 0x1e, 0x99, 0xf0,
+	0xcb, 0xe8, 0xd3, 0xe8, 0xdb, 0xe0, 0x7a, 0xf0,0x29, 0xec, 0x2b, 0x20, 0x20, 0xec, 0xff, 0x97,
+	0x37, 0x9e, 0x21, 0x28, 0x2a, 0x28, 0xa9, 0x87,0x78, 0x8e, 0x80, 0x00, 0x6c, 0x8d, 0x80, 0x00,
+	0x44, 0x8d, 0x80, 0x00, 0xf0, 0x65, 0x82, 0x60,0x6e, 0x06, 0x64, 0xa3, 0x06, 0xb6, 0x01, 0x7d,
+	0x33, 0x20, 0x2b, 0x20, 0x3a, 0x0b, 0x3b, 0x0a,0x19, 0x58, 0x0a, 0x00, 0x1a, 0x50, 0x3a, 0x0b,
+	0x55, 0xa2, 0x1a, 0x40, 0x39, 0x0a, 0x3a, 0x0b,0x1a, 0x20, 0x3a, 0x0a, 0x3a, 0x0b, 0x1a, 0x50,
+	0x3a, 0x0a, 0x08, 0xa3, 0x3a, 0x09, 0x13, 0x40,0x04, 0xba, 0x11, 0x20, 0x01, 0xb2, 0x13, 0x40,
+	0xff, 0xa3, 0x1b, 0xf6, 0x23, 0xba, 0x13, 0x50,0x01, 0xa3, 0x5b, 0x02, 0x04, 0xb2, 0x13, 0x20,
+	0x34, 0x0b, 0x00, 0xa2, 0x34, 0x09, 0x1a, 0x40,0x01, 0xa3, 0x0b, 0x40, 0x10, 0xb1, 0x0a, 0x50,
+	0x32, 0x0a, 0x13, 0x40, 0x80, 0xa3, 0x1b, 0xf4,0x1f, 0xa2, 0x1a, 0x40, 0x30, 0x0a, 0x31, 0x0b,
+	0x31, 0x08, 0x1a, 0x50, 0xff, 0x97, 0x06, 0x9d,0x30, 0x0a, 0x00, 0xa3, 0x30, 0x08, 0x19, 0xe8,
+	0xd0, 0x1a, 0x08, 0x20, 0x2f, 0x08, 0x19, 0xe8,0x10, 0xec, 0x10, 0xb0, 0xc0, 0x1a, 0x08, 0x20,
+	0x2d, 0x08, 0x19, 0xe8, 0x10, 0xec, 0x20, 0xb0,0xc0, 0x1a, 0x08, 0x20, 0x2b, 0x08, 0x19, 0xe8,
+	0x10, 0xec, 0x30, 0xb0, 0xc0, 0x1a, 0x02, 0xb3,0x08, 0x20, 0x10, 0xab, 0xe6, 0xc1, 0x00, 0xa3,
+	0x27, 0x0c, 0x23, 0x0f, 0x00, 0x33, 0x3b, 0x28,0x33, 0x20, 0x3b, 0x2a, 0x30, 0xec, 0x2b, 0x20,
+	0x29, 0xec, 0x00, 0xa2, 0x00, 0x3b, 0xff, 0x97,0xcd, 0x9e, 0x33, 0x28, 0x23, 0x20, 0x2b, 0x28,
+	0xfa, 0xa0, 0x23, 0x22, 0x80, 0xf0, 0xff, 0x97,0xd5, 0x9c, 0x00, 0x38, 0x01, 0xb0, 0x00, 0x30,
+	0x02, 0xb7, 0x02, 0xb4, 0x08, 0xa8, 0xe6, 0xc1,0xfa, 0xa0, 0x80, 0xf0, 0xff, 0x97, 0xca, 0x9c,
+	0xa8, 0xa3, 0x10, 0x0a, 0xdb, 0xf5, 0x13, 0x50,0xff, 0x97, 0x4a, 0x9d, 0xfc, 0x87, 0xc0, 0x46,
+	0x40, 0x06, 0x80, 0x00, 0xff, 0xff, 0xff, 0xfe,0x10, 0x04, 0x80, 0x00, 0x00, 0x9e, 0xff, 0xff,
+	0x28, 0x00, 0x80, 0x00, 0xc0, 0x9f, 0x80, 0x00,0xc4, 0x8d, 0x80, 0x00, 0x86, 0x00, 0x80, 0x00,
+	0x07, 0x08, 0x00, 0x00, 0x68, 0x00, 0x80, 0x00,0x20, 0x06, 0x80, 0x00, 0x03, 0x00, 0x80, 0x00,
+	0x01, 0x00, 0x00, 0x54, 0x00, 0x96, 0x80, 0x00,0x88, 0x13, 0x00, 0x00, 0x04, 0x8d, 0x80, 0x00,
+	0x00, 0x94, 0x80, 0x00, 0x10, 0x94, 0x80, 0x00,0xc0, 0x94, 0x80, 0x00, 0xd0, 0x94, 0x80, 0x00,
+	0x80, 0x94, 0x80, 0x00, 0x18, 0x07, 0xc0, 0x46,0x30, 0x65, 0x0d, 0xf4, 0x2d, 0xfc, 0x03, 0xec,
+	0x00, 0xa0, 0x00, 0xad, 0x14, 0xc0, 0x19, 0x48,0x00, 0xa4, 0x01, 0xb3, 0x00, 0xa2, 0x01, 0x80,
+	0x19, 0x48, 0x01, 0xb3, 0x08, 0xe8, 0x51, 0x03,0x01, 0xb2, 0x64, 0xe8, 0x12, 0xf4, 0x00, 0xf4,
+	0x24, 0xf4, 0x12, 0xfc, 0x00, 0xfc, 0x24, 0xfc,0x95, 0x02, 0xf1, 0xc8, 0x24, 0xf4, 0x20, 0x03,
+	0x30, 0x6d, 0xc0, 0x46, 0x32, 0x00, 0x64, 0x00,0xc8, 0x00, 0xfa, 0x00, 0x2c, 0x01, 0x5e, 0x01,
+	0x90, 0x01, 0xc2, 0x01, 0x0a, 0x00, 0x3c, 0x00,0x6e, 0x00, 0xa0, 0x00, 0xd2, 0x00, 0x04, 0x01,
+	0x36, 0x01, 0x68, 0x01, 0x32, 0x00, 0x63, 0x00,0xc4, 0x00, 0xea, 0x00, 0x12, 0x01, 0x41, 0x01,
+	0x72, 0x01, 0xa4, 0x01, 0x0a, 0x00, 0x3b, 0x00,0x6e, 0x00, 0x8d, 0x00, 0xb7, 0x00, 0xe7, 0x00,
+	0x18,0x01,0x4a,0x01,
+
+};
+//const unsigned char flashTestCodeBin[] = {
+//	0x08,0x80,0x6F,0x6D,0x00,0x00,0xD8,0x07,0x4B,0x4E,0x4C,0x54,0x80,0x01,0x88,0x00,
+//	0x34,0x80,0xC0,0x46,0x00,0xA0,0x17,0x09,0x17,0x0A,0x08,0x50,0x04,0xB1,0x91,0x02,
+//	0xFB,0xCB,0x0C,0x08,0xC0,0x6B,0x0D,0x08,0x85,0x06,0x0B,0x08,0xC0,0x6B,0x0C,0x08,
+//	0x85,0x06,0x0C,0x09,0x40,0xA0,0x08,0x40,0x40,0xA0,0x48,0x40,0x0A,0x09,0x0B,0x0A,
+//	0x0B,0x0B,0x08,0x58,0x10,0x50,0x04,0xB1,0x04,0xB2,0x9A,0x02,0xF9,0xCB,0x00,0x90,
+//	0xE9,0x9A,0xC0,0x46,0x12,0x00,0x00,0x00,0x13,0x00,0x00,0x00,0xF0,0x9D,0x80,0x00,
+//	0xF0,0x9C,0x80,0x00,0x0C,0x06,0x80,0x00,0xD8,0x07,0x00,0x00,0x04,0x8D,0x80,0x00,
+//	0x04,0x8D,0x80,0x00,0x04,0x8D,0x80,0x00,0x00,0xA0,0x80,0x00,0x30,0x65,0x07,0x0C,
+//	0x01,0xA3,0x23,0x40,0x05,0xF6,0x1C,0xA0,0x00,0x90,0xA2,0x98,0x00,0xA3,0x23,0x40,
+//	0x03,0x0B,0x2D,0xFE,0x1D,0x40,0x00,0x90,0xDF,0x98,0x30,0x6D,0x0D,0x00,0x80,0x00,
+//	0x0C,0x00,0x80,0x00,0xF0,0x65,0xFA,0xA0,0xC0,0xF0,0x00,0x90,0x91,0x98,0x05,0xA0,
+//	0xFF,0x97,0xE4,0x9F,0x0A,0x0C,0x0B,0x0D,0x00,0xA6,0x01,0xA7,0x05,0x80,0xC8,0xA0,
+//	0x01,0xBC,0x00,0x90,0x85,0x98,0x00,0xAC,0x05,0xC0,0x2E,0x40,0x00,0x90,0xC4,0x98,
+//	0x2B,0x48,0x1F,0x02,0xF3,0xC1,0x04,0x0B,0x01,0xA2,0x1A,0x40,0xF0,0x6D,0xC0,0x46,
+//	0x80,0x96,0x98,0x00,0x0C,0x00,0x80,0x00,0x0D,0x00,0x80,0x00,0x30,0x65,0x03,0xF2,
+//	0x08,0x0C,0x1B,0xFE,0x05,0xEC,0x23,0x40,0x00,0x90,0xAE,0x98,0x2B,0xF4,0x1B,0xFE,
+//	0x2D,0xF6,0x23,0x40,0x2D,0xFE,0x00,0x90,0xA7,0x98,0x25,0x40,0x00,0x90,0xA4,0x98,
+//	0x30,0x6D,0xC0,0x46,0x0C,0x00,0x80,0x00,0x10,0x65,0x04,0xEC,0x06,0xA0,0xFF,0x97,
+//	0xAD,0x9F,0x20,0xA0,0xFF,0x97,0xAA,0x9F,0x20,0xEC,0xFF,0x97,0xDF,0x9F,0x03,0x0B,
+//	0x01,0xA2,0x1A,0x40,0xFF,0x97,0xB6,0x9F,0x10,0x6D,0xC0,0x46,0x0D,0x00,0x80,0x00,
+//	0xF0,0x65,0x04,0xEC,0x03,0xA0,0x0D,0xEC,0x16,0xEC,0x0E,0x0F,0xFF,0x97,0x96,0x9F,
+//	0x20,0xEC,0xFF,0x97,0xCB,0x9F,0x00,0xA3,0x3B,0x40,0x00,0x90,0x7D,0x98,0x0A,0x0B,
+//	0x0A,0xA2,0x1A,0x40,0x00,0x90,0x78,0x98,0x00,0xAD,0x07,0xC0,0x00,0xA4,0x3B,0x48,
+//	0x33,0x15,0x01,0xB4,0x00,0x90,0x70,0x98,0xAC,0x02,0xF8,0xC1,0x02,0x0B,0x01,0xA2,
+//	0x1A,0x40,0xF0,0x6D,0x0C,0x00,0x80,0x00,0x0D,0x00,0x80,0x00,0xF0,0x65,0x04,0xEC,
+//	0x06,0xA0,0x0D,0xEC,0x16,0xEC,0xFF,0x97,0x71,0x9F,0x02,0xA0,0xFF,0x97,0x6E,0x9F,
+//	0x20,0xEC,0xFF,0x97,0xA3,0x9F,0x00,0xAD,0x08,0xC0,0x07,0x0F,0x00,0xA4,0x33,0x1D,
+//	0x01,0xB4,0x3B,0x40,0x00,0x90,0x50,0x98,0xA5,0x02,0xF8,0xC8,0x03,0x0B,0x01,0xA2,
+//	0x1A,0x40,0xFF,0x97,0x6F,0x9F,0xF0,0x6D,0x0C,0x00,0x80,0x00,0x0D,0x00,0x80,0x00,
+//	0x06,0x09,0x0B,0x58,0x81,0x60,0x00,0x33,0x43,0xF0,0x18,0xE8,0xC0,0xF0,0x0A,0x58,
+//	0x00,0x3B,0xD3,0xEA,0x83,0x02,0xFA,0xC9,0x01,0x60,0x70,0x07,0x30,0x06,0x80,0x00,
+//	0x10,0x65,0x94,0xE0,0x00,0xAC,0x05,0xCD,0x00,0xA3,0x04,0xD9,0x01,0xB3,0x04,0xD0,
+//	0xA3,0x02,0xFA,0xC1,0x10,0x6D,0xC0,0x46,0x10,0x65,0x09,0xF4,0x49,0xFC,0x03,0xEC,
+//	0x00,0xA0,0x00,0xA9,0x0B,0xC0,0x4C,0xEE,0x24,0xF4,0xE4,0xFB,0x02,0xB4,0x00,0xA2,
+//	0x99,0x1A,0x40,0xE8,0x00,0xF4,0x02,0xB2,0x00,0xFC,0xA2,0x02,0xF8,0xC1,0x10,0x6D,
+//	0x0B,0xF6,0x02,0xF6,0xC0,0xA1,0xC9,0xF3,0x12,0xFE,0x52,0xE8,0x1B,0xFC,0xD2,0xE8,
+//	0x03,0x0B,0x04,0x09,0x1A,0x50,0x01,0xA2,0x0B,0x48,0x1A,0x02,0xFC,0xC1,0x70,0x07,
+//	0xB8,0x00,0x80,0x00,0xBA,0x00,0x80,0x00,0x30,0x65,0x06,0x0D,0x2B,0x48,0xDA,0xF6,
+//	0x06,0xC5,0x10,0xA4,0x1C,0xA0,0xFF,0x97,0xB3,0x9F,0x2B,0x48,0x1C,0x02,0xF9,0xC1,
+//	0x30,0x6D,0xC0,0x46,0x0D,0x00,0x80,0x00,0x01,0x0B,0x01,0xA2,0x1A,0x40,0x70,0x07,
+//	0x0D,0x00,0x80,0x00,0x01,0x0B,0x00,0xA2,0x1A,0x40,0x70,0x07,0x0D,0x00,0x80,0x00,
+//	0x02,0x0B,0x00,0xF6,0x00,0xFE,0x18,0x40,0x70,0x07,0xC0,0x46,0x0C,0x00,0x80,0x00,
+//	0x02,0x0B,0x00,0xF6,0x00,0xFE,0x18,0x40,0x70,0x07,0xC0,0x46,0x0D,0x00,0x80,0x00,
+//	0x01,0x0B,0x18,0x48,0x70,0x07,0xC0,0x46,0x0C,0x00,0x80,0x00,0x10,0x65,0x03,0x0C,
+//	0x00,0xA3,0x23,0x40,0xFF,0x97,0xC8,0x9F,0x20,0x48,0x10,0x6D,0x0C,0x00,0x80,0x00,
+//	0x10,0x65,0x04,0x0C,0x00,0xA3,0x23,0x40,0xFF,0x97,0xBE,0x9F,0x23,0x48,0x01,0xA0,
+//	0x18,0x00,0x10,0x6D,0x0C,0x00,0x80,0x00,0xF0,0x65,0x47,0x06,0x80,0x64,0x13,0x0B,
+//	0x1B,0x48,0x05,0xEC,0x01,0xA0,0x85,0xAB,0x17,0xC0,0x80,0xA3,0x5B,0xF1,0xEF,0xE8,
+//	0x00,0xA0,0xBD,0x02,0x11,0xC2,0x0E,0x0E,0x74,0xEC,0xB0,0x06,0xFF,0xB4,0x80,0xA1,
+//	0x28,0xEC,0x49,0xF0,0x42,0x06,0xFF,0x97,0x13,0x9F,0x33,0xEC,0x01,0x80,0xA3,0x02,
+//	0x06,0xC0,0x04,0xDB,0x01,0xB2,0xFA,0xC0,0x01,0xA0,0x04,0x6C,0x90,0x06,0xF0,0x6D,
+//	0x01,0xB5,0xFF,0xB5,0xAF,0x02,0xEA,0xC8,0x00,0xA0,0xF6,0x87,0x04,0x8D,0x80,0x00,
+//	0x14,0x8E,0x80,0x00,0xF0,0x65,0x47,0x06,0x80,0x64,0x05,0xEC,0xFF,0x97,0xE4,0x9E,
+//	0x80,0xA3,0x5B,0xF1,0xEF,0xE8,0x00,0xA0,0xBD,0x02,0x11,0xC2,0x0D,0x0E,0x74,0xEC,
+//	0xB0,0x06,0xFF,0xB4,0x80,0xA1,0x28,0xEC,0x49,0xF0,0x42,0x06,0xFF,0x97,0xE8,0x9E,
+//	0x33,0xEC,0x01,0x80,0xA3,0x02,0x06,0xC0,0x04,0xDB,0x01,0xB2,0xFA,0xC0,0x01,0xA0,
+//	0x04,0x6C,0x90,0x06,0xF0,0x6D,0x01,0xB5,0xFF,0xB5,0xAF,0x02,0xEA,0xC8,0x00,0xA0,
+//	0xF6,0x87,0xC0,0x46,0x14,0x8E,0x80,0x00,0xF0,0x65,0x0F,0x0D,0x9F,0xA0,0x00,0xA7,
+//	0x0E,0x0C,0x0F,0x0E,0xFF,0x97,0x6A,0x9E,0x2F,0x40,0xFF,0x97,0x55,0x9F,0x0A,0xA3,
+//	0x33,0x40,0xFF,0x97,0x51,0x9F,0x2B,0x48,0x23,0x40,0xFF,0x97,0x4D,0x9F,0x2B,0x48,
+//	0x63,0x40,0xFF,0x97,0x49,0x9F,0x2B,0x48,0xA3,0x40,0xFF,0x97,0x45,0x9F,0x01,0xA3,
+//	0x33,0x40,0xE7,0x40,0xF0,0x6D,0xC0,0x46,0x0C,0x00,0x80,0x00,0x04,0x8D,0x80,0x00,
+//	0x0D,0x00,0x80,0x00,0xF0,0x65,0x57,0x06,0x4E,0x06,0x45,0x06,0xE0,0x64,0x04,0xEC,
+//	0xF0,0xA0,0x40,0xF2,0xFF,0x97,0x78,0x9F,0x00,0xA8,0x4B,0xC1,0xF8,0xA0,0x40,0xF2,
+//	0xFF,0x97,0x72,0x9F,0x00,0xA8,0x4F,0xC1,0x00,0xAC,0x3C,0xC0,0x38,0x0D,0x2C,0xEC,
+//	0x08,0xDC,0x9A,0x06,0x23,0x58,0xF7,0xA0,0x80,0xA1,0x2A,0xEC,0x40,0xF2,0x49,0xF0,
+//	0x99,0x06,0xFF,0x97,0xB3,0x9E,0xFF,0xA0,0x80,0xA1,0x2A,0xEC,0x40,0xF2,0x49,0xF0,
+//	0xFF,0x97,0xAC,0x9E,0x80,0xA1,0x22,0xEC,0x2E,0x08,0x49,0xF0,0xFF,0x97,0xA6,0x9E,
+//	0x80,0xA1,0x2D,0x08,0x22,0xEC,0x49,0xF0,0xFF,0x97,0xA0,0x9E,0x2B,0x0F,0x00,0xA3,
+//	0xF7,0xA0,0x7E,0xEC,0x54,0x06,0x98,0x06,0x40,0xF2,0xFF,0xB6,0x00,0xA5,0x80,0xA1,
+//	0x49,0xF0,0x3A,0xEC,0xFF,0x97,0x6C,0x9E,0x3B,0xEC,0x03,0x80,0x20,0xD3,0xB3,0x02,
+//	0x1F,0xC0,0xE4,0x03,0x1A,0x58,0xA2,0x02,0xF8,0xC0,0x01,0xA0,0x1C,0x6C,0x90,0x06,
+//	0x99,0x06,0xA2,0x06,0xF0,0x6D,0x1A,0x0D,0x6B,0x58,0x2C,0xEC,0x9A,0x06,0x08,0xB4,
+//	0x04,0xB5,0xBF,0x87,0xF0,0xA0,0x40,0xF2,0xFF,0x97,0x3E,0x9E,0xF8,0xA0,0x40,0xF2,
+//	0xFF,0x97,0x22,0x9F,0x00,0xA8,0xAF,0xC0,0xF8,0xA0,0x40,0xF2,0xFF,0x97,0x34,0x9E,
+//	0xAA,0x87,0x01,0xA3,0x98,0x04,0x04,0xA3,0x98,0x05,0x01,0xC1,0x00,0xA0,0xDD,0x87,
+//	0x00,0xA3,0x98,0x05,0x0F,0xC0,0x01,0xA3,0x98,0x05,0x05,0xC0,0x02,0xA3,0x98,0x05,
+//	0x05,0xC0,0x4C,0x06,0x08,0x08,0xC2,0x87,0x4C,0x06,0x06,0x08,0xBF,0x87,0xFF,0xA0,
+//	0x54,0x06,0x40,0xF2,0xBB,0x87,0xF7,0xA0,0x54,0x06,0x40,0xF2,0xB7,0x87,0xC0,0x46,
+//	0x08,0x8D,0x80,0x00,0x00,0xEF,0x01,0x00,0x00,0xFF,0x01,0x00,0x14,0x8E,0x80,0x00,
+//	0xF0,0x65,0x5F,0x06,0x56,0x06,0x4D,0x06,0x44,0x06,0xF0,0x64,0x0E,0xFB,0x36,0xF3,
+//	0x04,0xEC,0x30,0xEC,0xFF,0x97,0xE8,0x9E,0x00,0xA8,0x5E,0xC1,0x00,0xAC,0x52,0xC0,
+//	0x31,0x0F,0x80,0xA2,0x52,0xF1,0x92,0xE9,0x90,0x06,0x00,0xA0,0x46,0x05,0x42,0xC2,
+//	0x3D,0xED,0x34,0xEC,0x80,0xA1,0x20,0xEC,0x49,0xF0,0x3A,0xEC,0xFF,0x97,0x26,0x9E,
+//	0x60,0xEC,0x80,0xA1,0xFF,0xB0,0x49,0xF0,0x3A,0xEC,0xFF,0x97,0x1F,0x9E,0x80,0xA3,
+//	0x9B,0xF0,0x80,0xA1,0xE0,0xE8,0x49,0xF0,0x2A,0xEC,0xFF,0x97,0x17,0x9E,0xC0,0xA2,
+//	0x92,0xF0,0x80,0xA1,0xA0,0xE8,0x49,0xF0,0x2A,0xEC,0xFF,0x97,0x0F,0x9E,0x80,0xA3,
+//	0xDB,0xF0,0xE4,0xE8,0xA0,0x05,0xDD,0xC8,0x1C,0x0A,0x92,0x06,0x80,0xA2,0x52,0xF0,
+//	0xB1,0x06,0x00,0xA3,0x16,0xEC,0x9B,0x06,0x56,0x04,0x00,0xA5,0x02,0xA3,0x5A,0x06,
+//	0x13,0x02,0x16,0xC0,0x7C,0x58,0x80,0xA1,0x48,0x06,0x49,0xF0,0x13,0x0A,0xFF,0x97,
+//	0xCF,0x9D,0x53,0x06,0x03,0x80,0x20,0xD3,0xB3,0x02,0x0E,0xC0,0xE4,0x03,0x1A,0x58,
+//	0xA2,0x02,0xF8,0xC0,0x01,0xA0,0x3C,0x6C,0x90,0x06,0x99,0x06,0xA2,0x06,0xAB,0x06,
+//	0xF0,0x6D,0x3C,0x58,0xE7,0x87,0x0A,0x0F,0xAB,0x87,0x80,0xA3,0x5B,0xF0,0x99,0x04,
+//	0xC8,0x05,0x06,0xC9,0x01,0xA2,0x93,0x04,0xD8,0x87,0x30,0xEC,0xFF,0x97,0x9C,0x9D,
+//	0x9C,0x87,0x00,0xA0,0xE7,0x87,0xC0,0x46,0x08,0x8D,0x80,0x00,0x14,0x8E,0x80,0x00,
+//	0x0C,0x8D,0x80,0x00,0x30,0x65,0x90,0xA5,0x00,0xA4,0x2D,0xF2,0x00,0xA0,0x21,0xEC,
+//	0xFF,0x97,0x7E,0x9F,0x00,0xA8,0x0B,0xC1,0x80,0xA3,0x5B,0xF1,0xE4,0xE8,0xAC,0x02,
+//	0xF4,0xC1,0xF0,0xA1,0x09,0xF2,0xFF,0x97,0x73,0x9F,0x43,0xEE,0x98,0x01,0x30,0x6D,
+//	0x01,0xA0,0xFC,0x87,0x30,0x65,0x47,0x0B,0x08,0xA2,0x1A,0x40,0x46,0x0A,0x04,0xBB,
+//	0x1A,0x20,0x46,0x0B,0x46,0x0A,0x19,0x58,0x0A,0x00,0x1A,0x50,0x45,0x0B,0x55,0xA2,
+//	0x1A,0x40,0x45,0x0A,0x45,0x0B,0x1A,0x20,0x45,0x0A,0xFF,0xA3,0x1B,0xF6,0x13,0x50,
+//	0x01,0xA3,0x5B,0x02,0x04,0xB2,0x13,0x20,0x42,0x0B,0x00,0xA2,0x42,0x09,0x1A,0x40,
+//	0x01,0xA3,0x0B,0x40,0x10,0xB1,0x0A,0x50,0x40,0x0A,0x13,0x40,0x80,0xA3,0x1B,0xF4,
+//	0x1F,0xA2,0x1A,0x40,0x3E,0x0A,0x3F,0x0B,0x1A,0x50,0x3F,0x0A,0x01,0xA3,0x11,0x48,
+//	0x0B,0x02,0xFC,0xC1,0x3D,0x0B,0x18,0xEC,0x09,0xB0,0x3D,0x09,0x3D,0x0A,0xFF,0xB0,
+//	0x19,0x50,0x5A,0x50,0x08,0xB3,0x83,0x02,0xFA,0xC1,0xFF,0x97,0x7D,0x9E,0x3A,0x0B,
+//	0x3A,0x0C,0x1A,0x58,0x3A,0x0B,0x00,0xA0,0x1A,0x50,0x08,0xA1,0x22,0xEC,0xFF,0x97,
+//	0x47,0x9D,0x23,0x58,0x25,0xEC,0x01,0xB3,0x13,0xC0,0x63,0x58,0x01,0xB3,0x10,0xC0,
+//	0xD0,0xA1,0x00,0xA0,0x09,0xF2,0xFF,0x97,0x1B,0x9F,0x0A,0xA3,0x00,0xA8,0x26,0xC0,
+//	0xA8,0xA2,0xD2,0xF5,0x9B,0xE8,0x2F,0x0A,0x13,0x50,0x2F,0x0B,0x00,0xA2,0x1A,0x40,
+//	0xFE,0x87,0x2A,0xEC,0x00,0xA0,0x08,0xA1,0xFF,0x97,0x2A,0x9D,0x22,0x58,0x00,0xA3,
+//	0x01,0xB2,0xED,0xC1,0x62,0x58,0x01,0xB2,0xEA,0xC1,0x00,0xA0,0xFF,0x97,0x72,0x9E,
+//	0x01,0xA3,0x00,0xA8,0xE4,0xC1,0xFF,0x97,0x75,0x9F,0x03,0xA3,0x00,0xA8,0xDF,0xC1,
+//	0xFF,0x97,0x18,0x9E,0x03,0xEC,0x58,0xEE,0x83,0x01,0x9B,0xF0,0xD8,0x87,0xD0,0xA1,
+//	0x01,0xA0,0x09,0xF2,0xFF,0x97,0xEC,0x9E,0x0B,0xA3,0x00,0xA8,0xD0,0xC1,0x01,0xA0,
+//	0xFF,0x97,0x58,0x9E,0x02,0xEC,0x50,0xEE,0x82,0x01,0x0C,0xA3,0x52,0x02,0x13,0x00,
+//	0xC6,0x87,0xC0,0x46,0x86,0x00,0x80,0x00,0x07,0x08,0x00,0x00,0x40,0x06,0x80,0x00,
+//	0xFF,0xFF,0xFF,0xFE,0x10,0x04,0x80,0x00,0x00,0x9E,0xFF,0xFF,0x28,0x00,0x80,0x00,
+//	0x60,0x00,0x80,0x00,0x68,0x00,0x80,0x00,0x20,0x06,0x80,0x00,0x03,0x00,0x80,0x00,
+//	0x03,0x70,0x60,0x00,0xB8,0x00,0x80,0x00,0xBA,0x00,0x80,0x00,0x08,0x8D,0x80,0x00,
+//	0x55,0x55,0x55,0x55,0xAA,0xAA,0xAA,0xAA,0x04,0x8D,0x80,0x00,0x14,0x8E,0x80,0x00,
+//	0x00,0x80,0x80,0x00,0x04,0x80,0x80,0x00,0x83,0x00,0x80,0x00,0x30,0x65,0x0D,0xF4,
+//	0x2D,0xFC,0x03,0xEC,0x00,0xA0,0x00,0xAD,0x14,0xC0,0x19,0x48,0x00,0xA4,0x01,0xB3,
+//	0x00,0xA2,0x01,0x80,0x19,0x48,0x01,0xB3,0x08,0xE8,0x51,0x03,0x01,0xB2,0x64,0xE8,
+//	0x12,0xF4,0x00,0xF4,0x24,0xF4,0x12,0xFC,0x00,0xFC,0x24,0xFC,0x95,0x02,0xF1,0xC8,
+//	0x24,0xF4,0x20,0x03,0x30,0x6D,0xC0,0x46,
+//};
+
+
+struct SortPacket 
+{
+	double dpVal;
+	int dpRow;
+	int dpCol;
+	SortPacket( int row, int col, double val = 0 )
+		:dpRow(row)
+		,dpCol(col)
+		,dpVal(val)
+	{
+
+	}
+	bool operator < ( const SortPacket& cmp ) const
+	{
+		return this->dpVal < cmp.dpVal;
+	}
+};
+
+CTest3536::CTest3536()
+:CTestBase()
+{
+// 	memset( m_CurTestItemAddr, 0, sizeof(m_CurTestItemAddr) );
+// 	m_CurTestItemAddr[TEST_ITEM_MTK_CONNECT]     = new CRunTimeMethod<CTestBase>( this, &CTestBase::MTKConnectTest );
+// 	m_CurTestItemAddr[TEST_ITEM_TP_WAIT]         = new CRunTimeMethod<CTestBase>( this, &CTestBase::TP_WaitTest );
+// 	m_CurTestItemAddr[TEST_ITEM_TP_REMOVE]       = new CRunTimeMethod<CTestBase>( this, &CTestBase::TP_RemoveTest );
+// 	m_CurTestItemAddr[TEST_ITEM_INT_TEST]        = new CRunTimeMethod<CTest3536>( this, &CTest3536::INT_Test );
+// 	m_CurTestItemAddr[TEST_ITEM_RESET_TEST]      = new CRunTimeMethod<CTest3536>( this, &CTest3536::Reset_Test );
+// 	m_CurTestItemAddr[TEST_ITEM_FSD_TEST_3536]   = new CRunTimeMethod<CTest3536>( this, &CTest3536::FSD_Test );
+// 	m_CurTestItemAddr[TEST_ITEM_OS_TEST_3536]    = new CRunTimeMethod<CTest3536>( this, &CTest3536::OS_Test );
+// 	m_CurTestItemAddr[TEST_ITEM_BOOT_TEST]       = new CRunTimeMethod<CTest3536>( this, &CTest3536::Boot_Test );
+// 	m_CurTestItemAddr[TEST_ITEM_CFG_TEST]        = new CRunTimeMethod<CTest3536>( this, &CTest3536::Config_Test );
+// 	m_CurTestItemAddr[TEST_ITEM_BUTTON_TEST]     = new CRunTimeMethod<CTest3536>( this, &CTestBase::Graph_Test );
+// 	m_CurTestItemAddr[TEST_ITEM_LINEARLY_TEST]   = new CRunTimeMethod<CTest3536>( this, &CTestBase::Graph_Test );
+// 	m_CurTestItemAddr[TEST_ITEM_FREE_PAINT_TEST] = new CRunTimeMethod<CTest3536>( this, &CTestBase::Graph_Test );
+// 	m_CurTestItemAddr[TEST_ITEM_CURRENT_TEST]    = new CRunTimeMethod<CTest3536>( this, &CTest3536::Current_Test );
+}
+CTest3536::~CTest3536()
+{
+	
+}
+void CTest3536::SetTestContext( unsigned char deviceNo, NativeTestInterface* native )
+{
+	//m_listTestItems.clear();
+	CTestBase::SetTestContext( deviceNo, native );
+
+	int indexSel = 0;  //mtk = 0
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_MTK_CONNECT;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("MTK"), lengthof(_T("MTK")));
+		info.bSelected = pCfg3536->mtk_selected;
+		info.jumpIfNG = false;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTestBase>( this, &CTestBase::MTKConnectTest );
+	}
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_TP_WAIT;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("Waiting"), lengthof(_T("Waiting")));
+		info.bSelected = pCfg3536->way_to_start == START_BY_AUTO;
+		info.jumpIfNG = false;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTestBase>( this, &CTestBase::TP_WaitTest );
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_ALGORITHM_TEST_3536;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("Algorithm"), lengthof(_T("Algorithm")));
+		info.bSelected = pCfg3536->algorithm_selected;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest3536>( this, &CTest3536::Algorithm_Test );
+	}
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_BOOT_TEST;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("Boot"), lengthof(_T("Boot")));
+		info.bSelected = pCfg3536->boot_selected;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest3536>( this, &CTest3536::Boot_Test );
+	}
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_CFG_TEST;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("Config"), lengthof(_T("Config")));
+		info.bSelected = pCfg3536->config_selected;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest3536>( this, &CTest3536::Config_Test );
+	}
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_OSCTRIM_TEST_3536;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("OSCTrim"), lengthof(_T("OSCTrim")));
+		info.bSelected = pCfg3536->osctrim_selected;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest3536>( this, &CTest3536::OSCTrim_Test );
+	}
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_MISC_TEST_3536;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("MISC"), lengthof(_T("MISC")));
+		info.bSelected = pCfg3536->misc_selected;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest3536>( this, &CTest3536::MISC_Test );
+	}
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_PROJECT_CODE;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("Project"), lengthof(_T("Project")));
+		info.bSelected = platform_required_sel;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest3536>( this, &CTest3536::ProjectCode_Test );
+	}
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_BASE_TEST_3536;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("RawData"), lengthof(_T("RawData")));
+		info.bSelected = pCfg3536->rawdata_selected;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest3536>( this, &CTest3536::RawData_Test );
+	}
+	
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_RESET_TEST;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("Reset"), lengthof(_T("Reset")));
+		info.bSelected = pCfg3536->reset_selected;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest3536>( this, &CTest3536::Reset_Test );
+	}
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_INT_TEST;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("INT"), lengthof(_T("INT")));
+		info.bSelected = pCfg3536->int_selected;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest3536>( this, &CTest3536::INT_Test );
+	}
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_CURRENT_TEST;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("Current"), lengthof(_T("Current")));
+		info.bSelected = pCfg3536->current_selected;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest3536>( this, &CTest3536::Current_Test );
+	}
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_IOVOL_TEST_3536;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("IoVotage"), lengthof(_T("IoVotage")));
+		info.bSelected = pCfg3536->iovol_selected;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest3536>( this, &CTest3536::IOVoltage_Test );
+	}
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_NOISE_TEST_3536;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("Noise"), lengthof(_T("Noise")));
+		info.bSelected = pCfg3536->noise_selected;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest3536>( this, &CTest3536::Noise_Test );
+	}
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_OS_TEST_3536;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("OS"), lengthof(_T("OS")));
+		info.bSelected = pCfg3536->os_selected;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest3536>( this, &CTest3536::OS_Test );
+	}
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_FSD_TEST_3536;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("FSD"), lengthof(_T("FSD")));
+		info.bSelected = pCfg3536->fsd.fsdT.fsd_selected;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest3536>( this, &CTest3536::FSD_Test );
+	}
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_FSDBK_TEST_3536;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("FSDBK"), lengthof(_T("FSDBK")));
+		info.bSelected = pCfg3536->fsd.fsdB.fsd_selected;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest3536>( this, &CTest3536::FSDBK_Test );
+	}
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_BUTTON_TEST;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("Button"), lengthof(_T("Button")));
+		info.bSelected = pCfg3536->button_selected;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest3536>( this, &CTest3536::Graph_Test );
+	}
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_LINEARLY_TEST;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("Linearly"), lengthof(_T("Linearly")));
+		info.bSelected = pCfg3536->LINEARITY_TEST;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest3536>( this, &CTest3536::Graph_Test );
+	}
+
+    {
+        InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+        info.item.ucDevice = m_deviceNo;
+        info.item.testCode = TEST_ITEM_EXP_LINEARLY_TEST;
+        info.item.testResult = ITEM_STA_NONE;
+        copytextto(info.item.testName, _T("ExpLinearly"), lengthof(_T("ExpLinearly")));
+        info.bSelected = pCfg3536->EXP_LINEARITY_TEST;
+        if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest3536>( this, &CTest3536::Graph_Test );
+    }
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_FREE_PAINT_TEST;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("FreePaint"), lengthof(_T("FreePaint")));
+		info.bSelected = pCfg3536->FREEPAINT_TEST;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest3536>( this, &CTest3536::Graph_Test );
+	}
+
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_VP_TEST_3536;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("VP"), lengthof(_T("VP")));
+		info.bSelected = pCfg3536->vp_selected;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest3536>( this, &CTest3536::Vp_Test );
+	}
+
+    //////////////////////////////////////////////////////////////////////////
+	{
+		InternalItemInfo& info = m_arrayItemInfo[indexSel++];
+		info.item.ucDevice = m_deviceNo;
+		info.item.testCode = TEST_ITEM_TP_REMOVE;
+		info.item.testResult = ITEM_STA_NONE;
+		copytextto(info.item.testName, _T("Removing"), lengthof(_T("Removing")));
+		info.bSelected = pCfg3536->way_to_start == START_BY_AUTO || pCfg3536->way_to_start == START_BY_SN;
+		info.jumpIfNG = false;
+		if( !info.funAddr ) info.funAddr = new CRunTimeMethod<CTest3536>( this, &CTest3536::TP_RemoveTest );
+	}
+
+	if( SM_ChipBase(m_deviceNo) )
+	{
+		CtpHalCfg halCfg;
+		halCfg.protocalType = PROTOCAL_IIC;
+		halCfg.speed = pCfg3536->Speed;
+		halCfg.IIC.slaveAddr = pCfg3536->I2cAddr;
+		halCfg.vddVoltage = pCfg3536->vddVotage;
+		halCfg.iovddVotage = pCfg3536->ioVddVotage;
+		halCfg.icType = pCfg3536->IcType;
+		SM_ChipBase(m_deviceNo)->SetCommContext( halCfg );
+	}
+
+	ActionToXmlConfig();
+}
+void CTest3536::ICArrayToSensorMatrix( unsigned short (&dataMappinged)[MAX_SCAP_ROW][MAX_SCAP_COL], unsigned short* const dataToMapping, unsigned int dataCnt, unsigned short maxRows, unsigned short maxCols )
+{
+	memset( dataMappinged, 0, sizeof( dataMappinged ) );
+
+	for( int iRow = 0; iRow < maxRows; iRow++ )
+	{
+		for( int iCol = 0; iCol < maxCols; iCol++ )
+		{
+			int index = (int)iRow * maxCols + iCol;
+			if( index >= (int)dataCnt )   continue;
+
+			int icPosition = pCfg3536->sensor_2_ic_map[index];
+			dataMappinged[iRow][iCol] = dataToMapping[icPosition];
+		}
+	}
+	for( int index = (int)maxRows * maxCols; index < (int)dataCnt; index++ )
+	{
+		int iCol = index - maxRows * maxCols + maxCols;
+		int icPosition = pCfg3536->sensor_2_ic_map[index];
+		dataMappinged[maxRows - 1][iCol] = dataToMapping[icPosition];
+	}
+}
+void CTest3536::ICMatrixToSensorMatrix( unsigned short (&dataMappinged)[MAX_SCAP_ROW][MAX_SCAP_COL],
+	unsigned short mappedRow,
+	unsigned short mappedCol,
+	const unsigned short (&dataToMapping)[MAX_SCAP_ROW][MAX_SCAP_COL],
+	unsigned short mappingRow,
+	unsigned short mappingCol )
+{
+	memset( dataMappinged, 0, sizeof( dataMappinged ) );
+
+	for( int iRow = 0; iRow < mappedRow; iRow++ )
+	{
+		for( int iCol = 0; iCol < mappedCol; iCol++ )
+		{
+			int index = iRow * mappedCol + iCol;
+			if( index >= (int)pCfg3536->real_channel_num )   continue;
+
+			int icPosition = pCfg3536->sensor_2_ic_map[index];
+			int icRow = icPosition / mappingCol;
+			int icCol = icPosition % mappingCol;
+
+			dataMappinged[iRow][iCol] = dataToMapping[icRow][icCol];
+		}
+	}
+}
+void CTest3536::SensorMatrixToIcMatrix( unsigned short (&dataMappinged)[MAX_SCAP_ROW][MAX_SCAP_COL],
+	unsigned short mappedRow,
+	unsigned short mappedCol,
+	const unsigned short (&dataToMapping)[MAX_SCAP_ROW][MAX_SCAP_COL],
+	unsigned short mappingRow,
+	unsigned short mappingCol )
+{
+	memset( dataMappinged, 0, sizeof( dataMappinged ) );
+
+// 	for( int iRow = 0; iRow < mappedRow; iRow++ )
+// 	{
+// 		for( int iCol = 0; iCol < mappedCol; iCol++ )
+// 		{
+// 			int index = iRow * mappedCol + iCol;
+// 		    int sensorPos = pCfg3536->ic_2_sensor_map[index] - 1;
+// 			if( sensorPos >= MAX_SCAP_CHANNEL )
+// 				continue;
+// 			int sensorRow = sensorPos / mappingCol;
+// 			int sensorCol = sensorPos % mappingCol;
+// 
+// 			dataMappinged[iRow][iCol] = dataToMapping[sensorRow][sensorCol];
+// 		}
+// 	}
+
+	for( int iRow = 0; iRow < mappingRow; iRow++ )
+	{
+		for( int iCol = 0; iCol < mappingCol; iCol++ )
+		{
+			int index = iRow * mappingCol + iCol;
+			if( index >= (int)pCfg3536->real_channel_num )   continue;
+
+			int icPosition = pCfg3536->sensor_2_ic_map[index];
+			int icRow = icPosition / mappedCol;
+			int icCol = icPosition % mappedCol;
+
+			dataMappinged[icRow][icCol] = dataToMapping[iRow][iCol];
+		}
+	}
+}
+void CTest3536::VerTriangleCompareDataCalc( short (&iRC)[MAX_SCAP_ROW][MAX_SCAP_COL],double (&dwOut)[MAX_SCAP_ROW][MAX_SCAP_COL] )
+{
+	double data_tt2[MAX_SCAP_ROW][MAX_SCAP_COL];
+	double data_r12[MAX_SCAP_COL], data_r13[MAX_SCAP_COL], data_r14[MAX_SCAP_COL], data_r23[MAX_SCAP_COL], data_r24[MAX_SCAP_COL], data_r34[MAX_SCAP_COL];
+
+	for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+	{
+		for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+		{
+			data_tt2[iRow][iCol] = iRC[iRow][iCol];
+			if( 0 == data_tt2[iRow][iCol] )
+				data_tt2[iRow][iCol] = 1;
+		}
+	}
+
+	for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+	{
+		data_r12[iCol] = data_tt2[0][iCol] / data_tt2[1][iCol];
+		data_r13[iCol] = data_tt2[0][iCol] / data_tt2[2][iCol];
+		data_r14[iCol] = data_tt2[0][iCol] / data_tt2[3][iCol];
+
+		data_r23[iCol] = data_tt2[1][iCol] / data_tt2[2][iCol];
+		data_r24[iCol] = data_tt2[1][iCol] / data_tt2[3][iCol];
+
+		data_r34[iCol] = data_tt2[2][iCol] / data_tt2[3][iCol];
+	}
+
+	memset(dwOut, 0, sizeof(dwOut));
+	for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+	{
+		dwOut[0][iCol] = data_r12[iCol] + data_r13[iCol] + data_r14[iCol];
+		dwOut[1][iCol] = data_r12[iCol] + data_r23[iCol] + data_r24[iCol];
+		dwOut[2][iCol] = data_r13[iCol] + data_r23[iCol] + data_r34[iCol];
+		dwOut[3][iCol] = data_r14[iCol] + data_r24[iCol] + data_r34[iCol];
+	}
+}
+void CTest3536::HorTriangleCompareDataCalc( short (&iRC)[MAX_SCAP_ROW][MAX_SCAP_COL],double (&dwOut)[MAX_SCAP_ROW][MAX_SCAP_COL] )
+{
+	double data_tt2[MAX_SCAP_ROW][MAX_SCAP_COL];
+	double data_r12[MAX_SCAP_COL];
+
+	for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+	{
+		for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+		{
+			data_tt2[iRow][iCol] = iRC[iRow][iCol];
+			if( 0 == data_tt2[iRow][iCol] )
+				data_tt2[iRow][iCol] = 1;
+		}
+	}
+
+	for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+	{
+		data_r12[iCol] = data_tt2[0][iCol] / data_tt2[1][iCol];
+	}
+
+	memset(dwOut, 0, sizeof(dwOut));
+	for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+	{
+		dwOut[0][iCol] = data_r12[iCol];
+	}
+}
+// double CTest3536::GetHarfScreenSortingMean( const unsigned short (&dataCopy)[MAX_SCAP_ROW][MAX_SCAP_COL], unsigned char* pRows, int RowsCnt )
+// {
+// 	double uDeltaHarfMean = 0;
+// 	std::list<short> listHarf; 
+// 
+// 	for( int iRow = 0; iRow < RowsCnt; iRow++ )
+// 	{
+// 		int RealRow = pRows[iRow];
+// 		for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+// 		{
+// 			listHarf.push_back( dataCopy[RealRow][iCol] );
+// 		}
+// 	}
+// 	listHarf.sort();
+// 
+// 	for( int index = 0; index < 4; index++ )
+// 	{
+// 		listHarf.pop_front();
+// 		listHarf.pop_back();
+// 	}
+// 
+// 	for( std::list<short>::iterator it = listHarf.begin(); it != listHarf.end(); it++ )
+// 		uDeltaHarfMean += *it;
+// 
+// 	uDeltaHarfMean /= (int)listHarf.size();
+// 
+// 	return uDeltaHarfMean;
+// }
+bool CTest3536::GetHarfScreenNormalizationFactor( const unsigned short (&fastFSDRaw)[MAX_SCAP_ROW][MAX_SCAP_COL], const unsigned short (&slowFSDRaw)[MAX_SCAP_ROW][MAX_SCAP_COL],
+	                                              const unsigned short (&fastFSDBase)[MAX_SCAP_ROW][MAX_SCAP_COL], const unsigned short (&slowFSDBase)[MAX_SCAP_ROW][MAX_SCAP_COL], 
+												  unsigned char* pRows, int RowsCnt, int cols,
+												  double& dFactorFast, double& dFactorSlow )
+{
+	bool bNormalizationOk = true;
+	int iDrops = (cols * RowsCnt >= 12) ? 4 : ((cols * RowsCnt >= 6) ? 2 : 1);
+	double fastSum = 0, slowSum = 0, fastBase = 0, slowBase = 0;
+
+	std::list<SortPacket> listHarf; 
+	for( int iRow = 0; iRow < RowsCnt; iRow++ )
+	{
+		for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+		{
+			int RealRow = pRows[iRow];
+			double dRatio = ( (double)fastFSDRaw[RealRow][iCol] - 710 ) * 100 / ( fastFSDBase[RealRow][iCol] - 710 );
+			listHarf.push_back( SortPacket( RealRow, iCol, dRatio ) );
+		}
+	}
+
+	listHarf.sort();
+
+	for( int index = 0; index < iDrops; index++ )
+	{
+		listHarf.pop_front();
+		listHarf.pop_back();
+	}
+
+
+	TCHAR szTemp[256] = {0};
+
+	for( std::list<SortPacket>::iterator it = listHarf.begin(); it != listHarf.end(); it++ )
+	{
+		fastSum  += fastFSDRaw[it->dpRow][it->dpCol] - 710;
+		fastBase += fastFSDBase[it->dpRow][it->dpCol] - 710;
+		slowSum  += slowFSDRaw[it->dpRow][it->dpCol] - 710;
+		slowBase += slowFSDBase[it->dpRow][it->dpCol] - 710;
+	}
+
+	if( listHarf.size() > 0 && fastBase > 0 && slowBase > 0 )
+	{
+		dFactorFast = fastBase / fastSum;
+		dFactorSlow = slowBase / slowSum;
+	}
+	else
+	{
+		bNormalizationOk = false;
+		dFactorFast = 1;
+		dFactorSlow = 1;
+	}
+
+	return bNormalizationOk;
+}
+double CTest3536::GetHarfScreenNormalization( short (&dataCopy)[MAX_SCAP_ROW][MAX_SCAP_COL], unsigned char* pRows, int RowsCnt  )
+{
+	double dwDeltaHarfMean = 0;
+	std::list<short> listHarf; 
+
+	for( int iRow = 0; iRow < RowsCnt; iRow++ )
+	{
+		int RealRow = pRows[iRow];
+		for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+		{
+			listHarf.push_back( dataCopy[RealRow][iCol] );
+		}
+	}
+	listHarf.sort();
+
+	if( abs( *listHarf.begin() ) > abs( *listHarf.rbegin() ) )
+	{
+		std::list<short>::reverse_iterator it = listHarf.rbegin();
+		for( int index = 0; index < pCfg3536->harf_va_channel_num / 2; index++ )
+			dwDeltaHarfMean += *it++;
+
+		dwDeltaHarfMean = dwDeltaHarfMean / (pCfg3536->harf_va_channel_num / 2);
+	}
+	else
+	{
+		std::list<short>::iterator it = listHarf.begin();
+
+		for( int index = 0; index < pCfg3536->harf_va_channel_num / 2; index++ )
+			dwDeltaHarfMean += *it++;
+
+		dwDeltaHarfMean = dwDeltaHarfMean / (pCfg3536->harf_va_channel_num / 2);
+	}
+
+	return dwDeltaHarfMean;
+}
+bool CTest3536::FSDPlusCheckMatched( int (&rcDeviation)[MAX_SCAP_ROW][MAX_SCAP_COL] )
+{
+	int ColT1[2] = { 0, pCfg3536->colsCnt - 1 };
+	for( int iter = 0; iter < 2; iter++ )
+	{
+		int iCol = ColT1[iter];
+		for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+		{
+			if( rcDeviation[iRow][iCol] < pCfg3536->fsd.fsdT.fsd_plus_t1 )
+			{
+				return false;
+			}
+		}
+	}
+
+	int ColT2[2] = { 1, pCfg3536->colsCnt - 2 };
+	for( int iter = 0; iter < 2; iter++ )
+	{
+		int iCol = ColT2[iter];
+		for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+		{
+			if( rcDeviation[iRow][iCol] < pCfg3536->fsd.fsdT.fsd_plus_t2 )
+			{
+				return false;
+			}
+		}
+	}
+
+	int ColT3[2] = { pCfg3536->colsCnt / 2 - 1, pCfg3536->colsCnt / 2 + 1 };
+	for( int iter = 0; iter < 2; iter++ )
+	{
+		int iCol = ColT3[iter];
+		for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+		{
+			if( rcDeviation[iRow][iCol] > pCfg3536->fsd.fsdT.fsd_plus_t3 )
+			{
+				return false;
+			}
+		}
+	}
+
+	int ColT4[2] = { pCfg3536->colsCnt / 2 };
+	for( int iter = 0; iter < 1; iter++ )
+	{
+		int iCol = ColT4[iter];
+		for( int iRow = 0; iRow < 4; iRow++ )
+		{
+			if( rcDeviation[iRow][iCol] > pCfg3536->fsd.fsdT.fsd_plus_t4 )
+			{
+				return false;
+			}
+		}
+	}
+
+	int iMiddleCol = pCfg3536->colsCnt / 2;
+	if( abs( (long)rcDeviation[1][iMiddleCol] ) < abs( (long)rcDeviation[0][iMiddleCol] ) ){
+		return false;
+	}
+	if( abs( (long)rcDeviation[2][iMiddleCol] ) < abs( (long)rcDeviation[3][iMiddleCol] ) ){
+		return false;
+	}
+
+	return true;
+}
+unsigned int CTest3536::FSD_Test( NativeTestItem& itemQuote )
+{
+	TEST_ITEM_STATUS itemStatus = (TEST_ITEM_STATUS)FSD_TestEx( itemQuote, 1 );
+
+	if( itemStatus == ITEM_STA_FAIL && !GetSimulateGate() )
+	{
+		itemStatus = (TEST_ITEM_STATUS)FSD_TestEx( itemQuote, 4 );
+	}
+
+	return itemStatus;
+}
+unsigned int CTest3536::FSD_TestEx( NativeTestItem& itemQuote, unsigned char testCnt )
+{
+	bool bMarkAsTBD = false;
+	BOOL bDeviationFail = FALSE;
+	unsigned int iReCode = ERROR_CODE_OK, failerCount = 0;
+	ItemNotifyer itemNotify( m_pNativeIntr, itemQuote );
+
+	const unsigned char clkCnt = testCnt;
+	unsigned short fsdTempBuffer[MAX_SCAP_BUFFER_CNT] = {0};
+	unsigned short fastFSDRaw[MAX_SCAP_ROW][MAX_SCAP_COL] = {0}, slowFSDRaw[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+
+    short fbTempBuffer1[100] = {0};
+	short fbTempBuffer2[100] = {0};
+	short fbTempBufferDelta[100] = {0};
+	short fbData[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+
+	short fsdData[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+	short deltaFSD[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+
+	unsigned char failed_channel[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+	memset( failed_channel, 0, sizeof(failed_channel) );
+
+	TestResultInfo( _T("\r\n------------------------------FSD Test------------------------------\r\n") );
+	
+	ISMChip3536* iChip3536 = (ISMChip3536*)SM_ChipBase(m_deviceNo);
+	if( NULL == iChip3536 )         return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+	iReCode = iChip3536->GetFSDFastData( pCfg3536->fsd.fsdT.f_clk, pCfg3536->fsd.fsdT.integral, fsdTempBuffer, MAX_SCAP_BUFFER_CNT * sizeof(unsigned short), clkCnt );
+	if( ERROR_CODE_OK != iReCode )  return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	ICArrayToSensorMatrix( fastFSDRaw, fsdTempBuffer, pCfg3536->va_channel_num, pCfg3536->rowsCnt, pCfg3536->colsCnt );
+
+	iReCode = iChip3536->GetFSDSlowData( pCfg3536->fsd.fsdT.s_clk, pCfg3536->fsd.fsdT.integral, fsdTempBuffer, MAX_SCAP_BUFFER_CNT * sizeof(unsigned short), clkCnt );
+	if( ERROR_CODE_OK != iReCode )  return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	ICArrayToSensorMatrix( slowFSDRaw, fsdTempBuffer, pCfg3536->va_channel_num, pCfg3536->rowsCnt, pCfg3536->colsCnt );
+
+	if( pCfg3536->fsd.fsdT.fb_check && !GetSimulateGate() )
+	{
+		iReCode = iChip3536->GetVirtualTouchData( 0x3202, 0x2257, 0x1f07, (unsigned short*)fbTempBuffer1, (unsigned short*)fbTempBuffer2, (pCfg3536->rowsCnt) * pCfg3536->colsCnt * 2 );
+		if( ERROR_CODE_OK != iReCode )  return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+		for( int index = 0; index < pCfg3536->rowsCnt * pCfg3536->colsCnt; index++ )
+			fbTempBufferDelta[index] = fbTempBuffer1[index] - fbTempBuffer2[index];
+	}
+// 	//////////////////////////////////////////////////////////////////////////
+// 	unsigned short tempBufferF[MAX_SCAP_BUFFER_CNT] = {
+// 		1561,1552,1568,1597,1605,1631,1607,	
+// 		1535,1560,1560,1575,1603,1616,1656,	
+// 		1870,1902,1925,1911,2004,1971,1805,	
+// 		1747,1892,1916,1943,1961,1993,1974,
+// 	};
+// 	ReShappingData( fastFSDRaw, tempBufferF, (unsigned int)pCfg3536->va_channel_num, pCfg3536->rowsCnt, pCfg3536->colsCnt );
+// 	unsigned short tempBufferS[MAX_SCAP_BUFFER_CNT] = {
+// 		1582,1573,1590,1622,1627,1654,1629,	
+// 		1557,1582,1581,1596,1625,1639,1682,	
+// 		1897,1933,1955,1941,2035,2003,1831,	
+// 		1774,1922,1949,1973,1993,2024,2007,
+// 	};
+// 	ReShappingData( slowFSDRaw, tempBufferS, (unsigned int)pCfg3536->va_channel_num, pCfg3536->rowsCnt, pCfg3536->colsCnt );
+// 	clkCnt = 1;
+// 	//////////////////////////////////////////////////////////////////////////
+	int offset = 1338;
+	int offset_t = 2048 - offset;
+
+	unsigned char RowsUp[MAX_SCAP_ROW] = {0};
+	unsigned char RowsDn[MAX_SCAP_ROW] = {0};
+	for( int iRow = 0; iRow < pCfg3536->rowsCnt / 2; iRow++ )
+	{
+		RowsUp[iRow] = iRow;
+		RowsDn[iRow] = iRow + pCfg3536->rowsCnt / 2;
+	}
+
+	//double dwFastMeanUp = 0, dwFastMeanDown = 0, dwFastBaseUp = 0, dwFastBaseDown = 0;
+	//double dwSlowMeanUp = 0, dwSlowMeanDown = 0, dwSlowBaseUp = 0, dwSlowBaseDown = 0;
+	double dwFastEfficientUp = 0, dwFastEfficientDn = 0, dwSlowEfficientUp = 0, dwSlowEfficientDn = 0;
+	unsigned short fastFSDRawCopy[MAX_SCAP_ROW][MAX_SCAP_COL] = {0}, slowFSDRawCopy[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+
+	for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+	{
+		for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+		{
+			fastFSDRaw[iRow][iCol] /= clkCnt;
+			slowFSDRaw[iRow][iCol] /= clkCnt;
+		}
+	}
+
+	memcpy_s( fastFSDRawCopy, sizeof(fastFSDRawCopy), fastFSDRaw, sizeof(fastFSDRaw) );
+	memcpy_s( slowFSDRawCopy, sizeof(slowFSDRawCopy), slowFSDRaw, sizeof(slowFSDRaw) );
+
+	//dwFastMeanUp   = GetHarfScreenSortingMean( fastFSDRawCopy, RowsUp, pCfg3536->rowsCnt / 2, pCfg3536->colsCnt ) - offset_t;
+	//dwFastMeanDown = GetHarfScreenSortingMean( fastFSDRawCopy, RowsDn, pCfg3536->rowsCnt / 2, pCfg3536->colsCnt ) - offset_t;
+	//dwFastBaseUp   = GetHarfScreenSortingMean( pCfg3536->fsd_fast, RowsUp, pCfg3536->rowsCnt / 2, pCfg3536->colsCnt ) - offset_t;
+	//dwFastBaseDown = GetHarfScreenSortingMean( pCfg3536->fsd_fast, RowsDn, pCfg3536->rowsCnt / 2, pCfg3536->colsCnt ) - offset_t;
+
+	//dwSlowMeanUp   = GetHarfScreenSortingMean( slowFSDRawCopy, RowsUp, pCfg3536->rowsCnt / 2, pCfg3536->colsCnt ) - offset_t;
+	//dwSlowMeanDown = GetHarfScreenSortingMean( slowFSDRawCopy, RowsDn, pCfg3536->rowsCnt / 2, pCfg3536->colsCnt ) - offset_t;
+	//dwSlowBaseUp   = GetHarfScreenSortingMean( pCfg3536->fsd_slow, RowsUp, pCfg3536->rowsCnt / 2, pCfg3536->colsCnt ) - offset_t;
+	//dwSlowBaseDown = GetHarfScreenSortingMean( pCfg3536->fsd_slow, RowsDn, pCfg3536->rowsCnt / 2, pCfg3536->colsCnt ) - offset_t;
+
+	//double dwFastEfficientUp = dwFastBaseUp / (dwFastMeanUp ? dwFastMeanUp : 1);
+	//double dwFastEfficientDn = dwFastBaseDown / (dwFastMeanDown ? dwFastMeanDown : 1);
+	//double dwSlowEfficientUp = dwSlowBaseUp / (dwSlowMeanUp ? dwSlowMeanUp : 1);
+	//double dwSlowEfficientDn = dwSlowBaseDown / (dwSlowMeanDown ? dwSlowMeanDown : 1);
+
+	GetHarfScreenNormalizationFactor( fastFSDRawCopy, slowFSDRawCopy, pCfg3536->fsd.fsd_fast, pCfg3536->fsd.fsd_slow, RowsUp, pCfg3536->rowsCnt / 2, pCfg3536->colsCnt, dwFastEfficientUp, dwSlowEfficientUp );
+	GetHarfScreenNormalizationFactor( fastFSDRawCopy, slowFSDRawCopy, pCfg3536->fsd.fsd_fast, pCfg3536->fsd.fsd_slow, RowsDn, pCfg3536->rowsCnt / 2, pCfg3536->colsCnt, dwFastEfficientDn, dwSlowEfficientDn );
+
+	for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+	{
+		for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+		{
+			double dwFastEfficient = iRow >= pCfg3536->rowsCnt / 2 ? dwFastEfficientDn : dwFastEfficientUp;
+			double dwSlowEfficinet = iRow >= pCfg3536->rowsCnt / 2 ? dwSlowEfficientDn : dwSlowEfficientUp; 
+
+			fastFSDRawCopy[iRow][iCol] = (unsigned short)( ( fastFSDRawCopy[iRow][iCol] - offset_t ) * dwFastEfficient ) + offset_t;
+			slowFSDRawCopy[iRow][iCol] = (unsigned short)( ( slowFSDRawCopy[iRow][iCol] - offset_t ) * dwSlowEfficinet ) + offset_t;
+			fsdData[iRow][iCol] = slowFSDRawCopy[iRow][iCol] - fastFSDRawCopy[iRow][iCol];
+			deltaFSD[iRow][iCol] = fsdData[iRow][iCol] - pCfg3536->fsd.fsd_base[iRow][iCol];
+		}
+	}
+
+// 	{
+// 		AnalyzeInfo info( pCfg3536->rowsCnt, pCfg3536->colsCnt );
+// 		PrintMaxtrixValue( m_ColorText, fastFSDRawCopy, pCfg3536->invalid_node, info, _T("\r\nFast Nor Data:\r\n") );
+// 	}
+// 
+// 	{
+// 		AnalyzeInfo info( pCfg3536->rowsCnt, pCfg3536->colsCnt );
+// 		PrintMaxtrixValue( m_ColorText, slowFSDRawCopy, pCfg3536->invalid_node, info, _T("\r\nSlow Nor Data:\r\n") );
+// 	}
+
+	/********************************************************************************************/
+	/*backup test result data*/
+	memcpy_s( m_stOneRecord.Scap.fsd_test_buff, sizeof(m_stOneRecord.Scap.fsd_test_buff), fsdData, sizeof(fsdData) );
+	memcpy_s( m_stOneRecord.Scap.fsd_fast_buff, sizeof(m_stOneRecord.Scap.fsd_fast_buff), fastFSDRaw, sizeof(fastFSDRaw) );
+	memcpy_s( m_stOneRecord.Scap.fsd_slow_buff, sizeof(m_stOneRecord.Scap.fsd_slow_buff), slowFSDRaw, sizeof(slowFSDRaw) );
+	/********************************************************************************************/
+
+	{
+		AnalyzeInfo info( pCfg3536->rowsCnt, pCfg3536->colsCnt );
+		PrintMaxtrixValue( m_ColorText, slowFSDRaw, pCfg3536->invalid_node, info, _T("\r\nSlow CLK RawData:\r\n") );
+	}
+	{
+		AnalyzeInfo info( pCfg3536->rowsCnt, pCfg3536->colsCnt );
+		PrintMaxtrixValue( m_ColorText, fastFSDRaw, pCfg3536->invalid_node, info, _T("\r\nFast CLK RawData:\r\n") );
+	}
+	{
+		AnalyzeInfo info( pCfg3536->rowsCnt, pCfg3536->colsCnt );
+		unsigned char dataFailChannel[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+		memset( dataFailChannel, 0, sizeof(dataFailChannel) );
+		for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+		{
+			for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+			{
+				if( ( fsdData[iRow][iCol] < pCfg3536->fsd.fsdT.fsd_min ) 
+					/*&& ( abs(fastFSDRaw[iRow][iCol] - 2048) < 20 )*/ 
+					/*&& ( abs(slowFSDRaw[iRow][iCol] - 2048) < 20 )*/ )
+				{
+					failerCount++;
+					bDeviationFail = TRUE;	
+					dataFailChannel[iRow][iCol] = 1;
+				}
+			}
+		}
+
+		PrintMaxtrixValue( m_ColorText, fsdData, dataFailChannel, pCfg3536->invalid_node, info, _T("\r\nFSD Data:\r\n") );
+	}
+
+	//case 0
+	if(pCfg3536->fsd.fsdT.scale_check)
+	{
+		if( dwFastEfficientUp <= 0.5 || dwFastEfficientUp >= 1.5 )
+		{
+			failerCount++;
+			bDeviationFail = TRUE;	
+		}
+		if( dwFastEfficientDn <= 0.5 || dwFastEfficientDn >= 1.5 )
+		{
+			failerCount++;
+			bDeviationFail = TRUE;
+		}
+		if( dwSlowEfficientUp <= 0.5 || dwSlowEfficientUp >= 1.5 )
+		{
+			failerCount++;
+			bDeviationFail = TRUE;
+		}
+		if( dwSlowEfficientDn <= 0.5 || dwSlowEfficientDn >= 1.5 )
+		{
+			failerCount++;
+			bDeviationFail = TRUE;
+		}
+		if( failerCount )
+		{
+			TCHAR chTemp[256] = {0};
+			transformat( chTemp, _T("\r\nfast coefficient up = %.3f, fast coefficient dn = %.3f, slow coefficient up = %.3f, slow coefficient dn = %.3f\r\n"), 
+				dwFastEfficientUp, dwFastEfficientDn, dwSlowEfficientUp, dwSlowEfficientDn );
+			ColorText text( chTemp, RGB( 255, 0, 0 ), TEXT_SIZE_SMALL, false );
+			TestResultInfo( text );
+		}
+	}
+
+	//case 1
+	short slowRc[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+	short fastRc[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+
+	for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+	{
+		for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+		{
+			slowRc[iRow][iCol] = slowFSDRawCopy[iRow][iCol] - offset_t;
+			if( 0 == slowRc[iRow][iCol] ) slowRc[iRow][iCol] = 1;
+
+			fastRc[iRow][iCol] = fastFSDRawCopy[iRow][iCol] - offset_t;
+			if( 0 == fastRc[iRow][iCol] ) fastRc[iRow][iCol] = 1;
+		}
+	}
+
+	
+	short fsdDataCopy1[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+	double data_r[MAX_SCAP_ROW][MAX_SCAP_COL], data_t_r[MAX_SCAP_ROW][MAX_SCAP_COL];
+
+	memcpy_s( fsdDataCopy1, sizeof(fsdDataCopy1), fsdData, sizeof(fsdData) );
+	for( int iCol = 0; /*pCfg3536->bVerticalTriangle &&*/ iCol < pCfg3536->colsCnt; iCol++ )
+	{
+		short baseDel = 0;
+		baseDel = pCfg3536->fsd.fsd_base[0 + 1][iCol] - pCfg3536->fsd.fsd_base[0][iCol];
+		fsdDataCopy1[0][iCol] += baseDel;
+
+		baseDel = pCfg3536->fsd.fsd_base[pCfg3536->rowsCnt - 2][iCol] - pCfg3536->fsd.fsd_base[pCfg3536->rowsCnt -1][iCol];
+		fsdDataCopy1[pCfg3536->rowsCnt -1][iCol] += baseDel;
+	}
+
+	if( pCfg3536->bVerticalTriangle )
+	{
+		VerTriangleCompareDataCalc( slowRc, data_r );
+		VerTriangleCompareDataCalc( fsdDataCopy1, data_t_r );
+	}
+	else
+	{
+		HorTriangleCompareDataCalc( slowRc, data_r );
+		HorTriangleCompareDataCalc( fsdDataCopy1, data_t_r );
+	}
+
+	int datar_r_cmp[MAX_SCAP_ROW][MAX_SCAP_COL];
+	double nbChannelCoef[MAX_SCAP_ROW][MAX_SCAP_COL];
+	for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow += 2 )
+	{
+		for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+		{
+			int iUpDownDev = abs( fsdDataCopy1[iRow][iCol] - fsdDataCopy1[iRow + 1][iCol] );
+			iUpDownDev = iUpDownDev ? iUpDownDev : 1;
+			nbChannelCoef[iRow][iCol] = ((double)iUpDownDev) * 2 / 10;
+
+			if(iCol == 0 || iCol == (pCfg3536->colsCnt - 1))
+			{
+				nbChannelCoef[iRow][iCol] /= 3;
+			}
+			nbChannelCoef[iRow + 1][iCol] = nbChannelCoef[iRow][iCol];
+		}
+	}
+
+	for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+	{
+		for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+		{
+			datar_r_cmp[iRow][iCol] = (int)( 1000 * ( data_r[iRow][iCol] / data_t_r[iRow][iCol] - 1 ) * nbChannelCoef[iRow][iCol] );
+		}
+	}
+
+	{
+		NodeVal nodeOutRange;
+		ColorText textTemp( _T("\r\nFSD CMP:\r\n") );
+		AnalyzeInfo info( pCfg3536->bVerticalTriangle ? pCfg3536->rowsCnt : 1, pCfg3536->colsCnt );
+		int cmp_min[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+		int cmp_max[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+		FillMatrixUseValue( cmp_min, -(int)(3 * pCfg3536->fsd.fsdT.cmp_max) );
+		FillMatrixUseValue( cmp_max, (int)pCfg3536->fsd.fsdT.cmp_max );
+
+		bool bResult = AnalyzeTestResult( datar_r_cmp, cmp_min, cmp_max, pCfg3536->invalid_node, info, textTemp, nodeOutRange );
+		TestResultInfo( textTemp );
+		if( !bResult )
+		{
+			LPCTSTR strHead = _T("\r\n//========= Out of Threshold in FSD CMP: \r\n");
+			PrintNodeValue( m_ColorText, &nodeOutRange, strHead );
+			MarkNodeToMatrix( &nodeOutRange, failed_channel );
+			failerCount++;
+		}
+	}
+
+	//case 2
+	double dwDeltaUpMean = 0, dwDeltaDownMean = 0;
+	short fsdDeltaCopy2[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+	memcpy_s( fsdDeltaCopy2, sizeof(fsdDeltaCopy2), deltaFSD, sizeof(deltaFSD) );
+
+	//dwDeltaUpMean = ( Sum( fsdDeltaCopy[0], pCfg3536->colsCnt ) + Sum( fsdDeltaCopy[1], pCfg3536->colsCnt ) ) / pCfg3536->harf_va_channel_num;
+	//dwDeltaDownMean =( Sum( fsdDeltaCopy[2], pCfg3536->colsCnt ) + Sum( fsdDeltaCopy[3], pCfg3536->colsCnt ) ) / pCfg3536->harf_va_channel_num;
+
+	dwDeltaUpMean = GetHarfScreenNormalization( fsdDeltaCopy2, RowsUp, pCfg3536->rowsCnt / 2 );
+	dwDeltaDownMean = GetHarfScreenNormalization( fsdDeltaCopy2, RowsDn, pCfg3536->rowsCnt / 2 );
+
+	for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+	{
+		for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+		{
+			int fsdDeltaFixed = 0;
+			if( iRow < pCfg3536->rowsCnt / 2 )
+				fsdDeltaFixed = fsdDeltaCopy2[iRow][iCol] - (int)dwDeltaUpMean;
+			else
+				fsdDeltaFixed = fsdDeltaCopy2[iRow][iCol] - (int)dwDeltaDownMean;
+
+			fsdDeltaCopy2[iRow][iCol] = abs( fsdDeltaFixed );
+		}
+	}
+
+	{
+		NodeVal nodeOutRange;
+		ColorText textTemp( _T("\r\nFSD Delta:\r\n") );
+		AnalyzeInfo info( pCfg3536->rowsCnt, pCfg3536->colsCnt );
+		int delta_min[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+		FillMatrixUseValue( delta_min, 0 );
+
+		bool bResult = AnalyzeTestResult( fsdDeltaCopy2, delta_min, pCfg3536->fsd.fsd_delta_max, pCfg3536->invalid_node, info, textTemp, nodeOutRange );
+		TestResultInfo( textTemp );
+		if( !bResult )
+		{
+			LPCTSTR strHead = _T("\r\n//========= Out of Threshold in FSD Delta: \r\n");
+			PrintNodeValue( m_ColorText, &nodeOutRange, strHead );
+			MarkNodeToMatrix( &nodeOutRange, failed_channel );
+			failerCount++;
+		}
+	}
+
+	//case 3
+	//normalization
+	short fsdDataCopy3[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+	memcpy_s( fsdDataCopy3, sizeof(fsdDataCopy3), fsdData, sizeof(fsdData) );
+	for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+	{
+		{
+			int iCol = 0;
+			double dwNormalization = (double)pCfg3536->fsd.fsd_base[iRow][iCol+1] / ( (pCfg3536->fsd.fsd_base[iRow][iCol] == 0) ? 0.001 : pCfg3536->fsd.fsd_base[iRow][iCol] );
+			fsdDataCopy3[iRow][iCol] =  (short)( dwNormalization * fsdDataCopy3[iRow][iCol] );
+		}
+		{
+			int iCol = pCfg3536->colsCnt - 1;
+			double dwNormalization = (double)pCfg3536->fsd.fsd_base[iRow][iCol-1] / ( (pCfg3536->fsd.fsd_base[iRow][iCol] == 0) ? 0.001 : pCfg3536->fsd.fsd_base[iRow][iCol] );
+			fsdDataCopy3[iRow][iCol] = (short)( dwNormalization * fsdDataCopy3[iRow][iCol] );
+		}
+	}
+	{
+		AnalyzeInfo info( pCfg3536->rowsCnt, pCfg3536->colsCnt );
+		PrintMaxtrixValue( m_ColorText, fsdDataCopy3, pCfg3536->invalid_node, info, _T("\r\nNormalization:\r\n") );
+	}
+
+	{
+		NodeVal nodeOutRange;
+		ColorText textTemp( _T("\r\nFSD Delta Uniformity Left:\r\n") );
+		AnalyzeInfo info( pCfg3536->rowsCnt, pCfg3536->colsCnt );
+		int pannel_left_min[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+		int pannel_left_val[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+		unsigned char invalidTemp[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+		CopyAndInvalid( invalidTemp, pCfg3536->invalid_node, MAX_SCAP_ROW,  0 );
+		for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+		{
+			for( int iCol = 1; iCol < pCfg3536->colsCnt; iCol++ )
+			{
+				pannel_left_val[iRow][iCol] = abs( fsdDataCopy3[iRow][iCol] - fsdDataCopy3[iRow][iCol - 1] );
+			}
+		}
+
+		bool bResult = AnalyzeTestResult( pannel_left_val, pannel_left_min, pCfg3536->fsd.fsd_uniformity_left, invalidTemp, info, textTemp, nodeOutRange );
+		TestResultInfo( textTemp );
+		if( !bResult )
+		{
+			LPCTSTR strHead = _T("\r\n//========= Out of Threshold in FSD Delta Uniformity Left: \r\n");
+			PrintNodeValue( m_ColorText, &nodeOutRange, strHead );
+			MarkNodeToMatrix( &nodeOutRange, failed_channel );
+			failerCount++;
+		}
+	}
+
+	{
+		NodeVal nodeOutRange;
+		ColorText textTemp( _T("\r\nFSD Delta Uniformity Right:\r\n") );
+		AnalyzeInfo info( pCfg3536->rowsCnt, pCfg3536->colsCnt );
+		int pannel_right_min[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+		int pannel_right_val[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+		unsigned char invalidTemp[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+		CopyAndInvalid( invalidTemp, pCfg3536->invalid_node, MAX_SCAP_ROW, pCfg3536->colsCnt - 1 );
+		for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+		{
+			for( int iCol = 0; iCol < pCfg3536->colsCnt - 1; iCol++ )
+			{
+				pannel_right_val[iRow][iCol] = abs( fsdDataCopy3[iRow][iCol]- fsdDataCopy3[iRow][iCol + 1] );
+			}
+		}
+
+		bool bResult = AnalyzeTestResult( pannel_right_val, pannel_right_min, pCfg3536->fsd.fsd_uniformity_right, invalidTemp, info, textTemp, nodeOutRange );
+		TestResultInfo( textTemp );
+		if( !bResult )
+		{
+			LPCTSTR strHead = _T("\r\n//========= Out of Threshold in FSD Delta Uniformity Right: \r\n");
+			PrintNodeValue( m_ColorText, &nodeOutRange, strHead );
+			MarkNodeToMatrix( &nodeOutRange, failed_channel );
+			failerCount++;
+		}
+	}
+
+	//case 4
+	int rcSlowDeviation[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+	{
+		/*unsigned*/ short baseSlowRc[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+		for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+		{
+			for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+			{
+				baseSlowRc[iRow][iCol] = pCfg3536->fsd.fsd_slow[iRow][iCol] - offset_t;
+				if( 0 == baseSlowRc[iRow][iCol] ) baseSlowRc[iRow][iCol] = 1;
+
+				rcSlowDeviation[iRow][iCol] = baseSlowRc[iRow][iCol] - slowRc[iRow][iCol];
+			}
+		}
+
+		double dwMeanUp = 0, dwMeanDown = 0;
+		dwMeanUp = GetHarfScreenSortingMean( rcSlowDeviation, RowsUp, pCfg3536->rowsCnt / 2, pCfg3536->colsCnt );
+		dwMeanDown = GetHarfScreenSortingMean( rcSlowDeviation, RowsDn, pCfg3536->rowsCnt / 2, pCfg3536->colsCnt );
+// 		if( pCfg3536->bVerticalTriangle )
+// 		{
+// // 			for( int iRow = 0; iRow < pCfg3536->rowsCnt / 2; iRow++ )
+// // 			{
+// // 				dwMeanUp += Sum( rcSlowDeviation[iRow], pCfg3536->colsCnt );
+// // 				dwMeanDown = Sum( rcSlowDeviation[iRow + pCfg3536->rowsCnt / 2], pCfg3536->colsCnt );
+// // 			}
+// // 			dwMeanUp /= pCfg3536->harf_va_channel_num;
+// // 			dwMeanDown /= pCfg3536->harf_va_channel_num;
+// 		}
+// 		else
+// 		{
+// // 			for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+// // 				dwMeanUp += Sum( rcSlowDeviation[iRow], pCfg3536->colsCnt );
+// // 
+// // 			dwMeanDown = dwMeanUp = dwMeanUp / pCfg3536->va_channel_num;
+// 		}
+		
+		for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+		{
+			for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+			{
+				if( iRow < pCfg3536->rowsCnt / 2 )
+					rcSlowDeviation[iRow][iCol] = rcSlowDeviation[iRow][iCol] - (int)dwMeanUp;
+				else 
+					rcSlowDeviation[iRow][iCol] = rcSlowDeviation[iRow][iCol] - (int)dwMeanDown;
+
+				rcSlowDeviation[iRow][iCol] = 1000 * rcSlowDeviation[iRow][iCol] / baseSlowRc[iRow][iCol]; 
+			}
+		}
+		NodeVal nodeOutRange;
+		ColorText textTemp( _T("\r\nFSD Deviation:\r\n") );
+		AnalyzeInfo info( pCfg3536->rowsCnt, pCfg3536->colsCnt );
+		int deviation_min[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+		for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+		{
+			for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+			{
+				deviation_min[iRow][iCol] = (-3) * pCfg3536->fsd.fsd_deviation[iRow][iCol];
+			}
+		}
+		bool bResult = AnalyzeTestResult( rcSlowDeviation, deviation_min, pCfg3536->fsd.fsd_deviation, pCfg3536->invalid_node, info, textTemp, nodeOutRange );
+		TestResultInfo( textTemp );
+		if( !bResult )
+		{
+			LPCTSTR strHead = _T("\r\n//========= Out of Threshold in FSD Deviation Test: \r\n");
+			PrintNodeValue( m_ColorText, &nodeOutRange, strHead );
+			MarkNodeToMatrix( &nodeOutRange, failed_channel );
+			failerCount++;
+			bDeviationFail = TRUE;
+		}
+	}
+
+	//case 5
+	int rcFastDeviation[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+	{
+		/*unsigned*/ short baseFastRc[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+		for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+		{
+			for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+			{
+				baseFastRc[iRow][iCol] = pCfg3536->fsd.fsd_fast[iRow][iCol] - offset_t;
+				if( 0 == baseFastRc[iRow][iCol] ) baseFastRc[iRow][iCol] = 1;
+
+				rcFastDeviation[iRow][iCol] = baseFastRc[iRow][iCol] - fastRc[iRow][iCol];
+			}
+		}
+		double dwMeanUp = 0, dwMeanDown = 0;
+		dwMeanUp = GetHarfScreenSortingMean( rcFastDeviation, RowsUp, pCfg3536->rowsCnt / 2, pCfg3536->colsCnt );
+		dwMeanDown = GetHarfScreenSortingMean( rcFastDeviation, RowsDn, pCfg3536->rowsCnt / 2, pCfg3536->colsCnt );
+		//dwMeanUp = (double)( Sum( rcFastDeviation[0], pCfg3536->colsCnt ) + Sum( rcFastDeviation[1], pCfg3536->colsCnt ) ) / pCfg3536->harf_va_channel_num;
+		//dwMeanDown = (double)( Sum( rcFastDeviation[2], pCfg3536->colsCnt ) + Sum( rcFastDeviation[3], pCfg3536->colsCnt ) ) / pCfg3536->harf_va_channel_num;
+		for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+		{
+			for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+			{
+				if( iRow < pCfg3536->rowsCnt / 2 )
+					rcFastDeviation[iRow][iCol] = rcFastDeviation[iRow][iCol] - (int)dwMeanUp;
+				else 
+					rcFastDeviation[iRow][iCol] = rcFastDeviation[iRow][iCol] - (int)dwMeanDown;
+
+				rcFastDeviation[iRow][iCol] = 1000 * rcFastDeviation[iRow][iCol] / baseFastRc[iRow][iCol]; 
+			}
+		}
+	}
+
+	{
+		AnalyzeInfo info( pCfg3536->rowsCnt, pCfg3536->colsCnt );
+		PrintMaxtrixValue( m_ColorText, rcFastDeviation, pCfg3536->invalid_node, info, _T("\r\nFast Deviation:\r\n") );
+	}
+
+	//case 6  打补丁放水
+	if( !bDeviationFail && failerCount > 0 )
+	{
+		for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+		{
+			for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+			{
+				//int index = iRow * pCfg3536->colsCnt + iCol;
+				int asbDeltaFSD = fsdDeltaCopy2[iRow][iCol];
+				if( (asbDeltaFSD >= pCfg3536->fsd.fsdT.fsd_triger_min)
+					&& (asbDeltaFSD <= pCfg3536->fsd.fsdT.fsd_triger_max)
+					&& (rcSlowDeviation[iRow][iCol] >= pCfg3536->fsd.fsdT.fsd_critical_slow_min)
+					&& (rcSlowDeviation[iRow][iCol] <= pCfg3536->fsd.fsdT.fsd_critical_slow_max) 
+					&& (rcFastDeviation[iRow][iCol] <= pCfg3536->fsd.fsdT.fsd_critical_fast_max) )
+				{
+					failed_channel[iRow][iCol] = 0;
+					for( int iRow2 = 0; iRow2 < pCfg3536->rowsCnt; iRow2++ )
+					{
+						if( abs( fsdDeltaCopy2[iRow2][iCol] ) < pCfg3536->fsd.fsdT.fsd_besides_min )
+							failed_channel[iRow2][iCol] = 0;
+					}
+					int iLeft  =  iCol == 0 ? 0 : iCol - 1;
+					int iRight = iCol == (pCfg3536->colsCnt - 1) ?  (pCfg3536->colsCnt - 1) : iCol + 1;
+					if( abs( (long)fsdDeltaCopy2[iRow * pCfg3536->colsCnt + iLeft] ) < pCfg3536->fsd.fsdT.fsd_besides_min )
+					{
+						failed_channel[iRow][iLeft] = 0;
+					}
+					if( abs( (long)fsdDeltaCopy2[iRow * pCfg3536->colsCnt + iRight] ) < pCfg3536->fsd.fsdT.fsd_besides_min )
+					{
+						failed_channel[iRow][iRight] = 0;
+					}
+				}
+			}
+		}
+
+		failerCount = Sum( failed_channel[0], pCfg3536->colsCnt ) + Sum( failed_channel[1], pCfg3536->colsCnt ) + Sum( failed_channel[2], pCfg3536->colsCnt ) + Sum( failed_channel[3], pCfg3536->colsCnt );
+		if( failerCount > 0 )
+		{
+
+		}
+		else
+		{
+			bMarkAsTBD = pCfg3536->fsd.fsdT.fsd_recheck ? false : true;
+		}
+	}
+	
+	//cast 7  
+	if( !failerCount && pCfg3536->fsd.fsdT.fsd_plus_check )
+	{
+		bool plus_feature_match = FSDPlusCheckMatched( rcSlowDeviation );
+		if( plus_feature_match )
+		{
+			failerCount++;
+			for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+			{
+				failed_channel[iRow][0] = 1;
+				failed_channel[iRow][pCfg3536->colsCnt - 1] = 1;
+				failed_channel[iRow][1] = 1;
+				failed_channel[iRow][pCfg3536->colsCnt - 2] = 1;
+				failed_channel[iRow][pCfg3536->colsCnt / 2] = 1;
+			}
+		}
+	}
+
+	//case 8
+	if( pCfg3536->fsd.fsdT.fb_check && !GetSimulateGate() )
+	{
+		AnalyzeInfo info( pCfg3536->rowsCnt, pCfg3536->colsCnt );
+		ReShappingData<short>( fbData, fbTempBuffer1, pCfg3536->va_channel_num, pCfg3536->rowsCnt, pCfg3536->colsCnt );
+		PrintMaxtrixValue( m_ColorText, fbData, pCfg3536->invalid_node, info, _T("\r\nFB RawData1:\r\n") );
+		ReShappingData<short>( fbData, fbTempBuffer2, pCfg3536->va_channel_num, pCfg3536->rowsCnt, pCfg3536->colsCnt );
+		PrintMaxtrixValue( m_ColorText, fbData, pCfg3536->invalid_node, info, _T("\r\nFB RawData2:\r\n") );
+		ReShappingData<short>( fbData, fbTempBufferDelta, pCfg3536->va_channel_num, pCfg3536->rowsCnt, pCfg3536->colsCnt );
+		PrintMaxtrixValue( m_ColorText, fbData, pCfg3536->invalid_node, info, _T("\r\nFB Data:\r\n") );
+
+		NodeVal nodeOutRange;
+		int fb_min[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+		int fb_max[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+		ColorText textTemp( _T("\r\nFB Delta:\r\n") );
+		FillMatrixUseValue( fb_min, (int)pCfg3536->fsd.fsdT.fb_min );
+		FillMatrixUseValue( fb_max, (int)pCfg3536->fsd.fsdT.fb_max );
+		for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+		{
+			for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+				fbData[iRow][iCol] = fbData[iRow][iCol] - pCfg3536->fsd.fsdT.fb_base;
+		}
+		bool bResult = AnalyzeTestResult( fbData, fb_min, fb_max, pCfg3536->invalid_node, info, textTemp, nodeOutRange );
+		TestResultInfo( textTemp );
+		if( !bResult )
+		{
+			LPCTSTR strHead = _T("\r\n//========= Out of Threshold in FB Delta: \r\n");
+			PrintNodeValue( m_ColorText, &nodeOutRange, strHead );
+			MarkNodeToMatrix( &nodeOutRange, failed_channel );
+			failerCount++;
+		}
+	}
+
+	if( pCfg3536->fsd.fsdT.fsd_recheck || pCfg3536->fsd.fsdT.fsd_plus_check )
+	{
+		AnalyzeInfo info( pCfg3536->rowsCnt, pCfg3536->colsCnt );
+		PrintMaxtrixValue( m_ColorText, rcSlowDeviation, failed_channel, pCfg3536->invalid_node, info, _T("\r\nFSD Redjuge:\r\n") );
+	}
+
+	if( failerCount )
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_FAIL );
+		TestResultInfo( "\r\n\r\n//FSD Test is Fail\r\n", ITEM_STA_FAIL );
+	}
+	else
+	{
+		if( bMarkAsTBD )
+		{
+			itemNotify.UpdateItemResult( ITEM_STA_TBD );
+			TestResultInfo( "\r\n\r\n//FSD Test is TBD\r\n", ITEM_STA_TBD );
+		}
+		else
+		{
+			itemNotify.UpdateItemResult( ITEM_STA_PASS );
+			TestResultInfo( "\r\n\r\n//FSD Test is Pass\r\n", ITEM_STA_PASS );
+		}	
+	}
+
+	return itemNotify;
+}
+unsigned int CTest3536::FSDBK_Test( NativeTestItem& itemQuote )
+{
+	TEST_ITEM_STATUS itemStatus = (TEST_ITEM_STATUS)FSDBK_TestEx( itemQuote, 1 );
+
+	if( itemStatus == ITEM_STA_FAIL && !GetSimulateGate() )
+	{
+		itemStatus = (TEST_ITEM_STATUS)FSDBK_TestEx( itemQuote, 4 );
+	}
+
+	return itemStatus;
+}
+unsigned int CTest3536::FSDBK_TestEx( NativeTestItem& itemQuote, unsigned char testCnt )
+{
+	bool bMarkAsTBD = false;
+	BOOL bDeviationFail = FALSE;
+	unsigned int iReCode = ERROR_CODE_OK, failerCount = 0;
+	ItemNotifyer itemNotify( m_pNativeIntr, itemQuote );
+
+	const unsigned char clkCnt = testCnt;
+	unsigned short fsdTempBuffer[MAX_SCAP_BUFFER_CNT] = {0};
+	unsigned short fastFSDRaw[MAX_SCAP_ROW][MAX_SCAP_COL] = {0}, slowFSDRaw[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+
+	short fbTempBuffer1[100] = {0};
+	short fbTempBuffer2[100] = {0};
+	short fbTempBufferDelta[100] = {0};
+	short fbData[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+
+	short fsdData[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+	short deltaFSD[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+
+	unsigned char failed_channel[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+	memset( failed_channel, 0, sizeof(failed_channel) );
+
+	TestResultInfo( _T("\r\n------------------------------FSDBK Test------------------------------\r\n") );
+
+	ISMChip3536* iChip3536 = (ISMChip3536*)SM_ChipBase(m_deviceNo);
+	if( NULL == iChip3536 )         return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+	iReCode = iChip3536->GetFSDFastData( pCfg3536->fsd.fsdB.f_clk, pCfg3536->fsd.fsdB.integral, fsdTempBuffer, MAX_SCAP_BUFFER_CNT * sizeof(unsigned short), clkCnt );
+	if( ERROR_CODE_OK != iReCode )  return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	ICArrayToSensorMatrix( fastFSDRaw, fsdTempBuffer, pCfg3536->real_channel_num, pCfg3536->rowsCnt + 1, pCfg3536->colsCnt );
+
+	iReCode = iChip3536->GetFSDSlowData( pCfg3536->fsd.fsdB.s_clk, pCfg3536->fsd.fsdB.integral, fsdTempBuffer, MAX_SCAP_BUFFER_CNT * sizeof(unsigned short), clkCnt );
+	if( ERROR_CODE_OK != iReCode )  return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	ICArrayToSensorMatrix( slowFSDRaw, fsdTempBuffer, pCfg3536->real_channel_num, pCfg3536->rowsCnt + 1, pCfg3536->colsCnt );
+
+	if( pCfg3536->fsd.fsdB.fb_check && !GetSimulateGate() )
+	{
+		iReCode = iChip3536->GetVirtualTouchData( 0x3202, 0x2257, 0x1f07, (unsigned short*)fbTempBuffer1, (unsigned short*)fbTempBuffer2, (pCfg3536->rowsCnt) * pCfg3536->colsCnt * 2 );
+		if( ERROR_CODE_OK != iReCode )  return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+		for( int index = 0; index < pCfg3536->rowsCnt * pCfg3536->colsCnt; index++ )
+			fbTempBufferDelta[index] = fbTempBuffer1[index] - fbTempBuffer2[index];
+	}
+	// 	//////////////////////////////////////////////////////////////////////////
+	// 	unsigned short tempBufferF[MAX_SCAP_BUFFER_CNT] = {
+	// 		1561,1552,1568,1597,1605,1631,1607,	
+	// 		1535,1560,1560,1575,1603,1616,1656,	
+	// 		1870,1902,1925,1911,2004,1971,1805,	
+	// 		1747,1892,1916,1943,1961,1993,1974,
+	// 	};
+	// 	ReShappingData( fastFSDRaw, tempBufferF, (unsigned int)pCfg3536->va_channel_num, pCfg3536->rowsCnt, pCfg3536->colsCnt );
+	// 	unsigned short tempBufferS[MAX_SCAP_BUFFER_CNT] = {
+	// 		1582,1573,1590,1622,1627,1654,1629,	
+	// 		1557,1582,1581,1596,1625,1639,1682,	
+	// 		1897,1933,1955,1941,2035,2003,1831,	
+	// 		1774,1922,1949,1973,1993,2024,2007,
+	// 	};
+	// 	ReShappingData( slowFSDRaw, tempBufferS, (unsigned int)pCfg3536->va_channel_num, pCfg3536->rowsCnt, pCfg3536->colsCnt );
+	// 	clkCnt = 1;
+	// 	//////////////////////////////////////////////////////////////////////////
+	int offset = 1338;
+	int offset_t = 2048 - offset;
+
+// 	unsigned char RowsUp[MAX_SCAP_ROW] = {0};
+// 	unsigned char RowsDn[MAX_SCAP_ROW] = {0};
+// 	for( int iRow = 0; iRow < pCfg3536->rowsCnt / 2; iRow++ )
+// 	{
+// 		RowsUp[iRow] = iRow;
+// 		RowsDn[iRow] = iRow + pCfg3536->rowsCnt / 2;
+// 	}
+
+	//double dwFastMeanUp = 0, dwFastMeanDown = 0, dwFastBaseUp = 0, dwFastBaseDown = 0;
+	//double dwSlowMeanUp = 0, dwSlowMeanDown = 0, dwSlowBaseUp = 0, dwSlowBaseDown = 0;
+	//double dwFastEfficientUp = 0, dwFastEfficientDn = 0, dwSlowEfficientUp = 0, dwSlowEfficientDn = 0;
+	double dwFastEfficient = 0, dwSlowEfficient = 0;
+	unsigned char RowsPannel[MAX_SCAP_ROW] = {0,1,2,3,4};
+	unsigned short fastFSDRawCopy[MAX_SCAP_ROW][MAX_SCAP_COL] = {0}, slowFSDRawCopy[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+
+	for( int iRow = 0; iRow < pCfg3536->rowsCnt + 1; iRow++ )
+	{
+		for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+		{
+			fastFSDRaw[iRow][iCol] /= clkCnt;
+			slowFSDRaw[iRow][iCol] /= clkCnt;
+		}
+	}
+
+	memcpy_s( fastFSDRawCopy, sizeof(fastFSDRawCopy), fastFSDRaw, sizeof(fastFSDRaw) );
+	memcpy_s( slowFSDRawCopy, sizeof(slowFSDRawCopy), slowFSDRaw, sizeof(slowFSDRaw) );
+
+	//dwFastMeanUp   = GetHarfScreenSortingMean( fastFSDRawCopy, RowsUp, pCfg3536->rowsCnt / 2, pCfg3536->colsCnt ) - offset_t;
+	//dwFastMeanDown = GetHarfScreenSortingMean( fastFSDRawCopy, RowsDn, pCfg3536->rowsCnt / 2, pCfg3536->colsCnt ) - offset_t;
+	//dwFastBaseUp   = GetHarfScreenSortingMean( pCfg3536->fsd_fast, RowsUp, pCfg3536->rowsCnt / 2, pCfg3536->colsCnt ) - offset_t;
+	//dwFastBaseDown = GetHarfScreenSortingMean( pCfg3536->fsd_fast, RowsDn, pCfg3536->rowsCnt / 2, pCfg3536->colsCnt ) - offset_t;
+
+	//dwSlowMeanUp   = GetHarfScreenSortingMean( slowFSDRawCopy, RowsUp, pCfg3536->rowsCnt / 2, pCfg3536->colsCnt ) - offset_t;
+	//dwSlowMeanDown = GetHarfScreenSortingMean( slowFSDRawCopy, RowsDn, pCfg3536->rowsCnt / 2, pCfg3536->colsCnt ) - offset_t;
+	//dwSlowBaseUp   = GetHarfScreenSortingMean( pCfg3536->fsd_slow, RowsUp, pCfg3536->rowsCnt / 2, pCfg3536->colsCnt ) - offset_t;
+	//dwSlowBaseDown = GetHarfScreenSortingMean( pCfg3536->fsd_slow, RowsDn, pCfg3536->rowsCnt / 2, pCfg3536->colsCnt ) - offset_t;
+
+	//double dwFastEfficientUp = dwFastBaseUp / (dwFastMeanUp ? dwFastMeanUp : 1);
+	//double dwFastEfficientDn = dwFastBaseDown / (dwFastMeanDown ? dwFastMeanDown : 1);
+	//double dwSlowEfficientUp = dwSlowBaseUp / (dwSlowMeanUp ? dwSlowMeanUp : 1);
+	//double dwSlowEfficientDn = dwSlowBaseDown / (dwSlowMeanDown ? dwSlowMeanDown : 1);
+
+	GetHarfScreenNormalizationFactor( fastFSDRawCopy, slowFSDRawCopy, pCfg3536->fsd.fsd_fast, pCfg3536->fsd.fsd_slow, RowsPannel, pCfg3536->rowsCnt, pCfg3536->colsCnt, dwFastEfficient, dwSlowEfficient );
+
+	for( int iRow = 0; iRow < pCfg3536->rowsCnt + 1; iRow++ )
+	{
+		for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+		{
+			//double dwFastEfficient = iRow >= pCfg3536->rowsCnt / 2 ? dwFastEfficientDn : dwFastEfficientUp;
+			//double dwSlowEfficinet = iRow >= pCfg3536->rowsCnt / 2 ? dwSlowEfficientDn : dwSlowEfficientUp; 
+
+			fastFSDRawCopy[iRow][iCol] = (unsigned short)( ( fastFSDRawCopy[iRow][iCol] - offset_t ) * dwFastEfficient ) + offset_t;
+			slowFSDRawCopy[iRow][iCol] = (unsigned short)( ( slowFSDRawCopy[iRow][iCol] - offset_t ) * dwFastEfficient ) + offset_t;
+			fsdData[iRow][iCol] = slowFSDRawCopy[iRow][iCol] - fastFSDRawCopy[iRow][iCol];
+			deltaFSD[iRow][iCol] = fsdData[iRow][iCol] - pCfg3536->fsd.fsd_base[iRow][iCol];
+		}
+	}
+
+	// 	{
+	// 		AnalyzeInfo info( pCfg3536->rowsCnt, pCfg3536->colsCnt );
+	// 		PrintMaxtrixValue( m_ColorText, fastFSDRawCopy, pCfg3536->invalid_node, info, _T("\r\nFast Nor Data:\r\n") );
+	// 	}
+	// 
+	// 	{
+	// 		AnalyzeInfo info( pCfg3536->rowsCnt, pCfg3536->colsCnt );
+	// 		PrintMaxtrixValue( m_ColorText, slowFSDRawCopy, pCfg3536->invalid_node, info, _T("\r\nSlow Nor Data:\r\n") );
+	// 	}
+
+	/********************************************************************************************/
+	/*backup test result data*/
+	memcpy_s( m_stOneRecord.Scap.fsd_test_buff, sizeof(m_stOneRecord.Scap.fsd_test_buff), fsdData, sizeof(fsdData) );
+	memcpy_s( m_stOneRecord.Scap.fsd_fast_buff, sizeof(m_stOneRecord.Scap.fsd_fast_buff), fastFSDRaw, sizeof(fastFSDRaw) );
+	memcpy_s( m_stOneRecord.Scap.fsd_slow_buff, sizeof(m_stOneRecord.Scap.fsd_slow_buff), slowFSDRaw, sizeof(slowFSDRaw) );
+	/********************************************************************************************/
+
+	{
+		AnalyzeInfo info( pCfg3536->rowsCnt, pCfg3536->colsCnt, pCfg3536->real_channel_num - pCfg3536->va_channel_num, true );
+		PrintMaxtrixValue( m_ColorText, slowFSDRaw, pCfg3536->invalid_node, info, _T("\r\nSlow CLK RawData:\r\n") );
+	}
+	{
+		AnalyzeInfo info( pCfg3536->rowsCnt, pCfg3536->colsCnt, pCfg3536->real_channel_num - pCfg3536->va_channel_num, true );
+		PrintMaxtrixValue( m_ColorText, fastFSDRaw, pCfg3536->invalid_node, info, _T("\r\nFast CLK RawData:\r\n") );
+	}
+	{
+		AnalyzeInfo info( pCfg3536->rowsCnt, pCfg3536->colsCnt, pCfg3536->real_channel_num - pCfg3536->va_channel_num, true );
+		unsigned char dataFailChannel[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+		memset( dataFailChannel, 0, sizeof(dataFailChannel) );
+		for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+		{
+			for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+			{
+				if (0 == pCfg3536->invalid_node[iRow][iCol]) continue;
+
+				if( ( fsdData[iRow][iCol] < pCfg3536->fsd.fsdB.fsd_min ) 
+					/*&& ( abs(fastFSDRaw[iRow][iCol] - 2048) < 20 )*/ 
+					/*&& ( abs(slowFSDRaw[iRow][iCol] - 2048) < 20 )*/ )
+				{				
+					failerCount++;
+					bDeviationFail = TRUE;	
+					dataFailChannel[iRow][iCol] = 1;
+				}
+			}
+		}
+
+		PrintMaxtrixValue( m_ColorText, fsdData, dataFailChannel, pCfg3536->invalid_node, info, _T("\r\nFSD Data:\r\n") );
+	}
+
+	if(pCfg3536->fsd.fsdB.scale_check)
+	{
+		//case 0
+		if( dwFastEfficient <= 0.5 || dwFastEfficient >= 1.5 )
+		{
+			failerCount++;
+			bDeviationFail = TRUE;	
+		}
+		if( dwSlowEfficient <= 0.5 || dwSlowEfficient >= 1.5 )
+		{
+			failerCount++;
+			bDeviationFail = TRUE;
+		}
+		if( failerCount )
+		{
+			TCHAR chTemp[256] = {0};
+			transformat( chTemp, _T("\r\nfast coefficient = %.3f, slow coefficient = %.3f\r\n"), dwFastEfficient, dwSlowEfficient );
+			ColorText text( chTemp, RGB( 255, 0, 0 ), TEXT_SIZE_SMALL, false );
+			TestResultInfo( text );
+		}
+	}
+
+	//case 1
+	short slowRc[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+	short fastRc[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+
+	for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+	{
+		for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+		{
+			slowRc[iRow][iCol] = slowFSDRawCopy[iRow][iCol] - offset_t;
+			if( 0 == slowRc[iRow][iCol] ) slowRc[iRow][iCol] = 1;
+
+			fastRc[iRow][iCol] = fastFSDRawCopy[iRow][iCol] - offset_t;
+			if( 0 == fastRc[iRow][iCol] ) fastRc[iRow][iCol] = 1;
+		}
+	}
+
+
+	//case 2
+	//double dwDeltaUpMean = 0, dwDeltaDownMean = 0;
+	double dwDeltaMean = 0;
+	short fsdDeltaCopy2[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+	memcpy_s( fsdDeltaCopy2, sizeof(fsdDeltaCopy2), deltaFSD, sizeof(deltaFSD) );
+
+	//dwDeltaUpMean = ( Sum( fsdDeltaCopy[0], pCfg3536->colsCnt ) + Sum( fsdDeltaCopy[1], pCfg3536->colsCnt ) ) / pCfg3536->harf_va_channel_num;
+	//dwDeltaDownMean =( Sum( fsdDeltaCopy[2], pCfg3536->colsCnt ) + Sum( fsdDeltaCopy[3], pCfg3536->colsCnt ) ) / pCfg3536->harf_va_channel_num;
+
+	dwDeltaMean = GetHarfScreenNormalization( fsdDeltaCopy2, RowsPannel, pCfg3536->rowsCnt );
+	//dwDeltaDownMean = GetHarfScreenNormalization( fsdDeltaCopy2, RowsDn, pCfg3536->rowsCnt / 2 );
+
+	AnalyzeInfo info( pCfg3536->rowsCnt, pCfg3536->colsCnt, pCfg3536->real_channel_num - pCfg3536->va_channel_num, true );
+
+	for( int iRow = 0; iRow < pCfg3536->rowsCnt +( info.bIncludeKey ? 1 : 0 ); iRow++ )
+	{
+		for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+		{
+			int fsdDeltaFixed = fsdDeltaCopy2[iRow][iCol] - (int)dwDeltaMean;
+
+			fsdDeltaCopy2[iRow][iCol] = abs( fsdDeltaFixed );
+		}
+	}
+
+	{
+		NodeVal nodeOutRange;
+		ColorText textTemp( _T("\r\nFSD Delta:\r\n") );
+		
+		int delta_min[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+		FillMatrixUseValue( delta_min, 0 );
+
+		bool bResult = AnalyzeTestResult( fsdDeltaCopy2, delta_min, pCfg3536->fsd.fsd_delta_max, pCfg3536->invalid_node, info, textTemp, nodeOutRange );
+		TestResultInfo( textTemp );
+		if( !bResult )
+		{
+			LPCTSTR strHead = _T("\r\n//========= Out of Threshold in FSD Delta: \r\n");
+			PrintNodeValue( m_ColorText, &nodeOutRange, strHead );
+			MarkNodeToMatrix( &nodeOutRange, failed_channel );
+			failerCount++;
+		}
+	}
+
+	//case 3
+	//normalization
+	short fsdDataCopy3[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+	memcpy_s( fsdDataCopy3, sizeof(fsdDataCopy3), fsdData, sizeof(fsdData) );
+// 	for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+// 	{
+// 		{
+// 			int iCol = 0;
+// 			double dwNormalization = (double)pCfg3536->fsd.fsd_base[iRow][iCol+1] / ( (pCfg3536->fsd.fsd_base[iRow][iCol] == 0) ? 0.001 : pCfg3536->fsd.fsd_base[iRow][iCol] );
+// 			fsdDataCopy3[iRow][iCol] =  (short)( dwNormalization * fsdDataCopy3[iRow][iCol] );
+// 		}
+// 		{
+// 			int iCol = pCfg3536->colsCnt - 1;
+// 			double dwNormalization = (double)pCfg3536->fsd.fsd_base[iRow][iCol-1] / ( (pCfg3536->fsd.fsd_base[iRow][iCol] == 0) ? 0.001 : pCfg3536->fsd.fsd_base[iRow][iCol] );
+// 			fsdDataCopy3[iRow][iCol] = (short)( dwNormalization * fsdDataCopy3[iRow][iCol] );
+// 		}
+// 	}
+// 	{
+// 		AnalyzeInfo info( pCfg3536->rowsCnt, pCfg3536->colsCnt );
+// 		PrintMaxtrixValue( m_ColorText, fsdDataCopy3, pCfg3536->invalid_node, info, _T("\r\nNormalization:\r\n") );
+// 	}
+
+	{
+		NodeVal nodeOutRange;
+		ColorText textTemp( _T("\r\nFSD Delta Uniformity Left:\r\n") );
+		AnalyzeInfo info( pCfg3536->rowsCnt, pCfg3536->colsCnt );
+		int pannel_left_min[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+		int pannel_left_val[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+		unsigned char invalidTemp[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+		CopyAndInvalid( invalidTemp, pCfg3536->invalid_node, MAX_SCAP_ROW,  0 );
+		for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+		{
+			for( int iCol = 1; iCol < pCfg3536->colsCnt; iCol++ )
+			{
+				pannel_left_val[iRow][iCol] = abs( fsdDataCopy3[iRow][iCol] - fsdDataCopy3[iRow][iCol - 1] );
+			}
+		}
+
+		bool bResult = AnalyzeTestResult( pannel_left_val, pannel_left_min, pCfg3536->fsd.fsd_uniformity_left, invalidTemp, info, textTemp, nodeOutRange );
+		TestResultInfo( textTemp );
+		if( !bResult )
+		{
+			LPCTSTR strHead = _T("\r\n//========= Out of Threshold in FSD Delta Uniformity Left: \r\n");
+			PrintNodeValue( m_ColorText, &nodeOutRange, strHead );
+			MarkNodeToMatrix( &nodeOutRange, failed_channel );
+			failerCount++;
+		}
+	}
+
+	{
+		NodeVal nodeOutRange;
+		ColorText textTemp( _T("\r\nFSD Delta Uniformity Right:\r\n") );
+		AnalyzeInfo info( pCfg3536->rowsCnt, pCfg3536->colsCnt );
+		int pannel_right_min[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+		int pannel_right_val[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+		unsigned char invalidTemp[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+		CopyAndInvalid( invalidTemp, pCfg3536->invalid_node, MAX_SCAP_ROW, pCfg3536->colsCnt - 1 );
+		for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+		{
+			for( int iCol = 0; iCol < pCfg3536->colsCnt - 1; iCol++ )
+			{
+				pannel_right_val[iRow][iCol] = abs( fsdDataCopy3[iRow][iCol]- fsdDataCopy3[iRow][iCol + 1] );
+			}
+		}
+
+		bool bResult = AnalyzeTestResult( pannel_right_val, pannel_right_min, pCfg3536->fsd.fsd_uniformity_right, invalidTemp, info, textTemp, nodeOutRange );
+		TestResultInfo( textTemp );
+		if( !bResult )
+		{
+			LPCTSTR strHead = _T("\r\n//========= Out of Threshold in FSD Delta Uniformity Right: \r\n");
+			PrintNodeValue( m_ColorText, &nodeOutRange, strHead );
+			MarkNodeToMatrix( &nodeOutRange, failed_channel );
+			failerCount++;
+		}
+	}
+
+	//case 4
+	int rcSlowDeviation[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+	{
+		/*unsigned*/ short baseSlowRc[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+		for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+		{
+			for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+			{
+				baseSlowRc[iRow][iCol] = pCfg3536->fsd.fsd_slow[iRow][iCol] - offset_t;
+				if( 0 == baseSlowRc[iRow][iCol] ) baseSlowRc[iRow][iCol] = 1;
+
+				rcSlowDeviation[iRow][iCol] = baseSlowRc[iRow][iCol] - slowRc[iRow][iCol];
+			}
+		}
+
+		double dwMean = 0;
+		dwMean = GetHarfScreenSortingMean( rcSlowDeviation, RowsPannel, pCfg3536->rowsCnt, pCfg3536->colsCnt );
+		//double dwMeanUp = 0, dwMeanDown = 0;
+		//dwMeanUp = GetHarfScreenSortingMean( rcSlowDeviation, RowsUp, pCfg3536->rowsCnt / 2, pCfg3536->colsCnt );
+		//dwMeanDown = GetHarfScreenSortingMean( rcSlowDeviation, RowsDn, pCfg3536->rowsCnt / 2, pCfg3536->colsCnt );
+		// 		if( pCfg3536->bVerticalTriangle )
+		// 		{
+		// // 			for( int iRow = 0; iRow < pCfg3536->rowsCnt / 2; iRow++ )
+		// // 			{
+		// // 				dwMeanUp += Sum( rcSlowDeviation[iRow], pCfg3536->colsCnt );
+		// // 				dwMeanDown = Sum( rcSlowDeviation[iRow + pCfg3536->rowsCnt / 2], pCfg3536->colsCnt );
+		// // 			}
+		// // 			dwMeanUp /= pCfg3536->harf_va_channel_num;
+		// // 			dwMeanDown /= pCfg3536->harf_va_channel_num;
+		// 		}
+		// 		else
+		// 		{
+		// // 			for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+		// // 				dwMeanUp += Sum( rcSlowDeviation[iRow], pCfg3536->colsCnt );
+		// // 
+		// // 			dwMeanDown = dwMeanUp = dwMeanUp / pCfg3536->va_channel_num;
+		// 		}
+
+		for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+		{
+			for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+			{
+				rcSlowDeviation[iRow][iCol] = rcSlowDeviation[iRow][iCol] - (int)dwMean;
+
+				rcSlowDeviation[iRow][iCol] = 1000 * rcSlowDeviation[iRow][iCol] / baseSlowRc[iRow][iCol]; 
+			}
+		}
+		NodeVal nodeOutRange;
+		ColorText textTemp( _T("\r\nFSD Deviation:\r\n") );
+		AnalyzeInfo info( pCfg3536->rowsCnt, pCfg3536->colsCnt, pCfg3536->real_channel_num - pCfg3536->va_channel_num, true );
+		int deviation_min[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+		for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+		{
+			for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+			{
+				deviation_min[iRow][iCol] = (-3) * pCfg3536->fsd.fsd_deviation[iRow][iCol];
+			}
+		}
+		bool bResult = AnalyzeTestResult( rcSlowDeviation, deviation_min, pCfg3536->fsd.fsd_deviation, pCfg3536->invalid_node, info, textTemp, nodeOutRange );
+		TestResultInfo( textTemp );
+		if( !bResult )
+		{
+			LPCTSTR strHead = _T("\r\n//========= Out of Threshold in FSD Deviation Test: \r\n");
+			PrintNodeValue( m_ColorText, &nodeOutRange, strHead );
+			MarkNodeToMatrix( &nodeOutRange, failed_channel );
+			failerCount++;
+			bDeviationFail = TRUE;
+		}
+	}
+
+	//case 5
+	int rcFastDeviation[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+	{
+		/*unsigned*/ short baseFastRc[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+		for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+		{
+			for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+			{
+				baseFastRc[iRow][iCol] = pCfg3536->fsd.fsd_fast[iRow][iCol] - offset_t;
+				if( 0 == baseFastRc[iRow][iCol] ) baseFastRc[iRow][iCol] = 1;
+
+				rcFastDeviation[iRow][iCol] = baseFastRc[iRow][iCol] - fastRc[iRow][iCol];
+			}
+		}
+		double dwMean = 0;
+		dwMean = GetHarfScreenSortingMean( rcFastDeviation, RowsPannel, pCfg3536->rowsCnt, pCfg3536->colsCnt );
+		//double dwMeanUp = 0, dwMeanDown = 0;
+		//dwMeanUp = GetHarfScreenSortingMean( rcFastDeviation, RowsUp, pCfg3536->rowsCnt / 2, pCfg3536->colsCnt );
+		//dwMeanDown = GetHarfScreenSortingMean( rcFastDeviation, RowsDn, pCfg3536->rowsCnt / 2, pCfg3536->colsCnt );
+		//dwMeanUp = (double)( Sum( rcFastDeviation[0], pCfg3536->colsCnt ) + Sum( rcFastDeviation[1], pCfg3536->colsCnt ) ) / pCfg3536->harf_va_channel_num;
+		//dwMeanDown = (double)( Sum( rcFastDeviation[2], pCfg3536->colsCnt ) + Sum( rcFastDeviation[3], pCfg3536->colsCnt ) ) / pCfg3536->harf_va_channel_num;
+		for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+		{
+			for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+			{
+				rcFastDeviation[iRow][iCol] = rcFastDeviation[iRow][iCol] - (int)dwMean;
+
+				rcFastDeviation[iRow][iCol] = 1000 * rcFastDeviation[iRow][iCol] / baseFastRc[iRow][iCol]; 
+			}
+		}
+	}
+
+	{
+		AnalyzeInfo info( pCfg3536->rowsCnt, pCfg3536->colsCnt, pCfg3536->real_channel_num - pCfg3536->va_channel_num, true );
+		PrintMaxtrixValue( m_ColorText, rcFastDeviation, pCfg3536->invalid_node, info, _T("\r\nFast Deviation:\r\n") );
+	}
+
+	//case 6  打补丁放水
+	if( !bDeviationFail && failerCount > 0 )
+	{
+		for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+		{
+			for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+			{
+				//int index = iRow * pCfg3536->colsCnt + iCol;
+				int asbDeltaFSD = fsdDeltaCopy2[iRow][iCol];
+				if( (asbDeltaFSD >= pCfg3536->fsd.fsdB.fsd_triger_min)
+					&& (asbDeltaFSD <= pCfg3536->fsd.fsdB.fsd_triger_max)
+					&& (rcSlowDeviation[iRow][iCol] >= pCfg3536->fsd.fsdB.fsd_critical_slow_min)
+					&& (rcSlowDeviation[iRow][iCol] <= pCfg3536->fsd.fsdB.fsd_critical_slow_max) 
+					&& (rcFastDeviation[iRow][iCol] <= pCfg3536->fsd.fsdB.fsd_critical_fast_max) )
+				{
+					failed_channel[iRow][iCol] = 0;
+					for( int iRow2 = 0; iRow2 < pCfg3536->rowsCnt; iRow2++ )
+					{
+						if( abs( fsdDeltaCopy2[iRow2][iCol] ) < pCfg3536->fsd.fsdB.fsd_besides_min )
+							failed_channel[iRow2][iCol] = 0;
+					}
+					int iLeft  =  iCol == 0 ? 0 : iCol - 1;
+					int iRight = iCol == (pCfg3536->colsCnt - 1) ?  (pCfg3536->colsCnt - 1) : iCol + 1;
+					if( abs( (long)fsdDeltaCopy2[iRow * pCfg3536->colsCnt + iLeft] ) < pCfg3536->fsd.fsdB.fsd_besides_min )
+					{
+						failed_channel[iRow][iLeft] = 0;
+					}
+					if( abs( (long)fsdDeltaCopy2[iRow * pCfg3536->colsCnt + iRight] ) < pCfg3536->fsd.fsdB.fsd_besides_min )
+					{
+						failed_channel[iRow][iRight] = 0;
+					}
+				}
+			}
+		}
+
+		failerCount = Sum( failed_channel[0], pCfg3536->colsCnt ) + Sum( failed_channel[1], pCfg3536->colsCnt ) + Sum( failed_channel[2], pCfg3536->colsCnt ) + Sum( failed_channel[3], pCfg3536->colsCnt );
+		if( failerCount > 0 )
+		{
+
+		}
+		else
+		{
+			bMarkAsTBD = pCfg3536->fsd.fsdB.fsd_recheck ? false : true;
+		}
+	}
+
+
+	//case 8
+	if( pCfg3536->fsd.fsdB.fb_check && !GetSimulateGate() )
+	{
+		AnalyzeInfo info( pCfg3536->rowsCnt, pCfg3536->colsCnt );
+		ReShappingData<short>( fbData, fbTempBuffer1, pCfg3536->va_channel_num, pCfg3536->rowsCnt, pCfg3536->colsCnt );
+		PrintMaxtrixValue( m_ColorText, fbData, pCfg3536->invalid_node, info, _T("\r\nFB RawData1:\r\n") );
+		ReShappingData<short>( fbData, fbTempBuffer2, pCfg3536->va_channel_num, pCfg3536->rowsCnt, pCfg3536->colsCnt );
+		PrintMaxtrixValue( m_ColorText, fbData, pCfg3536->invalid_node, info, _T("\r\nFB RawData2:\r\n") );
+		ReShappingData<short>( fbData, fbTempBufferDelta, pCfg3536->va_channel_num, pCfg3536->rowsCnt, pCfg3536->colsCnt );
+		PrintMaxtrixValue( m_ColorText, fbData, pCfg3536->invalid_node, info, _T("\r\nFB Data:\r\n") );
+
+		NodeVal nodeOutRange;
+		int fb_min[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+		int fb_max[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+		ColorText textTemp( _T("\r\nFB Delta:\r\n") );
+		FillMatrixUseValue( fb_min, (int)pCfg3536->fsd.fsdB.fb_min );
+		FillMatrixUseValue( fb_max, (int)pCfg3536->fsd.fsdB.fb_max );
+		for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+		{
+			for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+				fbData[iRow][iCol] = fbData[iRow][iCol] - pCfg3536->fsd.fsdB.fb_base;
+		}
+		bool bResult = AnalyzeTestResult( fbData, fb_min, fb_max, pCfg3536->invalid_node, info, textTemp, nodeOutRange );
+		TestResultInfo( textTemp );
+		if( !bResult )
+		{
+			LPCTSTR strHead = _T("\r\n//========= Out of Threshold in FB Delta: \r\n");
+			PrintNodeValue( m_ColorText, &nodeOutRange, strHead );
+			MarkNodeToMatrix( &nodeOutRange, failed_channel );
+			failerCount++;
+		}
+	}
+
+	if( pCfg3536->fsd.fsdB.fsd_recheck )
+	{
+		AnalyzeInfo info( pCfg3536->rowsCnt, pCfg3536->colsCnt );
+		PrintMaxtrixValue( m_ColorText, rcSlowDeviation, failed_channel, pCfg3536->invalid_node, info, _T("\r\nFSD Redjuge:\r\n") );
+	}
+
+	if( failerCount )
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_FAIL );
+		TestResultInfo( "\r\n\r\n//FSDBK Test is Fail\r\n", ITEM_STA_FAIL );
+	}
+	else
+	{
+		if( bMarkAsTBD )
+		{
+			itemNotify.UpdateItemResult( ITEM_STA_TBD );
+			TestResultInfo( "\r\n\r\n//FSDBK Test is TBD\r\n", ITEM_STA_TBD );
+		}
+		else
+		{
+			itemNotify.UpdateItemResult( ITEM_STA_PASS );
+			TestResultInfo( "\r\n\r\n//FSDBK Test is Pass\r\n", ITEM_STA_PASS );
+		}	
+	}
+
+	return itemNotify;
+}
+unsigned int CTest3536::OS_Test( NativeTestItem& itemQuote )
+{
+	//err_type 0 = no err; 1 - open; 2-short; 4-tbd
+	unsigned char err_type_linkly = 0;
+	//failerStep 1 - M1; 2 - M2; 4 - M3
+	unsigned int iReCode = ERROR_CODE_OK, failerStep = 0;
+	ItemNotifyer itemNotify( m_pNativeIntr, itemQuote );
+
+	int os_delta[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+	unsigned short osTempBuffer[MAX_SCAP_BUFFER_CNT] = {0};
+	unsigned short osSsRawDataMatrix[MAX_SCAP_ROW][MAX_SCAP_COL] = {0}, osIcRawDataMatrix[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+	unsigned short osICBaseMatrix[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+	unsigned short ic_2_sensor_matrix[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+
+	int ref_channel_num = min(pCfg3536->real_channel_num - pCfg3536->va_channel_num, pCfg3536->colsCnt);
+
+	TestResultInfo( _T("\r\n------------------------------OS Test------------------------------\r\n") );
+
+	ISMChip3536* iChip3536 = (ISMChip3536*)SM_ChipBase(m_deviceNo);
+	if( NULL == iChip3536 )         return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+	iReCode = iChip3536->IncokeCommand( CMD_CTP_RST );
+	SysDelay( 20 );
+
+	iReCode = iChip3536->GetOSData( pCfg3536->integral, pCfg3536->scale_a, pCfg3536->scale_b, pCfg3536->os_clk, osTempBuffer, MAX_SCAP_BUFFER_CNT * sizeof(unsigned short) );
+
+	//////////////////////////////////////////////////////////////////////////
+// 	unsigned short osTemp[] = {
+// 		300,1164,1176,   0,1154,1140,1104,1094, 852, 744,   0,   0,	
+// 		630, 668, 944, 916, 886, 888, 886, 902, 936, 930, 944, 946,	
+// 		0,   0, 704, 670, 780, 874,1132,1148,1202,1158, 326, 290,	
+// 		314, 344,   0,   0, 368, 338, 298, 266,   0,   0,   0,   0
+// 	};
+// 	memcpy_s( osTempBuffer, sizeof(osTempBuffer), osTemp, sizeof(osTemp) );
+	//////////////////////////////////////////////////////////////////////////
+
+	if( ERROR_CODE_OK != iReCode )  return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	ICArrayToSensorMatrix( osSsRawDataMatrix, osTempBuffer, pCfg3536->real_channel_num, pCfg3536->rowsCnt + 1, pCfg3536->colsCnt );
+
+	// 4 * 12
+	ReShappingData( ic_2_sensor_matrix, (unsigned short*)pCfg3536->ic_2_sensor_map, MAX_SCAP_CHANNEL, MAX_CHANNEL_ONE_GROUP, MAX_IX_NUM_3536 );
+	ReShappingData( osIcRawDataMatrix, osTempBuffer, MAX_SCAP_CHANNEL, MAX_CHANNEL_ONE_GROUP, MAX_IX_NUM_3536 );
+	SensorMatrixToIcMatrix( osICBaseMatrix, MAX_CHANNEL_ONE_GROUP, MAX_IX_NUM_3536, pCfg3536->os_base, pCfg3536->rowsCnt + 1, pCfg3536->colsCnt );
+
+	/********************************************************************************************/
+	/*backup test result data*/
+	memcpy_s( m_stOneRecord.Scap.OS_test_buff, sizeof(m_stOneRecord.Scap.OS_test_buff), osSsRawDataMatrix, sizeof(osSsRawDataMatrix) );
+	/********************************************************************************************/
+
+	//OS - M1
+	{
+		NodeVal nodeOutRange;
+		ColorText textTemp( _T("\r\nOS - M1:\r\n") );
+		AnalyzeInfo info( pCfg3536->rowsCnt, pCfg3536->colsCnt,  ref_channel_num, true );
+
+		unsigned short os_m2_min[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+		unsigned short os_m2_max[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+
+		for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+		{
+			for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+			{
+				os_m2_min[iRow][iCol] = pCfg3536->os_base[iRow][iCol] - (pCfg3536->os_base[iRow][iCol] * pCfg3536->m1_ratio_lower_va) / 100;
+				os_m2_max[iRow][iCol] = pCfg3536->os_base[iRow][iCol] + (pCfg3536->os_base[iRow][iCol] * pCfg3536->m1_ratio_upper_va) / 100;
+			}
+		}
+		for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+		{
+			os_m2_min[pCfg3536->rowsCnt][iCol] = pCfg3536->os_base[pCfg3536->rowsCnt][iCol] - (pCfg3536->os_base[pCfg3536->rowsCnt][iCol] * pCfg3536->m1_ratio_lower_ref) / 100;
+			os_m2_max[pCfg3536->rowsCnt][iCol] = pCfg3536->os_base[pCfg3536->rowsCnt][iCol] + (pCfg3536->os_base[pCfg3536->rowsCnt][iCol] * pCfg3536->m1_ratio_upper_ref) / 100;
+		}
+
+		bool bResult = AnalyzeTestResult( osSsRawDataMatrix, os_m2_min, os_m2_max, pCfg3536->invalid_node, info, textTemp, nodeOutRange );
+		TestResultInfo( textTemp );
+		if( !bResult )
+		{
+			LPCTSTR strHead = _T("\r\n//========= Out of Threshold in OS - M1: \r\n");
+			PrintNodeValue( m_ColorText, &nodeOutRange, strHead );
+			failerStep |= 0x01;
+		}
+	}
+
+	//OS - M2
+	unsigned char failedChannel[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+	unsigned char osInvalidM1[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+	memset( failedChannel, 0, sizeof(failedChannel) );
+	memset( osInvalidM1, 0x00, sizeof(osInvalidM1) );
+	for( int iCol = 0; iCol < MAX_IX_NUM_3536; iCol++ )
+	{
+		//no active channel
+		if( 0 == ( ic_2_sensor_matrix[0][iCol] + ic_2_sensor_matrix[1][iCol] + ic_2_sensor_matrix[2][iCol] + ic_2_sensor_matrix[3][iCol] ) ) continue;
+
+		for( int iRow = 0; iRow < MAX_CHANNEL_ONE_GROUP; iRow++ )
+		{
+			if( 0 == ic_2_sensor_matrix[iRow][iCol] ) continue;
+
+			int nextRow = iRow;
+			for( int index = 0; index < MAX_CHANNEL_ONE_GROUP; index++ )
+			{
+				nextRow = ( nextRow + 1 ) % MAX_CHANNEL_ONE_GROUP;
+				if( ic_2_sensor_matrix[nextRow][iCol] ) break;
+			}
+			
+			osInvalidM1[iRow][iCol]   = 1;
+			osInvalidM1[nextRow][iCol] = 1;
+			int productLast = osIcRawDataMatrix[iRow][iCol] * osICBaseMatrix[nextRow][iCol];
+			int productNext = osIcRawDataMatrix[nextRow][iCol] * osICBaseMatrix[iRow][iCol];
+
+			//打个补丁
+			if( !productLast || !productNext )  continue;
+
+			if( productLast > productNext + (productNext * pCfg3536->m2_ratio) / 100 )
+			{
+				failedChannel[iRow][iCol] = 1;
+				failedChannel[nextRow][iCol] = 1;
+				failerStep |= 0x02;
+			}
+			else if( productNext > productLast + (productLast * pCfg3536->m2_ratio) / 100 )
+			{
+				failedChannel[iRow][iCol] = 1;
+				failedChannel[nextRow][iCol] = 1;
+				failerStep |= 0x02;
+			}
+		}
+	}
+	//Print M2
+	{
+		AnalyzeInfo info( MAX_CHANNEL_ONE_GROUP, MAX_IX_NUM_3536 );
+		PrintMaxtrixValue( m_ColorText, osIcRawDataMatrix, failedChannel, osInvalidM1, info, _T("\r\nOS - M2:\r\n") );
+	}
+
+	//OS - M3
+	unsigned int sumBaseUp = 0, sumTestUp = 0;
+	unsigned int sumBaseDn = 0, sumTestDn = 0;
+	unsigned char RowsUp[MAX_SCAP_ROW] = {0};
+	unsigned char RowsDn[MAX_SCAP_ROW] = {0};
+	for( int iRow = 0; iRow < pCfg3536->rowsCnt / 2; iRow++ )
+	{
+		RowsUp[iRow] = iRow;
+		RowsDn[iRow] = iRow + pCfg3536->rowsCnt / 2;
+	}
+
+	sumTestUp = (unsigned int)GetHarfScreenSortingMean( osSsRawDataMatrix, RowsUp, pCfg3536->rowsCnt / 2, pCfg3536->colsCnt );
+	sumTestDn = (unsigned int)GetHarfScreenSortingMean( osSsRawDataMatrix, RowsDn, pCfg3536->rowsCnt / 2, pCfg3536->colsCnt );
+	sumBaseUp = (unsigned int)GetHarfScreenSortingMean( pCfg3536->os_base, RowsUp, pCfg3536->rowsCnt / 2, pCfg3536->colsCnt );
+	sumBaseDn = (unsigned int)GetHarfScreenSortingMean( pCfg3536->os_base, RowsDn, pCfg3536->rowsCnt / 2, pCfg3536->colsCnt );
+
+	short normalizationData[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+// 	for( int iRow = 0; iRow < pCfg3536->rowsCnt / 2; iRow++ )
+// 	{
+// 		sumBaseUp += Sum( &pCfg3536->os_base[iRow][1], pCfg3536->colsCnt - 2 );
+// 		sumTestUp += Sum( &osSsRawDataMatrix[iRow][1], pCfg3536->colsCnt - 2 );
+// 	}
+// 	for( int iRow = pCfg3536->rowsCnt / 2; iRow < pCfg3536->rowsCnt; iRow++ )
+// 	{
+// 		sumBaseDn += Sum( &pCfg3536->os_base[iRow][1], pCfg3536->colsCnt - 2 );
+// 		sumTestDn += Sum( &osSsRawDataMatrix[iRow][1], pCfg3536->colsCnt - 2 );
+// 	}
+	memset( os_delta, 0, sizeof(os_delta) );
+	//va channel
+	for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+	{
+		for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+		{
+			short oNormalization = 0;
+			if( ( iRow * pCfg3536->colsCnt + iCol ) < pCfg3536->harf_va_channel_num )
+				oNormalization = osSsRawDataMatrix[iRow][iCol] * sumBaseUp / (sumTestUp ? sumTestUp : 1);
+			else
+				oNormalization = osSsRawDataMatrix[iRow][iCol] * sumBaseDn / (sumTestDn ? sumTestDn : 1);
+
+			os_delta[iRow][iCol] = oNormalization - pCfg3536->os_base[iRow][iCol];
+			normalizationData[iRow][iCol] = oNormalization;
+		}
+	}
+	//ref channel
+	unsigned int sumBaseKey = 0, sumTestKey = 0;
+	sumBaseKey = Sum( &pCfg3536->os_base[pCfg3536->rowsCnt][0], ref_channel_num );
+	sumTestKey = Sum( &osSsRawDataMatrix[pCfg3536->rowsCnt][0], ref_channel_num );
+	for( int iCol = 0; iCol < ref_channel_num; iCol++ )
+	{
+		unsigned int sumBaseAdd = sumBaseUp + sumBaseDn + sumBaseKey;
+		unsigned int sumTestAdd = sumTestUp + sumTestDn + sumTestKey;
+		os_delta[pCfg3536->rowsCnt][iCol] = osSsRawDataMatrix[pCfg3536->rowsCnt][iCol] * (sumBaseAdd) / (sumTestAdd ? sumTestAdd : 1)
+			- pCfg3536->os_base[pCfg3536->rowsCnt][iCol];
+	}
+
+	{
+		unsigned char failedChannel[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+		memset( failedChannel, 0 , sizeof(failedChannel) );
+
+		//va channel
+		for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow += 2 )
+		{
+			for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+			{
+				if( os_delta[iRow][iCol] > pCfg3536->m3_delta_va_max || os_delta[iRow+1][iCol] > pCfg3536->m3_delta_va_max )
+				{
+					failerStep |= 0x04;
+					failedChannel[iRow][iCol] = 1;
+					failedChannel[iRow+1][iCol] = 1;
+
+					err_type_linkly |= 0x02;
+				}
+
+				if( os_delta[iRow][iCol] < pCfg3536->m3_delta_level2 && os_delta[iRow+1][iCol] < pCfg3536->m3_delta_level2 )
+				{
+					failerStep |= 0x04;
+					failedChannel[iRow][iCol] = 1;
+					failedChannel[iRow+1][iCol] = 1;
+					if( normalizationData[iRow][iCol] < 200 && normalizationData[iRow+1][iCol] < 200 )
+						err_type_linkly |= 0x01;
+					else
+						err_type_linkly |= 0x02;
+				}
+
+				if( os_delta[iRow][iCol] < (pCfg3536->m3_delta_level2 + pCfg3536->m3_delta_level1) || os_delta[iRow+1][iCol] < (pCfg3536->m3_delta_level2 + pCfg3536->m3_delta_level1) )
+				{
+					failerStep |= 0x04;
+					failedChannel[iRow][iCol] = 1;
+					failedChannel[iRow+1][iCol] = 1;
+					if( normalizationData[iRow][iCol] < 200 && normalizationData[iRow+1][iCol] < 200 )
+						err_type_linkly |= 0x01;
+					else
+						err_type_linkly |= 0x02;
+				}
+
+				if( os_delta[iRow][iCol] < pCfg3536->m3_delta_level1 && os_delta[iRow+1][iCol] < pCfg3536->m3_delta_level1 )
+				{
+					failedChannel[iRow][iCol] = 1;
+					failedChannel[iRow+1][iCol] = 1;
+					err_type_linkly |= 0x04;
+				}
+
+				if( os_delta[iRow][iCol] < pCfg3536->m3_delta_level2 || os_delta[iRow+1][iCol] < pCfg3536->m3_delta_level2 )
+				{
+					failedChannel[iRow][iCol] = 1;
+					failedChannel[iRow+1][iCol] = 1;
+					err_type_linkly |= 0x04;
+				}
+			}
+		}
+
+		for( int iCol = 0; iCol < ref_channel_num; iCol++ )
+		{
+			if( os_delta[pCfg3536->rowsCnt][iCol] > 2 * (pCfg3536->m3_delta_ref_max + abs(pCfg3536->m3_delta_level1)) )
+			{
+				failerStep |= 0x04;
+				failedChannel[pCfg3536->rowsCnt][iCol] = 1;
+				err_type_linkly |= 0x01;
+			}
+			if( os_delta[pCfg3536->rowsCnt][iCol] < -(pCfg3536->m3_delta_ref_max + abs(pCfg3536->m3_delta_level1)) )
+			{
+				failerStep |= 0x04;
+				failedChannel[pCfg3536->rowsCnt][iCol] = 1;
+				err_type_linkly |= 0x02;
+			}
+			if( os_delta[pCfg3536->rowsCnt][iCol] > 2 * pCfg3536->m3_delta_ref_max )
+			{
+				failedChannel[pCfg3536->rowsCnt][iCol] = 1;
+				err_type_linkly |= 0x04;
+			}
+			if( os_delta[pCfg3536->rowsCnt][iCol] < -pCfg3536->m3_delta_ref_max )
+			{
+				failedChannel[pCfg3536->rowsCnt][iCol] = 1;
+				err_type_linkly |= 0x04;
+			}
+		}
+
+		AnalyzeInfo info( pCfg3536->rowsCnt, pCfg3536->colsCnt, ref_channel_num, true );
+		PrintMaxtrixValue( m_ColorText, os_delta, failedChannel, pCfg3536->invalid_node, info, _T("\r\nOS - M3:\r\n") );
+	}
+
+	//M4
+	if( failerStep )
+	{
+		if( failerStep & 0x01 ) itemNotify.UpdateItemResult( ITEM_STA_FAIL, _T("M1") );
+		else if( failerStep & 0x02 ) itemNotify.UpdateItemResult( ITEM_STA_FAIL, _T("M2") );
+		else if( failerStep & 0x04 ) itemNotify.UpdateItemResult( ITEM_STA_FAIL, _T("M3") );
+		else itemNotify.UpdateItemResult( ITEM_STA_FAIL );
+
+// 		if( err_type_linkly & 0x01 )
+// 			TestResultInfo( _T("\r\nChannel Open likely\r\n") );
+// 		else if( err_type_linkly & 0x02 )
+// 			TestResultInfo( _T("\r\nChannel short likely\r\n") );
+
+		TestResultInfo( "\r\n\r\n//OS Test is Fail\r\n", ITEM_STA_FAIL );
+	}
+	else
+	{
+		if( err_type_linkly & 0x04 )
+		{
+			itemNotify.UpdateItemResult( ITEM_STA_TBD );
+			TestResultInfo( "\r\n\r\n//OS Test is TBD\r\n", ITEM_STA_TBD );
+		}
+		else
+		{
+			itemNotify.UpdateItemResult( ITEM_STA_PASS );
+			TestResultInfo( "\r\n\r\n//OS Test is Pass\r\n", ITEM_STA_PASS );
+		}
+	}
+
+	return itemNotify;
+}
+BOOL CTest3536::CheckTpBootSame( )
+{
+	BOOL bCheckBootOk = FALSE;
+	unsigned int iReCode = ERROR_CODE_OK;
+	ISMChip3536* iChip3536 = (ISMChip3536*)SM_ChipBase(m_deviceNo);
+	if( NULL == iChip3536 )   return FALSE;
+
+	unsigned int crc_from_tp = 0, otm_time = 0;
+	iReCode = iChip3536->GetBootCheckSum( &crc_from_tp, &otm_time );
+	if( iReCode != ERROR_CODE_OK )  return FALSE;
+
+	TCHAR szBuffer[MAX_PATH] = {0};
+	transformat( szBuffer, _T("ID = 0x%x,   %d-%d, %d:%d:%d"), otm_time, (otm_time>>22)&0xf, (otm_time>>17)&0x1f,(otm_time>>12)&0x1f, (otm_time>>6)&0x3f, otm_time&0x3f );
+	TestResultInfo( szBuffer );
+	
+	if( crc_from_tp == pCfg3536->boot_check_sum )
+		return TRUE;
+
+	return FALSE;
+}
+unsigned int CTest3536::CheckFlashEraseOk()
+{
+	unsigned int iReCode = ERROR_CODE_OK;
+
+	if(pCfg3536->boot_only_check || pCfg3536->config_only_check) return ERROR_CODE_OK;
+
+	unsigned char regHead1[] = { 0x05 };
+	iReCode = SM_ChipBase(m_deviceNo)->WriteCoreSpace( 0x602, regHead1, 1 );
+	CHECK_RETURN_IF_FAIL(iReCode);
+	unsigned char regHead2[] = { 0x00 };
+	iReCode = SM_ChipBase(m_deviceNo)->WriteCoreSpace( 0x643, regHead2, 1 );
+	CHECK_RETURN_IF_FAIL(iReCode);
+
+	iReCode = SM_ChipBase(m_deviceNo)->WriteCoreSpace( 0x8000, (unsigned char*)flashTestCodeBin, sizeof(flashTestCodeBin) );
+	CHECK_RETURN_IF_FAIL(iReCode);
+
+	unsigned char regHead3[] = { pCfg3536->I2cAddr };
+	iReCode = SM_ChipBase(m_deviceNo)->WriteCoreSpace( 0x001, regHead3, 1 );
+	CHECK_RETURN_IF_FAIL(iReCode);
+
+	unsigned char regHead4[] = { 0x88 };
+	iReCode = SM_ChipBase(m_deviceNo)->WriteCoreSpace( 0x602, regHead4, 1 );
+	CHECK_RETURN_IF_FAIL(iReCode);
+	SysDelay( 30 );
+
+	for( int index = 0; index < 30; index++ )
+	{
+		unsigned int flashTestResult = 0;
+		iReCode = SM_ChipBase(m_deviceNo)->ReadCoreSpace( 0x8000, (unsigned char*)&flashTestResult, 4 );
+		CHECK_RETURN_IF_FAIL(iReCode);
+		if( (flashTestResult >> 24) == 0x54  )
+		{
+			if( 0 == (flashTestResult & 0x00ffffff) )
+			{
+				iReCode = ERROR_CODE_OK;
+			}
+			else
+			{
+				iReCode = ERROR_CODE_INVALID_PARAM;
+				TCHAR chTemp[MAX_PATH] = {0};
+				transformat( chTemp, _T("WriteBurnSpace, Err = 0x%x\r\n"), flashTestResult );
+				TestResultInfo( chTemp );
+			}
+			break;
+		}
+		else
+		{
+			SysDelay(100);
+			//TestResultInfo( _T("WriteBurnSpace LoopOnce...\r\n") );
+			continue;
+		}
+	}
+
+	return iReCode;
+
+// 	unsigned int iReCode = ERROR_CODE_OK, errCode = 0;
+// 	unsigned char retBuffer[20];
+// 	char tempBuffer[MAX_PATH];
+// 	ISMChip3536* iChip3536 = (ISMChip3536*)SM_ChipBase(m_deviceNo);
+// 	if( NULL == iChip3536 )  return FALSE;
+// 
+// 	iReCode = iChip3536->IncokeCommand( CMD_FLASH_TST, 0, 0, 0, retBuffer );
+// 	if( iReCode != ERROR_CODE_OK ) return FALSE;
+// 
+// 	errCode = *(unsigned int*)&retBuffer[2];
+// 	if(0x54000000 != errCode)
+// 	{
+// 		transformat( tempBuffer, _T("ReadBurnSpace, Code = 0x%x\r\n"), errCode );
+// 		TestResultInfo( tempBuffer );
+// 		return FALSE;
+// 	}
+// 
+// 	return TRUE;
+
+// 	unsigned int iReCode = ERROR_CODE_OK;
+// 	ISMChip3536* iChip3536 = (ISMChip3536*)SM_ChipBase(m_deviceNo);
+// 	if( NULL == iChip3536 )  return FALSE;
+// 
+// 	unsigned char readBuffer[4096] = {0};
+// 	unsigned int writeData = 0x5ee5e55e, readData = 0x00000000;
+// 	iReCode = iChip3536->WriteBurnSpace( 0xd000, (const unsigned char*)&writeData, sizeof(writeData), OTP_W_CHK | TLK_DATACHK_EX1 );
+// 	if( iReCode != ERROR_CODE_OK ) return FALSE;
+// 
+// 	iReCode = iChip3536->ReadBurnSpace( 0xd000, (unsigned char*)&readData, sizeof(writeData) );
+// 	if( iReCode != ERROR_CODE_OK ) return FALSE;
+// 
+// 	if( writeData != readData )
+// 	{
+// 		TestResultInfo( _T("Check Erase Falsh step 1 Failed\r\n") );
+// 		return FALSE;
+// 	}
+// 
+// 	writeData = 0xe55e5ee5, readData = 0x00000000;
+// 	iReCode = iChip3536->WriteBurnSpace( 0xd000, (const unsigned char*)&writeData, sizeof(writeData), OTP_W_CHK | TLK_DATACHK_EX1 );
+// 	if( iReCode != ERROR_CODE_OK ) return FALSE;
+// 
+// 	iReCode = iChip3536->ReadBurnSpace( 0xd000, (unsigned char*)&readData, sizeof(writeData) );
+// 	if( iReCode != ERROR_CODE_OK ) return FALSE;
+// 
+// 	if( writeData != readData )
+// 	{
+// 		TestResultInfo( _T("Check Erase Falsh step 2 Failed\r\n") );
+// 		return false;
+// 	}
+// 
+// 	writeData = 0xffffffff;
+// 	iReCode = iChip3536->WriteBurnSpace( 0xd000, (const unsigned char*)&writeData, sizeof(writeData), OTP_W_CHK | TLK_DATACHK_EX1 );
+// 	if( iReCode != ERROR_CODE_OK ) return FALSE;
+// 
+// 	iReCode = iChip3536->ReadBurnSpace( 0xd000, readBuffer, sizeof(readBuffer) );
+// 	if( iReCode != ERROR_CODE_OK ) return FALSE;
+// 
+// 	for( int index = 0; index < sizeof(readBuffer); index++ )
+// 	{
+// 		if( 0xff != readBuffer[index] ) 
+// 		{
+// 		    TestResultInfo( _T("Check Erase Falsh step 3 Failed\r\n") );
+// 			return FALSE;
+// 		}
+// 	}
+// 
+// 	return TRUE;
+}
+unsigned int CTest3536::Boot_Test( NativeTestItem& itemQuote )
+{
+	BOOL bCheckFlashOk = FALSE;
+	unsigned int iReCode = ERROR_CODE_COMM_ERROR;
+	ItemNotifyer itemNotify( m_pNativeIntr, itemQuote );
+
+	TestResultInfo( _T("\r\n------------------------------BOOT Test------------------------------\r\n") );
+
+	ISMChip3536* iChip3536 = (ISMChip3536*)SM_ChipBase(m_deviceNo);
+	if( NULL == iChip3536 )   return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+	iChip3536->IncokeCommand(CMD_ENTER_UPGRADE_MODE);
+
+	for( int index = 0; index < 3; index++ )
+	{
+		bCheckFlashOk = ERROR_CODE_OK == CheckFlashEraseOk();
+		if( bCheckFlashOk ) break;
+		SysDelay( 200 );
+	}
+
+	if( !bCheckFlashOk )
+	{
+		TestResultInfo( _T("Check Erase Falsh Failed\r\n") );
+		return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( ERROR_CODE_CHECK_SUM_MISMATCH ) );
+	}
+
+	unsigned short booVerFromTp = 0;
+	iReCode = iChip3536->GetBootVersion( &booVerFromTp );
+	if( ERROR_CODE_OK != iReCode )  return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	TCHAR szBootVer[MAX_PATH] = {0};
+	transformat( szBootVer, _T("Ver=0x%x"), booVerFromTp );
+
+	BOOL bSameBoot = CheckTpBootSame();
+
+	//wasim
+	//bSameBoot = FALSE;
+
+	if( bSameBoot )
+	{
+		TestResultInfo( _T("\r\nBoot from tp is same with Boot from setting\r\n") );
+		TestResultInfo( szBootVer );
+		TestResultInfo( "\r\n\r\n//BOOT Test is Pass\r\n", ITEM_STA_PASS );
+		itemNotify.UpdateItemResult( ITEM_STA_PASS, szBootVer );
+	}
+	else
+	{
+		if( pCfg3536->boot_only_check )
+		{
+			TestResultInfo( _T("\r\nBoot from tp is differant from setting\r\n") );
+			TestResultInfo( szBootVer );
+			TestResultInfo( "\r\n\r\n//BOOT Test is Fail\r\n", ITEM_STA_FAIL );
+			itemNotify.UpdateItemResult( ITEM_STA_FAIL, szBootVer );
+		}
+		else
+		{
+			TestResultInfo( _T("\r\nDownlad new boot bin...\r\n") );
+			iReCode = iChip3536->BurnBootBin( pCfg3536->bootBinSize, pCfg3536->boot_svn, m_stOneRecord.Scap.oscTrim );
+			if( iReCode == ERROR_CODE_OK )   
+			{
+				/*unsigned short */booVerFromTp = 0;
+				iReCode = iChip3536->GetBootVersion( &booVerFromTp );
+				if( ERROR_CODE_OK != iReCode )  return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+				TCHAR szBootVer[MAX_PATH] = {0};
+				transformat( szBootVer, _T("NewVer=0x%x"), booVerFromTp );
+
+				BOOL bSameBoot2 = CheckTpBootSame();
+				if( bSameBoot2 )
+				{
+					TestResultInfo( "\r\n\r\n//BOOT Test is Pass\r\n", ITEM_STA_PASS );
+					TestResultInfo( szBootVer );
+					itemNotify.UpdateItemResult( ITEM_STA_PASS, szBootVer );
+				}
+				else
+				{
+					TestResultInfo( _T("\r\nBoot from tp is differant from setting\r\n") );
+					TestResultInfo( szBootVer );
+					TestResultInfo( "\r\n\r\n//BOOT Test is Fail\r\n", ITEM_STA_FAIL );
+					itemNotify.UpdateItemResult( ITEM_STA_FAIL, szBootVer );
+				}
+			}
+			else
+			{
+				TestResultInfo( _T("\r\nDownload boot exception\r\n") );
+				TestResultInfo( szBootVer );
+				TestResultInfo( "\r\n\r\n//BOOT Test is Fail\r\n", ITEM_STA_FAIL );
+				itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+			}
+		}
+	}
+
+	return itemNotify;
+}
+BOOL CTest3536::CheckConfigSame( const unsigned char* pCfg, unsigned short len )
+{
+	if( len != pCfg3536->cfgBinSize ) return FALSE;
+
+	unsigned int iReCode = ERROR_CODE_OK;
+	ISMChip3536* iChip3536 = (ISMChip3536*)SM_ChipBase(m_deviceNo);
+	if( NULL == iChip3536 )   return FALSE;
+
+	unsigned int check = caculate_check_sum_ex( pCfg, len );
+	if( check != pCfg3536->config_check_sum )
+	{
+		return FALSE;
+	}
+
+	for( int index = 0; index < len; index++ ) 
+	{
+		if( pCfg[index] != pCfg3536->cfgBinBuffer[index] )
+			return FALSE;
+	}
+
+	//unsigned char workSpaceCfg[MAX_CFG_BIN_SIZE] = {0};
+	//iReCode = iChip3536->ReadBurnSpace( 0x8000, workSpaceCfg, len );
+	//for( int index = 0; index < len; index++ ) 
+	//{
+	//	if( pCfg[index] != workSpaceCfg[index] )
+	//		return FALSE;
+	//}
+
+	unsigned char backSpaceCfg[MAX_CFG_BIN_SIZE] = {0};
+	iReCode = iChip3536->ReadBurnSpace( 0xf000, backSpaceCfg, len );
+
+	for( int index = 0; index < len; index++ ) 
+	{
+		if( pCfg[index] != backSpaceCfg[index] )
+			return FALSE;
+	}
+
+	return TRUE;
+}
+BOOL CTest3536::Ram_TestOk()
+{
+	BOOL bRamOk = FALSE;
+	unsigned int iReCode = ERROR_CODE_OK;
+
+	unsigned char regHead1[] = { 0x05 };
+	iReCode = SM_ChipBase(m_deviceNo)->WriteCoreSpace( 0x602, regHead1, 1 );
+	unsigned char regHead2[] = { 0x00 };
+	iReCode = SM_ChipBase(m_deviceNo)->WriteCoreSpace( 0x643, regHead2, 1 );
+
+	iReCode = SM_ChipBase(m_deviceNo)->WriteCoreSpace( 0x8000, (unsigned char*)ramTestCodeBin, sizeof(ramTestCodeBin) );
+
+	unsigned char regHead3[] = { pCfg3536->I2cAddr };
+	iReCode = SM_ChipBase(m_deviceNo)->WriteCoreSpace( 0x001, regHead3, 1 );
+
+	unsigned char regHead4[] = { 0x88 };
+	iReCode = SM_ChipBase(m_deviceNo)->WriteCoreSpace( 0x602, regHead4, 1 );
+	SysDelay( 30 );
+
+	for( int index = 0; index < 3; index++ )
+	{
+		unsigned int ramTestResult = 0;
+		iReCode = SM_ChipBase(m_deviceNo)->ReadCoreSpace( 0x8000, (unsigned char*)&ramTestResult, 4 );
+		if( (ramTestResult >> 24) == 0x54  )
+		{
+			if( 0 == (ramTestResult & 0x00ffffff) )
+			{
+				bRamOk = TRUE;
+			}
+			else
+			{
+				bRamOk = FALSE;
+				TCHAR chTemp[MAX_PATH] = {0};
+				transformat( chTemp, _T("WriteCoreSpace, Err = 0x%x\r\n"), ramTestResult );
+				TestResultInfo( chTemp );
+			}
+			break;
+		}
+		else
+		{
+			SysDelay(50);
+			TestResultInfo( _T("WriteCoreSpace LoopOnce...\r\n") );
+			continue;
+		}
+	}
+
+	return bRamOk;
+}
+unsigned int CTest3536::MakeTraceRecord()
+{
+	unsigned int iReCode = ERROR_CODE_OK;
+#ifdef _MSC_VER
+	ISMChip3536* iChip3536 = (ISMChip3536*)SM_ChipBase(m_deviceNo);
+	char szBuffer[MAX_PATH] = {0};
+	unsigned char record_buffer[3*1024] = {0};
+	//auto record_buffer = new unsigned char[2*1024];
+	Trace_Info* traceInfo = (Trace_Info*)record_buffer;
+	One_Record* record = (One_Record*)(record_buffer + sizeof(Trace_Info));
+	tstring userInfo = pCfg3536->szUserRecord ? tstring(pCfg3536->szUserRecord) : _T("");
+	unsigned short crc = caculate_check_sum_ex( (unsigned char*)userInfo.c_str(), userInfo.length() + 1 ) >> 16;
+
+	iReCode = iChip3536->ReadBurnSpace( 0xc000, record_buffer, sizeof(Trace_Info) );
+	if(iReCode != ERROR_CODE_OK) return iReCode;
+	
+	BOOL bExitSameUserRecord = FALSE;
+	if(traceInfo->trace_cnt + traceInfo->reverse == 0xff)
+	{
+		traceInfo->tlen =  traceInfo->tlen >= 0x800 ? 0x800 : traceInfo->tlen ;
+		iReCode = iChip3536->ReadBurnSpace( 0xc000 + sizeof(Trace_Info), (unsigned char*)record, traceInfo->tlen );
+		if(iReCode != ERROR_CODE_OK) return iReCode;
+
+		for(int index = 0; index < traceInfo->trace_cnt; index++)
+		{
+			if(0 != caculate_check_sum_u16((unsigned short*)record, sizeof(One_Record))) break;
+
+			unsigned char textOutCnt = 0;
+			if(m_pNativeIntr->DebugMode())
+			{
+				textOutCnt++;
+				transformat(szBuffer, _T("0x%010llX CRC = 0x%04x, %d-%d, %d:%d:%d	"), record->vid_pid, record->sz_crc, (record->time>>22)&0xf, (record->time>>17)&0x1f, 
+					(record->time>>12)&0x1f, (record->time>>6)&0x3f, record->time&0x3f);
+				TestResultInfo( szBuffer );
+			}
+
+			if((record->szlen > 0) && (record->szlen == align_2(lengthof((char*)(record + 1)) + 1)))
+			{
+				textOutCnt++;
+				transformat(szBuffer, _T("%s"), (char*)(record + 1) );
+				TestResultInfo(szBuffer);
+			}
+
+			if(textOutCnt > 0)
+			{
+				TestResultInfo( _T("\r\n") );
+			}
+
+			if(record->sz_crc == crc)
+			{
+				bExitSameUserRecord = TRUE;
+			}
+
+			record = (One_Record*)((unsigned char*)record + record->szlen + sizeof(One_Record));
+		}
+	}
+	else if(0xff == traceInfo->trace_cnt && 0xff == traceInfo->reverse)
+	{
+		traceInfo->tlen = traceInfo->trace_cnt = 0;
+	}
+	else
+	{
+		//compatible to v5
+		//delete[] record_buffer;
+		return iReCode;
+	}
+
+	if(traceInfo->tlen + sizeof(Trace_Info) + sizeof(One_Record) + userInfo.length() + 1 > 0x800)
+	{
+		TestResultInfo(_T("\r\nTrace Info Exceed Max Buffer Count\r\n"));
+	}
+	else
+	{
+		SYSTEMTIME SysTime;
+		::GetLocalTime(&SysTime);
+
+		record->reserve = 0;
+		record->record_crc = 0;
+		record->vid_pid = pCfg3536->vid_pid;
+		record->time = (SysTime.wMonth << 22) + (SysTime.wDay << 17) + (SysTime.wHour << 12) + (SysTime.wMinute << 6) + SysTime.wSecond;
+
+		if(bExitSameUserRecord)
+		{
+			record->szlen = 0;
+			record->sz_crc = crc;
+		}
+		else
+		{
+			record->szlen = align_2(userInfo.length() + 1);
+			copytextto((TCHAR*)(record + 1), record->szlen, userInfo.c_str(), record->szlen);
+			record->sz_crc = crc;
+		}
+		record->record_crc = 1 + (~caculate_check_sum_u16((unsigned short*)record, sizeof(One_Record)));
+
+		traceInfo->trace_cnt++;
+		traceInfo->reverse = ~traceInfo->trace_cnt;
+		traceInfo->tlen += record->szlen + sizeof(One_Record);
+
+		iReCode = iChip3536->WriteBurnSpace(0xc000, record_buffer, traceInfo->tlen + sizeof(Trace_Info), OTP_W_CHK | TLK_DATACHK_EX1);
+		SysDelay(10);
+
+		transformat(szBuffer, _T("0x%010llX CRC = 0x%04x, %d-%d, %d:%d:%d	"), record->vid_pid, record->sz_crc, (record->time>>22)&0xf, (record->time>>17)&0x1f, 
+			(record->time>>12)&0x1f, (record->time>>6)&0x3f, record->time&0x3f);
+		TestResultInfo(szBuffer);
+
+		if(record->szlen > 0)
+		{
+			transformat(szBuffer, _T("%s"), (char*)(record + 1) );
+			TestResultInfo(szBuffer);
+		}
+
+		TestResultInfo( _T("\r\n") );
+	}
+	//delete[] record_buffer;
+#endif
+
+	return iReCode;
+}
+
+unsigned int CTest3536:: ProblemJudgment(unsigned int addr, unsigned short plattenone,  unsigned short plattentwo)
+{
+	unsigned int iReCode = ERROR_CODE_OK;
+	unsigned short pValue = 0;
+	ISMChip3536* iChip3536 = (ISMChip3536*)SM_ChipBase(m_deviceNo);
+	iReCode = iChip3536->ReadBurnSpace( addr, (unsigned char*)&pValue, 2 );
+	if(iReCode != ERROR_CODE_OK) return iReCode;
+
+	if((pValue == plattenone) || (pValue == plattentwo))
+	{
+		iReCode = ERROR_CODE_COMM_ERROR;
+	}
+
+	return iReCode;
+}
+
+unsigned int CTest3536::ProjectCode_Test( NativeTestItem& itemQuote )
+{
+	unsigned int iReCode = ERROR_CODE_OK;
+	ItemNotifyer itemNotify( m_pNativeIntr, itemQuote );
+
+	TestResultInfo( _T("\r\n------------------------------Project Test------------------------------\r\n") );
+
+	if(ProblemJudgment(0xc000,0x5aa5,0xa55a)!=ERROR_CODE_OK)
+	{
+		iReCode = SM_ChipBase(m_deviceNo)->EraseBurnSpace(0xc000,4096);//在ProjectCode_Test测试前先擦除0xc000长度为4k的内容，在进行ICID的写入，解决残留5aa5的问题
+		if( iReCode != ERROR_CODE_OK ) itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	}
+
+	MakeTraceRecord();
+
+	if( !Ram_TestOk() )
+	{
+		return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( ERROR_CODE_CHECK_SUM_MISMATCH ) );
+	}
+
+	iReCode = SM_ChipBase(m_deviceNo)->IncokeCommand( CMD_CTP_RST );
+	if( iReCode != ERROR_CODE_OK ) itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+	SysDelay( 5 );
+
+	unsigned short cfgBuffer[MAX_CFG_BIN_SIZE] = {0};
+	iReCode = SM_ChipBase(m_deviceNo)->ReadCoreSpace( 0x9E00, (unsigned char*)cfgBuffer, 204 );
+	if( iReCode != ERROR_CODE_OK ) itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+	TCHAR chTemp[MAX_PATH] = {0};
+	unsigned short s = cfgBuffer[1] >> 10;
+	unsigned short p = (((cfgBuffer[1] >> 4) & 0x03) << 9) | (cfgBuffer[0] & 0x1ff);
+	unsigned short v = (((cfgBuffer[1] >> 6) & 0x03) << 7) | (cfgBuffer[0] >> 9);
+	transformat( chTemp, _T("SoftWare Ver = %d, ProjectCode = %d, VenderID = %d\r\n"), s, p, v );
+	TestResultInfo( chTemp );
+
+	transformat( chTemp, _T("S=%d, P=%d, V=%d"), s, p, v );
+		
+	if( pCfg3536->sVersion == s && pCfg3536->pVersion == p && pCfg3536->vVersion == v )
+	{
+		TestResultInfo( "\r\n\r\n//Project Test is Pass\r\n", ITEM_STA_PASS );
+		itemNotify.UpdateItemResult( ITEM_STA_PASS, chTemp );
+	}
+	else
+	{
+		TestResultInfo( "\r\n\r\n//Project Test is Fail\r\n", ITEM_STA_FAIL );
+		itemNotify.UpdateItemResult( ITEM_STA_FAIL, chTemp );
+	}
+
+	return itemNotify;
+}
+unsigned int CTest3536::Config_Test( NativeTestItem& itemQuote )
+{
+	unsigned int iReCode = ERROR_CODE_COMM_ERROR;
+	ItemNotifyer itemNotify( m_pNativeIntr, itemQuote );
+
+	TestResultInfo( _T("\r\n------------------------------CONFIG Test------------------------------\r\n") );
+
+	ISMChip3536* iChip3536 = (ISMChip3536*)SM_ChipBase(m_deviceNo);
+	if( NULL == iChip3536 )   return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+	unsigned short cfgVerFromTp = 0;
+	unsigned char configBuffer[MAX_CFG_BIN_SIZE] = {0};
+	iReCode = iChip3536->GetFirmWareConfig( configBuffer, pCfg3536->cfgBinSize );
+	if( ERROR_CODE_OK != iReCode )  return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+	cfgVerFromTp = configBuffer[3] >> 2;
+	TCHAR szConfigVer[MAX_PATH] = {0};
+	transformat( szConfigVer, _T("Ver=0x%x"), cfgVerFromTp );
+
+	BOOL bSameConfig = CheckConfigSame( configBuffer, pCfg3536->cfgBinSize );
+
+	//wasim
+	//bSameConfig = FALSE;
+
+	if( bSameConfig )
+	{
+		TestResultInfo( _T("\r\nConfig from tp is same with Config from setting\r\n") );
+		TestResultInfo( szConfigVer );
+		TestResultInfo( "\r\n\r\n//Config Test is Pass\r\n", ITEM_STA_PASS );
+		itemNotify.UpdateItemResult( ITEM_STA_PASS, szConfigVer );
+	}
+	else
+	{
+		if( pCfg3536->config_only_check )
+		{
+			TestResultInfo( _T("\r\nConfig from tp is differant from setting\r\n") );
+			TestResultInfo( szConfigVer );
+			TestResultInfo( "\r\n\r\n//Config Test is Fail\r\n", ITEM_STA_FAIL );
+			itemNotify.UpdateItemResult( ITEM_STA_FAIL, szConfigVer );
+		}
+		else
+		{
+			TestResultInfo( _T("\r\nDownlad new config bin...\r\n") );
+			iReCode = iChip3536->BurnConfigBin( pCfg3536->cfgBinBuffer, pCfg3536->cfgBinSize );
+			if( iReCode == ERROR_CODE_OK )   
+			{
+				memset( configBuffer, 0, sizeof(configBuffer) );
+				iChip3536->GetFirmWareConfig( configBuffer, pCfg3536->cfgBinSize );
+				BOOL bSameConfig2 = CheckConfigSame( configBuffer, pCfg3536->cfgBinSize );
+
+				cfgVerFromTp = configBuffer[3] >> 2;
+				TCHAR szConfigVer[MAX_PATH] = {0};
+				transformat( szConfigVer, _T("NewVer=0x%x"), cfgVerFromTp );
+
+				if( bSameConfig2 )
+				{
+					TestResultInfo( "\r\n\r\n//Config Test is Pass\r\n", ITEM_STA_PASS );
+					TestResultInfo( szConfigVer );
+					itemNotify.UpdateItemResult( ITEM_STA_PASS, szConfigVer );
+				}
+				else
+				{
+					TestResultInfo( _T("\r\nConfig from tp is differant from setting\r\n") );
+					TestResultInfo( szConfigVer );
+					TestResultInfo( "\r\n\r\n//Config Test is Fail\r\n", ITEM_STA_FAIL );
+					itemNotify.UpdateItemResult( ITEM_STA_FAIL, szConfigVer );
+				}
+			}
+			else
+			{
+				TestResultInfo( _T("\r\nDownload config exception\r\n") );
+				TestResultInfo( szConfigVer );
+				TestResultInfo( "\r\n\r\n//Config Test is Fail\r\n", ITEM_STA_FAIL );
+				itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+			}
+		}
+	}
+
+	return itemNotify;
+}
+unsigned int CTest3536::OSCTrim_Test( NativeTestItem& itemQuote )
+{
+	unsigned int iReCode = ERROR_CODE_OK, failerCnt=0;
+	ISMChip3536* iChip3536 = (ISMChip3536*)SM_ChipBase(m_deviceNo);
+	ItemNotifyer itemNotify( m_pNativeIntr, itemQuote );
+
+	TestResultInfo( _T("\r\n------------------------------OSC Trim Test------------------------------\r\n") );
+
+	unsigned short osTrim1 = 0, osTrim2 = 0, oscTrimNew = 0;
+	unsigned char readBuffer[16] = {0};
+	char szBuffer[MAX_PATH] = {0};
+
+	if(ProblemJudgment(0xe000,0x5aa5,0xa55a)!=ERROR_CODE_OK)
+	{
+		iReCode = SM_ChipBase(m_deviceNo)->EraseBurnSpace( 0xe000, 4096);   //有项目测试残留5aa5导致校准这里有问题，现在该项目校准前擦除4k在校准
+		if( iReCode != ERROR_CODE_OK ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	}
+
+	iReCode = SM_ChipBase(m_deviceNo)->ReadBurnSpace( 0xe000, readBuffer, sizeof(readBuffer) );
+	if( iReCode != ERROR_CODE_OK ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+	if(readBuffer[0]==0xa5 && readBuffer[1]==0x5a && readBuffer[2]==0xa5)
+	{
+		memset(readBuffer,0x00,16);
+	}
+	if( (0xff != (readBuffer[0] + readBuffer[1])) || (readBuffer[0] < pCfg3536->osctrim_min) || (readBuffer[0] > pCfg3536->osctrim_max) || pCfg3536->must_test)
+	{
+		TestResultInfo( _T("Start Trim And Refresh Trim Value\r\n") );
+
+		SysDelay( 10 );
+		iReCode = iChip3536->GetOSCTrim( &osTrim1, pCfg3536->tick_standard );
+		if( iReCode != ERROR_CODE_OK ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+		iReCode = iChip3536->GetOSCTrim( &osTrim2, pCfg3536->tick_standard );
+		if( iReCode != ERROR_CODE_OK ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+		if((osTrim1 - osTrim2) * (osTrim1 - osTrim2) > 49)
+		{
+			TestResultInfo( _T("OSTrim Value Out Of Range\r\n") );
+			return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( ERROR_CODE_INVALID_PARAM ) );
+		}
+
+		oscTrimNew = (osTrim1 + osTrim2) >> 1;
+		m_stOneRecord.Scap.oscTrim = oscTrimNew;
+
+		//unsigned short osc =  ( ~oscTrimNew ) & 0xff;
+		//osc = ( osc << 8 ) + oscTrimNew;	
+
+		readBuffer[0] = oscTrimNew & 0xff;
+		readBuffer[1] = ~readBuffer[0];
+
+		//Gen ICID
+		unsigned int* pIntData = (unsigned int*)&readBuffer[8];
+		unsigned short* pShortData = (unsigned short*)&readBuffer[8];
+		if(0xffff != (pShortData[2] + pShortData[3]))
+		{
+			SYSTEMTIME SysTime;
+			::GetLocalTime(&SysTime);
+			pIntData[0] = (SysTime.wMonth << 22) + (SysTime.wDay << 17) + (SysTime.wHour << 12) + (SysTime.wMinute << 6) + SysTime.wSecond;
+
+			std::srand((pIntData[0]+SysTime.wMilliseconds));
+			::GetLocalTime(&SysTime);
+			pShortData[2] = (((rand()&0xffff) + ((SysTime.wMilliseconds % 1000)<<3))&0xfff8) + m_deviceNo;
+			pShortData[3] = ~pShortData[2];
+		}
+
+		iReCode = SM_ChipBase(m_deviceNo)->WriteBurnSpace( 0xe000, readBuffer, sizeof(readBuffer), OTP_W_CHK | TLK_DATACHK_EX1 );
+		if( iReCode != ERROR_CODE_OK ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+		SysDelay( 10 );
+		iReCode = SM_ChipBase(m_deviceNo)->ReadBurnSpace( 0xe000, readBuffer, sizeof(readBuffer) );
+		if( iReCode != ERROR_CODE_OK ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	}
+
+	m_stOneRecord.ReleaseID = *(UINT64*)(readBuffer + 8);
+
+	//compatible to v5
+	if(0xffffffffffffffff == m_stOneRecord.ReleaseID)
+	{
+		iReCode = iChip3536->ReadBurnSpace( 0xc000, (unsigned char*)&m_stOneRecord.ReleaseID, sizeof(m_stOneRecord.ReleaseID) );
+		if( iReCode != ERROR_CODE_OK ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	}
+
+	UINT32 otm_time = *(UINT32*)&m_stOneRecord.ReleaseID;
+	transformat( szBuffer, _T("ICID = 0x%llx,   %d-%d, %d:%d:%d\r\n"), m_stOneRecord.ReleaseID, (otm_time>>22)&0xf, (otm_time>>17)&0x1f,(otm_time>>12)&0x1f, (otm_time>>6)&0x3f, otm_time&0x3f );
+	TestResultInfo( szBuffer );
+
+	transformat( szBuffer, _T("OSCTrim = 0x%02x"), readBuffer[0] );
+	TestResultInfo( szBuffer );
+
+	int fo_trim =0;
+	int offset = (unsigned int)(pCfg3536->tick_standard * (float)pCfg3536->offset_tick /1000);
+
+	iReCode = iChip3536->GetTrimeDosc(fo_trim);
+	if( iReCode != ERROR_CODE_OK ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+	int err = fo_trim - pCfg3536->tick_standard;
+
+	TestResultInfoR( _T("\r\nTicks = %d, Actual offset(%d), offset(%d), proportion(%d/1000)\r\n"),fo_trim, abs(err), offset, pCfg3536->offset_tick);
+
+	if (abs(err) > offset)
+	{
+		failerCnt++;
+		TestResultInfoR(_T("Err TrimeDosc!"));
+	}
+
+
+	if( readBuffer[0] >= pCfg3536->osctrim_min && readBuffer[0] <= pCfg3536->osctrim_max && 0==failerCnt)
+	{
+		TestResultInfo( "\r\n\r\n//OSCTrim Test is Pass\r\n", ITEM_STA_PASS );
+		itemNotify.UpdateItemResult( ITEM_STA_PASS, szBuffer );
+	}
+	else
+	{
+		TestResultInfo( "\r\n\r\n//OSCTrim Test is Fail\r\n", ITEM_STA_FAIL );
+		itemNotify.UpdateItemResult( ITEM_STA_FAIL, szBuffer );
+	}
+
+	return itemNotify;
+}
+unsigned int CTest3536::Current_Test( NativeTestItem& itemQuote )
+{
+	TEST_ITEM_STATUS itemStatus = ITEM_STA_NONE;
+	for( int index = 0; index < 3; index++ )
+	{
+		itemStatus = (TEST_ITEM_STATUS)Current_TestEx( itemQuote, index );
+		if( itemStatus == ITEM_STA_PASS ) break;
+	}
+	return itemStatus;
+}
+unsigned int CTest3536::Current_TestEx( NativeTestItem& itemQuote, unsigned char times )
+{
+	int failedCount = 0;
+	unsigned int iReCode = ERROR_CODE_COMM_ERROR;
+	ItemNotifyer itemNotify( m_pNativeIntr, itemQuote );
+
+	TestResultInfo( _T("\r\n------------------------------Current Test------------------------------\r\n") );
+
+	times = (0 == times) ? 1 : 0;
+	ISMChip3536* iChip3536 = (ISMChip3536*)SM_ChipBase(m_deviceNo);
+	if( NULL == SM_ChipBase(m_deviceNo) )   return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+	//new SEMI.Util.SMDefinition(0x80, "sleep"),
+    //new SEMI.Util.SMDefinition(0x40, "stop"),
+	//new SEMI.Util.SMDefinition(0x00, "active"),
+
+	short deltaCurrent = 0;
+	short workCurrent = 0, sleepCurrent = 0, activeCurrent = 0, emptyCurrent = 0;
+	short level1[2][2] = {
+		(short)(-30 * times), (short)(0 * times),
+		(short)(50 * times), (short)(pCfg3536->sleep_current_max * times),
+	};
+	iReCode = iChip3536->GetCurrent( 0x80, level1, (unsigned short*)&workCurrent, (unsigned short*)&sleepCurrent );
+	if( iReCode != ERROR_CODE_OK )
+	{
+		failedCount++;
+	}
+
+	short level2[2][2] = {
+		(short)(pCfg3536->active_current_min * times), 0,
+		(short)(pCfg3536->active_current_max * times), 0,
+	};
+	iReCode = iChip3536->GetCurrent( 0x00, level2, (unsigned short*)&activeCurrent, (unsigned short*)&emptyCurrent );
+	if( iReCode != ERROR_CODE_OK )
+	{
+		failedCount++;
+	}
+
+	//iReCode = iChip3536->IncokeCommand( CMD_CTP_RST );
+	//SysDelay( 50 );
+
+	deltaCurrent = workCurrent - sleepCurrent;
+
+	TCHAR szTmep[MAX_PATH] = {0};
+
+	{
+		m_stOneRecord.current_mode1 = workCurrent;
+		m_stOneRecord.current_mode2 = sleepCurrent;
+		m_stOneRecord.current_mode3 = activeCurrent;
+		m_stOneRecord.current_delta = deltaCurrent;
+		transformat( szTmep, _T("\r\nmode1 = %d, mode2 = %d, mode3 = %d, delta = %d\r\n"), workCurrent, sleepCurrent, activeCurrent, deltaCurrent );
+		TestResultInfo( szTmep );
+	}
+	if( workCurrent < pCfg3536->work_current_min )
+	{
+		failedCount++;
+		transformat( szTmep, _T( "\r\nmode1(%d) < setting min(%d)\r\n"), workCurrent, pCfg3536->work_current_min );
+		TestResultInfo( szTmep );
+	}
+	if( workCurrent > pCfg3536->work_current_max )
+	{
+		failedCount++;
+		transformat( szTmep, _T( "\r\nmode1(%d) > setting max(%d)\r\n"), workCurrent, pCfg3536->work_current_max );
+		TestResultInfo( szTmep );
+	}
+	if( sleepCurrent < pCfg3536->sleep_current_min )
+	{
+		failedCount++;
+		transformat( szTmep, _T( "\r\nmode2(%d) < setting min(%d)\r\n"), sleepCurrent, pCfg3536->sleep_current_min );
+		TestResultInfo( szTmep );
+	}
+	if( sleepCurrent > pCfg3536->sleep_current_max )
+	{
+		failedCount++;
+		transformat( szTmep, _T( "\r\nmode2(%d) > setting max(%d)\r\n"), sleepCurrent, pCfg3536->sleep_current_max );
+		TestResultInfo( szTmep );
+	}
+	if( deltaCurrent < pCfg3536->delta_current_min )
+	{
+		failedCount++;
+		transformat( szTmep, _T( "\r\ndelta(%d) < setting min(%d)\r\n"), deltaCurrent, pCfg3536->delta_current_min );
+		TestResultInfo( szTmep );
+	}
+	if( deltaCurrent > pCfg3536->delta_current_max )
+	{
+		failedCount++;
+		transformat( szTmep, _T( "\r\ndelta(%d) > setting max(%d)\r\n"), deltaCurrent, pCfg3536->delta_current_max );
+		TestResultInfo( szTmep );
+	}
+	if( activeCurrent < pCfg3536->active_current_min )
+	{
+		failedCount++;
+		transformat( szTmep, _T( "\r\nmode3(%d) < setting min(%d)\r\n"), activeCurrent, pCfg3536->active_current_min );
+		TestResultInfo( szTmep );
+	}
+	if( activeCurrent > pCfg3536->active_current_max )
+	{
+		failedCount++;
+		transformat( szTmep, _T( "\r\nmode3(%d) > setting max(%d)\r\n"), activeCurrent, pCfg3536->active_current_max );
+		TestResultInfo( szTmep );
+	}
+
+	if( failedCount )
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_FAIL );
+		TestResultInfo( "\r\n\r\n//Current Test is Fail\r\n", ITEM_STA_FAIL );
+	}
+	else
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_PASS );
+		TestResultInfo( "\r\n\r\n//Current Test is Pass\r\n", ITEM_STA_PASS );
+	}
+
+	return itemNotify;
+}
+unsigned int CTest3536::RawData_Test( NativeTestItem& itemQuote )
+{
+	int failerCount = 0;
+	unsigned int iReCode = ERROR_CODE_COMM_ERROR;
+	ItemNotifyer itemNotify( m_pNativeIntr, itemQuote );
+	signed short rawdataTempBuffer[100] = {0};
+	unsigned short rawdataMatrix[MAX_SCAP_ROW][MAX_SCAP_COL];
+
+	TestResultInfo( _T("\r\n------------------------------RawData Test------------------------------\r\n") );
+
+	if( NULL == SM_ChipBase(m_deviceNo) )   return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	ISMChip3536* iChip3536 = (ISMChip3536*)SM_ChipBase(m_deviceNo);
+
+	int addRow = ( pCfg3536->real_channel_num - pCfg3536->va_channel_num ) ? 1 : 0;
+
+	//iReCode = iChip3536->IncokeCommand( CMD_CTP_RST );
+	//SysDelay( 20 );
+
+	iReCode = iChip3536->SwitchMode( pCfg3536->sync_type, pCfg3536->sync_length );
+	if( ERROR_CODE_OK != iReCode ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	SysDelay( 50 );
+
+	for( int index = 0; index < 2; index++ )
+	{
+		iReCode = iChip3536->GetRawData( rawdataTempBuffer, pCfg3536->sync_length/*(pCfg3536->rowsCnt + 1) * pCfg3536->colsCnt * 2*/ );
+		//if( iReCode == ERROR_CODE_OK ) break;
+		if( ERROR_CODE_OK != iReCode ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	}
+	
+	int ref_channel_num = min(pCfg3536->real_channel_num - pCfg3536->va_channel_num, pCfg3536->colsCnt);
+	AnalyzeInfo info( pCfg3536->rowsCnt, pCfg3536->colsCnt, ref_channel_num, true );
+	ReShappingData( rawdataMatrix, (unsigned short*)rawdataTempBuffer, G_XMLConfig->real_channel_num, pCfg3536->rowsCnt + 1, pCfg3536->colsCnt );
+	//short rawdataMin[MAX_SCAP_ROW][MAX_SCAP_COL] = {0}, rawdataMax[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+	//FillMatrixUseValue( rawdataMin, pCfg3536->rawdata_min );
+	//FillMatrixUseValue( rawdataMax, pCfg3536->rawdata_max );
+
+	NodeVal nodeOutRange;
+	ColorText textTemp( _T("\r\nScapData:\r\n") );
+	bool bResult = AnalyzeTestResult( rawdataMatrix, pCfg3536->rawdata_min, pCfg3536->rawdata_max, pCfg3536->invalid_node, info, textTemp, nodeOutRange );
+	TestResultInfo( textTemp );
+	if( !bResult )
+	{
+		failerCount++;
+		LPCTSTR strHead = _T("\r\n//========= Out of Threshold in BaseTest: \r\n");
+		PrintNodeValue( m_ColorText, &nodeOutRange, strHead );
+	}
+
+	if( !failerCount )
+	{
+		BOOL bAllInvalid = TRUE;
+		for( int iRow = 0; iRow < pCfg3536->rowsCnt; iRow++ )
+		{
+			for( int iCol = 0; iCol < pCfg3536->colsCnt; iCol++ )
+			{
+				if( 4096 != rawdataMatrix[iRow][iCol] )
+					bAllInvalid = FALSE;
+				if( 2048 != rawdataMatrix[iRow][iCol] )
+					bAllInvalid = FALSE;
+			}
+		}
+		if( bAllInvalid ) 
+		{
+			TestResultInfo( _T("\r\nRawData Is Invalid\r\n") );
+			failerCount++;
+		}
+	}
+
+	if( failerCount )
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_FAIL );
+		TestResultInfo( "\r\n\r\n//RawData Test is Fail\r\n", ITEM_STA_FAIL );
+	}
+	else
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_PASS );
+		TestResultInfo( "\r\n\r\n//RawData Test is Pass\r\n", ITEM_STA_PASS );
+	}
+
+	return itemNotify;
+}
+unsigned int CTest3536::Noise_Test( NativeTestItem& itemQuote )
+{
+	int failerCount = 0;
+	unsigned int iReCode = ERROR_CODE_COMM_ERROR;
+	ItemNotifyer itemNotify( m_pNativeIntr, itemQuote );
+	signed short noiseTempBuffer[100] = {0}, noiseMaxBuffer[100] = {0};
+	signed short rawdataTempBuffer[5][100] = {0}, rawdataBaseBuffer[100] = {0};
+	unsigned short noiseMatrix[MAX_SCAP_ROW][MAX_SCAP_COL];
+
+	TestResultInfo( _T("\r\n------------------------------Noise Test------------------------------\r\n") );
+
+	if( NULL == SM_ChipBase(m_deviceNo) )   return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	ISMChip3536* iChip3536 = (ISMChip3536*)SM_ChipBase(m_deviceNo);
+
+	int addRow = ( pCfg3536->real_channel_num - pCfg3536->va_channel_num ) ? 1 : 0;
+
+	iReCode = iChip3536->IncokeCommand( CMD_CTP_RST );
+	SysDelay( 20 );
+
+	iReCode = iChip3536->SwitchMode( MODE_RAWDATA, pCfg3536->sync_length );
+	if( ERROR_CODE_OK != iReCode ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+	for( int index = 0; index < 5; index++ )
+	{
+		iReCode = iChip3536->GetRawData( rawdataTempBuffer[index], pCfg3536->sync_length );
+		if( ERROR_CODE_OK != iReCode ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+		SysDelay(10);
+	}
+
+	for(int iCnt = 0; iCnt < (pCfg3536->rowsCnt + 1) * pCfg3536->colsCnt; iCnt++ )
+	{
+		int sum = 0;
+		for(int index = 0; index < 5; index++)
+		{
+			sum += rawdataTempBuffer[index][iCnt];
+		}
+
+		rawdataBaseBuffer[iCnt] = sum/5;
+	}
+
+
+
+	for( int index = 0; index < pCfg3536->noise_frame; index++ )
+	{
+		iReCode = iChip3536->GetRawData( noiseTempBuffer, pCfg3536->sync_length );
+		if( ERROR_CODE_OK != iReCode ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+		for( int iCnt = 0; iCnt < (pCfg3536->rowsCnt + 1) * pCfg3536->colsCnt; iCnt++ )
+		{
+			noiseTempBuffer[iCnt] = noiseTempBuffer[iCnt] - rawdataBaseBuffer[iCnt];
+			noiseMaxBuffer[iCnt] = max( noiseMaxBuffer[iCnt], abs(noiseTempBuffer[iCnt]) );
+		}
+
+		/*for( int iCnt = 0; iCnt < (pCfg3536->rowsCnt + 1) * pCfg3536->colsCnt; iCnt++ )
+		noiseMaxBuffer[iCnt] = max( noiseMaxBuffer[iCnt], abs(noiseTempBuffer[iCnt]) );*/
+
+		SysDelay(5);
+	}
+
+	int ref_channel_num = min(pCfg3536->real_channel_num - pCfg3536->va_channel_num, pCfg3536->colsCnt);
+	AnalyzeInfo info( pCfg3536->rowsCnt, pCfg3536->colsCnt, ref_channel_num, true );
+	ReShappingData( noiseMatrix, (unsigned short*)noiseMaxBuffer, G_XMLConfig->real_channel_num * 2, pCfg3536->rowsCnt + 1, pCfg3536->colsCnt );
+	short noiseMin[MAX_SCAP_ROW][MAX_SCAP_COL] = {0}, noiseMax[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+	FillMatrixUseValue( noiseMin, (signed short)0 );
+	FillMatrixUseValue( noiseMax, pCfg3536->noise_max );
+
+	NodeVal nodeOutRange;
+	ColorText textTemp( _T("\r\nNoise Data:\r\n") );
+	bool bResult = AnalyzeTestResult( noiseMatrix, noiseMin, noiseMax, pCfg3536->invalid_node, info, textTemp, nodeOutRange );
+	TestResultInfo( textTemp );
+	if( !bResult )
+	{
+		failerCount++;
+		LPCTSTR strHead = _T("\r\n//========= Out of Threshold in NoiseTest: \r\n");
+		PrintNodeValue( m_ColorText, &nodeOutRange, strHead );
+	}
+
+	if( failerCount )
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_FAIL );
+		TestResultInfo( "\r\n\r\n//Noise Test is Fail\r\n", ITEM_STA_FAIL );
+	}
+	else
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_PASS );
+		TestResultInfo( "\r\n\r\n//Noise Test is Pass\r\n", ITEM_STA_PASS );
+	}
+
+	return itemNotify;
+}
+unsigned int CTest3536::IOVoltage_Test( NativeTestItem& itemQuote )
+{
+	int failerCnt = 0;
+	unsigned int iReCode = ERROR_CODE_COMM_ERROR;
+	ItemNotifyer itemNotify( m_pNativeIntr, itemQuote );
+	TCHAR szTemp[MAX_PATH] = {0};
+
+	TestResultInfo( _T("\r\n------------------------------IOVoltage Test------------------------------\r\n") );
+
+	if( NULL == SM_ChipBase(m_deviceNo) )   return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	ISMChip3536* iChip3536 = (ISMChip3536*)SM_ChipBase(m_deviceNo);
+
+	unsigned int ioVols[2][8] = {0};
+	iReCode = iChip3536->GetIoVoltage( ioVols );
+	if( iReCode != ERROR_CODE_OK ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+	transformat( szTemp, _T("pin = low,  int vol = %-6d,	sda vol = %-6d,	scl vol = %-6d\r\n"), ioVols[0][2], ioVols[0][0], ioVols[0][1] );
+	TestResultInfo( szTemp );
+	transformat( szTemp, _T("pin = high, int vol = %-6d,	sda vol = %-6d,	scl vol = %-6d\r\n"), ioVols[1][2], ioVols[1][0], ioVols[1][1] );
+	TestResultInfo( szTemp );
+
+	if( ioVols[0][2] < pCfg3536->int_low_min || ioVols[0][2] > pCfg3536->int_low_max )//if( ioVols[0][2] > pCfg3536->int_low )
+	{
+		failerCnt++;
+		transformat( szTemp, _T("int vol = %d, th = [%d - %d]\r\n"), ioVols[0][2], pCfg3536->int_low_min, pCfg3536->int_low_max  );
+		TestResultInfo( szTemp );
+	}
+	if( ioVols[1][2] < pCfg3536->int_high_min || ioVols[1][2] > pCfg3536->int_high_max )//if( ioVols[1][2] < pCfg3536->int_high )
+	{
+		failerCnt++;
+		transformat( szTemp, _T("int vol = %d, th = [%d - %d]\r\n"), ioVols[1][2], pCfg3536->int_high_min, pCfg3536->int_high_max );
+		TestResultInfo( szTemp );
+	}
+
+	if( ioVols[0][0] < pCfg3536->iic_low_min || ioVols[0][0] > pCfg3536->iic_low_max  )//if( ioVols[0][0] > pCfg3536->iic_low )
+	{
+		failerCnt++;
+		transformat( szTemp, _T("sda vol = %d, th = [%d - %d]\r\n"), ioVols[0][0], pCfg3536->iic_low_min, pCfg3536->iic_low_max );
+		TestResultInfo( szTemp );
+	}
+	if( ioVols[1][0] < pCfg3536->iic_high_min || ioVols[1][0] > pCfg3536->iic_high_max )//if( ioVols[1][0] < pCfg3536->iic_high )
+	{
+		failerCnt++;
+		transformat( szTemp, _T("sda vol = %d, th = [%d - %d]\r\n"), ioVols[1][0], pCfg3536->iic_high_min, pCfg3536->iic_high_max );
+		TestResultInfo( szTemp );
+	}
+
+	if( ioVols[0][1] < pCfg3536->iic_low_min || ioVols[0][1] > pCfg3536->iic_low_max )//if( ioVols[0][1] > pCfg3536->iic_low )
+	{
+		failerCnt++;
+		transformat( szTemp, _T("scl vol = %d, th = [%d - %d]\r\n"), ioVols[0][1], pCfg3536->iic_low_min, pCfg3536->iic_low_max  );
+		TestResultInfo( szTemp );
+	}
+	if(ioVols[1][1] < pCfg3536->iic_high_min || ioVols[1][1] > pCfg3536->iic_high_max )//if( ioVols[1][1] < pCfg3536->iic_high )
+	{
+		failerCnt++;
+		transformat( szTemp, _T("scl vol = %d, th = [%d - %d]\r\n"), ioVols[1][1], pCfg3536->iic_high_min, pCfg3536->iic_high_max  );
+		TestResultInfo( szTemp );
+	}
+
+	if( failerCnt )
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_FAIL );
+		TestResultInfo( "\r\n\r\n//IOVoltage Test is Fail\r\n", ITEM_STA_FAIL );
+	}
+	else
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_PASS );
+		TestResultInfo( "\r\n\r\n//IOVoltage Test is Pass\r\n", ITEM_STA_PASS );
+	}
+
+	return itemNotify;
+}
+unsigned int CTest3536::Vp_Test( NativeTestItem& itemQuote )
+{
+	int failerCount = 0;
+	unsigned int iReCode = ERROR_CODE_COMM_ERROR;
+	ItemNotifyer itemNotify( m_pNativeIntr, itemQuote );
+	unsigned short baseTempBuffer[100] = {0}, baseCopyBuffer[100] = {0};
+	unsigned short baseMatrix[MAX_SCAP_ROW][MAX_SCAP_COL];
+
+	TestResultInfo( _T("\r\n------------------------------VP Test------------------------------\r\n") );
+
+	if( NULL == SM_ChipBase(m_deviceNo) )   return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	ISMChip3536* iChip3536 = (ISMChip3536*)SM_ChipBase(m_deviceNo);
+
+	iReCode = SM_ChipBase(m_deviceNo)->IncokeCommand( CMD_CTP_RST );
+	if( iReCode != ERROR_CODE_OK ) itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+	SysDelay( 100 );
+
+	for( int index = 0; index < 2; index++ )
+	{
+		iReCode = iChip3536->SwitchMode( pCfg3536->sync_type, pCfg3536->sync_length );
+		if( ERROR_CODE_OK != iReCode ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+		iReCode = iChip3536->GetRawData( (signed short*)baseCopyBuffer, pCfg3536->sync_length );
+		if( ERROR_CODE_OK != iReCode ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	}
+
+	//extern triger
+	//SM_CommBase(m_deviceNo)->SetMtkExternOutput( TEST_GOING, 0, 0, 0 );
+
+	for(int retry = 0; retry < (int)(pCfg3536->vp_out_time*3); retry++)
+	{
+		TCHAR szTimer[MAX_PATH];
+		transformat(szTimer, _T("Timer: %d S"), (int)(((pCfg3536->vp_out_time*3) - retry) / 3));
+
+		if(retry % 2)
+			itemNotify.UpdateItemResult( ITEM_STA_PRESS, szTimer);
+		else
+			itemNotify.UpdateItemResult( ITEM_STA_NONE, szTimer);
+
+		iReCode = iChip3536->SwitchMode( pCfg3536->sync_type, pCfg3536->sync_length );
+		if( ERROR_CODE_OK != iReCode ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+		iReCode = iChip3536->GetRawData( (signed short*)baseTempBuffer, pCfg3536->sync_length );
+		if( ERROR_CODE_OK != iReCode ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+		BOOL bTouchLikely = TRUE;
+		for(int index = 0; index < pCfg3536->rowsCnt * pCfg3536->colsCnt; index++)
+		{
+			int delta = (int)baseTempBuffer[index] - (int)baseCopyBuffer[index];
+			//if(delta < -1000) delta += (1 << 14);
+			if(abs(delta) < (int)pCfg3536->vp_trigger)
+			{ 
+				bTouchLikely = FALSE; 
+				SysDelay(300); 
+				break;
+			}
+		}
+
+		if(bTouchLikely)
+		{
+			SysDelay(100); 
+			iReCode = iChip3536->SwitchMode( pCfg3536->sync_type, pCfg3536->sync_length );
+			if( ERROR_CODE_OK != iReCode ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+			SysDelay(10); 
+			iReCode = iChip3536->GetRawData( (signed short*)baseTempBuffer, pCfg3536->sync_length );
+			if( ERROR_CODE_OK != iReCode ) return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+			
+			break;
+		}
+	}
+
+	for(int index = 0; index < pCfg3536->rowsCnt * pCfg3536->colsCnt * 2; index++)
+	{
+		baseTempBuffer[index] = abs((int)(unsigned short)baseTempBuffer[index] - (int)(unsigned short)baseCopyBuffer[index]);
+		//if(baseTempBuffer[index] < -1000) baseTempBuffer[index] += (1 << 14);
+	}
+
+	int ref_channel_num = min(pCfg3536->real_channel_num - pCfg3536->va_channel_num, pCfg3536->colsCnt);
+	AnalyzeInfo info( pCfg3536->rowsCnt, pCfg3536->colsCnt, ref_channel_num, true );
+	ReShappingData( baseMatrix, baseTempBuffer, G_XMLConfig->real_channel_num, pCfg3536->rowsCnt + 1, pCfg3536->colsCnt );
+	unsigned short baseMin[MAX_SCAP_ROW][MAX_SCAP_COL] = {0},  baseMax[MAX_SCAP_ROW][MAX_SCAP_COL] = {0};
+	FillMatrixUseValue( baseMin, (unsigned short)pCfg3536->vp_min );
+	FillMatrixUseValue( baseMax, (unsigned short)65535 );
+
+	NodeVal nodeOutRange;
+	ColorText textTemp( _T("\r\nBase Data:\r\n") );
+	bool bResult = AnalyzeTestResult( baseMatrix, baseMin, baseMax, pCfg3536->invalid_node, info, textTemp, nodeOutRange );
+	TestResultInfo( textTemp );
+	if( !bResult )
+	{
+		failerCount++;
+		LPCTSTR strHead = _T("\r\n//========= Out of Threshold in BaseTest: \r\n");
+		PrintNodeValue( m_ColorText, &nodeOutRange, strHead );
+	}
+
+	if( failerCount )
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_FAIL );
+		TestResultInfo( "\r\n\r\n//VP Test is Fail\r\n", ITEM_STA_FAIL );
+	}
+	else
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_PASS );
+		TestResultInfo( "\r\n\r\n//VP Test is Pass\r\n", ITEM_STA_PASS );
+	}
+
+	return itemNotify;
+}
+void CTest3536::PrepareSimulate( SimulateData& sm )
+{
+	unsigned char cmdID = sm.itemID & 0xff;
+	unsigned char dataIndex = (sm.itemID >> 8) & 0xff;
+	unsigned char sumCnt = 1;
+
+	if( CMD_OPEN_TST == cmdID )
+	{
+		sm.itemArray[48] = 0x6306;
+		sm.itemArray[50] = 0x5555;
+		unsigned short exeParam = pCfg3536->integral;
+		exeParam = (exeParam << 8) + pCfg3536->scale_a;
+		exeParam = (exeParam << 8) + pCfg3536->scale_b;
+		sm.itemID |= (exeParam << 16);
+	}
+	else if( CMD_FSD_TST == cmdID )
+	{
+		if(pCfg3536->fsd.fsdT.fsd_selected)
+		{
+			sumCnt = 1;
+			sm.itemArray[48] = 0x6306;
+			sm.itemArray[49] = 0x5555;
+			dataIndex ? (sm.itemID |= pCfg3536->fsd.fsdT.s_clk << 16) : (sm.itemID |= pCfg3536->fsd.fsdT.f_clk << 16);
+		}
+		else
+		{
+			sumCnt = 1;
+			sm.itemArray[48] = 0x6306;
+			sm.itemArray[49] = 0x5555;
+			dataIndex ? (sm.itemID |= pCfg3536->fsd.fsdB.s_clk << 16) : (sm.itemID |= pCfg3536->fsd.fsdB.f_clk << 16);
+		}
+	}
+
+	for( int iRow = 0; iRow < sm.rows; iRow++ )
+	{
+		for( int iCol = 0; iCol < sm.cols; iCol++ )
+		{
+			int index = iRow * sm.cols + iCol;
+			if( index >= pCfg3536->real_channel_num ) break;
+
+			int icPosition = pCfg3536->sensor_2_ic_map[index];
+			sm.itemArray[icPosition] = sm.itemData[iRow][iCol] * sumCnt;
+		}
+	}
+}
+
+unsigned int CTest3536::Algorithm_Test(NativeTestItem& itemQuote)
+{
+	int failerCount = 0;
+	unsigned int iReCode = ERROR_CODE_COMM_ERROR;
+	ItemNotifyer itemNotify( m_pNativeIntr, itemQuote );
+
+	unsigned short readBuff[16] = {0};
+	unsigned short checkBuff[16] = {0x32,0x63,0xC4,0xEA,0x112,0x141,0x172,0x1A4,0x0A,0x3B,0x6E,0x8D, 0xB7, 0xE7,0x118,0x14A};
+
+	TestResultInfo( _T("\r\n------------------------------Algorithm Test------------------------------\r\n") );
+
+	if( NULL == SM_ChipBase(m_deviceNo) )   return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	ISMChip3536* iChip3536 = (ISMChip3536*)SM_ChipBase(m_deviceNo);
+
+	iReCode = SM_ChipBase(m_deviceNo)->IncokeCommand( CMD_CTP_RST );
+	if( iReCode != ERROR_CODE_OK ) itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+	unsigned char regHead1[] = { 0x05 };
+	iReCode = SM_ChipBase(m_deviceNo)->WriteCoreSpace( 0x602, regHead1, 1 );
+	unsigned char regHead2[] = { 0x00 };
+	iReCode = SM_ChipBase(m_deviceNo)->WriteCoreSpace( 0x643, regHead2, 1 );
+
+	iReCode = SM_ChipBase(m_deviceNo)->WriteCoreSpace( 0x8000, (unsigned char*)ramAlgorithmTestCodeBin, sizeof(ramAlgorithmTestCodeBin) );
+
+	unsigned char regHead3[] = { pCfg3536->I2cAddr };
+	iReCode = SM_ChipBase(m_deviceNo)->WriteCoreSpace( 0x001, regHead3, 1 );
+
+	unsigned char regHead4[] = { 0x88 };
+	iReCode = SM_ChipBase(m_deviceNo)->WriteCoreSpace( 0x602, regHead4, 1 );
+	SysDelay( 200 );
+
+	auto check = [&]()->bool{
+
+		for ( int i = 0; i<5; i++)
+		{
+			unsigned int ramTestResult = 0;
+			iReCode = SM_ChipBase(m_deviceNo)->ReadCoreSpace( 0x9600, (unsigned char*)&ramTestResult, 4 );
+			if( iReCode != ERROR_CODE_OK ) itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+			if( (ramTestResult >> 24) == 0x54  )
+			{
+				if( 0 == (ramTestResult & 0x00ffffff) )
+				{
+					return true;
+				}
+				else
+				{
+					TestResultInfoR(  _T("ReadCoreSpace, Err = 0x%x\r\n"), ramTestResult );
+					failerCount++;
+				}
+				return false;;
+			}
+			else
+			{
+				SysDelay(50);
+				TestResultInfoR( _T("ReadCoreSpace LoopOnce...\r\n") );
+				continue;
+			}
+		}
+
+		failerCount++;
+		return false;
+
+	};
+
+	if (check() == true)
+	{
+		iReCode = SM_ChipBase(m_deviceNo)->ReadCoreSpace( 0x9480, (unsigned char*)readBuff, 32 );
+		if( iReCode != ERROR_CODE_OK ) itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+		for (int i = 0; i<16;i++)
+		{
+			if(readBuff[i] != checkBuff[i])
+			{
+				failerCount++;
+				TestResultInfoR(  _T("ReadBuff[%d](0x%x) != CheckBuff[%d](0x%x)\r\n"), i, readBuff[i], i, checkBuff[i]);
+				break;
+			}
+		}
+
+	}
+	else
+	{
+		failerCount++;
+	}
+
+	if( failerCount )
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_FAIL );
+		TestResultInfo( "\r\n\r\n//Algorithm Test is Fail\r\n", ITEM_STA_FAIL );
+	}
+	else
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_PASS );
+		TestResultInfo( "\r\n\r\n//Algorithm Test is Pass\r\n", ITEM_STA_PASS );
+	}
+
+	return itemNotify;
+}
+
+unsigned int CTest3536::MISC_Test(NativeTestItem& itemQuote)
+{
+	int failerCount = 0;
+	unsigned int iReCode = ERROR_CODE_COMM_ERROR;
+	ItemNotifyer itemNotify( m_pNativeIntr, itemQuote );
+
+	if( NULL == SM_ChipBase(m_deviceNo) )   return itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+	ISMChip3536* iChip3536 = (ISMChip3536*)SM_ChipBase(m_deviceNo);
+
+	iReCode = SM_ChipBase(m_deviceNo)->IncokeCommand( CMD_CTP_RST );
+	if( iReCode != ERROR_CODE_OK ) itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+	unsigned short rsp[8] = {0};
+	iReCode = SM_ChipBase(m_deviceNo)->IncokeCommand( CMD_MISC_TST, 0, 0, 0,(unsigned char*)rsp );
+	if( iReCode != ERROR_CODE_OK ) itemNotify.UpdateItemResult( ITEM_STA_EXCEPTION, GetErrorMessage( iReCode ) );
+
+	if((rsp[2]<<16|rsp[1]) != 0x54000000)
+	{
+		failerCount++;
+	}
+
+	TestResultInfoR( _T("Misc, Code = 0x%x\r\n"), rsp[2] << 16|rsp[1]);
+
+	if( failerCount )
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_FAIL );
+		TestResultInfo( "\r\n\r\n//MISC Test is Fail\r\n", ITEM_STA_FAIL );
+	}
+	else
+	{
+		itemNotify.UpdateItemResult( ITEM_STA_PASS );
+		TestResultInfo( "\r\n\r\n//MISC Test is Pass\r\n", ITEM_STA_PASS );
+	}
+
+	return itemNotify;
+}

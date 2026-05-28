@@ -1,0 +1,206 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:viewModel="clr-namespace:SEMIDevelopKit.Src.WinSub"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+			<RowDefinition Height="565"></RowDefinition>
+			<RowDefinition Height="125"></RowDefinition>
+			<RowDefinition Height="325"></RowDefinition>
+			<RowDefinition Height="285"></RowDefinition>
+        </Grid.RowDefinitions>
+		
+		<GroupBox Header="7.1：功能开关、配置" Grid.Row="0">
+            <UniformGrid Rows="14">
+				<UniformGrid Columns="16">
+				<Label Content="温度补偿，缓慢靠近"  HorizontalAlignment="Right" Margin="5"></Label>
+                <CheckBox Content="Base Upgrade"   Tag="0" viewModel:TuningItem.ItemName="funcCfg"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				<CheckBox Content="Slowly closely"       Tag="7" viewModel:TuningItem.ItemName="funcCfg"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="划线滤波"  HorizontalAlignment="Right" Margin="5"></Label>
+				<CheckBox Content="Filter Kalm"    Tag="1" viewModel:TuningItem.ItemName="funcCfg"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				<CheckBox Content="Filter Jitter"   Tag="4" viewModel:TuningItem.ItemName="funcCfg"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Control></Control>
+				<CheckBox Content="Filter Smooth"           Tag="3" viewModel:TuningItem.ItemName="funcCfg"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				<CheckBox Content="Filter Smooth（Edge）"   Tag="26" viewModel:TuningItem.ItemName="funcCfgEx1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>	
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="水滤波"  HorizontalAlignment="Right" Margin="5"></Label>
+				<CheckBox Content="Filter Water"   Tag="2" viewModel:TuningItem.ItemName="funcCfg"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="减滚动噪声"  HorizontalAlignment="Right" Margin="5"></Label>
+				<CheckBox Content="Rolling Noise（Mul）"   Tag="5" viewModel:TuningItem.ItemName="funcCfg1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				<CheckBox Content="Rolling Noise（Slt）"   Tag="24" viewModel:TuningItem.ItemName="funcCfgEx1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>	
+				<CheckBox Content="Rolling Noise（Slr）"   Tag="25" viewModel:TuningItem.ItemName="funcCfgEx1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>	
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="大手掌、重压"  HorizontalAlignment="Right" Margin="5"></Label>
+				<CheckBox Content="Filter Palm"     Tag="5" viewModel:TuningItem.ItemName="funcCfg"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				<CheckBox Content="HardPressure"    Tag="2" viewModel:TuningItem.ItemName="funcCfg1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="Idle模式"  HorizontalAlignment="Right" Margin="5"></Label>
+				<CheckBox Content="Idle LP Slt"          Tag="6" viewModel:TuningItem.ItemName="funcCfg1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				<CheckBox Content="Idle LP Slr"          Tag="7" viewModel:TuningItem.ItemName="funcCfg1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="坐标切换"  HorizontalAlignment="Right" Margin="5"></Label>
+				<CheckBox Content="VA XY Switch"         Tag="1" viewModel:TuningItem.ItemName="funcCfg1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="默认配置"  HorizontalAlignment="Right" Margin="5"></Label>
+				<CheckBox Content="Def Int Low Vol" 		Tag="0" viewModel:TuningItem.ItemName="funcCfg1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				<CheckBox Content="IoVcc Ldo Support"       		Tag="5" viewModel:TuningItem.ItemName="funcCfg2"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="屏体特性"  HorizontalAlignment="Right" Margin="5"></Label>
+				<CheckBox Content="Full Paste(互容噪声大)"                  Tag="6" viewModel:TuningItem.ItemName="funcCfg2"  HorizontalAlignment="Left" Margin="5" ></CheckBox>	
+				<CheckBox Content="Large Noise（Idle虑噪判断温漂）"    Tag="7" viewModel:TuningItem.ItemName="funcCfg2"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="悬空功能加强"  HorizontalAlignment="Right" Margin="5"></Label>
+				<CheckBox Content="Fingers Hovering Reinforce"  Tag="4" viewModel:TuningItem.ItemName="funcCfg2"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				<CheckBox Content="Hovering Merger Reinforce"   Tag="7" viewModel:TuningItem.ItemName="funcCfgEx1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>	
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="水滴屏"  HorizontalAlignment="Right" Margin="5"></Label>
+				<CheckBox Content="Waterdrop Patten"            Tag="3" viewModel:TuningItem.ItemName="funcCfgEx1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>	
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="鼠标模式"  HorizontalAlignment="Right" Margin="5"></Label>
+				<CheckBox Content="Mouse Mode（静止不报点）"   Tag="8" viewModel:TuningItem.ItemName="funcCfgEx1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>	
+				</UniformGrid>	
+				
+				<UniformGrid Columns="16">
+				<Label Content="握边"  HorizontalAlignment="Right" Margin="5"></Label>
+				<CheckBox Content="HandSide(指腹虎口)"       Tag="3" viewModel:TuningItem.ItemName="funcCfg2"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				<CheckBox Content="HandSide(Finger)" Tag="5" viewModel:TuningItem.ItemName="funcCfgEx1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				<TextBox Margin="5" viewModel:TuningItem.ItemName="HandSideFingerRatio"></TextBox>		
+				<Label Content="次边缘diff与阈值比例（默认50%）" Grid.Column="2" HorizontalAlignment="Left" Margin="5"></Label>	
+				</UniformGrid>
+            </UniformGrid>
+        </GroupBox>
+		
+		<GroupBox Header="7.2：扫描模式" Grid.Row="1">
+            <UniformGrid Rows="2">
+				<UniformGrid Columns="16">
+				<Label Content="必选"  HorizontalAlignment="Right" Margin="5"></Label>
+			    <CheckBox Content="Scan_Rx Tx2Dummy" Tag="1" viewModel:TuningItem.ItemName="self_mode"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+                <CheckBox Content="Scan_Tx Rx2Dummy" Tag="3" viewModel:TuningItem.ItemName="self_mode"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+                <CheckBox Content="Mutual Scan" Tag="4" viewModel:TuningItem.ItemName="self_mode"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="仅供调试"  HorizontalAlignment="Right" Margin="5"></Label>
+			    <CheckBox Content="Scan_Rx Tx2Gnd" Tag="0" viewModel:TuningItem.ItemName="self_mode"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+                <CheckBox Content="Scan_Tx Rx2Gnd" Tag="2" viewModel:TuningItem.ItemName="self_mode"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>
+			</UniformGrid>
+        </GroupBox>
+		
+		<GroupBox Header="8.1：手势参数配置" Grid.Row="2">
+            <UniformGrid Rows="7">    			
+				<UniformGrid Columns="16">
+				<Label Content="手势功能"  HorizontalAlignment="Right" Margin="5"></Label>
+				<CheckBox Content="SClick（单击）"    Tag="0" viewModel:TuningItem.ItemName="funcCfg2"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				<CheckBox Content="DClick（双击）"    Tag="2" viewModel:TuningItem.ItemName="funcCfg2"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Control></Control>
+				<CheckBox Content="Straight line（上下左右）"       Tag="9"  viewModel:TuningItem.ItemName="funcCfgEx1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				<CheckBox Content="Curve line（折线）"  Tag="10" viewModel:TuningItem.ItemName="funcCfgEx1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Control></Control>
+				<CheckBox Content="Letter（字母WMECSVZL）"              Tag="15" viewModel:TuningItem.ItemName="funcCfgEx1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>	
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Control></Control>
+				<CheckBox Content="Suspend LP（超低功耗）"        Tag="1" viewModel:TuningItem.ItemName="funcCfg2"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				<CheckBox Content="Int空闲电平非默认电平"  Tag="6" viewModel:TuningItem.ItemName="funcCfgEx1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>	
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Control></Control>
+				<TextBox Margin="5" viewModel:TuningItem.ItemName="GestureDClickTimeMax"></TextBox>	
+				<Label Content="双击间隔时间(N*0.1s)" HorizontalAlignment="Left" Margin="5"></Label>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Control></Control>
+				<TextBox Margin="5" viewModel:TuningItem.ItemName="GestureTouchTimeMax"></TextBox>	
+				<Label Content="最长触摸时间(N*0.1s)" HorizontalAlignment="Left" Margin="5"></Label>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Control></Control>
+				<TextBox Margin="5" Grid.Column="1" viewModel:TuningItem.ItemName="GestureTrigOverTime"></TextBox>
+				<Label Content="Int拉低时间(N*2ms)" Grid.Column="0" HorizontalAlignment="Left" Margin="5"></Label>
+				</UniformGrid>
+			</UniformGrid>
+        </GroupBox>
+		
+		<GroupBox Header="8.2：边缘防误触" Grid.Row="3">
+            <UniformGrid Rows="6">    			
+				<UniformGrid Columns="16">
+				<Label Content="防误触"  HorizontalAlignment="Right" Margin="5"></Label>
+				<CheckBox Content="Edge Restrain"  Tag="12" viewModel:TuningItem.ItemName="funcCfgEx1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>	
+				</UniformGrid>	
+				
+				<UniformGrid Columns="16">
+				<Control></Control>
+				<TextBox Margin="5" viewModel:TuningItem.ItemName="restrain_edge_size"></TextBox>	
+				<Label Content="边缘抑制宽度，LCD pixel" HorizontalAlignment="Left" Margin="5"></Label>
+				<TextBox Margin="5" viewModel:TuningItem.ItemName="restrain_key_size"></TextBox>	
+				<Label Content="四角抑制宽度，LCD pixel" Grid.Column="0" HorizontalAlignment="Left" Margin="5"></Label>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="竖屏边缘抑制"       HorizontalAlignment="Right" Margin="5"></Label>
+				<CheckBox Content="Top"     Tag="16" viewModel:TuningItem.ItemName="funcCfgEx1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>	
+				<CheckBox Content="Bottom"  Tag="17" viewModel:TuningItem.ItemName="funcCfgEx1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>	
+				</UniformGrid>	
+				
+				<UniformGrid Columns="16">
+				<Control></Control>
+				<CheckBox Content="Left"    Tag="18" viewModel:TuningItem.ItemName="funcCfgEx1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>	
+				<CheckBox Content="Right"   Tag="19" viewModel:TuningItem.ItemName="funcCfgEx1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>	
+				</UniformGrid>	
+				
+				<UniformGrid Columns="16">
+				<Label Content="横屏边缘抑制"       HorizontalAlignment="Right" Margin="5"></Label>
+				<CheckBox Content="Top"     Tag="20" viewModel:TuningItem.ItemName="funcCfgEx1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>	
+				<CheckBox Content="Bottom"  Tag="21" viewModel:TuningItem.ItemName="funcCfgEx1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>	
+				</UniformGrid>	
+				
+				<UniformGrid Columns="16">
+				<Control></Control>
+				<CheckBox Content="Left"    Tag="22" viewModel:TuningItem.ItemName="funcCfgEx1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>	
+				<CheckBox Content="Right"   Tag="23" viewModel:TuningItem.ItemName="funcCfgEx1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>	
+				</UniformGrid>	
+			</UniformGrid>
+        </GroupBox>
+    </Grid>
+</UserControl>

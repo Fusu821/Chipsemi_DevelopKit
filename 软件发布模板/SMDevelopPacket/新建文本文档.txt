@@ -1,0 +1,4851 @@
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+0: 255, 28891, 44.304455 mhz, 52051
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+1: 127, 20289, 63.088371 mhz, 15084
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+2: 191, 24550, 52.138493 mhz, 47925
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+3: 223, 26738, 47.871944 mhz, 17417
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+4: 207, 25657, 49.888920 mhz, 51363
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+5: 199, 25102, 50.991951 mhz, 19217
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+6: 195, 24823, 51.565079 mhz, 52328
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+7: 193, 24683, 51.857552 mhz, 19762
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+8: 192, 24614, 52.002926 mhz, 52664
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+9: 192, 24611, 52.009266 mhz, 20025
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+10: 192, 24611, 52.009266 mhz, 52922
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+11: 192, 24612, 52.007153 mhz, 20380
+
+**************************** lab310_52M_osc_scan *****************************
+
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . osc52m:000,  104832104.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . osc52m:001,  104293976.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . osc52m:002,  103719312.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . osc52m:003,  103275776.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . osc52m:004,  102769968.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . osc52m:005,  102203768.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . osc52m:006,  101764984.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . osc52m:007,  101257808.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . osc52m:008,  100747736.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . osc52m:009,  100337072.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . osc52m:010,  99851784.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . osc52m:011,  99301784.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . osc52m:012,  98879880.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . osc52m:013,  98408552.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . osc52m:014,  97881776.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . osc52m:015,  97456984.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . osc52m:016,  97190584.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . osc52m:017,  96684040.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . osc52m:018,  96269552.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . osc52m:019,  95815552.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . osc52m:020,  95330304.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . osc52m:021,  94913240.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . osc52m:022,  94478888.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . osc52m:023,  93993248.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . osc52m:024,  93663104.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . osc52m:025,  93226512.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . osc52m:026,  92746904.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:027,  92358760.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:028,  91947416.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:029,  91520088.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:030,  91109688.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:031,  90690096.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:032,  90318936.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:033,  89906584.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:034,  89472952.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:035,  89093064.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:036,  88710240.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:037,  88275864.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:038,  87912088.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:039,  87521368.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:040,  87145968.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:041,  86797312.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:042,  86422256.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:043,  86038848.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:044,  85676040.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:045,  85287848.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:046,  84908792.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:047,  84561008.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:048,  84477296.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:049,  84105392.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:050,  83753192.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:051,  83355040.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:052,  83041392.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:053,  82687336.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:054,  82309816.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:055,  81993464.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:056,  81705608.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:057,  81357656.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:058,  81017784.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:059,  80645160.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:060,  80356584.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:061,  80015000.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:062,  79671352.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:063,  79365080.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:064,  79007472.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:065,  78706264.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:066,  78392944.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:067,  78044024.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:068,  77769000.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:069,  77453712.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:070,  77145616.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:071,  76835344.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:072,  76541288.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:073,  76258568.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:074,  75959880.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:075,  75650120.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:076,  75373928.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:077,  75038104.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:078,  74783824.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:079,  74483560.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:080,  74319224.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:081,  74031232.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:082,  73715736.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:083,  73461888.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:084,  73159576.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:085,  72909544.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:086,  72632352.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:087,  72320472.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:088,  72128928.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:089,  71833440.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:090,  71576360.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:091,  71313168.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:092,  71051904.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:093,  70784712.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:094,  70503992.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:095,  70260184.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:096,  70113936.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:097,  69865184.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:098,  69610616.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:099,  69335352.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:100,  69107008.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:101,  68832008.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:102,  68603280.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:103,  68354160.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:104,  68135848.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:105,  67886504.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:106,  67642552.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:107,  67403896.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:108,  67163392.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:109,  66924604.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:110,  66677084.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:111,  66455532.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:112,  66400372.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:113,  66160128.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:114,  65928404.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:115,  65688188.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:116,  65476496.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:117,  65232900.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:118,  65020828.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:119,  64800284.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:120,  64613832.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:121,  64386316.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:122,  64173268.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:123,  63945648.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:124,  63719632.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:125,  63517268.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:126,  63284880.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:127,  63085264.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:128,  62908536.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:129,  62705140.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:130,  62493896.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:131,  62284072.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:132,  62084688.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:133,  61874608.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:134,  61674856.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:135,  61455732.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:136,  61290940.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:137,  61071616.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:138,  60888592.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:139,  60672132.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:140,  60497212.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:141,  60292040.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:142,  60105184.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:143,  59905460.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:144,  59799112.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:145,  59601416.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:146,  59410536.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:147,  59220876.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:148,  59037868.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:149,  58853280.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:150,  58667156.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:151,  58479532.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:152,  58322320.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:153,  58136896.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:154,  57947396.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:155,  57774768.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:156,  57592800.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:157,  57419704.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+osc52m:158,  57237400.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:159,  57066428.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:160,  56972448.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:161,  56803052.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:162,  56619632.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:163,  56454816.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:164,  56290952.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:165,  56115740.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:166,  55934276.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:167,  55773420.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:168,  55615904.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:169,  55459272.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:170,  55291576.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:171,  55124892.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:172,  54966292.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:173,  54796868.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:174,  54640144.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:175,  54475040.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:176,  54433340.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:177,  54271784.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:178,  54102032.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:179,  53951528.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:180,  53801856.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:181,  53641772.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:182,  53475936.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:183,  53328888.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:184,  53200332.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:185,  53046000.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:186,  52890376.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:187,  52737836.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:188,  52594816.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:189,  52431080.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:190,  52289716.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:191,  52134244.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:192,  52009264.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:193,  51859656.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:194,  51710904.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:195,  51563004.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:196,  51424208.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:197,  51273836.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:198,  51138632.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:199,  50989920.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:200,  50870360.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:201,  50713152.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:202,  50584888.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:203,  50445336.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:204,  50310512.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:205,  50170500.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:206,  50031268.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:207,  49892808.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:208,  49815140.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:209,  49674016.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:210,  49543272.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:211,  49409404.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:212,  49278152.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:213,  49141936.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:214,  49013976.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:215,  48881080.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:216,  48771196.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:217,  48635916.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:218,  48506896.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:219,  48380392.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:220,  48252724.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:221,  48125728.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:222,  47999400.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:223,  47868364.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:224,  47812932.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:225,  47684684.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:226,  47557124.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:227,  47433760.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:228,  47312780.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:229,  47187200.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:230,  47069208.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:231,  46944912.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:232,  46838408.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:233,  46715328.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:234,  46594592.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:235,  46471100.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:236,  46358336.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:237,  46239432.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:238,  46119480.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:239,  46005104.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:240,  45975360.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:241,  45853484.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:242,  45740424.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:243,  45626292.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:244,  45514348.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:245,  45398120.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:246,  45285688.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:247,  45170624.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:248,  45078360.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:249,  44961184.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:250,  44849336.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:251,  44738036.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:252,  44633516.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:253,  44521740.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:254,  44412060.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:255,  44299856.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:256,  44198896.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:257,  44087764.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:258,  43981720.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:259,  43876188.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:260,  43771160.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:261,  43665144.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:262,  43558156.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:263,  43453168.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:264,  43360432.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:265,  43254932.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:266,  43151400.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:267,  43046916.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:268,  42950136.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:269,  42845188.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:270,  42742176.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:271,  42642504.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:272,  42582920.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:273,  42482576.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:274,  42384104.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:275,  42280504.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:276,  42185748.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:277,  42083116.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:278,  41987864.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:279,  41888928.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:280,  41808204.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:281,  41710116.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:282,  41609780.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:283,  41512616.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:284,  41421268.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:285,  41327652.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+osc52m:286,  41230472.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:287,  41136392.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:288,  41091492.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:289,  40996732.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:290,  40903716.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:291,  40805916.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:292,  40717648.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:293,  40625892.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:294,  40533264.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:295,  40441060.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:296,  40361996.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:297,  40269300.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:298,  40179552.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:299,  40088948.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:300,  40003752.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:301,  39911448.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:302,  39823284.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:303,  39734276.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:304,  39714552.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:305,  39623576.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:306,  39535460.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:307,  39450164.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:308,  39364024.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:309,  39274648.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:310,  39191672.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:311,  39104268.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:312,  39033912.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:313,  38949580.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:314,  38864428.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:315,  38776128.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:316,  38697584.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:317,  38612368.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:318,  38527528.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:319,  38443056.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:320,  38368156.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:321,  38282092.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:322,  38202112.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:323,  38117928.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:324,  38040892.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:325,  37959668.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:326,  37878788.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:327,  37797136.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:328,  37725840.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:329,  37645952.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:330,  37568608.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:331,  37487188.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:332,  37412680.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:333,  37329756.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:334,  37255872.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:335,  37176880.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:336,  37130508.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:337,  37052048.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:338,  36977120.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:339,  36896116.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:340,  36822876.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:341,  36748872.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:342,  36673064.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:343,  36596524.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:344,  36532808.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:345,  36457888.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:346,  36385344.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:347,  36309996.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:348,  36238040.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:349,  36164320.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:350,  36089888.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:351,  36015756.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:352,  35982348.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:353,  35907652.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:354,  35836272.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:355,  35764180.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:356,  35695364.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:357,  35618880.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:358,  35547656.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:359,  35476720.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:360,  35416840.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:361,  35343496.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:362,  35273368.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:363,  35201584.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:364,  35136840.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:365,  35063688.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:366,  34998496.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:367,  34927824.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:368,  34909724.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:369,  34839412.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:370,  34774104.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:371,  34705276.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:372,  34638596.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:373,  34569368.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:374,  34503208.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:375,  34435448.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:376,  34379028.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:377,  34313596.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:378,  34245660.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:379,  34181644.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:380,  34116956.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:381,  34047988.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:382,  33983804.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:383,  33919864.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:384,  33854372.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:385,  33787352.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:386,  33725036.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:387,  33659408.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:388,  33599328.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:389,  33531554.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:390,  33469302.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:391,  33405538.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:392,  33352442.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:393,  33286524.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:394,  33226040.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:395,  33162340.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:396,  33101450.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:397,  33037374.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:398,  32976942.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:399,  32915038.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:400,  32882062.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:401,  32817988.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:402,  32756680.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:403,  32695598.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:404,  32637242.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:405,  32579094.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:406,  32517020.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:407,  32456830.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:408,  32409166.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:409,  32346920.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:410,  32288172.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:411,  32229636.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:412,  32173738.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:413,  32115616.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:414,  32054492.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:415,  31997600.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:416,  31972024.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:417,  31910650.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:418,  31855060.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:419,  31795712.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:420,  31739734.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:421,  31681600.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:422,  31627586.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:423,  31569860.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:424,  31518554.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:425,  31462000.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:426,  31407190.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:427,  31350266.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:428,  31298140.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:429,  31241610.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:430,  31185284.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:431,  31129162.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:432,  31117810.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:433,  31061176.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:434,  31007752.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:435,  30952266.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:436,  30901454.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:437,  30844116.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:438,  30792176.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:439,  30737458.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:440,  30693236.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:441,  30637402.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:442,  30584694.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:443,  30531438.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:444,  30481270.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:445,  30426204.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:446,  30374220.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:447,  30322412.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:448,  30279374.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:449,  30225748.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:450,  30176580.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:451,  30123318.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:452,  30071656.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:453,  30020874.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:454,  29970264.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:455,  29917726.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:456,  29875132.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:457,  29822926.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:458,  29773674.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:459,  29719752.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:460,  29672902.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:461,  29622772.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:462,  29573494.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:463,  29521656.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:464,  29495126.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:465,  29443562.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:466,  29396904.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:467,  29344338.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:468,  29297992.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:469,  29248452.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:470,  29199744.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:471,  29152526.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:472,  29110758.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:473,  29063826.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:474,  29013758.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:475,  28966484.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:476,  28920672.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:477,  28870444.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:478,  28823636.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:479,  28776332.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:480,  28756290.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:481,  28707276.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:482,  28662278.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:483,  28614222.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:484,  28569516.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:485,  28523042.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:486,  28476718.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:487,  28428020.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:488,  28389558.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:489,  28343666.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:490,  28296672.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:491,  28252328.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:492,  28208124.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:493,  28161578.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:494,  28116420.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:495,  28071406.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:496,  28059100.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:497,  28014270.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:498,  27972028.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:499,  27924430.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:500,  27883066.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:501,  27836374.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:502,  27792252.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:503,  27750076.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:504,  27711626.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:505,  27667300.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:506,  27624906.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:507,  27580858.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:508,  27538134.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:509,  27496134.00
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+dly:1
+CR1=0x81  . CR1=0x81
+CR1=0x81
+CR1=0x81
+CR1=0x81
+osc52m:510,  27451316.00
+dly:1

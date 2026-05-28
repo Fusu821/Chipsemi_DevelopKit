@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<semitester ic_type="CHUF310">
+  <common protocal="1" vdd_votage="0x81" agent="0x1" iovdd_votage="0x47" vih_votage="1.8" i2c_speed="5" spi_speed="24" i2c_addr="0x5C" work_station="F01" project_name="0508" configure_bin="user/CHUF310_0508_cfg.bin" boot_bin="user/CHUF310_0508_boot.bin" VA_Width="1" X_Pitch="1" VA_Height="1" Y_Pitch="1" eLog="0" />
+  <firmware boot_crc="0x7F4F640F" boot_loader_crc="0x3FE0BC75" config_crc="0x0" w_clk="0x2602" rows="34" cols="16" usr_def="0" />
+  <F01>
+    <misc test_mode="1" way_to_start="2" sn_length="10" need_click_start="0" need_remove_ic="0" selected_format="0" user_record="" heatbeat_voltage="39" log_path="" hold_up="10" snFilter="" />
+    <online link_type="0" port_num="0" ip_addr="127.0.0.1" port_source="0" />
+    <uploader ftp_type="0" port_num="21" ip_addr="127.0.0.1" account="" password="" relative_path="" />
+    <int_test selected="0" />
+    <reset_test selected="1" />
+    <short_test selected="1" short_tx_max="400" short_rx_max="400" />
+    <boot_test selected="0" only_check="0" />
+    <config_test selected="0" only_check="0" />
+    <current_test selected="1" active_current_min="10000" active_current_max="20000" sleep_current_min="0" sleep_current_max="30" deep_current_min="0" deep_current_max="100" vbus_active_current_min="10" vbus_active_current_max="60" vbus_sleep_current_min="0" vbus_sleep_current_max="240" vbus_deep_current_min="0" vbus_deep_current_max="100" idle_current_min="0" idle_current_max="2500" />
+    <osctrim_test selected="1" tick_32k_standard="32" trim_32k_min="16" trim_32k_max="161" offset_32k="50" tick_52m_standard="52000" tick_52m_standardNo2="41600" tick_52m_standardNo3="62400" trim_52m_min="37" trim_52m_max="468" offset_52m="30" speed_mode="0" only_check="0" tick_52m_standardNo1="52000" />
+    <mtkversion_test selected="1" mtk_version="853270" auto_update="0" />
+    <iovol_test selected="1" int_low_min="0" int_low_max="300" int_high_min="1600" int_high_max="2000" iic_low_min="0" iic_low_max="300" iic_high_min="1600" iic_high_max="2000" spi_low_min="0" spi_low_max="300" spi_high_min="1600" spi_high_max="2000" int0_1p2_high_max="1400" int0_1p2_high_min="1200" int0_1p2_low_max="100" int0_1p2_low_min="0" int2_1p2_high_max="1400" int2_1p2_high_min="1200" int2_1p2_low_max="100" int2_1p2_low_min="0" int0_1p8_high_max="2000" int0_1p8_high_min="1600" int0_1p8_low_max="100" int0_1p8_low_min="0" int2_1p8_high_max="2000" int2_1p8_high_min="1600" int2_1p8_low_max="100" int2_1p8_low_min="0" />
+    <noise_test selected="1" noise_frames="32" noise_max_mcap="100" noise_max_time_A="25" noise_max_space_A="250" noise_max_time_P="100" noise_max_space_P="100" />
+    <temperature_test selected="0" />
+    <otp_test selected="1" only_check="0" simplelog="0" />
+    <pressure_contact_impedance_test selected="0" />
+    <communication_test selected="0" />
+    <adc_test selected="1" adc_max="10" adc_min="0" adc_tx_max="1200" adc_tx_min="20" adc_notx_max="20" adc_notx_min="0" />
+    <invalidnode>
+      <invalid_0>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_0>
+      <invalid_1>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_1>
+      <invalid_2>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_2>
+      <invalid_3>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_3>
+      <invalid_4>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_4>
+      <invalid_5>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_5>
+      <invalid_6>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_6>
+      <invalid_7>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_7>
+      <invalid_8>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_8>
+      <invalid_9>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_9>
+      <invalid_10>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_10>
+      <invalid_11>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_11>
+      <invalid_12>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_12>
+      <invalid_13>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_13>
+      <invalid_14>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_14>
+      <invalid_15>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_15>
+      <invalid_16>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_16>
+      <invalid_17>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_17>
+      <invalid_18>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_18>
+      <invalid_19>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_19>
+      <invalid_20>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_20>
+      <invalid_21>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_21>
+      <invalid_22>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_22>
+      <invalid_23>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_23>
+      <invalid_24>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_24>
+      <invalid_25>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_25>
+      <invalid_26>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_26>
+      <invalid_27>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_27>
+      <invalid_28>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_28>
+      <invalid_29>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_29>
+      <invalid_30>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_30>
+      <invalid_31>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_31>
+      <invalid_32>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_32>
+      <invalid_33>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </invalid_33>
+    </invalidnode>
+    <freepaint_test selected="0" once="1" limited_time="98" swaddr_selected="0" swaddr_slaveAddr1="255" swaddr_slaveAddr2="255" line_type="0" xy_reverse="0" x_reverse="0" y_reverse="0" />
+    <button_test selected="0" max_ng="4" limited_time="10" key_thr="0" key_channel_invalid="1" />
+    <linearly_test selected="0" max_ng="6" limited_time="10" distance="36" edge="30" lenth="36" postion="0" linearly_direction="1" upper_limite_h1="0" lower_limite_h1="0" upper_limite_h2="0" lower_limite_h2="0" upper_limite_h3="0" lower_limite_h3="0" upper_limite_h4="0" lower_limite_h4="0" upper_limite_h5="0" lower_limite_h5="0" upper_limite_h6="0" lower_limite_h6="0" upper_limite_v1="0" lower_limite_v1="0" upper_limite_v2="0" lower_limite_v2="0" upper_limite_v3="0" lower_limite_v3="0" upper_limite_v4="0" lower_limite_v4="0" upper_limite_v5="0" lower_limite_v5="0" upper_limite_v6="0" lower_limite_v6="0" />
+    <exp_linearly_test selected="0" max_ng="6" limited_time="10" distance="36" edge="30" lenth="36" postion="0" upper_limite_h1="0" lower_limite_h1="0" upper_limite_h2="0" lower_limite_h2="0" upper_limite_h3="0" lower_limite_h3="0" upper_limite_h4="0" lower_limite_h4="0" upper_limite_h5="0" lower_limite_h5="0" upper_limite_v1="0" lower_limite_v1="0" upper_limite_v2="0" lower_limite_v2="0" upper_limite_v3="0" lower_limite_v3="0" upper_limite_v4="0" lower_limite_v4="0" upper_limite_v5="0" lower_limite_v5="0" diagnol_length="20" diagnol_width="10" />
+    <pressure_contact_test selected="0" />
+    <flytime_test selected="1" Flytime_code_max="90" Flytime_code_min="40" Flytime_val_max="10000" Flytime_val_min="5000" Flytime_std_max="10" Flytime_std_min="10" flytime_code_max="90" flytime_code_min="40" flytime_val_max="12000" flytime_val_min="7000" flytime_std_max="1000" flytime_std_min="0" />
+    <pixeldefect_test selected="1" pixel_raw_max="1200" pixel_raw_min="10" gain1_0_max="1.89999997615814" gain1_0_min="1.39999997615814" gain2_1_max="1.5" gain2_1_min="1.20000004768372" />
+    <srf_test selected="1" srfreq_max="14" srfreq_min="10" />
+  </F01>
+  <stations station_0="F01" />
+</semitester>

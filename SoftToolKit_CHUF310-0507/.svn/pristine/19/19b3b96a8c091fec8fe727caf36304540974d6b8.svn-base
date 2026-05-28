@@ -1,0 +1,1882 @@
+﻿ using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Windows.Controls;
+using System.Windows.Input;
+using SEMI.Util;
+using SMInvokeBridge;
+using System.Threading;
+using System.Collections;
+using SEMIDevelopKit.Src.Util;
+using System.Windows.Forms;
+using System.IO;
+using MahApps.Metro.Controls.Dialogs;
+using MahApps.Metro.Controls;
+using System.Threading.Tasks;
+
+namespace SEMIDevelopKit.Src.WinSub
+{
+    public class ModelBase : NotifyBase
+    {
+        public ICommand ctrlClickCommand { get;  set; }
+
+        public WpfRawDataView WpfRawDispView = new WpfRawDataView();
+
+        public WpfRawDataView WpfStatisticRawDispView = new WpfRawDataView();
+
+        public static int Rows { get { return MainViewModel.Intr.RowNum; } set { MainViewModel.Intr.RowNum = value; } }
+        public static int Cols { get { return MainViewModel.Intr.ColNum; } set { MainViewModel.Intr.ColNum = value; } }
+        public ushort DisplayDataLen { get { return MainViewModel.Intr.DisplayDataLen; } set { if (value != MainViewModel.Intr.DisplayDataLen) { MainViewModel.Intr.DisplayDataLen = value; } } }
+        public static int Refs { get; protected set; }
+        public static ushort[] Ic_2_Sensor_Map { get; protected set; }
+        public static ushort[] Sensor_2_Ic_Map { get; protected set; }
+        public static int TouchMaxNum { get; set; }
+
+        protected static int xPixel = 1284;
+        protected static int yPixel = 2778;
+
+        protected byte[] touchPoint = new byte[84];
+        protected static short[] dataBuffer = new short[100 * 100];
+        protected static short[] diffBuffer = new short[100 * 100];
+        protected Boolean Initialized { set; get; }
+        protected Boolean Refresh { get; set; }
+
+        public static int XPixel { get { return xPixel; } set { xPixel = value; } }
+        public static int YPixel { get { return yPixel; } set { yPixel = value; } }
+
+        //         protected static int xPixel = 728;
+        //         protected static int yPixel = 1024;
+        //         public static int XLines { get { return xLines; } set { xLines = value; } }
+        //         public static int YLines { get { return yLines; } set { yLines = value; } }
+
+        //protected List<DataMatrix> listCatchData = new List<DataMatrix>();
+        protected List<short[]> listCatchData = new List<short[]>();
+        protected Queue<short[]> queueCatchData = new Queue<short[]>();
+        private readonly object _lockObj = new object();
+
+        protected int frames = 0;
+
+        protected IList<short[,]> listSimulation = new List<short[,]>();
+        private int stcFrames = 64;
+        public int StcFrames
+        {
+            get { return stcFrames; }
+            set { if (value != stcFrames) { stcFrames = value; OnPropertyChanged("StcFrames"); } }
+        }
+
+        private DataMatrix statisticMatrix = null;
+        public DataMatrix StatisticMatrix
+        {
+            get { return statisticMatrix; }
+            set { if (statisticMatrix != value) { statisticMatrix = value; OnPropertyChanged("StatisticMatrix"); } }
+        }
+
+        public IList<SMDefinition> listStcType = new List<SMDefinition>()
+        {
+            new SMDefinition(0, "Stop"),
+            new SMDefinition(1, "MSE"),
+            new SMDefinition(2, "MAX"),
+            new SMDefinition(3, "AVG"),
+            new SMDefinition(4, "MIN"),
+            new SMDefinition(5, "SNR"),
+            new SMDefinition(6, "VT"),
+        };
+        public IList<SMDefinition> ListStcType
+        {
+            get { return listStcType; }
+            private set { }
+        }
+
+
+        public IList<SMDefinition> listSNRType = new List<SMDefinition>()
+        {
+            new SMDefinition(0, "Visionox-RMS"),
+            new SMDefinition(1, "CSOT-RMS"),
+            new SMDefinition(2, "CSOT-MaxMin"),
+            new SMDefinition(3, "USER-RMS"),
+        };
+        public IList<SMDefinition> ListSNRType
+        {
+            get { return listSNRType; }
+            private set { }
+        }
+        private ushort snrType = 0;
+        public ushort SNRType
+        {
+            get { return snrType; }
+            set { if (snrType != value) { snrType = value; OnPropertyChanged("SNRType"); } }
+        }
+
+        private ushort stcType = 0;
+        public ushort StcType
+        {
+            get { return stcType; }
+            set
+            {
+                if (value != stcType)
+                {
+                    stcType = value;
+                    OnPropertyChanged("StcType");
+
+                    System.Threading.Tasks.Task.Factory.StartNew(() =>
+                    {
+                        //if (stcType == 1)
+                        //{
+                        //    if (null == RawDataMatrix) return;
+                        //    double[,] uDataMx = new double[RawDataMatrix.RowNumber, RawDataMatrix.ColNumber];
+                        //    StatisticMatrix = new DataMatrix(RawDataMatrix.RowNumber, RawDataMatrix.ColNumber);
+                        //    IList<short[,]> lsStcData = new List<short[,]>();
+                        //    RuningKernel.Instance().Work.AddWorkTemporary(() =>
+                        //    {
+                        //        short[,] sTemp = new short[RawDataMatrix.RowNumber, RawDataMatrix.ColNumber];
+                        //        for (int iRow = 0; iRow < RawDataMatrix.RowNumber; iRow++)
+                        //        {
+                        //            for (int iCol = 0; iCol < Cols; iCol++)
+                        //            {
+                        //                sTemp[iRow, iCol] = dataBuffer[iRow * Cols + iCol];//Convert.ToInt16(RawDataMatrix[iRow][iCol]);
+                        //            }
+                        //            if (RawDataMatrix.ColNumber > Cols)
+                        //            {
+                        //                sTemp[iRow, Cols] = dataBuffer[RawDataMatrix.RowNumber * Cols + iRow];
+                        //            }
+                        //        }
+                        //        lsStcData.Add(sTemp);
+
+                        //        if (lsStcData.Count < StcFrames) return;
+
+                        //        //DataMatrix aveMx = new DataMatrix(RawDataMatrix.RowNumber, RawDataMatrix.ColNumber);
+
+                        //        if (Refresh)
+                        //        {
+                        //            if (StatisticMatrix.RowNumber != RawDataMatrix.RowNumber || StatisticMatrix.ColNumber != RawDataMatrix.ColNumber)
+                        //            {
+                        //                uDataMx = new double[RawDataMatrix.RowNumber, RawDataMatrix.ColNumber];
+                        //                StatisticMatrix = new DataMatrix(RawDataMatrix.RowNumber, RawDataMatrix.ColNumber);
+                        //                lsStcData.Clear();
+                        //                return;
+                        //            }
+                        //            for (int iRow = 0; iRow < RawDataMatrix.RowNumber; iRow++)
+                        //            {
+                        //                for (int iCol = 0; iCol < RawDataMatrix.ColNumber; iCol++)
+                        //                {
+                        //                    uDataMx[iRow, iCol] = (double)lsStcData.Average((t) =>
+                        //                    {
+                        //                        return t[iRow, iCol];
+                        //                    });
+
+                        //                    uDataMx[iRow, iCol] = (double)lsStcData.Sum((t) =>
+                        //                    {
+                        //                        return Math.Pow(t[iRow, iCol] - uDataMx[iRow, iCol], 2);
+                        //                    });
+
+                        //                    uDataMx[iRow, iCol] = (double)Math.Sqrt((double)uDataMx[iRow, iCol] / lsStcData.Count);
+                        //                    StatisticMatrix[iRow][iCol] = (short)uDataMx[iRow, iCol];
+                        //                }
+                        //            }
+                        //        }
+
+                        //        while (lsStcData.Count >= Math.Max(1, StcFrames))
+                        //            lsStcData.RemoveAt(0);
+
+                        //    }, new WorkComplete(() =>
+                        //    {
+                        //        return StcType == 1 ? false : true;
+                        //    }));
+                        //}
+                        //else if (StcType == 2)
+                        //{
+                        //    if (null == RawDataMatrix) return;
+                        //    StatisticMatrix = new DataMatrix(RawDataMatrix.RowNumber, RawDataMatrix.ColNumber);
+                        //    RuningKernel.Instance().Work.AddWorkTemporary(() =>
+                        //    {
+                        //        if (Refresh)
+                        //        {
+                        //            if (StatisticMatrix.RowNumber != RawDataMatrix.RowNumber || StatisticMatrix.ColNumber != RawDataMatrix.ColNumber)
+                        //            {
+                        //                StatisticMatrix = new DataMatrix(RawDataMatrix.RowNumber, RawDataMatrix.ColNumber);
+                        //                return;
+                        //            }
+                        //            for (int iRow = 0; iRow < RawDataMatrix.RowNumber; iRow++)
+                        //            {
+                        //                for (int iCol = 0; iCol < Cols; iCol++)
+                        //                {
+                        //                    StatisticMatrix[iRow][iCol] = Math.Max(Convert.ToInt16(StatisticMatrix[iRow][iCol]), dataBuffer[iRow * Cols + iCol]);
+                        //                }
+                        //                if (RawDataMatrix.ColNumber > Cols)
+                        //                {
+                        //                    StatisticMatrix[iRow][Cols] = Math.Max(Convert.ToInt16(StatisticMatrix[iRow][Cols]), dataBuffer[RawDataMatrix.RowNumber * Cols + iRow]);
+                        //                }
+                        //            }
+                        //        }
+
+                        //    }, new WorkComplete(() =>
+                        //    {
+                        //        return StcType == 2 ? false : true;
+                        //    }));
+                        //}
+                        //else if (stcType == 3)
+                        //{
+                        //    if (null == RawDataMatrix) return;
+                        //    double[,] uDataMx = new double[RawDataMatrix.RowNumber, RawDataMatrix.ColNumber];
+                        //    StatisticMatrix = new DataMatrix(RawDataMatrix.RowNumber, RawDataMatrix.ColNumber);
+                        //    IList<short[,]> lsStcData = new List<short[,]>();
+                        //    RuningKernel.Instance().Work.AddWorkTemporary(() =>
+                        //    {
+                        //        short[,] sTemp = new short[RawDataMatrix.RowNumber, RawDataMatrix.ColNumber];
+                        //        for (int iRow = 0; iRow < RawDataMatrix.RowNumber; iRow++)
+                        //        {
+                        //            for (int iCol = 0; iCol < Cols; iCol++)
+                        //            {
+                        //                sTemp[iRow, iCol] = dataBuffer[iRow * Cols + iCol];
+                        //            }
+                        //            if (RawDataMatrix.ColNumber > Cols)
+                        //            {
+                        //                sTemp[iRow, Cols] = dataBuffer[RawDataMatrix.RowNumber * Cols + iRow];
+                        //            }
+                        //        }
+                        //        lsStcData.Add(sTemp);
+
+                        //        if (lsStcData.Count < StcFrames) return;
+
+                        //        //DataMatrix aveMx = new DataMatrix(RawDataMatrix.RowNumber, RawDataMatrix.ColNumber);
+
+                        //        if (Refresh)
+                        //        {
+                        //            if (StatisticMatrix.RowNumber != RawDataMatrix.RowNumber || StatisticMatrix.ColNumber != RawDataMatrix.ColNumber)
+                        //            {
+                        //                uDataMx = new double[RawDataMatrix.RowNumber, RawDataMatrix.ColNumber];
+                        //                StatisticMatrix = new DataMatrix(RawDataMatrix.RowNumber, RawDataMatrix.ColNumber);
+                        //                lsStcData.Clear();
+                        //                return;
+                        //            }
+                        //            for (int iRow = 0; iRow < RawDataMatrix.RowNumber; iRow++)
+                        //            {
+                        //                for (int iCol = 0; iCol < RawDataMatrix.ColNumber; iCol++)
+                        //                {
+                        //                    uDataMx[iRow, iCol] = (double)lsStcData.Average((t) =>
+                        //                    {
+                        //                        return t[iRow, iCol];
+                        //                    });
+                        //                    StatisticMatrix[iRow][iCol] = (short)uDataMx[iRow, iCol];
+                        //                }
+                        //            }
+                        //        }
+
+                        //        while (lsStcData.Count >= Math.Max(1, StcFrames))
+                        //            lsStcData.RemoveAt(0);
+
+                        //    }, new WorkComplete(() =>
+                        //    {
+                        //        return StcType == 3 ? false : true;
+                        //    }));
+                        //}
+                        //else if (StcType == 4)
+                        //{
+                        //    short rawMin = 30000;
+                        //    if (null == RawDataMatrix) return;
+                        //    StatisticMatrix = new DataMatrix(RawDataMatrix.RowNumber, RawDataMatrix.ColNumber);
+                        //    Boolean rawMinInit = false;
+                        //    RuningKernel.Instance().Work.AddWorkTemporary(() =>
+                        //    {
+                        //        if (Refresh)
+                        //        {
+                        //            if (StatisticMatrix.RowNumber != RawDataMatrix.RowNumber || StatisticMatrix.ColNumber != RawDataMatrix.ColNumber)
+                        //            {
+                        //                StatisticMatrix = new DataMatrix(RawDataMatrix.RowNumber, RawDataMatrix.ColNumber);
+                        //                rawMinInit = false;
+                        //                return;
+                        //            }
+                        //            for (int iRow = 0; iRow < RawDataMatrix.RowNumber; iRow++)
+                        //            {
+                        //                for (int iCol = 0; iCol < Cols; iCol++)
+                        //                {
+                        //                    if (!rawMinInit) StatisticMatrix[iRow][iCol] = rawMin;
+                        //                    StatisticMatrix[iRow][iCol] = Math.Min(Convert.ToInt16(StatisticMatrix[iRow][iCol]), dataBuffer[iRow * Cols + iCol]);
+                        //                }
+                        //                if (RawDataMatrix.ColNumber > Cols)
+                        //                {
+                        //                    if (!rawMinInit) StatisticMatrix[iRow][Cols] = rawMin;
+                        //                    StatisticMatrix[iRow][Cols] = Math.Min(Convert.ToInt16(StatisticMatrix[iRow][Cols]), dataBuffer[RawDataMatrix.RowNumber * Cols + iRow]);
+                        //                }
+                        //            }
+                        //            rawMinInit = true;
+                        //        }
+
+                        //    }, new WorkComplete(() =>
+                        //    {
+                        //        return StcType == 4 ? false : true;
+                        //    }));
+                        //}
+                        //else if (stcType == 5)
+                        //{
+                        //    if (null == RawDataMatrix) return;
+                        //    StatisticMatrix = new DataMatrix(RawDataMatrix.RowNumber, RawDataMatrix.ColNumber);
+                        //    var SampleNum = StcFrames;
+                        //    var lsSignalUnTouchedData = new List<short[]>();
+                        //    var lsSignalTouchedData = new List<short[]>();
+                        //    var lsSignalTouchedDataCopy = new List<short[]>();
+                        //    var SNRdB = new double[RawDataMatrix.RowNumber * RawDataMatrix.ColNumber];
+                        //    //var TouchStrength = new double[RawDataMatrix.RowNumber * RawDataMatrix.ColNumber];
+                        //    var NoiseTouched = new double[RawDataMatrix.RowNumber * RawDataMatrix.ColNumber];
+                        //    var SignalUnTouchedAGV1000 = new double[RawDataMatrix.RowNumber * RawDataMatrix.ColNumber];
+                        //    var SignalTouchedAGV1000 = new double[RawDataMatrix.RowNumber * RawDataMatrix.ColNumber];
+
+                        //    MainWindow.AppWin.Dispatcher.Invoke((Action)(() =>
+                        //    {
+                        //        Task<MessageDialogResult> result = MainWindow.AppWin.ShowMessageAsync("warning", "基础采样请勿触碰", MessageDialogStyle.Affirmative);
+                        //         //result.ContinueWith(t =>
+                        //         //{
+                        //         //    var meg = t.Result;
+                        //         //    if (MessageDialogResult.Affirmative == meg) return;
+                        //         //});
+                               
+                        //    }));
+                        //    RuningKernel.Instance().Work.AddWorkTemporary(() =>
+                        //    {
+
+                        //        if (lsSignalUnTouchedData.Count() < SampleNum)
+                        //        {
+
+                        //            var sTemp = new short[Rows * Cols + Rows + Cols];
+                        //            Array.Copy(dataBuffer, sTemp, Rows * Cols + Rows + Cols);
+                        //            lsSignalUnTouchedData.Add(sTemp);
+
+                        //            if (lsSignalUnTouchedData.Count() == SampleNum)
+                        //            {
+                        //                //var b = MainWindow.AppWin.GetCurrentDialogAsync<MessageDialog>();
+                                       
+                        //                MainWindow.AppWin.Dispatcher.Invoke((Action)(() =>
+                        //                {
+                        //                   // MainWindow.AppWin.HideMetroDialogAsync();
+                        //                    //MainWindow.AppWin.GetCurrentDialogAsync<MessageDialogResult>(MainWindow.AppWin);
+                        //                    MainWindow.AppWin.ShowMessageAsync("warning", "基础采样结束", MessageDialogStyle.Affirmative);
+                        //                }));
+
+                        //                for (int index = 0; index < Rows * Cols + Rows + Cols; index++)
+                        //                {
+                        //                    SignalUnTouchedAGV1000[index] = lsSignalUnTouchedData.Average((t) =>
+                        //                    {
+                        //                        return t[index];
+                        //                    });
+                        //                }
+
+                        //            }
+                        //        }
+                        //        else
+                        //        {
+                        //            //var lsSignalTouchedData0 = new short[RawDataMatrix.RowNumber * RawDataMatrix.ColNumber];//定义lsSignalTouchedData的第0帧
+                        //            //Array.Clear(lsSignalTouchedData0, 0, lsSignalTouchedData0.Length);                                    
+                        //            if (lsSignalTouchedData.Count() >= SampleNum)
+                        //            {
+                        //                //lsSignalTouchedData0 = lsSignalTouchedData[0];
+                        //                lsSignalTouchedData.RemoveAt(0);
+                        //                lsSignalTouchedDataCopy.RemoveAt(0);
+                        //            }
+
+                        //            var sTemp = new short[Rows * Cols + Rows + Cols];
+                        //            Array.Copy(dataBuffer, sTemp, Rows * Cols + Rows + Cols);
+                        //            lsSignalTouchedData.Add(sTemp);
+                        //            lsSignalTouchedDataCopy.Add(sTemp);
+
+                        //            for (int index = 0; index < Rows * Cols + Rows + Cols; index++)
+                        //            {
+                        //                if (index >= Rows * Cols)
+                        //                {
+                        //                    if (Math.Abs(sTemp[index]) < 30)
+                        //                    {
+                        //                        SNRdB[index] = 0;
+                        //                        continue;
+                        //                    } 
+                        //                }
+                        //                else
+                        //                {
+                        //                    if (Math.Abs(sTemp[index]) < 100)
+                        //                    {
+                        //                        SNRdB[index] = 0;
+                        //                        continue;
+                        //                    }
+                                        
+                        //                }
+                                       
+                        //                SignalTouchedAGV1000[index] = lsSignalTouchedData.Average((t) =>
+                        //                {
+                        //                    return t[index];
+                        //                });
+
+                        //                // TouchStrength[index] = Math.Abs(SignalTouchedAGV1000[index] - SignalUnTouchedAGV1000[index]);
+                        //                if (SNRType == 0 || SNRType == 1)
+                        //                {
+                        //                    NoiseTouched[index] = Math.Sqrt(lsSignalTouchedData.Sum((t) =>
+                        //                    {
+                        //                        return Math.Pow(t[index] - SignalTouchedAGV1000[index], 2);
+                        //                    }) / lsSignalTouchedData.Count());
+                                        
+                        //                }
+                        //                else if (SNRType == 2 )
+                        //                {
+                        //                    var pmax = lsSignalTouchedData.Max((t) => 
+                        //                    {
+                        //                        return t[index];
+                        //                    });
+                        //                    var pmin = lsSignalTouchedData.Min((t) =>
+                        //                    {
+                        //                        return t[index];
+                        //                    });
+
+                        //                    NoiseTouched[index] = pmax == pmin ? 1 : (pmax - pmin) * 0.7;
+                        //                }
+
+                        //                if (SNRType == 0 )
+                        //                {
+                        //                    SNRdB[index] = 20 * Math.Log10((Math.Abs(SignalTouchedAGV1000[index] - SignalUnTouchedAGV1000[index])) / NoiseTouched[index]);
+                        //                }
+                        //                else if (SNRType == 1||SNRType==2)
+                        //                {
+                        //                    SNRdB[index] = ((Math.Abs(SignalTouchedAGV1000[index] - SignalUnTouchedAGV1000[index])) / NoiseTouched[index]);
+                        //                }
+                        //                else if(SNRType == 3)
+                        //                {
+                        //                    SNRdB[index] = Math.Abs(20 * Math.Log10((Math.Abs(SignalTouchedAGV1000[index]) / (SignalUnTouchedAGV1000[index] <= 0 ? 1 : SignalUnTouchedAGV1000[index]))));
+                        //                }
+                        //            }
+
+
+                        //            for (int iRow = 0; iRow < RawDataMatrix.RowNumber; iRow++)
+                        //            {
+                        //                for (int iCol = 0; iCol < Cols; iCol++)
+                        //                {
+                        //                    StatisticMatrix[iRow][iCol] = (short)SNRdB[iRow * Cols + iCol] < 0 ? (short)0 : (short)SNRdB[iRow * Cols + iCol];
+                        //                }
+                        //                if (RawDataMatrix.ColNumber > Cols)
+                        //                {
+                        //                    StatisticMatrix[iRow][Cols] = (short)SNRdB[RawDataMatrix.RowNumber * Cols + iRow] < 0 ? (short)0 : (short)SNRdB[RawDataMatrix.RowNumber * Cols + iRow];
+                        //                }
+                        //            }
+                        //        }
+
+                        //    }, new WorkComplete(() =>
+                        //    {
+                        //        return StcType == 5 ? false : true;
+                        //    }));
+
+                        //}
+                        //else if (stcType == 6)
+                        //{
+                        //    short[] uDataMx = new short[RawDataMatrix.RowNumber * RawDataMatrix.ColNumber];
+                        //    StatisticMatrix = new DataMatrix(RawDataMatrix.RowNumber, RawDataMatrix.ColNumber);
+                        //    Array.Copy(dataBuffer, 0, uDataMx, 0, RawDataMatrix.RowNumber * RawDataMatrix.ColNumber);
+                        //    byte[] retValue = new byte[16];
+
+                        //    RuningKernel.Instance().Work.AddWorkTemporary(() =>
+                        //    {
+
+                        //        MainViewModel.Intr.ReturnCode = SMChipBase.IncokeCommand((byte)cmdTypeID.CMD_CTP_FREQ, 5, 1, 0, retValue);
+                        //    });
+
+                        //    RuningKernel.Instance().Work.AddWorkTemporary(() =>
+                        //    {
+                        //        if (Refresh)
+                        //        {
+                        //            if (StatisticMatrix.RowNumber != RawDataMatrix.RowNumber || StatisticMatrix.ColNumber != RawDataMatrix.ColNumber)
+                        //            {
+                        //                StatisticMatrix = new DataMatrix(RawDataMatrix.RowNumber, RawDataMatrix.ColNumber);
+                        //                uDataMx = new short[RawDataMatrix.RowNumber * RawDataMatrix.ColNumber];
+                        //                MainViewModel.Intr.ReturnCode = SMChipBase.IncokeCommand((byte)cmdTypeID.CMD_CTP_FREQ, 5, 1, 0, retValue);
+                        //                return;
+                        //            }
+
+                        //            for (int iRow = 0; iRow < RawDataMatrix.RowNumber; iRow++)
+                        //            {
+                        //                for (int iCol = 0; iCol < Cols; iCol++)
+                        //                {
+                        //                    StatisticMatrix[iRow][iCol] = (short)(dataBuffer[iRow * Cols + iCol] - uDataMx[iRow * Cols + iCol]);
+                        //                }
+                        //                if (RawDataMatrix.ColNumber > Cols)
+                        //                {
+                        //                    if (iRow == Rows) break;
+                        //                    StatisticMatrix[iRow][Cols] = (short)(dataBuffer[RawDataMatrix.RowNumber * Cols + iRow] - uDataMx[RawDataMatrix.RowNumber * Cols + iRow]);
+                        //                }
+                        //            }
+                        //        }
+
+                        //    }, new WorkComplete(() =>
+                        //    {
+                        //        if (6 != stcType) MainViewModel.Intr.ReturnCode = SMChipBase.IncokeCommand((byte)cmdTypeID.CMD_CTP_FREQ, 5, 0, 0, retValue);
+                        //        return StcType == 6 ? false : true;
+                        //    }));
+                        //}
+
+                        if (stcType == 1)
+                        {
+                            if (0 == WpfRawDispView.Rows|| 0 == WpfRawDispView.Columns) return;
+                            double[] uDataMx = new double[DisplayDataLen >> 1];
+
+                            System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() =>
+                            { WpfStatisticRawDispView.WpfRawDataViewInit(WpfRawDispView.Rows, WpfRawDispView.Columns, WpfRawDispView.RowExp, WpfRawDispView.ColExp); }));
+ 
+                            IList<short[]> lsStcData = new List<short[]>();
+                            RuningKernel.Instance().Work.AddWorkTemporary(() =>
+                            {
+                                short[] sTemp = new short[DisplayDataLen>>1];
+                                Array.Copy(dataBuffer, sTemp, DisplayDataLen >> 1);
+                                lsStcData.Add(sTemp);
+
+                                if (lsStcData.Count < StcFrames) return;
+
+                                if (Refresh)
+                                {
+                                    if (WpfStatisticRawDispView.Rows != WpfRawDispView.Rows || WpfStatisticRawDispView.Columns != WpfRawDispView.Columns)
+                                    {
+
+                                        uDataMx = new double[DisplayDataLen >> 1];
+                                        System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() =>
+                                        { WpfStatisticRawDispView.WpfRawDataViewInit(WpfRawDispView.Rows, WpfRawDispView.Columns, WpfRawDispView.RowExp, WpfRawDispView.ColExp); }));
+                                        
+                                        lsStcData.Clear();
+                                        return;
+                                    }
+
+                                    for (int index = 0; index < DisplayDataLen >> 1; index ++)
+                                    {
+                                        uDataMx[index] = (double)lsStcData.Average((t) =>
+                                        {
+                                            return t[index];
+                                        });
+
+                                        uDataMx[index] = (double)lsStcData.Sum((t) =>
+                                        {
+                                            return Math.Pow(t[index] - uDataMx[index], 2);
+                                        });
+
+                                        uDataMx[index] = (double)Math.Sqrt((double)uDataMx[index] / lsStcData.Count);
+                                        WpfStatisticRawDispView.RawDataMatrix[index] = (short)uDataMx[index];
+                                    }
+
+                                    System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() => { WpfStatisticRawDispView.Refresh(); }));
+                                }
+
+                                while (lsStcData.Count >= Math.Max(1, StcFrames))
+                                    lsStcData.RemoveAt(0);
+
+                            }, new WorkComplete(() =>
+                            {
+                                return StcType == 1 ? false : true;
+                            }));
+                        }
+                        else if (StcType == 2)
+                        {
+
+                            if (0 == WpfRawDispView.Rows || 0 == WpfRawDispView.Columns) return;
+
+                            System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() =>
+                            { WpfStatisticRawDispView.WpfRawDataViewInit(WpfRawDispView.Rows, WpfRawDispView.Columns, WpfRawDispView.RowExp, WpfRawDispView.ColExp); }));
+
+                            RuningKernel.Instance().Work.AddWorkTemporary(() =>
+                            {
+                                if (Refresh)
+                                {
+                                    if (WpfStatisticRawDispView.Rows != WpfRawDispView.Rows || WpfStatisticRawDispView.Columns != WpfRawDispView.Columns)
+                                    {
+
+                                        System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() =>
+                                        { WpfStatisticRawDispView.WpfRawDataViewInit(WpfRawDispView.Rows, WpfRawDispView.Columns, WpfRawDispView.RowExp, WpfRawDispView.ColExp); }));
+
+                                        return;
+                                    }
+
+                                    for (int index = 0; index < DisplayDataLen >> 1; index++)
+                                    {
+                                        WpfStatisticRawDispView.RawDataMatrix[index] = Math.Max(Convert.ToInt16(WpfStatisticRawDispView.RawDataMatrix[index]), dataBuffer[index]);
+                                    }
+
+                                    System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() => { WpfStatisticRawDispView.Refresh(); }));
+
+                                }
+
+                            }, new WorkComplete(() =>
+                            {
+                                return StcType == 2 ? false : true;
+                            }));
+                        }
+                        else if (stcType == 3)
+                        {
+                            if (0 == WpfRawDispView.Rows || 0 == WpfRawDispView.Columns) return;
+                            double[] uDataMx = new double[DisplayDataLen >> 1];
+
+                            System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() =>
+                            { WpfStatisticRawDispView.WpfRawDataViewInit(WpfRawDispView.Rows, WpfRawDispView.Columns, WpfRawDispView.RowExp, WpfRawDispView.ColExp); }));
+
+                            IList<short[]> lsStcData = new List<short[]>();
+
+                            RuningKernel.Instance().Work.AddWorkTemporary(() =>
+                            {
+                                short[] sTemp = new short[DisplayDataLen >> 1];
+
+                                Array.Copy(dataBuffer, sTemp, DisplayDataLen >> 1);
+                                lsStcData.Add(sTemp);
+
+                                if (lsStcData.Count < StcFrames) return;
+
+                                if (Refresh)
+                                {
+                                    if (WpfStatisticRawDispView.Rows != WpfRawDispView.Rows || WpfStatisticRawDispView.Columns != WpfRawDispView.Columns)
+                                    {
+
+                                        uDataMx = new double[DisplayDataLen >> 1];
+                                        System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() =>
+                                        { WpfStatisticRawDispView.WpfRawDataViewInit(WpfRawDispView.Rows, WpfRawDispView.Columns, WpfRawDispView.RowExp, WpfRawDispView.ColExp); }));
+
+                                        lsStcData.Clear();
+                                        return;
+                                    }
+
+
+                                    for (int index = 0; index < DisplayDataLen >> 1; index++)
+                                    {
+                                        uDataMx[index] = (double)lsStcData.Average((t) =>
+                                        {
+                                            return t[index];
+                                        });
+
+                                        WpfStatisticRawDispView.RawDataMatrix[index] = (short)uDataMx[index];
+                                    }
+
+                                    System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() => { WpfStatisticRawDispView.Refresh(); }));
+                                }
+
+                                while (lsStcData.Count >= Math.Max(1, StcFrames))
+                                    lsStcData.RemoveAt(0);
+
+                            }, new WorkComplete(() =>
+                            {
+                                return StcType == 3 ? false : true;
+                            }));
+                        }
+                        else if (StcType == 4)
+                        {
+                            short rawMin = 30000;
+
+                            if (0 == WpfRawDispView.Rows || 0 == WpfRawDispView.Columns) return;
+
+                            System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() =>
+                            { WpfStatisticRawDispView.WpfRawDataViewInit(WpfRawDispView.Rows, WpfRawDispView.Columns, WpfRawDispView.RowExp, WpfRawDispView.ColExp); }));
+
+                            Boolean rawMinInit = false;
+                            RuningKernel.Instance().Work.AddWorkTemporary(() =>
+                            {
+                                if (Refresh)
+                                {
+                                    if (WpfStatisticRawDispView.Rows != WpfRawDispView.Rows || WpfStatisticRawDispView.Columns != WpfRawDispView.Columns)
+                                    {
+
+                                        System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() =>
+                                        { WpfStatisticRawDispView.WpfRawDataViewInit(WpfRawDispView.Rows, WpfRawDispView.Columns, WpfRawDispView.RowExp, WpfRawDispView.ColExp); }));
+
+                                        rawMinInit = false;
+                                        return;
+                                    }
+
+                                    for (int index = 0; index < DisplayDataLen >> 1; index++)
+                                    {
+                                        if (!rawMinInit) WpfStatisticRawDispView.RawDataMatrix[index] = rawMin;
+
+                                        WpfStatisticRawDispView.RawDataMatrix[index] = Math.Min(Convert.ToInt16(WpfStatisticRawDispView.RawDataMatrix[index]), dataBuffer[index]);
+                                    }
+
+                                    System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() => { WpfStatisticRawDispView.Refresh(); }));
+                                  
+                                    rawMinInit = true;
+                                }
+
+                            }, new WorkComplete(() =>
+                            {
+                                return StcType == 4 ? false : true;
+                            }));
+                        }
+                        else if (stcType == 5)
+                        {
+                            if (0 == WpfRawDispView.Rows || 0 == WpfRawDispView.Columns) return;
+
+                            System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() =>
+                            { WpfStatisticRawDispView.WpfRawDataViewInit(WpfRawDispView.Rows, WpfRawDispView.Columns, WpfRawDispView.RowExp, WpfRawDispView.ColExp); }));
+
+
+                            var SampleNum = StcFrames;
+                            var lsSignalUnTouchedData = new List<short[]>();
+                            var lsSignalTouchedData = new List<short[]>();
+                            var lsSignalTouchedDataCopy = new List<short[]>();
+                            var SNRdB = new double[DisplayDataLen >> 1];
+                            //var TouchStrength = new double[RawDataMatrix.RowNumber * RawDataMatrix.ColNumber];
+                            var NoiseTouched = new double[DisplayDataLen >> 1];
+                            var SignalUnTouchedAGV1000 = new double[DisplayDataLen >> 1];
+                            var SignalTouchedAGV1000 = new double[DisplayDataLen >> 1];
+
+                            MainWindow.AppWin.Dispatcher.Invoke((Action)(() =>
+                            {
+                                Task<MessageDialogResult> result = MainWindow.AppWin.ShowMessageAsync("warning", "基础采样请勿触碰", MessageDialogStyle.Affirmative);
+                                //result.ContinueWith(t =>
+                                //{
+                                //    var meg = t.Result;
+                                //    if (MessageDialogResult.Affirmative == meg) return;
+                                //});
+
+                            }));
+                            RuningKernel.Instance().Work.AddWorkTemporary(() =>
+                            {
+
+                                if (lsSignalUnTouchedData.Count() < SampleNum)
+                                {
+
+                                    var sTemp = new short[Rows * Cols + Rows + Cols];
+                                    Array.Copy(dataBuffer, sTemp, Rows * Cols + Rows + Cols);
+                                    lsSignalUnTouchedData.Add(sTemp);
+
+                                    if (lsSignalUnTouchedData.Count() == SampleNum)
+                                    {
+                                        //var b = MainWindow.AppWin.GetCurrentDialogAsync<MessageDialog>();
+
+                                        MainWindow.AppWin.Dispatcher.Invoke((Action)(() =>
+                                        {
+                                            // MainWindow.AppWin.HideMetroDialogAsync();
+                                            //MainWindow.AppWin.GetCurrentDialogAsync<MessageDialogResult>(MainWindow.AppWin);
+                                            MainWindow.AppWin.ShowMessageAsync("warning", "基础采样结束", MessageDialogStyle.Affirmative);
+                                        }));
+
+                                        for (int index = 0; index < Rows * Cols + Rows + Cols; index++)
+                                        {
+                                            SignalUnTouchedAGV1000[index] = lsSignalUnTouchedData.Average((t) =>
+                                            {
+                                                return t[index];
+                                            });
+                                        }
+
+                                    }
+                                }
+                                else
+                                {
+                                    //var lsSignalTouchedData0 = new short[RawDataMatrix.RowNumber * RawDataMatrix.ColNumber];//定义lsSignalTouchedData的第0帧
+                                    //Array.Clear(lsSignalTouchedData0, 0, lsSignalTouchedData0.Length);                                    
+                                    if (lsSignalTouchedData.Count() >= SampleNum)
+                                    {
+                                        //lsSignalTouchedData0 = lsSignalTouchedData[0];
+                                        lsSignalTouchedData.RemoveAt(0);
+                                        lsSignalTouchedDataCopy.RemoveAt(0);
+                                    }
+
+                                    var sTemp = new short[Rows * Cols + Rows + Cols];
+                                    Array.Copy(dataBuffer, sTemp, Rows * Cols + Rows + Cols);
+                                    lsSignalTouchedData.Add(sTemp);
+                                    lsSignalTouchedDataCopy.Add(sTemp);
+
+                                    for (int index = 0; index < Rows * Cols + Rows + Cols; index++)
+                                    {
+                                        if (index >= Rows * Cols)
+                                        {
+                                            if (Math.Abs(sTemp[index]) < 30)
+                                            {
+                                                SNRdB[index] = 0;
+                                                continue;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (Math.Abs(sTemp[index]) < 100)
+                                            {
+                                                SNRdB[index] = 0;
+                                                continue;
+                                            }
+
+                                        }
+
+                                        SignalTouchedAGV1000[index] = lsSignalTouchedData.Average((t) =>
+                                        {
+                                            return t[index];
+                                        });
+
+                                        // TouchStrength[index] = Math.Abs(SignalTouchedAGV1000[index] - SignalUnTouchedAGV1000[index]);
+                                        if (SNRType == 0 || SNRType == 1)
+                                        {
+                                            NoiseTouched[index] = Math.Sqrt(lsSignalTouchedData.Sum((t) =>
+                                            {
+                                                return Math.Pow(t[index] - SignalTouchedAGV1000[index], 2);
+                                            }) / lsSignalTouchedData.Count());
+
+                                        }
+                                        else if (SNRType == 2)
+                                        {
+                                            var pmax = lsSignalTouchedData.Max((t) =>
+                                            {
+                                                return t[index];
+                                            });
+                                            var pmin = lsSignalTouchedData.Min((t) =>
+                                            {
+                                                return t[index];
+                                            });
+
+                                            NoiseTouched[index] = pmax == pmin ? 1 : (pmax - pmin) * 0.7;
+                                        }
+
+                                        if (SNRType == 0)
+                                        {
+                                            SNRdB[index] = 20 * Math.Log10((Math.Abs(SignalTouchedAGV1000[index] - SignalUnTouchedAGV1000[index])) / NoiseTouched[index]);
+                                        }
+                                        else if (SNRType == 1 || SNRType == 2)
+                                        {
+                                            SNRdB[index] = ((Math.Abs(SignalTouchedAGV1000[index] - SignalUnTouchedAGV1000[index])) / NoiseTouched[index]);
+                                        }
+                                        else if (SNRType == 3)
+                                        {
+                                            SNRdB[index] = Math.Abs(20 * Math.Log10((Math.Abs(SignalTouchedAGV1000[index]) / (SignalUnTouchedAGV1000[index] <= 0 ? 1 : SignalUnTouchedAGV1000[index]))));
+                                        }
+                                    }
+
+                                    for (int index = 0; index < Rows * Cols + Rows + Cols; index++)
+                                    {
+                                        WpfStatisticRawDispView.RawDataMatrix[index] = (short)SNRdB[index] < 0 ? (short)0 : (short)SNRdB[index];
+                                    }
+
+                                    System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() => { WpfStatisticRawDispView.Refresh(); }));
+                                   
+                                }
+
+                            }, new WorkComplete(() =>
+                            {
+                                return StcType == 5 ? false : true;
+                            }));
+
+                        }
+                        else if (stcType == 6)
+                        {
+
+                            if (0 == WpfRawDispView.Rows || 0 == WpfRawDispView.Columns) return;
+                            short[] uDataMx = new short[DisplayDataLen >> 1];
+
+                            System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() =>
+                            { WpfStatisticRawDispView.WpfRawDataViewInit(WpfRawDispView.Rows, WpfRawDispView.Columns, WpfRawDispView.RowExp, WpfRawDispView.ColExp); }));
+
+                            Array.Copy(dataBuffer, 0, uDataMx, 0, DisplayDataLen >> 1);
+                            byte[] retValue = new byte[16];
+
+                            RuningKernel.Instance().Work.AddWorkTemporary(() =>
+                            {
+
+                                MainViewModel.Intr.ReturnCode = SMChipBase.IncokeCommand((byte)cmdTypeID.CMD_CTP_FREQ, 5, 1, 0, retValue);
+                            });
+
+                            RuningKernel.Instance().Work.AddWorkTemporary(() =>
+                            {
+                                if (Refresh)
+                                {
+
+                                    if (WpfStatisticRawDispView.Rows != WpfRawDispView.Rows || WpfStatisticRawDispView.Columns != WpfRawDispView.Columns)
+                                    {
+
+                                        uDataMx = new short[DisplayDataLen >> 1];
+                                        System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() =>
+                                        { WpfStatisticRawDispView.WpfRawDataViewInit(WpfRawDispView.Rows, WpfRawDispView.Columns, WpfRawDispView.RowExp, WpfRawDispView.ColExp); }));
+
+                                        MainViewModel.Intr.ReturnCode = SMChipBase.IncokeCommand((byte)cmdTypeID.CMD_CTP_FREQ, 5, 1, 0, retValue);
+                                        return;
+                                    }
+
+                                    for (int index = 0; index < DisplayDataLen >> 1; index++)
+                                    {
+
+                                        WpfStatisticRawDispView.RawDataMatrix[index] = (short)(dataBuffer[index] - uDataMx[index]);
+                                    }
+
+                                    System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() => { WpfStatisticRawDispView.Refresh(); }));
+                                  
+                                }
+
+                            }, new WorkComplete(() =>
+                            {
+                                if (6 != stcType) MainViewModel.Intr.ReturnCode = SMChipBase.IncokeCommand((byte)cmdTypeID.CMD_CTP_FREQ, 5, 0, 0, retValue);
+                                return StcType == 6 ? false : true;
+                            }));
+                        }
+                    });
+                }
+            }
+        }
+        public ModelBase()
+        {
+            ctrlClickCommand = new DelegateCommand(OnCtrlClickCommand, CanCtrlClick);
+
+            System.Timers.Timer t = RuningKernel.Instance().RefreshTimer;
+            t.Elapsed += (source, e) => {
+                //if (MainViewModel.Intr.SelectedIC == eChipTypeList.SM_IC_7126)
+                {
+                    Refresh = true;
+                }
+                //else
+                //{
+                //    if (null != RawDataMatrix)
+                //    {
+                //        Refresh = true;
+                //    }
+                //}
+
+            };
+            t.Interval = MainViewModel.Intr.TimerInterval;
+            t.Enabled = true;
+            t.Start();
+        }
+
+        public virtual void ActionOnChannelNumChange()
+        {
+            //if (Rows > 0 && Cols > 0)
+            //{
+            //    if (null == RawDataMatrix || (Rows + 1) != RawDataMatrix.RowNumber || Cols != RawDataMatrix.ColNumber)
+            //    {
+            //        RuningKernel.Instance().Pause(true);
+            //        RawDataMatrix = new DataMatrix(Rows, Cols, Refs);
+            //        RuningKernel.Instance().Pause(false);
+            //    }
+            //}
+
+            if (Rows > 0 && Cols > 0)
+            {
+                if ((Rows) != WpfRawDispView.Rows || (Cols) != WpfRawDispView.Columns)
+                {
+                    RuningKernel.Instance().Pause(true);
+                    //RawDataMatrix = new DataMatrix(Rows, Cols, Cols + 2, Rows + 2);
+
+                    System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() => { WpfRawDispView.WpfRawDataViewInit(Rows, Cols, 1, 1); }));
+                    RuningKernel.Instance().Pause(false);
+                }
+            }
+
+        }
+
+        public virtual void ActionOnICChanged()
+        {
+            RuningKernel.Instance().StopRun();
+            RuningKernel.Instance().StartRun();
+
+            Initialized = false;
+
+            Func<short[], bool> ackOnRawData = new Func<short[], bool>((t) =>
+            {
+                if (Refresh)
+                {
+                    //Refresh = false;
+                    RuningKernel.Instance().Work.AddWorkTemporary(() => { Refresh = false; });
+
+                    int index = 0;
+                    for (int iRow = 0; iRow < Rows; iRow++)
+                    {
+                        for (int iCol = 0; iCol < Cols; iCol++)
+                        {
+                            if (index * 2 >= DisplayDataLen) break;
+
+                            if (null != RawDataMatrix)
+                            {
+                                RawDataMatrix[iRow][iCol] = t[index++];
+                            }
+                        }
+                    }
+                    if (RawDataMatrix.RowNumber > Rows)
+                    {
+                        for (int iCol = 0; iCol < Cols; iCol++)
+                        {
+                            if (index * 2 >= DisplayDataLen) break;
+
+                            if (null != RawDataMatrix)
+                            {
+                                RawDataMatrix[Rows][iCol] = t[index++];
+                            }
+                        }
+                    }
+
+                    if (RawDataMatrix.ColNumber > Cols)
+                    {
+                        for (int iRow = 0; iRow < Rows; iRow++)
+                        {
+                            if (index * 2 >= DisplayDataLen) break;
+
+                            if (null != RawDataMatrix)
+                            {
+                                RawDataMatrix[iRow][Cols] = t[index++];
+                            }
+                        }
+                    }
+                }
+                return true;
+            });
+
+            Action ackOnRawDataN = new Action(() =>
+            {
+                if (Refresh)
+                {
+                    Array.Copy(dataBuffer, WpfRawDispView.RawDataMatrix, DisplayDataLen);
+                    //Refresh = false;
+                    RuningKernel.Instance().Work.AddWorkTemporary(() => { Refresh = false; });
+                    System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() => { WpfRawDispView.Refresh(); }));
+                }
+
+            });
+
+            RuningKernel.Instance().Work.AddWorkPermanent(new Action(() =>
+            {
+                //if (MainViewModel.Intr.DisplayType > dtType.MODE_TOUCH)
+                //    return;
+                if (SimulationChecked) return;
+                if (dtType.MODE_NONE == MainViewModel.Intr.DisplayType) return;
+
+                bool tpLinked = false;
+                if (MainViewModel.Intr.ReturnCode > 0)
+                {
+                    tpLinked = SMChipBase.HaveTpLinked();
+                    Initialized = false;
+                }
+                else
+                {
+                    tpLinked = true;
+                }
+
+
+                if (!tpLinked || !Initialized)
+                {
+                    if (!tpLinked)
+                    {
+                        if (MainViewModel.Intr.NotReset != true) SMChipBase.IncokeCommand(cmdTypeID.CMD_CTP_RST);
+                        
+                        Thread.Sleep(120);
+                        tpLinked = SMChipBase.HaveTpLinked();
+                        if (!tpLinked) MainViewModel.Intr.ReturnCode = 0x0008;
+                    }
+
+                    if (tpLinked && InitializeOK())
+                    {
+                        SwitchMode();
+                        Initialized = true;
+                    }
+                }
+            }));
+
+            RuningKernel.Instance().Work.AddWorkPermanent(new Action(() =>    //获取数据
+            {
+                //if (!Initialized) return;
+                if (dtType.MODE_RAWDATA == MainViewModel.Intr.DisplayType || dtType.MODE_TWOICS_RAWDATA == MainViewModel.Intr.DisplayType || dtType.MODE_810ANALOG_RAW == MainViewModel.Intr.DisplayType || dtType.MODE_810TWOICS_RAWDATA == MainViewModel.Intr.DisplayType)
+                {
+                    //MainViewModel.Intr.ReturnCode = SMChipBase.GetRawDataPoint(dataBuffer, DisplayDataLen);
+                    MainViewModel.Intr.ReturnCode = SMChipBase.GetRawDataPoint(dataBuffer, DisplayDataLen);
+                    if (0 == MainViewModel.Intr.ReturnCode)
+                        //ackOnRawData(dataBuffer);
+                        ackOnRawDataN();
+                        //System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Input, new Action(() => ackOnRawData(dataBuffer)));
+                    //else if (Initialized)
+                        //SwitchMode();
+                }
+                else if (dtType.MODE_DIFFER == MainViewModel.Intr.DisplayType)
+                {
+                    MainViewModel.Intr.ReturnCode = SMChipBase.GetRawDataPoint(dataBuffer, DisplayDataLen);
+                    if (0 == MainViewModel.Intr.ReturnCode)
+                        //ackOnRawData(dataBuffer);
+                        ackOnRawDataN();
+                        //System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Input, new Action(() => ackOnRawData(dataBuffer)));
+                    //else if (Initialized)
+                    //    SwitchMode();
+                }
+                else if (dtType.MODE_BASE == MainViewModel.Intr.DisplayType)
+                {
+                    MainViewModel.Intr.ReturnCode = SMChipBase.GetRawDataPoint(dataBuffer, DisplayDataLen);
+                    if (0 == MainViewModel.Intr.ReturnCode)
+                        //ackOnRawData(dataBuffer);
+                        ackOnRawDataN();
+                }
+                else if (dtType.MODE_TOUCH == MainViewModel.Intr.DisplayType || dtType.MODE_TWOICS_TOUCH == MainViewModel.Intr.DisplayType || dtType.MODE_810ANALOG_TOUCH == MainViewModel.Intr.DisplayType || dtType.MODE_810TWOICS_TOUCH == MainViewModel.Intr.DisplayType)
+                {
+                    ushort len = 0;
+                    MainViewModel.Intr.ReturnCode = SMChipBase.GetTouchPoint(touchPoint, ref len);
+                    ModelTouch touchMode = ModeCatch.GetModeByIdAndICType(SMDevelopChipReflex.SEMI_DEVLOP_TOUCH, MainViewModel.Intr.SelectedIC) as ModelTouch;
+                    TouchReportData rpt = GenTouchReport(touchPoint);
+                    System.Windows.Application.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Render, (Action)(() => touchMode.OnReport(rpt)));
+                }
+                else if (dtType.MODE_SIMULATE_RAW == MainViewModel.Intr.DisplayType)
+                {
+                    if (SimulationChecked)
+                        MainViewModel.Intr.ReturnCode = GetSimullationRawData(dataBuffer);
+                    else
+                        MainViewModel.Intr.ReturnCode = SMChipBase.GetRawDataPoint(dataBuffer, DisplayDataLen);
+
+                    if (0 == MainViewModel.Intr.ReturnCode)
+                    {
+                        FirmwareSimulate.FirmwareSimulation(SimulationPosition++, Cols, Rows, dataBuffer, diffBuffer, touchPoint);
+                        ackOnRawData(dataBuffer);
+                        ModelTouch touchMode = ModeCatch.GetModeByIdAndICType(SMDevelopChipReflex.SEMI_DEVLOP_TOUCH, MainViewModel.Intr.SelectedIC) as ModelTouch;
+                        System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() => touchMode.OnReport(GenTouchReport(touchPoint))));
+                        //touchMode.TouchData = GenTouchReport(touchPoint);
+                    }
+                        
+                }
+                else if (dtType.MODE_SIMULATE_DIFF == MainViewModel.Intr.DisplayType)
+                {
+                    if (SimulationChecked)
+                        MainViewModel.Intr.ReturnCode = GetSimullationRawData(dataBuffer);
+                    else
+                        MainViewModel.Intr.ReturnCode = SMChipBase.GetRawDataPoint(dataBuffer, DisplayDataLen);
+
+                    if (0 == MainViewModel.Intr.ReturnCode)
+                    {
+                        FirmwareSimulate.FirmwareSimulation(SimulationPosition++, Cols, Rows, dataBuffer, diffBuffer, touchPoint);
+                        ackOnRawData(diffBuffer);
+                        ModelTouch touchMode = ModeCatch.GetModeByIdAndICType(SMDevelopChipReflex.SEMI_DEVLOP_TOUCH, MainViewModel.Intr.SelectedIC) as ModelTouch;
+                        System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() => touchMode.OnReport(GenTouchReport(touchPoint))));
+						//touchMode.TouchData = GenTouchReport(touchPoint);
+                    }
+                }
+
+                else
+                {
+                    Thread.Sleep(100);
+                }
+            }));
+        }
+        
+        public virtual uint GetSimullationRawData(short[] dataBuffer)
+        {
+            return 1;
+        }
+
+        public virtual TouchReportData GenTouchReport(byte[] touchPoint)
+        {
+            return new SCapTouchReportData(touchPoint);
+        }
+
+        public virtual bool InitializeOK()
+        {
+            return false;
+        }
+        public virtual uint BurnConfigBin(byte[] buffer, uint len)
+        {
+            return 1;
+        }
+        public virtual uint GetFirmWareConfig(byte[] buffer, uint len)
+        {
+            return 1;
+        }
+        public virtual uint GetScanFreq(ushort workClk, short[] buffer, byte scanCnt = 1)
+        {
+            return 1;
+        }
+        public virtual uint WritePram(byte[] buffer, uint len)
+        {
+            return 1;
+        }
+        public void ICArrayToSensorMatrix(short[] icArray, short[,] sensorMatrix)
+        {
+            for (int iRow = 0; iRow < Rows; iRow++)
+            {
+                for (int iCol = 0; iCol < Cols; iCol++)
+                {
+                    int index = (int)iRow * Cols + iCol;
+                    if (index >= Rows * Cols + Refs) continue;
+
+                    int icPosition = Sensor_2_Ic_Map[index];
+                    sensorMatrix[iRow, iCol] = icArray[icPosition];
+                }
+            }
+            for (int index = (int)Rows * Cols; index < Rows * Cols + Refs; index++)
+            {
+                int iCol = index - Rows * Cols;
+                int icPosition = Sensor_2_Ic_Map[index];
+                sensorMatrix[Rows, iCol] = icArray[icPosition];
+            }
+        }
+        public virtual void SwitchMode()
+        {
+            uint iRetCode = 0;
+            //iRetCode = SMChipBase.IncokeCommand(cmdTypeID.CMD_CTP_RST);
+            //Thread.Sleep(50);
+            if (SimulationChecked) return;
+            if (MainViewModel.Intr.SelectedIC == eChipTypeList.SM_IC_7449 || MainViewModel.Intr.SelectedIC == eChipTypeList.SM_IC_5562
+                || MainViewModel.Intr.SelectedIC == eChipTypeList.SM_IC_570)
+            {
+                System.Threading.Thread.Sleep(200);
+                SMChipBase.IncokeCommand(cmdTypeID.CMD_SWITCH_IIC);  
+                System.Threading.Thread.Sleep(60);
+            } 
+            iRetCode = SMChipBase.SwitchMode(MainViewModel.Intr.DisplayType, DisplayDataLen);
+            if (0 != iRetCode)
+            {
+                if (MainViewModel.Intr.NotReset != true) SMChipBase.IncokeCommand(cmdTypeID.CMD_CTP_RST);
+                Thread.Sleep(1000);
+
+                if (MainViewModel.Intr.SelectedIC == eChipTypeList.SM_IC_7449  || MainViewModel.Intr.SelectedIC == eChipTypeList.SM_IC_5562
+                    || MainViewModel.Intr.SelectedIC == eChipTypeList.SM_IC_570)
+                {
+                    SMChipBase.IncokeCommand(cmdTypeID.CMD_SWITCH_IIC); 
+                    System.Threading.Thread.Sleep(60);
+                } 
+                iRetCode = SMChipBase.SwitchMode(MainViewModel.Intr.DisplayType, DisplayDataLen);
+            }
+
+            MainViewModel.Intr.ReturnCode = iRetCode;
+            //.....
+            //Thread.Sleep(200);
+        }
+
+        public virtual void SwitchModeEx()
+        {
+            uint iRetCode = 0;
+            if (MainViewModel.Intr.NotReset != true) SMChipBase.IncokeCommand(cmdTypeID.CMD_CTP_RST);
+            Thread.Sleep(50);
+
+            iRetCode = SMChipBase.SetClkInFctMode(MainViewModel.Intr.WorkClk, MainViewModel.Intr.FilterOff);
+            Thread.Sleep(50);
+
+            iRetCode = SMChipBase.SwitchMode(MainViewModel.Intr.DisplayType, DisplayDataLen);
+
+            MainViewModel.Intr.ReturnCode = iRetCode;
+            //.....
+            Thread.Sleep(100);
+        }
+
+        public virtual void saveTextData(string exportPath)
+        {
+            StringBuilder szOut = new StringBuilder();
+
+            for (int index = 0; index < listCatchData.Count; index++)
+            {
+                szOut.Append("Frame:" + index.ToString() + "\r\n");
+                short[] dataCopy = listCatchData[index];
+                for (int iRow = 0; iRow < RawDataMatrix.RowNumber; iRow++)
+                {
+                    for (int iCol = 0; iCol < Cols; iCol++)
+                    {
+                        szOut.Append(string.Format("{0,-9:D}", dataCopy[iRow * Cols + iCol]));
+                    }
+                    if (RawDataMatrix.ColNumber > Cols)
+                    {
+                        szOut.Append(string.Format("{0,-9:D}", dataCopy[RawDataMatrix.RowNumber * Cols + iRow]));
+                    }
+                    szOut.Append("\r\n");
+                }
+                if (RawDataMatrix.RowExp > 0 && RawDataMatrix.ColExp > 0)
+                {
+                    szOut.Remove(szOut.Length - 8, 8);
+                }
+
+                szOut.Append("\r\n");
+            }
+            listCatchData.Clear();
+
+            StreamWriter sw = new StreamWriter(exportPath, false, Encoding.Default);
+            sw.Write(szOut.ToString());
+            sw.Flush();
+            sw.Close();
+        }
+
+        private void saveHexData(string exportPath)
+        {
+            byte[] hexBuffer = new byte[3 * 1024];
+            BinaryWriter bw = new BinaryWriter(new FileStream(exportPath, FileMode.Create));
+            for (int index = 0; index < listCatchData.Count; index++)
+            {
+                SMCheckTools.ShortArrayToByteArray(listCatchData[index], (ushort)(DisplayDataLen >> 1), hexBuffer, DisplayDataLen);
+                //ushort crc = SMCheckTools.CaculateCheckSumU16(hexBuffer, DisplayDataLen);
+                hexBuffer[DisplayDataLen + 0] = 0x55;
+                hexBuffer[DisplayDataLen + 1] = 0x55;
+                hexBuffer[DisplayDataLen + 2] = (byte)(index >> 0);
+                hexBuffer[DisplayDataLen + 3] = (byte)(index >> 8);
+                hexBuffer[DisplayDataLen + 4] = (byte)(index >> 16);
+                hexBuffer[DisplayDataLen + 5] = (byte)(index >> 24);
+                bw.Write(hexBuffer, 0, DisplayDataLen + 6);
+            }
+            bw.Flush();
+            bw.Close();
+        }
+
+        public virtual void saveTextDataNew(StringBuilder szOut)
+        {
+            //szOut.Append("Frame:" + frames.ToString() + "\r\n");
+            //short[] dataCopy = queueCatchDataGet();
+            //for (int iRow = 0; iRow < RawDataMatrix.RowNumber; iRow++)
+            //{
+            //    for (int iCol = 0; iCol < Cols; iCol++)
+            //    {
+            //        szOut.Append(string.Format("{0,-9:D}", dataCopy[iRow * Cols + iCol]));
+            //    }
+            //    if (RawDataMatrix.ColNumber > Cols)
+            //    {
+            //        szOut.Append(string.Format("{0,-9:D}", dataCopy[RawDataMatrix.RowNumber * Cols + iRow]));
+            //    }
+            //    szOut.Append("\r\n");
+            //}
+            //if (RawDataMatrix.RowExp > 0 && RawDataMatrix.ColExp > 0)
+            //{
+            //    szOut.Remove(szOut.Length - 8, 8);
+            //}
+            //szOut.Append("\r\n");
+
+            szOut.Append("Frame:" + frames.ToString() + "\r\n");
+            short[] dataCopy = queueCatchDataGet();
+            for (int iRow = 0; iRow < Rows + 1; iRow++)
+            {
+                for (int iCol = 0; iCol < Cols; iCol++)
+                {
+                    szOut.Append(string.Format("{0,-9:D}", dataCopy[iRow * Cols + iCol]));
+                }
+                if (WpfRawDispView.Columns + WpfRawDispView.ColExp > Cols)
+                {
+                    szOut.Append(string.Format("{0,-9:D}", dataCopy[(Rows + 1) * Cols + iRow]));
+                }
+                szOut.Append("\r\n");
+            }
+            if (WpfRawDispView.RowExp > 0 && WpfRawDispView.ColExp > 0)
+            {
+                szOut.Remove(szOut.Length - 8, 8);
+            }
+
+            szOut.Append("\r\n");
+        }
+
+        public virtual void OnCtrlClickCommand(object param)
+        {
+            string strParam = param as string;
+            if (null == strParam) return;
+
+            if ("main-catch-checked" == strParam)
+            {
+                queueCatchData.Clear();
+
+                string exportPath="";
+
+                frames = 0;
+
+                try
+                {
+                    SaveFileDialog saveFileDialog = new SaveFileDialog();
+                    saveFileDialog.Filter = "Text Files (*.txt;)|*.txt";//|Hex Files(*.bin;)|*.bin
+                    if (DialogResult.OK == saveFileDialog.ShowDialog())
+                    {
+                        exportPath = saveFileDialog.FileName;
+                        exportPath.EndsWith(".txt");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ex.ToString();
+                }
+
+                RuningKernel.Instance().Work.AddWorkTemporary(() =>
+                {
+                    //if (null == RawDataMatrix) return;
+                    ////DataMatrix mx = new DataMatrix(RawDataMatrix.RowNumber, RawDataMatrix.ColNumber);
+                    //int matrixCells = Math.Max(RawDataMatrix.RowNumber * RawDataMatrix.ColNumber, DisplayDataLen >> 1);
+                    //short[] dataCopy = new short[matrixCells];
+                    //Array.Copy(dataBuffer, dataCopy, matrixCells);
+
+                    //queueCatchDataAdd(dataCopy);
+
+                    int matrixCells = DisplayDataLen >> 1;
+                    short[] dataCopy = new short[matrixCells];
+                    Array.Copy(dataBuffer, dataCopy, matrixCells);
+
+                    queueCatchDataAdd(dataCopy);
+                  
+                }, new WorkComplete(() =>
+                {
+                    return CatchChecked ? false : true;
+                }));
+         
+                Task task = new Task(() =>
+                {
+                    StreamWriter sw = new StreamWriter(exportPath, true, Encoding.Default);
+                    while (CatchChecked || queueCatchDataCount()!=0)
+                    {
+                        if (queueCatchDataCount() != 0)
+                        {
+                            StringBuilder szOut = new StringBuilder();
+
+                            saveTextDataNew(szOut);
+
+                            //szOut.Append("Frame:" + frames.ToString() + "\r\n");
+                            //short[] dataCopy = queueCatchDataGet();
+                            //for (int iRow = 0; iRow < RawDataMatrix.RowNumber; iRow++)
+                            //{
+                            //    for (int iCol = 0; iCol < Cols; iCol++)
+                            //    {
+                            //        szOut.Append(string.Format("{0,-9:D}", dataCopy[iRow * Cols + iCol]));
+                            //    }
+                            //    if (RawDataMatrix.ColNumber > Cols)
+                            //    {
+                            //        szOut.Append(string.Format("{0,-9:D}", dataCopy[RawDataMatrix.RowNumber * Cols + iRow]));
+                            //    }
+                            //    szOut.Append("\r\n");
+                            //}
+                            //if (RawDataMatrix.RowExp > 0 && RawDataMatrix.ColExp > 0)
+                            //{
+                            //    szOut.Remove(szOut.Length - 8, 8);
+                            //}
+
+                            //szOut.Append("\r\n");
+ 
+                            sw.Write(szOut.ToString());
+                            sw.Flush();
+                           
+
+                            frames++;
+                        }  
+                    }
+                    sw.Close();
+                });
+                task.Start();
+
+
+            }
+            else if ("main-stopcatch-unchecked" == strParam)
+            {
+                //try
+                //{
+                //    SaveFileDialog saveFileDialog = new SaveFileDialog();
+                //    saveFileDialog.Filter = "Text Files (*.txt;)|*.txt|Hex Files(*.bin;)|*.bin";
+                //    if (DialogResult.OK == saveFileDialog.ShowDialog())
+                //    {
+                //        string exportPath = saveFileDialog.FileName;
+
+                //        if (exportPath.EndsWith(".txt"))
+                //        {
+                //            saveTextData(exportPath);
+                //        }
+                //        else 
+                //        {
+                //            saveHexData(exportPath);
+                //        }
+                //    }
+                //}
+                //catch (Exception ex)
+                //{
+                //    ex.ToString();
+                //}
+            }
+            else if ("simulation-path-click" == strParam)
+            {
+                try
+                {
+                    Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
+                    openFileDialog.Filter = "Txt File(*.txt)|*.txt";
+                    openFileDialog.RestoreDirectory = true;
+                    openFileDialog.FilterIndex = 1;
+                    openFileDialog.InitialDirectory = Directory.GetCurrentDirectory();
+                    if (openFileDialog.ShowDialog() == true)
+                    {
+                        SimulationPath = openFileDialog.FileName;
+
+                        RuningKernel.Instance().Pause(true);
+
+                        listSimulation.Clear();
+                        using (FileStream fs = new FileStream(SimulationPath, FileMode.Open))
+                        {
+                            RuningKernel.Instance().Pause(true);
+                            using (StreamReader sr = new StreamReader(fs))
+                            {
+                                string strLine = "";
+                                int iRow = 0, iCol = 0;
+                                short[,] oneFrame = null;
+
+                                while (null != (strLine = sr.ReadLine()))
+                                {
+                                    if (strLine.Contains("Frame"))
+                                    {
+                                        if (null == oneFrame)
+                                        {
+                                            oneFrame = new short[50, 50];
+                                            continue;
+                                        }
+                                        else
+                                        {
+                                            listSimulation.Add(oneFrame);
+                                            oneFrame = new short[50, 50];
+                                            iRow = 0;
+                                            continue;
+                                        }
+                                    }
+
+                                    string[] line = strLine.Trim().Split(' ');
+                                    line = line.Where((t) =>
+                                    {
+                                        return string.IsNullOrEmpty(t) ? false : true;
+                                    }).ToArray();
+                                    if (line.Length <= 2) continue;
+                                    for (iCol = 0; iCol < line.Length; iCol++)
+                                    {
+                                        oneFrame[iRow, iCol] = short.Parse(line[iCol]);
+                                    }
+                                    iRow++; 
+                                }
+
+                                listSimulation.Add(oneFrame);
+
+                                Rows = iRow - 1; Cols = iCol;
+                            }
+                            fs.Close();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ex.ToString();
+                }
+                finally
+                {
+                    SimulationPosition = 0;
+                    SimulationStop = SimulationMax = listSimulation.Count;
+                    RuningKernel.Instance().Pause(false);
+                }
+            }
+            else if ("simulation-next-click" == strParam)
+            {
+                SimulationStop++;
+            }
+            else if ("main-catch-analyze-checked" == strParam)
+            {
+                queueCatchData.Clear();
+
+                string exportPath = "";
+
+                frames = 0;
+
+                try
+                {
+                    SaveFileDialog saveFileDialog = new SaveFileDialog();
+                    saveFileDialog.Filter = "Text Files (*.txt;)|*.txt|Hex Files(*.bin;)|*.bin";
+                    if (DialogResult.OK == saveFileDialog.ShowDialog())
+                    {
+                        exportPath = saveFileDialog.FileName;
+                        exportPath.EndsWith(".txt");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ex.ToString();
+                }
+
+                RuningKernel.Instance().Work.AddWorkTemporary(() =>
+                {
+                    //if (null == RawDataMatrix) return;
+                    ////DataMatrix mx = new DataMatrix(RawDataMatrix.RowNumber, RawDataMatrix.ColNumber);
+                    //int matrixCells = Math.Max(RawDataMatrix.RowNumber * RawDataMatrix.ColNumber, DisplayDataLen >> 1);
+                    //short[] dataCopy = new short[matrixCells];
+                    //Array.Copy(dataBuffer, dataCopy, matrixCells);
+
+                    //queueCatchDataAdd(dataCopy);
+
+                    int matrixCells = DisplayDataLen >> 1;
+                    short[] dataCopy = new short[matrixCells];
+                    Array.Copy(dataBuffer, dataCopy, matrixCells);
+
+                    queueCatchDataAdd(dataCopy);
+
+                }, new WorkComplete(() =>
+                {
+                    return CatchAnalyzeChecked ? false : true;
+                }));
+
+                Task task = new Task(() =>
+                {
+                    StreamWriter sw = new StreamWriter(exportPath, true, Encoding.Default);
+                    while (CatchAnalyzeChecked || queueCatchDataCount() != 0)
+                    {
+                        if (queueCatchDataCount() != 0)
+                        {
+                            StringBuilder szOut = new StringBuilder();
+
+                            saveTextDataNew(szOut);
+
+                            //szOut.Append("Frame:" + frames.ToString() + "\r\n");
+                            //short[] dataCopy = queueCatchDataGet();
+                            //for (int iRow = 0; iRow < RawDataMatrix.RowNumber; iRow++)
+                            //{
+                            //    for (int iCol = 0; iCol < Cols; iCol++)
+                            //    {
+                            //        szOut.Append(string.Format("{0,-9:D}", dataCopy[iRow * Cols + iCol]));
+                            //    }
+                            //    if (RawDataMatrix.ColNumber > Cols)
+                            //    {
+                            //        szOut.Append(string.Format("{0,-9:D}", dataCopy[RawDataMatrix.RowNumber * Cols + iRow]));
+                            //    }
+                            //    szOut.Append("\r\n");
+                            //}
+                            //if (RawDataMatrix.RowExp > 0 && RawDataMatrix.ColExp > 0)
+                            //{
+                            //    szOut.Remove(szOut.Length - 8, 8);
+                            //}
+
+                            //szOut.Append("\r\n");
+
+                            sw.Write(szOut.ToString());
+                            sw.Flush();
+
+
+                            frames++;
+                        }
+                    }
+                    sw.Close();
+                });
+                task.Start();
+            }
+            else if ("main-stopcatch-analyze-unchecked" == strParam)
+            {
+                //try
+                //{
+                //    SaveFileDialog saveFileDialog = new SaveFileDialog();
+                //    saveFileDialog.Filter = "Text Files (*.txt;)|*.txt|Hex Files(*.bin;)|*.bin";
+                //    if (DialogResult.OK == saveFileDialog.ShowDialog())
+                //    {
+                //        string exportPath = saveFileDialog.FileName;
+
+                //        if (exportPath.EndsWith(".txt"))
+                //        {
+                //            saveTextData(exportPath);
+                //        }
+                //        else
+                //        {
+                //            saveHexData(exportPath);
+                //        }
+                //    }
+                //}
+                //catch (Exception ex)
+                //{
+                //    ex.ToString();
+                //}
+            }
+        }
+
+        public virtual bool CanCtrlClick(object param)
+        {
+            return true;
+        }
+
+        public virtual void OnDisplayTypeChanged(ushort type)
+        {
+            ReferenceData = dtType.MODE_RAWDATA == type ? 12000 : 100;
+
+            if (Rows > 0 && Cols > 0)
+            {
+                RawDataMatrix = new DataMatrix(Rows, Cols, Refs);
+                RuningKernel.Instance().Work.AddWorkTemporary(new Action(SwitchMode));
+            }
+        }
+
+        public virtual void OnDisplayLenChanged(ushort len)
+        {
+            RuningKernel.Instance().Work.AddWorkTemporary(new Action(() =>
+            {
+                if (MainViewModel.Intr.NotReset != true) SMChipBase.IncokeCommand(cmdTypeID.CMD_CTP_RST);
+                Thread.Sleep(50);
+                SwitchMode();
+            }));
+        }
+
+        private string simulationPath = "";
+        public string SimulationPath
+        {
+            get { return simulationPath; }
+            set { if (value != simulationPath) { simulationPath = value; OnPropertyChanged("SimulationPath"); } }
+        }
+
+        private int simulationPosition = 0;
+        public int SimulationPosition
+        {
+            get { return simulationPosition; }
+            set { if (value != simulationPosition) { simulationPosition = value; OnPropertyChanged("SimulationPosition"); } }
+        }
+
+        private int simulationStop = 100;
+        public int SimulationStop
+        {
+            get { return simulationStop; }
+            set { if (value != simulationStop) { simulationStop = value; OnPropertyChanged("SimulationStop"); } }
+        }
+
+        private int simulationMax = 0;
+        public int SimulationMax
+        {
+            get { return simulationMax; }
+            set { if (value != simulationMax) { simulationMax = value; OnPropertyChanged("SimulationMax"); } }
+        }
+
+        private int simulationSpeed = 100;
+        public int SimulationSpeed
+        {
+            get { return simulationSpeed; }
+            set { if (value != simulationSpeed) { simulationSpeed = value; OnPropertyChanged("SimulationSpeed"); } }
+        }
+
+        private bool simulationChecked = false;
+        public bool SimulationChecked
+        {
+            get { return simulationChecked; }
+            set
+            {
+                if (value != simulationChecked)
+                {
+                    simulationChecked = value;
+                    OnPropertyChanged("SimulationChecked");
+
+                    if (simulationChecked)
+                    {
+                        SimulationPosition = 0;
+                    }
+                }
+            }
+        }
+
+        private DataMatrix rawdataMatrix = null;
+        public DataMatrix RawDataMatrix
+        {
+            get { return rawdataMatrix; }
+            set { if (rawdataMatrix != value) { rawdataMatrix = value; OnPropertyChanged("RawDataMatrix"); } }
+        }
+
+        private int iReferenceData = 12000;
+        public int ReferenceData
+        {
+            get { return iReferenceData; }
+            set { if (value != iReferenceData) { iReferenceData = value; OnPropertyChanged("ReferenceData"); } }
+        }
+
+        private Boolean catchChecked = false;
+        public Boolean CatchChecked
+        {
+            get { return catchChecked; }
+            set { if (value != catchChecked) { catchChecked = value; OnPropertyChanged("CatchChecked"); } }
+        }
+
+        private Boolean catchAnalyzeChecked = false;
+        public Boolean CatchAnalyzeChecked
+        {
+            get { return catchAnalyzeChecked; }
+            set { if (value != catchAnalyzeChecked) { catchAnalyzeChecked = value; OnPropertyChanged("CatchAnalyzeChecked"); } }
+        }
+
+        public void queueCatchDataAdd(short[] dataCopy)
+        {
+            lock (_lockObj)
+            {
+                queueCatchData.Enqueue(dataCopy);
+            }
+        }
+
+        public int queueCatchDataCount()
+        {
+            lock (_lockObj)
+            {
+                return queueCatchData.Count();
+            }
+        }
+
+        public short[] queueCatchDataGet()
+        {
+            lock (_lockObj)
+            {
+                return queueCatchData.Dequeue();
+            }
+        }
+    }
+
+    public class SMDataType
+    {
+        public dtType Type { get; set; }
+        public string TypeName { get; set; }
+        public SMDataType(dtType t, string n)
+        {
+            Type = t;
+            TypeName = n;
+        }
+    }
+
+    public class ModeCatch
+    {
+        internal class ModeType
+        {
+            public ushort modeIdentity{get;set;}
+            public ushort icType{get;set;}
+            public ModeType(ushort id, ushort ic)
+            {
+                modeIdentity = id;
+                icType = ic;
+            }
+        }
+        private static IDictionary<ModeType, NotifyBase> mapTypeToMode = new Dictionary<ModeType, NotifyBase>();
+        //public static IDictionary<ModeType, NotifyBase> MapTypeToMode { get { return mapTypeToMode; } }
+
+        public static void Register(ushort identity, ushort ic, NotifyBase mode)
+        {
+            ModeType mt = new ModeType(identity, ic);
+            mapTypeToMode[mt] = mode;
+        }
+
+        public static NotifyBase GetModeByIdAndICType(ushort id, ushort icType)
+        {
+            foreach (var item in mapTypeToMode)
+            {
+                if (eChipTypeList.IsSameKind(item.Key.icType, icType) && item.Key.modeIdentity == id)
+                {
+                    return item.Value;
+                }
+            }
+            foreach (var item in mapTypeToMode)
+            {
+                if (item.Key.icType == eChipTypeList.SM_CHIPALL && item.Key.modeIdentity == id)
+                {
+                    return item.Value;
+                }
+            }
+            return null;
+        }
+        public static IList<NotifyBase> GetListModes(ushort icType, Boolean allMatch = true)
+        {
+            IList<NotifyBase> lsNotify = new List<NotifyBase>();
+
+            foreach (var item in mapTypeToMode)
+            {
+                if (allMatch && item.Key.icType == eChipTypeList.SM_CHIPALL)
+                {
+                    lsNotify.Add(item.Value);
+                    continue;
+                }
+                else if (eChipTypeList.IsSameKind(item.Key.icType, icType))
+                {
+                    lsNotify.Add(item.Value);
+                }
+            }
+            return lsNotify;
+        }
+    }
+
+
+    public partial class SMDevelopChipReflex : SEMI.Util.ChipReflex
+    {
+        protected static ChipReflex single = new SMDevelopChipReflex();
+
+        public static ChipReflex Instance
+        {
+            get { return single; }
+        }
+
+        static SMDevelopChipReflex()
+        {
+            RegisterReflexModule();
+        }
+
+        public override Type TypeOfReflexObject(string objName)
+        {
+            return Type.GetType(objName);
+        }
+
+        private static void RegisterReflexModule()
+        {
+            Type type = typeof(SMDevelopChipReflex);
+            var methods = type.GetMethods();
+
+            var reflexMethods = methods.Where(t => { return t.Name.Contains("RegistReflex") ? true : false; });
+
+            reflexMethods.All((t) => { t.Invoke(SMDevelopChipReflex.Instance, null); return true; });
+        }
+    }
+}

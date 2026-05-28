@@ -1,0 +1,89 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:viewModel="clr-namespace:SEMIDevelopKit.Src.WinSub"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+			<RowDefinition Height="445"></RowDefinition>
+        </Grid.RowDefinitions>
+		
+		<GroupBox Header="6.1：精度、拉边" Grid.Row="0">
+			<UniformGrid Rows="10">
+				<UniformGrid Columns="16">
+					<Label Content="" HorizontalAlignment="Center" Margin="5"></Label>
+					<Label Content="X" HorizontalAlignment="Center" Margin="5"></Label>
+					<Label Content="Y" HorizontalAlignment="Center" Margin="5"></Label>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+					<Label Content="平移 Shift" HorizontalAlignment="Right" Margin="5"></Label>
+					<TextBox Margin="5" viewModel:TuningItem.ItemBase="0xC0" viewModel:TuningItem.ItemName="StrechX_shift"></TextBox>
+					<TextBox Margin="5" viewModel:TuningItem.ItemBase="0xC0" viewModel:TuningItem.ItemName="StrechY_shift"></TextBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+					<Label Content="" HorizontalAlignment="Center" Margin="5"></Label>
+				</UniformGrid>
+			
+				<UniformGrid Columns="16">
+					<Label Content="" HorizontalAlignment="Center" Margin="5"></Label>
+					<Label Content="Top" HorizontalAlignment="Center" Margin="5"></Label>
+					<Label Content="Bottom" HorizontalAlignment="Center" Margin="5"></Label>
+					<Label Content="Left" HorizontalAlignment="Center" Margin="5"></Label>
+					<Label Content="Right" HorizontalAlignment="Center" Margin="5"></Label>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+					<Label Content="整体拉伸" HorizontalAlignment="Right" Margin="5"></Label>
+					<TextBox Margin="5" viewModel:TuningItem.ItemBase="0xC0" viewModel:TuningItem.ItemName="StrechCutT"></TextBox>
+					<TextBox Margin="5" viewModel:TuningItem.ItemBase="0xC0" viewModel:TuningItem.ItemName="StrechCutB"></TextBox>
+					<TextBox Margin="5" viewModel:TuningItem.ItemBase="0xC0" viewModel:TuningItem.ItemName="StrechCutL"></TextBox>
+					<TextBox Margin="5" viewModel:TuningItem.ItemBase="0xC0" viewModel:TuningItem.ItemName="StrechCutR"></TextBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+					<Label Content="拉边起始1" HorizontalAlignment="Right" Margin="5"></Label>
+					<TextBox Margin="5" viewModel:TuningItem.ItemBase="0xC0" viewModel:TuningItem.ItemName="StrechPixelT"></TextBox>
+					<TextBox Margin="5" viewModel:TuningItem.ItemBase="0xC0" viewModel:TuningItem.ItemName="StrechPixelB"></TextBox>
+					<TextBox Margin="5" viewModel:TuningItem.ItemBase="0xC0" viewModel:TuningItem.ItemName="StrechPixelL"></TextBox>
+					<TextBox Margin="5" viewModel:TuningItem.ItemBase="0xC0" viewModel:TuningItem.ItemName="StrechPixelR"></TextBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+					<Label Content="拉边比例1" HorizontalAlignment="Right" Margin="5"></Label>
+					<TextBox Margin="5" viewModel:TuningItem.ItemBase="0xC0" viewModel:TuningItem.ItemName="StrechRatioT"></TextBox>
+					<TextBox Margin="5" viewModel:TuningItem.ItemBase="0xC0" viewModel:TuningItem.ItemName="StrechRatioB"></TextBox>
+					<TextBox Margin="5" viewModel:TuningItem.ItemBase="0xC0" viewModel:TuningItem.ItemName="StrechRatioL"></TextBox>
+					<TextBox Margin="5" viewModel:TuningItem.ItemBase="0xC0" viewModel:TuningItem.ItemName="StrechRatioR"></TextBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+					<Label Content="拉边起始2" HorizontalAlignment="Right" Margin="5"></Label>
+					<TextBox Margin="5" viewModel:TuningItem.ItemBase="0xC0" viewModel:TuningItem.ItemName="StrechPixelT2"></TextBox>
+					<TextBox Margin="5" viewModel:TuningItem.ItemBase="0xC0" viewModel:TuningItem.ItemName="StrechPixelB2"></TextBox>
+					<TextBox Margin="5" viewModel:TuningItem.ItemBase="0xC0" viewModel:TuningItem.ItemName="StrechPixelL2"></TextBox>
+					<TextBox Margin="5" viewModel:TuningItem.ItemBase="0xC0" viewModel:TuningItem.ItemName="StrechPixelR2"></TextBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+					<Label Content="拉边比例2" HorizontalAlignment="Right" Margin="5"></Label>
+					<TextBox Margin="5" viewModel:TuningItem.ItemBase="0xC0" viewModel:TuningItem.ItemName="StrechRatioT2"></TextBox>
+					<TextBox Margin="5" viewModel:TuningItem.ItemBase="0xC0" viewModel:TuningItem.ItemName="StrechRatioB2"></TextBox>
+					<TextBox Margin="5" viewModel:TuningItem.ItemBase="0xC0" viewModel:TuningItem.ItemName="StrechRatioL2"></TextBox>
+					<TextBox Margin="5" viewModel:TuningItem.ItemBase="0xC0" viewModel:TuningItem.ItemName="StrechRatioR2"></TextBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+					<Label Content="坐标内缩" HorizontalAlignment="Right" Margin="5"></Label>
+					<TextBox Margin="5" viewModel:TuningItem.ItemBase="0xC0" viewModel:TuningItem.ItemName="StrechMarginT"></TextBox>
+					<TextBox Margin="5" viewModel:TuningItem.ItemBase="0xC0" viewModel:TuningItem.ItemName="StrechMarginB"></TextBox>
+					<TextBox Margin="5" viewModel:TuningItem.ItemBase="0xC0" viewModel:TuningItem.ItemName="StrechMarginL"></TextBox>
+					<TextBox Margin="5" viewModel:TuningItem.ItemBase="0xC0" viewModel:TuningItem.ItemName="StrechMarginR"></TextBox>
+				</UniformGrid>
+			</UniformGrid>
+        </GroupBox>
+    </Grid>
+</UserControl>

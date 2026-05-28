@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="HalHIDIICLayer">
+      <UniqueIdentifier>{c7ee94de-190e-4903-8d72-fc81df6987bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{49379c56-ef17-4ea0-b827-62a894a7e924}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="HalHIDIICLayerSrv.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HalHIDIICLayer\HalHIDIICLayerService.cpp">
+      <Filter>HalHIDIICLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Util\Realize\RefBase.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="HalHIDIICLayer\HalHIDIICServiceProxy.cpp">
+      <Filter>HalHIDIICLayer</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Include\BaseService.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Macro.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Util\Header\Wait.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\HalServiceInterface.h">
+      <Filter>HalHIDIICLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="HalHIDIICLayer\HalHIDIICLayerService.h">
+      <Filter>HalHIDIICLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="HalHIDIICLayer\HalHIDIICServiceParam.h">
+      <Filter>HalHIDIICLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="HalHIDIICLayer\HalHIDIICServiceParam.h">
+      <Filter>HalHIDIICLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Util\Header\RefBase.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="HalHIDIICLayer\HalHIDIICServiceParam.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HalHIDIICLayer\HalHIDIICServiceProxy.h">
+      <Filter>HalHIDIICLayer</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="HalHIDIICLayerSrv.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+</Project>

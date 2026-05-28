@@ -1,0 +1,23 @@
+ChipSemi_Tester_V8.8.8_20260318
+WorkStation: F01   ProjectName: 0508
+
+Time Stamp:	2026-05-13 16:02:43 169
+Mtk Version = 0xd1103
+
+Time Stamp:	2026-05-13 16:02:43 662
+
+------------------------------Project Test------------------------------
+
+
+//Project Test is Pass
+
+Time Stamp:	2026-05-13 16:02:43 938
+
+------------------------------SRF Test------------------------------
+SelfResonance Freq = 12.75 M
+
+
+//SRF Test is Pass
+
+
+//Final result is Pass

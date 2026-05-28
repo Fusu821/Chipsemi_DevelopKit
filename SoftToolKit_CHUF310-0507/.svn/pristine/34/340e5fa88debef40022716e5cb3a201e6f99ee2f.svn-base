@@ -1,0 +1,168 @@
+﻿<Page x:Class="SEMITestApp.Src.WinSet.MainSet"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SEMITestApp.Src.WinSet"
+      xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+      xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"    
+      mc:Ignorable="d" 
+      KeepAlive="True"
+      d:DesignHeight="600" d:DesignWidth="800"
+      Title="MainSet" IsVisibleChanged="Page_IsVisibleChanged">
+    <ScrollViewer VerticalScrollBarVisibility="Visible">
+        <Grid Height="700">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5*" />
+            <ColumnDefinition Width="795*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="4*"></RowDefinition>
+            <RowDefinition Height="4*"></RowDefinition>
+            <RowDefinition Height="6*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <GroupBox Header="Basic Config" Grid.ColumnSpan="2" Margin="5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.ColumnSpan="3" Text="{Binding XMLPath}" Controls:TextBoxHelper.Watermark="xml file from out side" Margin="{StaticResource ItemMargin}" ></TextBox>
+                <Button Grid.Row="0" Grid.Column="3" Content="Load Config" Margin="{StaticResource ItemMargin}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <i:InvokeCommandAction Command="{Binding ctrlClickCommand}" CommandParameter="load-config-click"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <Label Content="IC Type" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="0" Margin="{StaticResource ItemMargin}"></Label>
+                <ComboBox ItemsSource="{Binding ICLists}" SelectedValuePath="TypeVal" DisplayMemberPath="TypeName" SelectedValue="{Binding SelectedIC}" Grid.Row="1" Grid.Column="1" Margin="{StaticResource ItemMargin}"></ComboBox>
+                <Label Content="Work Station" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="2" Margin="{StaticResource ItemMargin}"></Label>
+                <ComboBox ItemsSource="{Binding WorkStationList}" SelectedValue="{Binding WorkStation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Grid.Row="1" Grid.Column="3" Margin="{StaticResource ItemMargin}"></ComboBox>
+                <Button Content="Maintain Station" Grid.Row="1" Grid.Column="4"  Margin="{StaticResource ItemMargin}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <i:InvokeCommandAction Command="{Binding ctrlClickCommand}" CommandParameter="maintain-station-click"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <Label HorizontalAlignment="Right" Grid.Row="2" Grid.Column="0" Content="VDD" Margin="{StaticResource ItemMargin}"></Label>
+                <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding VddVoltageList}" SelectedValuePath="TypeVal" DisplayMemberPath="TypeName" SelectedValue="{Binding VddVotage}" Margin="{StaticResource ItemMargin}"></ComboBox>
+                <Label HorizontalAlignment="Right" Grid.Row="2" Grid.Column="2" Content="IOVDD" Margin="{StaticResource ItemMargin}"></Label>
+                <ComboBox Grid.Row="2" Grid.Column="3" ItemsSource="{Binding IoVddVoltageList}" SelectedValuePath="TypeVal" DisplayMemberPath="TypeName" SelectedValue="{Binding IoVddVotage}" Margin="{StaticResource ItemMargin}"></ComboBox>
+                <Label HorizontalAlignment="Right" Grid.Row="2" Grid.Column="4" Content="VIH" Margin="{StaticResource ItemMargin}"></Label>
+                <TextBox Text="{Binding VIHVotage}" Grid.Row="2" Grid.Column="5" Margin="{StaticResource ItemMargin}"></TextBox>
+                <Label HorizontalAlignment="Right" Grid.Row="3" Grid.Column="0" Content="Agent" Margin="{StaticResource ItemMargin}"></Label>
+                <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding AgentList}" SelectedValuePath="TypeVal" DisplayMemberPath="TypeName" SelectedValue="{Binding Agent}" Margin="{StaticResource ItemMargin}"></ComboBox>
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.Row="1" Header="Program" Grid.ColumnSpan="2" Margin="5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Label Content="Project No." HorizontalAlignment="Right" Margin="{StaticResource ItemMargin}"></Label>
+                <TextBox x:Name="txtPro" Text="{Binding ProjectName}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Margin="{StaticResource ItemMargin}"></TextBox>
+                <!--Label Content="Firmware No." HorizontalAlignment="Right" Grid.Column="2" Margin="{StaticResource ItemMargin}"></Label>
+                <TextBox Grid.Row="0" Grid.Column="3" Margin="{StaticResource ItemMargin}"></TextBox-->
+                <TextBox Text="{Binding BootBinPath}" IsEnabled="False" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Controls:TextBoxHelper.Watermark="Please Input Project Number" Margin="{StaticResource ItemMargin}"></TextBox>
+                <Button Grid.Row="1" Grid.Column="3" IsEnabled="{Binding ElementName=txtPro, Path=Text, Converter={StaticResource StringLenghBooleanConverter}}" Content="Load" Margin="{StaticResource ItemMargin}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <i:InvokeCommandAction Command="{Binding ctrlClickCommand}" CommandParameter="load-bootbin-click"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <TextBox Text="{Binding ConfigBinPath}" Visibility="{Binding CfgVisible}" IsEnabled="False" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Controls:TextBoxHelper.Watermark="Please Input TP Config" Margin="{StaticResource ItemMargin}"></TextBox>
+                <Button Grid.Row="2" Grid.Column="3" Visibility="{Binding CfgVisible}" IsEnabled="{Binding ElementName=txtPro, Path=Text, Converter={StaticResource StringLenghBooleanConverter}}" Content="Load" Margin="{StaticResource ItemMargin}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <i:InvokeCommandAction Command="{Binding ctrlClickCommand}" CommandParameter="load-cfgbin-click"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <TextBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Margin="{StaticResource ItemMargin}" Visibility="Collapsed"></TextBox>
+                <Button Grid.Row="3" Grid.Column="3"  Content="Load" Margin="{StaticResource ItemMargin}" Visibility="Collapsed"></Button>
+             </Grid>
+        </GroupBox>
+        <GroupBox Grid.Row="2" Header="TP Info" Grid.ColumnSpan="2" Margin="5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition ></RowDefinition>
+                    <RowDefinition ></RowDefinition>
+                    <RowDefinition ></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Label Content="Protocal" HorizontalAlignment="Right" Margin="5" Grid.Row="0"></Label>
+                <ComboBox ItemsSource="{Binding ProtocalList}" SelectedValuePath="TypeVal" DisplayMemberPath="TypeName" SelectedValue="{Binding SelectedProtocal}"  Grid.Row="0" Grid.Column="1" Margin="{StaticResource ItemMargin}"></ComboBox>
+                
+                <Label Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" Margin="5" Content="Work Clk"></Label>
+                <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding WorkClk, Converter={StaticResource HexValueStringConverter}}" Margin="5"></TextBox>
+                <CheckBox Grid.Row="0" Grid.Column="4" Content="Filter off" Margin="5" IsChecked="{Binding FilterOff}"></CheckBox>
+                <Label Content="X Pixel" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Text="{Binding XPixel}"  Grid.Row="1" Grid.Column="1" IsEnabled="False" Margin="5"></TextBox>
+                <Label Content="Y Pixel" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Text="{Binding YPixel}" Grid.Row="1" Grid.Column="3" IsEnabled="False" Margin="5"></TextBox>
+                <!--Label Content="Std Ticks" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" Margin="5"> </Label>
+                <TextBox Text="{Binding StandardTicks}" Grid.Row="2" Grid.Column="1" Margin="5"></TextBox-->
+                <Label Content="I2C Addr" HorizontalAlignment="Right" Margin="5" Grid.Row="2" Grid.Column="0" Visibility="{Binding SelectedProtocal, Converter={StaticResource EnumerToVisibleConverter}, ConverterParameter=0}"></Label>
+                <ComboBox IsEditable="True" ItemsSource="{Binding SlaveAddrList}" Text="{Binding SlaveAddr, Converter={StaticResource HexValueStringConverter}}"  Grid.Row="2" Grid.Column="1" Margin="{StaticResource ItemMargin}" Visibility="{Binding SelectedProtocal, Converter={StaticResource EnumerToVisibleConverter}, ConverterParameter=0}"></ComboBox>
+                <Label Content="Speed" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right" Margin="5" Visibility="{Binding SelectedProtocal, Converter={StaticResource EnumerToVisibleConverter}, ConverterParameter=0}"></Label>
+                <ComboBox Grid.Row="2" Grid.Column="3" ItemsSource="{Binding I2CSpeedList}" SelectedValuePath="TypeVal" DisplayMemberPath="TypeName" SelectedValue="{Binding I2CSpeed}" Margin="{StaticResource ItemMargin}" Visibility="{Binding SelectedProtocal, Converter={StaticResource EnumerToVisibleConverter}, ConverterParameter=0}"></ComboBox>
+
+                <Label Content="Speed" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" Margin="5" Visibility="{Binding SelectedProtocal, Converter={StaticResource EnumerToVisibleConverter}, ConverterParameter=1}"></Label>
+                <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding SPISpeedList}" SelectedValuePath="TypeVal" DisplayMemberPath="TypeName" SelectedValue="{Binding SPISpeed}" Margin="{StaticResource ItemMargin}" Visibility="{Binding SelectedProtocal, Converter={StaticResource EnumerToVisibleConverter}, ConverterParameter=1}"></ComboBox>
+
+                <Label Content="Rows" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Text="{Binding Rows}"  Grid.Row="3" Grid.Column="1" Margin="5"></TextBox>
+                <Label Content="Cols" Grid.Row="3" Grid.Column="2" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Text="{Binding Cols}" Grid.Row="3" Grid.Column="3" Margin="5"></TextBox>
+                <CheckBox Grid.Row="3" Grid.Column="4" Content="UsrDef" Margin="5" IsChecked="{Binding UsrDef}"></CheckBox>
+
+                <Label Content="VA-Height" Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Text="{Binding VA_Width}"  Grid.Row="4" Grid.Column="1" Margin="5"></TextBox>                
+                <Label Content="Y-Pitch" Grid.Row="4" Grid.Column="2" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Text="{Binding X_Pitch}"  Grid.Row="4" Grid.Column="3" Margin="5"></TextBox>
+                <Label Name="l_X_Row"  Content="{Binding X_Row}"  Grid.Row="4" Grid.Column="4" HorizontalAlignment="Left" Margin="5"></Label>
+                <Label Content="VA-Width" Grid.Row="5" Grid.Column="0" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Text="{Binding VA_Height}" Grid.Row="5" Grid.Column="1" Margin="5"></TextBox>     
+                <Label Content="X-Pitch" Grid.Row="5" Grid.Column="2" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Text="{Binding Y_Pitch}" Grid.Row="5" Grid.Column="3" Margin="5"></TextBox>
+                <Label Name="l_Y_Col"  Content="{Binding Y_Col}"  Grid.Row="5" Grid.Column="4" HorizontalAlignment="Left" Margin="5"></Label>
+
+                </Grid>
+        </GroupBox>
+    </Grid>
+    </ScrollViewer>
+</Page>

@@ -1,0 +1,64 @@
+ChipSemi_Tester_V8.8.8_20260318
+WorkStation: F01   ProjectName: 0508
+
+Time Stamp:	2026-05-18 15:52:19 170
+Mtk Version = 0xd1103
+
+Time Stamp:	2026-05-18 15:52:19 649
+
+------------------------------OSC Trim Test------------------------------
+Target No1=52000  No2=62400  No3=62400 
+osc32k trim = 52 value = 32113	osc52m trim = 197 value = 52030756
+osc52.00m trim = 197	value = 52030756 
+osc41.60m trim = 286	value = 41567440
+osc62.40m trim = 137	value  = 62421264
+Temp1 65344	Temp2 65345	Temp3 65345	Temp4 65345	
+32K = 0x34, 52M=0xc5 
+
+//OSCTrim Test is Pass
+
+Time Stamp:	2026-05-18 15:52:19 869
+
+------------------------------Current Test------------------------------
+
+avdd_active = 17616(uA), avdd_idle = 2369(uA)£¬  avdd_sleep = 21(uA)
+
+idle(2369) > setting max(2000)
+
+
+//Current Test is Fail
+
+------------------------------Current Test------------------------------
+
+avdd_active = 17615(uA), avdd_idle = 2028(uA)£¬  avdd_sleep = 22(uA)
+
+idle(2028) > setting max(2000)
+
+
+//Current Test is Fail
+
+------------------------------Current Test------------------------------
+
+avdd_active = 17621(uA), avdd_idle = 2033(uA)£¬  avdd_sleep = 18(uA)
+
+idle(2033) > setting max(2000)
+
+
+//Current Test is Fail
+
+Time Stamp:	2026-05-18 15:52:23 561
+
+------------------------------Project Test------------------------------
+
+
+//Project Test is Pass
+
+Time Stamp:	2026-05-18 15:52:23 844
+
+------------------------------OTP Test------------------------------
+Fail = 0 
+
+//OTP Test is Pass
+
+
+//Final result is NG

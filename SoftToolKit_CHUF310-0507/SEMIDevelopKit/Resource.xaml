@@ -1,0 +1,70 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:util="clr-namespace:SEMI.Util;assembly=SEMI.Util"
+                    xmlns:app_util="clr-namespace:SEMIDevelopKit.Src.Util"
+                    xmlns:apps="clr-namespace:SEMIDevelopKit.Src.WinSub"
+                    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Src/Theme/WpfToggleButton.xaml" />
+        <ResourceDictionary Source="Src/Theme/WpfAvalonDock.xaml" />
+        <ResourceDictionary Source="Src/Theme/OutlookBar.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <app_util:ValueToBackGroundConveter x:Key="ValueToBackGroundConveter"></app_util:ValueToBackGroundConveter>
+    <app_util:ReturnCodeToColorConverter x:Key="ReturnCodeToColorConverter"></app_util:ReturnCodeToColorConverter>
+    <app_util:ReturnCodeToTextConverter x:Key="ReturnCodeToTextConverter"></app_util:ReturnCodeToTextConverter>
+    <app_util:BurnTypeToVisibleConverter x:Key="BurnTypeToVisibleConverter"></app_util:BurnTypeToVisibleConverter>
+    <app_util:BooleanNegtiveConverter x:Key="BooleanNegtiveConverter"></app_util:BooleanNegtiveConverter>
+    <util:StatusArrayToTextConverter x:Key="StatusArrayToTextConverter"></util:StatusArrayToTextConverter>
+    <util:EnumerToVisibleConverter x:Key="EnumerToVisibleConverter"></util:EnumerToVisibleConverter>
+    <util:HexValueStringConverter x:Key="HexValueStringConverter"></util:HexValueStringConverter>
+    <util:EnumToBooleanConverter x:Key="EnumToBooleanConverter"></util:EnumToBooleanConverter>
+    <apps:LinkUriConverter x:Key="LinkUriConverter"></apps:LinkUriConverter>
+
+
+    <ControlTemplate x:Key="TpBurnTemplate">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition Height="2"></RowDefinition>
+            </Grid.RowDefinitions>
+            <DockPanel Grid.Row="0" LastChildFill="True" Visibility="{Binding SelectedBurnType, Converter={StaticResource BurnTypeToVisibleConverter}, ConverterParameter=0}">
+                <Button DockPanel.Dock="Left" Margin="5" Content="LOAD" Width="70">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <i:InvokeCommandAction Command="{Binding ctrlClickCommand}" CommandParameter="burn-load-click"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+               <TextBox Margin="5" Text="{Binding TextSrc}"></TextBox>
+            </DockPanel>
+
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Visibility="{Binding SelectedBurnType, Converter={StaticResource BurnTypeToVisibleConverter}, ConverterParameter=1}">
+                <Label Content="Addr:" Margin="5" Width="70" HorizontalContentAlignment="Right"></Label>
+                <TextBox Text="{Binding BurnStartAddr,Converter={StaticResource HexValueStringConverter}, UpdateSourceTrigger=PropertyChanged}" Width="150" Margin="5"></TextBox>
+                <Label Content="Lengh:"  Width="70" Margin="30,5,5,5" HorizontalContentAlignment="Right"></Label>
+                <TextBox Text="{Binding BurnLengh, UpdateSourceTrigger=PropertyChanged}" Width="60" Margin="5"></TextBox>
+                <ComboBox Width="70" Margin="5" ItemsSource="{Binding ListUnit}" DisplayMemberPath="TypeName" SelectedValuePath="TypeVal" SelectedValue="{Binding RWUnit}" ></ComboBox>
+                <CheckBox Content="Save" Margin="50,5,5,5" IsChecked="{Binding SaveBurnContent}"></CheckBox>
+            </StackPanel>
+             
+            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                <Label Content="Operation:" Margin="5" Width="70" HorizontalContentAlignment="Right"></Label>
+                <ComboBox x:Name="cbxBurnType" Margin="5" Width="150" ItemsSource="{Binding ListBurnType}" DisplayMemberPath="TypeName" SelectedValuePath="TypeVal" SelectedValue="{Binding SelectedBurnType}"></ComboBox>
+                <Button Margin="180, 5" Width="70" Content="Execute">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <i:InvokeCommandAction Command="{Binding ctrlClickCommand}" CommandParameter="item-execute-click"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+            </StackPanel>
+
+            <StackPanel Background="LightBlue" Grid.Row="2"></StackPanel>
+        </Grid>
+    </ControlTemplate>
+    
+    
+</ResourceDictionary>

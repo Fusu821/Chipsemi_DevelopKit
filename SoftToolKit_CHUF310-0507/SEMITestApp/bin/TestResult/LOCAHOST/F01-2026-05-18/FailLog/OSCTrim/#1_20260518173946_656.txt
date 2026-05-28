@@ -1,0 +1,92 @@
+ChipSemi_Tester_V8.8.8_20260318
+WorkStation: F01   ProjectName: 0508
+
+Time Stamp:	2026-05-18 17:39:40 394
+Mtk Version = 0xd1103
+
+Time Stamp:	2026-05-18 17:39:40 891
+
+------------------------------OSC Trim Test------------------------------
+Target No1=52000  No2=62400  No3=62400 
+osc32k trim = 50 value = 32141	osc52m trim = 0 value = 110638912
+osc52.00m trim = 196	value = 52039572 
+osc41.60m trim = 285	value = 41573064
+osc62.40m trim = 136	value  = 62428872
+[52M][FAIL] meter=110638912 target=52000000 err=58638912 limit=1560000 proportion=30¡ë
+Temp1 65359	Temp2 65359	Temp3 65359	Temp4 65357	
+32K = 0x32, 52M=0x00 
+
+//OSCTrim Test is Fail
+
+Time Stamp:	2026-05-18 17:39:41 113
+
+------------------------------IOVoltage Test------------------------------
+
+IOV = 1.8V  High : int0 vol = 1779  ,	int2 vol = 1779  
+IOV = 1.8V  Low  : int0 vol = 26    ,	int2 vol = 1     
+IOV = 1.2V  High : int0 vol = 1230  ,	int2 vol = 1231  
+IOV = 1.2V  Low  : int0 vol = 18    ,	int2 vol = 1     
+
+IOV 1.62V  & 1.08V trans test PASS
+
+
+//IOVoltage Test is Pass
+
+Time Stamp:	2026-05-18 17:39:42 562
+
+------------------------------RESET Test------------------------------
+
+
+//Reset Test is Pass
+
+Time Stamp:	2026-05-18 17:39:42 658
+
+------------------------------Current Test------------------------------
+
+avdd_active = 17461(uA), avdd_idle = 3512(uA)£¬  avdd_sleep = 138(uA)
+
+idle(3512) > setting max(2000)
+
+sleep(138) > setting max(30)
+
+
+//Current Test is Fail
+
+------------------------------Current Test------------------------------
+
+avdd_active = 17481(uA), avdd_idle = 3470(uA)£¬  avdd_sleep = 134(uA)
+
+idle(3470) > setting max(2000)
+
+sleep(134) > setting max(30)
+
+
+//Current Test is Fail
+
+------------------------------Current Test------------------------------
+
+avdd_active = 17469(uA), avdd_idle = 3506(uA)£¬  avdd_sleep = 102(uA)
+
+idle(3506) > setting max(2000)
+
+sleep(102) > setting max(30)
+
+
+//Current Test is Fail
+
+Time Stamp:	2026-05-18 17:39:46 348
+
+------------------------------Project Test------------------------------
+Project = 1
+
+//Project Test is Pass
+
+Time Stamp:	2026-05-18 17:39:46 621
+
+------------------------------OTP Test------------------------------
+Fail = 0 
+
+//OTP Test is Pass
+
+
+//Final result is NG

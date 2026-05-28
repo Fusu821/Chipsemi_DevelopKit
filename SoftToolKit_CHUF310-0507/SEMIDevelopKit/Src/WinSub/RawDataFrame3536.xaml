@@ -1,0 +1,98 @@
+﻿<UserControl x:Class="SEMIDevelopKit.Src.WinSub.RawDataFrame3536"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:avalonDock="http://schemas.xceed.com/wpf/xaml/avalondock"
+             xmlns:app_util="clr-namespace:SEMIDevelopKit.Src.Util"
+             xmlns:local="clr-namespace:SEMIDevelopKit.Src.WinSub"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="170"></RowDefinition>
+        </Grid.RowDefinitions>
+        <!--<app_util:WpfDataGrid Grid.Row="0" MatrixSource="{Binding RawDataMatrix, Mode=TwoWay}" Reference="{Binding ReferenceData, Mode=TwoWay}"></app_util:WpfDataGrid>-->
+        <app_util:WpfRawDataView Grid.Row="0" x:Name="dispRawData" Reference="{Binding ReferenceData, Mode=TwoWay}"></app_util:WpfRawDataView>
+        <GridSplitter Height="2" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"></GridSplitter>
+
+        <avalonDock:DockingManager  Grid.Row="1" x:Name="dockManager"  AllowMixedOrientation="True">
+            <avalonDock:DockingManager.Theme>
+                <avalonDock:VS2010Theme></avalonDock:VS2010Theme>
+            </avalonDock:DockingManager.Theme>
+
+            <avalonDock:LayoutRoot>
+                <avalonDock:LayoutPanel Orientation="Horizontal">
+                    <avalonDock:LayoutAnchorablePaneGroup>
+                        <avalonDock:LayoutAnchorablePane x:Name="panelLeft">
+                            <avalonDock:LayoutAnchorable Title="Main" CanAutoHide="False" CanHide="False" CanClose="False">
+                                <Grid Background="#AAAAAA">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="180" ></ColumnDefinition>
+                                        <ColumnDefinition Width="180"></ColumnDefinition>
+                                        <ColumnDefinition></ColumnDefinition>
+                                        <ColumnDefinition ></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+
+                                    <app_util:WpfToggleButton Grid.Row="0" Grid.Column="0" Width="150" Height="60" IsChecked="{Binding CatchChecked}">
+                                        <ToggleButton.Style>
+                                            <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource WpfToggleButtonStyle}">
+                                                <Setter Property="Content" Value="Catch-Data"></Setter>
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsChecked" Value="True">
+                                                        <Setter Property="Content" Value="Stop-Catch"></Setter>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ToggleButton.Style>
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="Checked">
+                                                <i:InvokeCommandAction Command="{Binding ctrlClickCommand}" CommandParameter="main-catch-checked"/>
+                                            </i:EventTrigger>
+                                            <i:EventTrigger EventName="Unchecked">
+                                                <i:InvokeCommandAction Command="{Binding ctrlClickCommand}" CommandParameter="main-stopcatch-unchecked"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </app_util:WpfToggleButton>
+                                    <!--wpfCtrl:WpfToggleButton Grid.Row="0" Grid.Column="0" Width="150" Height="60" IsChecked="True">
+                                        <ToggleButton.Style>
+                                            <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource WpfToggleButtonStyle}">
+                                                <Setter Property="Content" Value="Run"></Setter>
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsChecked" Value="True">
+                                                        <Setter Property="Content" Value="Stop"></Setter>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ToggleButton.Style>
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="Checked">
+                                                <i:InvokeCommandAction Command="{Binding ctrlClickCommand}" CommandParameter="main-start-checked"/>
+                                            </i:EventTrigger>
+                                            <i:EventTrigger EventName="Unchecked">
+                                                <i:InvokeCommandAction Command="{Binding ctrlClickCommand}" CommandParameter="main-start-unchecked"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </wpfCtrl:WpfToggleButton-->
+                                    <!--GroupBox Header="DataType" Grid.Column="1" Style="{x:Null}" BorderThickness="0.3" Margin="1">
+                                    </GroupBox>
+                                    <GroupBox Header="Debug" Grid.Column="2" Style="{x:Null}" BorderThickness="0.3" Margin="1">
+                                        <StackPanel Orientation="Vertical">
+                                           
+                                        </StackPanel>
+                                    </GroupBox-->
+                                </Grid>
+                            </avalonDock:LayoutAnchorable>
+                            <avalonDock:LayoutAnchorable Title="FreqScan" CanAutoHide="False" CanHide="False" CanClose="False">
+                                
+                            </avalonDock:LayoutAnchorable>
+                        </avalonDock:LayoutAnchorablePane>
+                    </avalonDock:LayoutAnchorablePaneGroup>
+                </avalonDock:LayoutPanel>
+            </avalonDock:LayoutRoot>
+        </avalonDock:DockingManager>
+    </Grid>
+</UserControl>

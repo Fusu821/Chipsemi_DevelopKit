@@ -1,0 +1,199 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:viewModel="clr-namespace:SEMIDevelopKit.Src.WinSub"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+			<RowDefinition Height="525"></RowDefinition>
+			<RowDefinition Height="165"></RowDefinition>
+			<RowDefinition Height="125"></RowDefinition>
+			<RowDefinition Height="405"></RowDefinition>
+        </Grid.RowDefinitions>
+		
+        <GroupBox Header="12.1：触摸阈值、抬起阈值、按键阈值" Grid.Row="0">
+            <UniformGrid Rows="12">
+				<UniformGrid Columns="16">
+                <Control></Control>
+				<Control></Control>
+				<Label Content="      主频" HorizontalAlignment="Left" Margin="5"></Label>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+                <Label Content="触摸阈值 (mul)" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="touchLv_mul"></TextBox>
+                <Label Content="抬起阈值 (mul)" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="leaveLv_mul"></TextBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="触摸阈值  (slt)" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="touchLv_slt"></TextBox>
+				<Label Content="抬起阈值  (slt)" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="leaveLv_slt"></TextBox>
+				</UniformGrid>
+
+				<UniformGrid Columns="16">
+				<Label Content="触摸阈值  (slr)" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="touchLv_slr"></TextBox>
+				<Label Content="抬起阈值  (slr)" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="leaveLv_slr"></TextBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+                <Label Content="触摸阈值 (mul key)" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="keyTouchLv"></TextBox>
+				<Label Content="抬起阈值 (mul key)" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="keyLeaveLv"></TextBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+                <Label Content="自容阈值比例 (self key)" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="key_thd_self"></TextBox>
+				<Label Content="[7:4]:Rx、[3:0]:Tx是Va区的比例" HorizontalAlignment="Left" Margin="5"></Label>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+                <Control></Control>
+				<Control></Control>
+				<Label Content="      辅频" HorizontalAlignment="Left" Margin="5"></Label>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+                <Label Content="触摸阈值 (mul)" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="touchLv_mul1"></TextBox>
+                <Label Content="抬起阈值 (mul)" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="leaveLv_mul1"></TextBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="触摸阈值  (slt)" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="touchLv_slt1"></TextBox>
+				<Label Content="抬起阈值  (slt)" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="leaveLv_slt1"></TextBox>	
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="触摸阈值  (slr)" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="touchLv_slr1"></TextBox>		
+				<Label Content="抬起阈值  (slr)" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="leaveLv_slr1"></TextBox>
+				</UniformGrid>
+                
+				<UniformGrid Columns="16">
+                <Label Content="触摸阈值 (mul key)" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="keyTouchLv1"></TextBox>
+                <Label Content="抬起阈值 (mul key)" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="keyLeaveLv1"></TextBox>		
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+                <Label Content="自容阈值比例 (self key)" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="key_thd_self1"></TextBox>
+				<Label Content="[7:4]:Rx、[3:0]:Tx是Va区的比例" HorizontalAlignment="Left" Margin="5"></Label>
+				</UniformGrid>
+			</UniformGrid>
+        </GroupBox>
+		
+		<GroupBox Header="12.2：Idle模式下 触摸阈值、温漂阈值，与对应触摸阈值的比例" Grid.Row="1">
+            <UniformGrid Rows="3">			
+				<UniformGrid Columns="16">
+                <Label Content="触摸阈值AA区(self r+t)" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="idle_touch_thd"></TextBox>
+				<Label Content="触摸阈值Key (self r+t)" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="idle_touch_key_RTx"></TextBox>
+				<Label Content="触摸阈值:[7:4]:slr; [3:0]:slt" HorizontalAlignment="Left" Margin="5"></Label>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="温漂 (mul)" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="idle_tempera_mul"></TextBox>
+				<Label Content="温漂 (slr)" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="idle_tempera_slr"></TextBox>
+				<Label Content="温漂:[7:4]:max、[3:0]:average ratio" HorizontalAlignment="Left" Margin="5"></Label>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Control></Control>
+				<Control></Control>
+				<Label Content="温漂 (slt)" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="idle_tempera_slt"></TextBox>
+				</UniformGrid>
+			</UniformGrid>
+        </GroupBox>
+		
+		<GroupBox Header="12.3：边缘自容阈值配置（Active）" Grid.Row="2">
+            <UniformGrid Rows="2">			
+				<UniformGrid Columns="16">
+                <Label Content="边缘阈值比例 (slt)" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="edgeThd_slt"></TextBox>
+				<Label Content="[7:4]:first、[3:0]:end channel" HorizontalAlignment="Left" Margin="5"></Label>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="边缘阈值比例 (slr)" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="edgeThd_slr"></TextBox>
+				<Label Content="[7:4]:first、[3:0]:end channel" HorizontalAlignment="Left" Margin="5"></Label>
+				</UniformGrid>
+			</UniformGrid>
+        </GroupBox>
+		
+		<GroupBox Header="12.4：阈值抬升" Grid.Row="3">
+            <UniformGrid Rows="9">			
+				<UniformGrid Columns="16">
+                <Label Content="触摸点数量与抬升阈值 mul" HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="ThresholdIncrease"></TextBox>
+				<Label Content="[7:4]:ratio、[3:0]:Num" HorizontalAlignment="Left" Margin="5"></Label>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+                <Label Content="触摸点数量与抬升阈值 Slt " HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="ThresholdIncreaseSlt"></TextBox>
+				<Label Content="[7:4]:ratio、[3:0]:Num" HorizontalAlignment="Left" Margin="5"></Label>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+                <Label Content="触摸点数量与抬升阈值 Slr " HorizontalAlignment="Right" Margin="5"></Label>
+                <TextBox Margin="5" viewModel:TuningItem.ItemName="ThresholdIncreaseSlr"></TextBox>
+				<Label Content="[7:4]:ratio、[3:0]:Num" HorizontalAlignment="Left" Margin="5"></Label>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Control></Control>
+				<CheckBox Content="mul按区域抬升阈值开关"         Tag="29" viewModel:TuningItem.ItemName="funcCfgEx1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				<CheckBox Content="0:从上往下阈值增大，1:相反"    Tag="30" viewModel:TuningItem.ItemName="funcCfgEx1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Control></Control>
+				<TextBox Margin="5" viewModel:TuningItem.ItemName="MulRxAmpRatioMain"></TextBox>
+				<Label Content="主频mul抬升比例" HorizontalAlignment="Left" Margin="5"></Label>
+				<TextBox Margin="5" viewModel:TuningItem.ItemName="MulRxAmpRatioAuxi"></TextBox>
+				<Label Content="辅频mul抬升比例" HorizontalAlignment="Left" Margin="5"></Label>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Control></Control>
+				<CheckBox Content="Slr按区域抬升阈值开关"         Tag="31" viewModel:TuningItem.ItemName="funcCfgEx1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				<CheckBox Content="0:从上往下阈值增大，1:相反"    Tag="30" viewModel:TuningItem.ItemName="funcCfgEx1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>	
+
+				<UniformGrid Columns="16">
+				<Control></Control>
+				<TextBox Margin="5" viewModel:TuningItem.ItemName="SlrAmpRatioMain"></TextBox>
+				<Label Content="主频slr抬升比例" HorizontalAlignment="Left" Margin="5"></Label>
+				<TextBox Margin="5" viewModel:TuningItem.ItemName="SlrAmpRatioAuxi"></TextBox>
+				<Label Content="辅频slr抬升比例" HorizontalAlignment="Left" Margin="5"></Label>
+				</UniformGrid>	
+		    </UniformGrid>
+        </GroupBox>
+    </Grid>
+</UserControl>

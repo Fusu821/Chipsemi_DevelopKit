@@ -1,0 +1,1588 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using GDI = System.Drawing;
+using SMInvokeBridge;
+using SEMIDevelopKit.Src.WinSub;
+using System.IO;
+namespace SEMIDevelopKit.Src.Util
+{
+    public class TPoint
+    {
+        public ushort X;
+        public ushort Y;
+        public ushort Z;
+        public byte   ID;
+        public ushort xcode;
+        public ushort ycode;
+        public byte status;
+        public byte statusO;
+
+    }
+    public class TouchReportData
+    {
+        public byte[] report = null;
+        protected TPoint[] points = new TPoint[ExportDeclares.SM_MAX_NUM_POINT + ExportDeclares.SM_OTHER_NUM_POINT];
+        public TouchReportData(byte[] report)
+        {
+            this.report = new byte[report.Length];
+            Array.Copy(report, this.report, report.Length);
+        }
+        public virtual byte TCnt { get;set; }
+        public virtual ushort Msk { get; set; }
+        public virtual bool Valid()
+        {
+            return false;
+        }
+        public virtual TouchReportData Colne()
+        {
+            return null;
+        }
+
+        public virtual TPoint Points(int index)
+        {
+            return null;
+        }
+        public override string ToString()
+        {
+            StringBuilder strRet = new StringBuilder();
+            int len = report.Length;
+            for (int index = 0; index < len; index++)
+            {
+                strRet.Append("0x" + report[index].ToString("X2") + ",");
+            }
+            strRet = strRet.Remove(strRet.Length - 1, 1);
+
+            return strRet.ToString();
+        }
+    }
+
+    public class SCapTouchReportData : TouchReportData
+    {
+        public SCapTouchReportData(byte[] report)
+            :base(report)
+        {
+            for (int index = 0; index < 2; index++)
+            {
+                TPoint pt = new TPoint();
+                pt.X = (ushort)(((report[3 + index * 6] & 0x03f) << 8) + report[4 + index * 6]);
+                pt.Y = (ushort)(((report[5 + index * 6] & 0x0f) << 8) + report[6 + index * 6]);
+                pt.Z = (ushort)(report[7 + index * 6]);
+                pt.ID = (byte)((report[5 + index * 6] & 0xf0)>>4);
+
+                if (index < TCnt && pt.ID < 2)
+                {
+                    points[pt.ID] = pt;
+                }
+            }
+        }
+
+        public override byte TCnt { get { return (byte)(report[2] & 0x0f); } }
+        public override ushort Msk 
+        {
+            get
+            {
+                ushort temp = 0;
+                for (int index = 0; index < TCnt; index++)
+                    temp |= (ushort)(0x0001 << index);
+                return temp;
+            }
+        }
+
+        public override bool Valid()
+        {
+            return TCnt <= 2;
+        }
+        public override TPoint Points(int id)
+        {
+            return points[id];
+        }
+        public override TouchReportData Colne()
+        {
+            return new SCapTouchReportData(report);
+        }
+    }
+
+    public class MCapTouchReportData : TouchReportData
+    {
+        public MCapTouchReportData(byte[] report)
+            : base(report)
+        {
+            for (int index = 0; index < ExportDeclares.SM_MAX_NUM_POINT; index++)
+            {
+                TPoint pt = new TPoint();
+                pt.X = (ushort)(((report[5 + index * 5] & 0x0f) << 8) + report[2 + index * 5]);
+                pt.Y = (ushort)(((report[5 + index * 5] & 0xf0) << 4) + report[3 + index * 5]);
+                pt.Z = (ushort)(report[4 + index * 5]);
+                pt.ID = (byte)(report[6 + index * 5] & 0x0f);
+                if (eChipTypeList.IsSameKind(eChipTypeList.SM_IC_5816, MainViewModel.Intr.SelectedIC))
+                {
+                    if (index < TCnt && pt.ID < ExportDeclares.SM_MAX_NUM_POINT)//
+                    {
+                        points[pt.ID] = pt;
+                    }
+                }
+                else
+                {
+                    if (index < TCnt+1 && pt.ID < ExportDeclares.SM_MAX_NUM_POINT)// 54,55系列少报点问题
+                    {
+                        points[pt.ID] = pt;
+                    }
+                }
+               
+            }
+        }
+
+        public override byte TCnt { get { return (byte)(report[1] & 0x0f); } }
+        public override ushort Msk 
+        { 
+            get 
+            { 
+                ushort temp = 0;
+                for (int index = 0; index < TCnt; index++)
+                    temp |= (ushort)(0x0001 << index);
+                return temp;
+            }
+        }
+
+        public override bool Valid()
+        {
+            if (TCnt >= 0x0f) return false;
+            if (0 == report[0]) return false;
+
+            return true;
+        }
+        public override TPoint Points(int id)
+        {
+            return points[id];
+        }
+        public override TouchReportData Colne()
+        {
+            return new MCapTouchReportData(report);
+        }
+    }
+    public class MCap550TouchReportData : TouchReportData
+    {
+        public MCap550TouchReportData(byte[] report)
+            : base(report)
+        {
+            for (int index = 0; index < ExportDeclares.SM_MAX_NUM_POINT; index++)
+            {
+
+                TPoint pt = new TPoint();
+                if (report[0] == 0xF8)
+                {
+                    pt.X = (ushort)(((report[3 + index * 6]) << 8) + report[2 + index * 6]);
+                    pt.Y = (ushort)(((report[5 + index * 6] << 8)) + report[4 + index * 6]);
+                    pt.Z = (ushort)(report[6 + index * 6]);
+                    pt.ID = (byte)(report[7 + index * 6] & 0x0f);
+                }
+                else if (report[0] == 0xF0)
+                {
+                    pt.X = (ushort)(((report[3 + index * 5]) << 8) + report[2 + index * 5]);
+                    pt.Y = (ushort)(((report[5 + index * 5] << 8)) + report[4 + index * 5]);
+                    pt.Z = 0;
+                    pt.ID = (byte)(report[6 + index * 5] & 0x0f); 
+                }
+                else
+                {
+                    pt.X = (ushort)(((report[5 + index * 5] & 0x0f) << 8) + report[2 + index * 5]);
+                    pt.Y = (ushort)(((report[5 + index * 5] & 0xf0) << 4) + report[3 + index * 5]);
+                    pt.Z = (ushort)(report[4 + index * 5]);
+                    pt.ID = (byte)(report[6 + index * 5] & 0x0f);
+                
+                }
+
+                if (pt.ID < ExportDeclares.SM_MAX_NUM_POINT)//index < TCnt && 54,55系列少报点问题
+                {
+                    points[pt.ID] = pt;
+                }
+                
+
+            }
+        }
+
+        public override byte TCnt { get { return (byte)(report[1] & 0x0f); } }
+        public override ushort Msk
+        {
+            get
+            {
+                ushort temp = 0;
+                for (int index = 0; index < TCnt; index++)
+                    temp |= (ushort)(0x0001 << index);
+                return temp;
+            }
+        }
+
+        public override bool Valid()
+        {
+            if (TCnt >= 0x0f) return false;
+            if (0 == report[0]) return false;
+
+            return true;
+        }
+        public override TPoint Points(int id)
+        {
+            return points[id];
+        }
+        public override TouchReportData Colne()
+        {
+            return new MCap550TouchReportData(report);
+        }
+    }
+    public class MCap710TouchReportData : TouchReportData
+    {
+        public MCap710TouchReportData(byte[] report)
+            : base(report)
+        {
+            if (report[0] != 0xEB)
+            {
+                for (int index = 0; index < ExportDeclares.SM_MAX_NUM_POINT; index++)
+                {
+
+                    TPoint pt = new TPoint();
+                    if (report[0] == 0xF8)
+                    {
+                        pt.X = (ushort)(((report[3 + index * 6]) << 8) + report[2 + index * 6]);
+                        pt.Y = (ushort)(((report[5 + index * 6] << 8)) + report[4 + index * 6]);
+                        pt.Z = (ushort)(report[6 + index * 6]);
+                        pt.ID = (byte)(report[7 + index * 6] & 0x0f);
+                    }
+                    else if (report[0] == 0xF0)
+                    {
+                        pt.X = (ushort)(((report[3 + index * 5]) << 8) + report[2 + index * 5]);
+                        pt.Y = (ushort)(((report[5 + index * 5] << 8)) + report[4 + index * 5]);
+                        pt.Z = 0;
+                        pt.ID = (byte)(report[6 + index * 5] & 0x0f);
+                    }
+                    else
+                    {
+                        pt.X = (ushort)(((report[5 + index * 5] & 0x0f) << 8) + report[2 + index * 5]);
+                        pt.Y = (ushort)(((report[5 + index * 5] & 0xf0) << 4) + report[3 + index * 5]);
+                        pt.Z = (ushort)(report[4 + index * 5]);
+                        pt.ID = (byte)(report[6 + index * 5] & 0x0f);
+
+                    }
+
+                    if (pt.ID < ExportDeclares.SM_MAX_NUM_POINT)//index < TCnt && 54,55系列少报点问题
+                    {
+                        points[pt.ID] = pt;
+                    }
+                }
+            }
+            else
+            {
+                if (ExportDeclares.SM_OTHER_NUM_POINT >= 1)
+                {
+                    TPoint pt = new TPoint();
+                    pt.X = (ushort)(((report[3]) << 8) + report[2]);
+                    pt.Y = (ushort)(((report[5] << 8)) + report[4]);
+                    pt.xcode = (ushort)((((report[7] << 8)) + report[6]) & 0xfff);
+                    pt.ID = (byte)(report[8] & 0x0f) > (byte)ExportDeclares.SM_MAX_NUM_POINT ? (byte)ExportDeclares.SM_MAX_NUM_POINT : (byte)(report[8] & 0x0f);
+                    pt.statusO = (byte)((report[8] & 0xf0)>>4);
+                    pt.status = (byte)(report[9]|0x08);
+                    pt.ycode = (ushort)(((report[11] << 8)) + report[10]);
+                    points[ExportDeclares.SM_MAX_NUM_POINT] = pt;
+                }
+            }
+        }
+
+        public override byte TCnt { get { return (byte)(report[1] & 0x0f); } }
+        public override ushort Msk
+        {
+            get
+            {
+                ushort temp = 0;
+                for (int index = 0; index < TCnt; index++)
+                    temp |= (ushort)(0x0001 << index);
+                return temp;
+            }
+        }
+
+        public override bool Valid()
+        {
+            if (TCnt >= 0x0f) return false;
+            if (0 == report[0]) return false;
+
+            return true;
+        }
+        public override TPoint Points(int id)
+        {
+            return points[id];
+        }
+        public override TouchReportData Colne()
+        {
+            return new MCap710TouchReportData(report);
+        }
+    }
+
+    public class MCap810ReportData : TouchReportData
+    {
+        public MCap810ReportData(byte[] report)
+            : base(report)
+        {
+
+            TPoint pt = new TPoint();
+
+            pt.X = (ushort)(((report[1] & 0xff) << 8) + report[0]);
+            pt.Y = (ushort)(((report[3] & 0xff) << 8) + report[2]);
+            pt.Z = 10;
+            pt.ID = 0;
+            points[pt.ID] = pt;
+
+            //ushort xcode = (ushort)((((report[3]) << 8) + report[2]) >> (16 - MainViewModel.Intr.Accuracy));
+
+            //ushort ycode = (ushort)((((report[5]) << 8) + report[4]) >> (16 - MainViewModel.Intr.Accuracy));
+
+            //int xv = ((xcode) * 3600) >> MainViewModel.Intr.Accuracy;
+            //int yv = (ycode * 3600) >> MainViewModel.Intr.Accuracy;
+
+            //pt.X = (ushort)(((ushort)xv) * 300 / 3300);
+            //pt.Y = (ushort)(((ushort)yv) * 300 / 3300);
+            //pt.Z = 10;
+            //pt.ID = 0;
+            //pt.xcode = xcode;
+            //pt.ycode = ycode;
+            //points[pt.ID] = pt;
+
+
+    
+        }
+
+        public override byte TCnt { get { return 1; } }
+        public override ushort Msk
+        {
+            get
+            {
+                ushort temp = 0;
+                for (int index = 0; index < TCnt; index++)
+                    temp |= (ushort)(0x0001 << index);
+                return temp;
+            }
+        }
+
+        public override bool Valid()
+        {
+            if (TCnt >= 0x0f) return false;
+            //if (0 == report[0]) return false;
+
+            return true;
+        }
+        public override TPoint Points(int id)
+        {
+            return points[id];
+        }
+        public override TouchReportData Colne()
+        {
+            return new MCap810ReportData(report);
+        }
+    }
+
+    public class MCap8006ReportData : TouchReportData
+    {
+        public MCap8006ReportData(byte[] report)
+            : base(report)
+        {
+
+            TPoint pt = new TPoint();
+
+            pt.X = (ushort)(((report[0]&0xff) << 8) + report[1]);
+            pt.Y = (ushort)(((report[2]&0xff) << 8) + report[3]);
+            pt.Z = 10;
+            pt.ID = 0;
+            points[pt.ID] = pt;
+
+        }
+
+        public override byte TCnt { get { return 1; } }
+        public override ushort Msk
+        {
+            get
+            {
+                ushort temp = 0;
+                for (int index = 0; index < TCnt; index++)
+                    temp |= (ushort)(0x0001 << index);
+                return temp;
+            }
+        }
+
+        public override bool Valid()
+        {
+            if (TCnt >= 0x0f) return false;
+            //if (0 == report[0]) return false;
+
+            return true;
+        }
+        public override TPoint Points(int id)
+        {
+            return points[id];
+        }
+        public override TouchReportData Colne()
+        {
+            return new MCap8006ReportData(report);
+        }
+    }
+
+
+    public class TickRate
+    {
+        private int tickCount = 0;
+        private long systemTime = 0;
+        private double dwRate = 0;
+        private uint touchcurrent = 0;
+        private uint touchlast = 0;
+
+        public TickRate()
+        {
+
+        }
+        public bool TickComplete()
+        {
+            if (++tickCount >= 100)
+            {
+                long current = DateTime.Now.Ticks;
+                long dev = current - systemTime;
+                dwRate = tickCount * 10000000 / (current - systemTime);
+                tickCount = 0;
+                systemTime = current;
+
+                return true;
+            }
+            return false;
+        }
+        public bool TickCompleteNew(TouchReportData touch)
+        {
+
+            if (++tickCount >= 100)
+            {
+                touchcurrent = (uint)((touch.report[83] << 24) + (touch.report[82] << 16) + (touch.report[81] << 8) + touch.report[80]);
+                long current = DateTime.Now.Ticks;
+                long dev = current - systemTime;
+                dwRate = (touchcurrent - touchlast) * 10000000 / (current - systemTime);
+                tickCount = 0;
+                systemTime = current;
+                touchlast = touchcurrent;
+
+                return true;
+            }
+            return false;
+        }
+        public double Rate { get { return dwRate; } }
+    }
+    /// <summary>
+    ///
+    ///     <MyNamespace:TouchDisplayView/>
+    ///
+    /// </summary>
+    public class WpfDisplayView : ContentControl
+    {
+        public int width { get; set; }
+        public int height { get; set; } 
+        public byte f_TCnt { get; set; }
+        public byte p_TCnt { get; set; }
+        private bool PendingClean = false;
+        private WriteableBitmap bitmap = null;
+        private TouchReportData lastTouch = null;
+        private TouchReportData lastPenTouch = null;
+        private TickRate tickRate = new TickRate();
+        private TickRate tickPenRate = new TickRate();
+        MemoryStream mos = new MemoryStream();
+        private Image img = new Image();
+
+        private GDI.Pen[] pen = new GDI.Pen[]
+        {
+            new GDI.Pen(GDI.Color.Red, 1),
+            new GDI.Pen(GDI.Color.Silver, 1),
+            new GDI.Pen(GDI.Color.GreenYellow, 1),
+            new GDI.Pen(GDI.Color.LightGreen, 1),
+            new GDI.Pen(GDI.Color.Green, 1),
+            new GDI.Pen(GDI.Color.DarkRed, 1),
+            new GDI.Pen(GDI.Color.Gold, 1),
+            new GDI.Pen(GDI.Color.LightSkyBlue, 1),
+            new GDI.Pen(GDI.Color.Orange, 1),
+            new GDI.Pen(GDI.Color.Blue, 1),
+            new GDI.Pen(GDI.Color.HotPink, 1),
+        };
+        private GDI.Brush[] brush = new GDI.Brush[]
+        {
+            new GDI.SolidBrush(GDI.Color.Red),
+            new GDI.SolidBrush(GDI.Color.Silver),
+            new GDI.SolidBrush(GDI.Color.GreenYellow),
+            new GDI.SolidBrush(GDI.Color.LightGreen),
+            new GDI.SolidBrush(GDI.Color.Green),
+            new GDI.SolidBrush(GDI.Color.DarkRed),
+            new GDI.SolidBrush(GDI.Color.Gold),
+            new GDI.SolidBrush(GDI.Color.LightSkyBlue),
+            new GDI.SolidBrush(GDI.Color.Orange),
+            new GDI.SolidBrush(GDI.Color.Blue),
+             new GDI.SolidBrush(GDI.Color.HotPink),
+        };
+
+        public int heightMeg =70;
+
+        public WpfDisplayView()
+        {
+            this.Content = img;
+        }
+
+        public static readonly DependencyProperty TouchProperty =
+            DependencyProperty.Register("Touch", typeof(TouchReportData), typeof(WpfDisplayView),
+            new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.None, OnTouchPropertyChanged));
+
+        public static TouchReportData GetTouch(DependencyObject d)
+        {
+            return (TouchReportData)d.GetValue(TouchProperty);
+        }
+
+        public static void SetTouch(DependencyObject d, TouchReportData value)
+        {
+            d.SetValue(TouchProperty, value);
+        }
+
+        private static void OnTouchPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            WpfDisplayView trendLine = (WpfDisplayView)d;
+            TouchReportData latestTouch = (TouchReportData)e.NewValue;
+            if (null != trendLine)
+            {
+                trendLine.OnTouchReport(latestTouch);
+            }
+            else
+            {
+
+            }
+        }
+
+        public static readonly DependencyProperty XLinesProperty =
+            DependencyProperty.Register("XLines", typeof(int), typeof(WpfDisplayView),
+            new FrameworkPropertyMetadata(10, FrameworkPropertyMetadataOptions.None, OnXLinesPropertyChanged));
+
+        public static int GetXLines(DependencyObject d)
+        {
+            return (int)d.GetValue(XLinesProperty);
+        }
+
+        public static void SetXLines(DependencyObject d, int value)
+        {
+            d.SetValue(XLinesProperty, value);
+        }
+
+        private static void OnXLinesPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            WpfDisplayView trendLine = (WpfDisplayView)d;
+            int xLines = (int)e.NewValue;
+            if (null != trendLine)
+            {
+                
+            }
+            else
+            {
+
+            }
+        }
+
+        public static readonly DependencyProperty YLinesProperty =
+            DependencyProperty.Register("YLines", typeof(int), typeof(WpfDisplayView),
+            new FrameworkPropertyMetadata(10, FrameworkPropertyMetadataOptions.None, OnYLinesPropertyChanged));
+
+        public static int GetYLines(DependencyObject d)
+        {
+            return (int)d.GetValue(YLinesProperty);
+        }
+
+        public static void SetYLines(DependencyObject d, int value)
+        {
+            d.SetValue(YLinesProperty, value);
+        }
+
+        private static void OnYLinesPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            WpfDisplayView trendLine = (WpfDisplayView)d;
+            int yLines = (int)e.NewValue;
+            if (null != trendLine)
+            {
+
+            }
+            else
+            {
+
+            }
+        }
+
+        protected override void OnRender(DrawingContext dc)
+        {
+            this.width = (int)RenderSize.Width;
+            this.height = (int)RenderSize.Height;
+            if (width <= 0 || height <= 0) return;
+
+            ModelTouch viewModel = this.DataContext as ModelTouch;
+            if (0 == ModelBase.YPixel) return;
+
+            //Modify to prevent TouchFrame.xaml designer from not being displayed
+            if (viewModel == null)
+            {
+                base.OnRender(dc);
+                return;
+            }
+            viewModel.DisplayWidth = (height - heightMeg) * ModelBase.XPixel / ModelBase.YPixel;
+            
+
+            if (bitmap == null)
+            {
+                this.bitmap = new WriteableBitmap(width, height, 96, 96, PixelFormats.Bgr24, null);
+            }
+            else if (bitmap.Width != this.width || bitmap.Height != this.height)
+            {
+                this.bitmap = new WriteableBitmap(width, height, 96, 96, PixelFormats.Bgr24, null);
+            }
+
+            this.bitmap.Lock();
+
+            using (GDI.Bitmap backBufferBitmap = new GDI.Bitmap(width, height,
+            this.bitmap.BackBufferStride, GDI.Imaging.PixelFormat.Format24bppRgb,
+            this.bitmap.BackBuffer))
+            {
+                using (GDI.Graphics backBufferGraphics = GDI.Graphics.FromImage(backBufferBitmap))
+                {
+                    backBufferGraphics.SmoothingMode = GDI.Drawing2D.SmoothingMode.HighSpeed;
+                    backBufferGraphics.CompositingQuality = GDI.Drawing2D.CompositingQuality.HighSpeed;
+                    ClearBitmap(backBufferGraphics);
+
+                    backBufferGraphics.Flush();
+                }
+            }
+
+            this.bitmap.AddDirtyRect(new Int32Rect(0, 0, (int)this.bitmap.Width, (int)this.bitmap.Height));
+            this.bitmap.Unlock();
+
+            img.Source = bitmap;
+            this.Content = img;
+
+            if (viewModel.ShowPackets)
+            {
+                img.Source = bitmap;
+                this.Content = img;
+            }
+            else
+            {
+                this.Content = null;
+                dc.DrawImage(bitmap, new Rect(0, 0, width, height));
+            }
+
+            base.OnRender(dc);
+        }
+
+        private void ClearScreen()
+        {
+            ModelTouch viewModel = this.DataContext as ModelTouch;
+
+            if (!viewModel.ClearScreen) return;
+
+            this.bitmap.Lock();
+
+            using (GDI.Bitmap backBufferBitmap = new GDI.Bitmap(width, height,
+                this.bitmap.BackBufferStride, GDI.Imaging.PixelFormat.Format24bppRgb,
+                this.bitmap.BackBuffer))
+            {
+                using (GDI.Graphics backBufferGraphics = GDI.Graphics.FromImage(backBufferBitmap))
+                {
+                    if (viewModel.ClearScreen)
+                    {
+                        PendingClean = true;
+                        viewModel.ClearScreen = false;
+                        ClearBitmap(backBufferGraphics);
+                        backBufferGraphics.Flush();
+                    }
+                }
+            }
+            this.bitmap.AddDirtyRect(new Int32Rect(0, 0, width, height));
+            this.bitmap.Unlock();
+        }
+
+        public void OnTouchReport(TouchReportData touch)
+        {
+            ModelTouch viewModel = this.DataContext as ModelTouch;
+
+            if (viewModel.ShowHandStyleData)
+            {
+                viewModel.ReportShowHandStyleData(touch);
+            }
+            else
+            {
+                //if (touch.TCnt > 10) return;
+                if (touch == null) return;
+                if (!touch.Valid()) return;
+                if (null == this.bitmap) return;
+                if (touch.report[0] == 0xEB)//for 710
+                {
+                    if (0 == touch.TCnt && null == lastPenTouch) return;
+                }
+                else
+                {
+                    if (0 == touch.TCnt && null == lastTouch) return;
+                }
+                viewModel.ReportPacketToCatch(touch);
+                if (touch.report[0] == 0xEB)
+                {
+                    if (null == lastPenTouch) { lastPenTouch = touch.Colne(); return; }
+                }
+                else
+                {
+                    if (null == lastTouch) { lastTouch = touch.Colne(); return; }
+                }
+
+                //viewModel.ReportPacketToCatch(new SEMIDevelopKit.Src.WinSub.ModelTouch.ReportPacket(TouchPacketToString(touch)));
+            
+
+                if (touch.TCnt == 0 /*&& (byte)lastTouch.Msk == 0*/)
+                {
+                    lastTouch = null;
+                    lastPenTouch = null;
+                    PendingClean = true;
+                    return;
+                }
+
+    //             ushort lastPacketCnt = 0, thisPacketCnt = 0;
+    //             lastPacketCnt = (ushort)((lastTouch.Report[83] << 8) + lastTouch.Report[82]);
+    //             thisPacketCnt = (ushort)((touch.Report[83] << 8) + touch.Report[82]);
+    //             if (thisPacketCnt - lastPacketCnt > 1)
+    //             {
+    //                 int index = 0;
+    //             }
+
+
+                ClearScreen();
+
+                if (touch.report[0] == 0xEB)//for 710
+                {
+                    if (tickPenRate.TickComplete())
+                    {
+                        var rate = (uint)tickPenRate.Rate;
+
+                        viewModel.ReportPenRate = rate;
+
+                    }
+                }
+                else
+                {
+                    if (tickRate.TickComplete())
+                    {
+                        var rate = (uint)tickRate.Rate;
+
+                        //if (MainViewModel.Intr.SelectedIC == eChipTypeList.SM_IC_5562)
+                        //{
+                        //    if (rate <= 120)
+                        //    {
+                        //        rate = rate * 2;
+                        //    }
+                        //    else if ((rate > 120) && (rate < 240))
+                        //    {
+                        //        rate = 240 + (rate & 0x8);
+                        //    }
+
+                        //}
+
+                        viewModel.ReportRate = rate;
+
+                    }
+                }
+
+                this.bitmap.Lock();
+
+                using (GDI.Bitmap backBufferBitmap = new GDI.Bitmap(width, height,
+                    this.bitmap.BackBufferStride, GDI.Imaging.PixelFormat.Format24bppRgb,
+                    this.bitmap.BackBuffer))
+                {
+                    using (GDI.Graphics backBufferGraphics = GDI.Graphics.FromImage(backBufferBitmap))
+                    {
+                        backBufferGraphics.SmoothingMode = GDI.Drawing2D.SmoothingMode.HighSpeed;
+                        backBufferGraphics.CompositingQuality = GDI.Drawing2D.CompositingQuality.HighSpeed;
+
+    //                     if (touch.TCnt <= 0)
+    //                     {
+    //                         
+    //                     }
+    //                     else
+    //                     {
+                            if (PendingClean && viewModel.GraphOnce)
+                            {
+                                //backBufferGraphics.Clear(m_backColor);
+                                //backBufferGraphics.FillEllipse(new GDI.SolidBrush(GDI.Color.Black), 0, 0, width, height);
+                                ClearBitmap(backBufferGraphics);
+                                PendingClean = false;
+                            }
+
+                            
+                            if (1 == viewModel.GraghMode)
+                                if ((MainViewModel.Intr.SelectedIC == eChipTypeList.SM_IC_7126) && touch.report[0] == 0xEB && (touch.report[9] & 0x7) == 4)
+                                {
+                                    DrawInPointModeForPen(backBufferGraphics, touch);
+                                }
+                                else
+                                {
+                                    DrawInLineMode(backBufferGraphics, touch);
+                                }
+
+                            else
+                                DrawInPointMode(backBufferGraphics, touch);
+
+
+                            backBufferGraphics.FillRectangle(new GDI.SolidBrush(GDI.Color.Black), 0, height - heightMeg + 5, width, height);
+                            
+                            if (touch.report[0] == 0xEB)
+                            {
+                                p_TCnt = touch.TCnt;
+                            }
+                            else
+                            {
+                                f_TCnt = touch.TCnt;
+                            }
+                            string tpMeg;
+                            string penMeg;
+                            if (MainViewModel.Intr.SelectedIC == eChipTypeList.SM_IC_7126)
+                            {
+
+                                tpMeg = tpMeg = "Finger" + ", " + "ReportRate:" + viewModel.ReportRate.ToString("D3") + ", " + "Points:" + f_TCnt.ToString("D2") + "; ";
+                            }//"P_R:" + viewModel.ReportPenRate.ToString("D3") + ", " + "N:" + p_TCnt.ToString("D2");
+                            else
+                            {
+                                tpMeg = tpMeg = "R:" + viewModel.ReportRate.ToString("D3") + ", " + "N:" + touch.TCnt.ToString("D2");
+                                if (touch.Points(0) != null && (MainViewModel.Intr.SelectedIC == eChipTypeList.SM_IC_8006 || MainViewModel.Intr.SelectedIC == eChipTypeList.SM_IC_810))
+                                {
+                                    tpMeg += ", X:" + touch.Points(0).X.ToString("D4") + ", Y:" + touch.Points(0).Y.ToString("D4");
+                                }
+                            }
+
+                            GDI.Font textFont = new GDI.Font("Arial", viewModel.PointSize * 0.6f, GDI.FontStyle.Bold);
+                            //GDI.SizeF sizeF = backBufferGraphics.MeasureString(tpMeg, textFont);
+                            backBufferGraphics.DrawString(tpMeg, textFont, new GDI.SolidBrush(GDI.Color.Red), new GDI.PointF(0, height - heightMeg + 5));
+
+                            if (touch.Points(ExportDeclares.SM_MAX_NUM_POINT) != null && (MainViewModel.Intr.SelectedIC == eChipTypeList.SM_IC_7126) && (touch.Points(ExportDeclares.SM_MAX_NUM_POINT).status & 0x8) == 0x8)
+                            {
+                                var point = touch.Points(ExportDeclares.SM_MAX_NUM_POINT);
+                                tpMeg = "Pen" + ", " + "ReportRate:" + viewModel.ReportPenRate.ToString("D3") + ", " + "Points:" + p_TCnt.ToString("D2") +
+                                      ", " + "Pressure:" + point.xcode.ToString("D4");
+                                penMeg = "Pen" + ", Status:" + (point.status & 0x7).ToString("D2") +
+                                    ", Button:" + ((point.statusO >> 1) & 0x1).ToString("D1") + ((point.statusO) & 0x1).ToString("D1") +
+                                    String.Format(", Angle:({0},{1})", (point.ycode & 0xff).ToString("D3"), ((point.ycode >> 8) & 0xff).ToString("D3"));
+
+                                backBufferGraphics.DrawString(tpMeg, textFont, new GDI.SolidBrush(GDI.Color.LightCyan), new GDI.PointF(0, height - heightMeg + 25));
+                                backBufferGraphics.DrawString(penMeg, textFont, new GDI.SolidBrush(GDI.Color.LightCyan), new GDI.PointF(0, height - heightMeg + 45));
+                            }
+
+                            if (touch.report[0] != 0xEB && (MainViewModel.Intr.SelectedIC == eChipTypeList.SM_IC_7126) && lastPenTouch != null && (lastPenTouch.Points(ExportDeclares.SM_MAX_NUM_POINT).status & 0x8) == 0x8)
+                            {
+                                var point = lastPenTouch.Points(ExportDeclares.SM_MAX_NUM_POINT);
+                                tpMeg = "Pen" + ", " + "ReportRate:" + viewModel.ReportPenRate.ToString("D3") + ", " + "Points:" + p_TCnt.ToString("D2") +
+                                    ", " + "Pressure:" + point.xcode.ToString("D4");
+                                penMeg = "Pen" + ", Status:" + (point.status & 0x7).ToString("D2") +
+                                    ", Button:" + ((point.statusO >> 1) & 0x1).ToString("D1") + ((point.statusO) & 0x1).ToString("D1") +
+                                    String.Format(", Angle:({0},{1})", (point.ycode & 0xff).ToString("D3"), ((point.ycode >> 8) & 0xff).ToString("D3"));
+
+                                backBufferGraphics.DrawString(tpMeg, textFont, new GDI.SolidBrush(GDI.Color.LightCyan), new GDI.PointF(0, height - heightMeg + 25));
+                                backBufferGraphics.DrawString(penMeg, textFont, new GDI.SolidBrush(GDI.Color.LightCyan), new GDI.PointF(0, height - heightMeg + 45));
+                            }
+
+                             //if (viewModel.HideTickRate == false)
+                             //{
+                             //    string strRate = viewModel.ReportRate.ToString();
+                             //    GDI.Font textFont = new GDI.Font("Arial", viewModel.PointSize * 0.8f, GDI.FontStyle.Bold);
+                             //    GDI.SizeF sizeF = backBufferGraphics.MeasureString(strRate, textFont);
+                             //    backBufferGraphics.FillRectangle(new GDI.SolidBrush(GDI.Color.Black), 0, 0, sizeF.Width, sizeF.Height);
+                             //    backBufferGraphics.DrawString(strRate, textFont, new GDI.SolidBrush(GDI.Color.Red), new GDI.PointF(0, 0));
+
+                             //    if (touch.TCnt <= 10)
+                             //    {
+                             //        var strTCnt = touch.TCnt.ToString();
+                             //        sizeF = backBufferGraphics.MeasureString(strTCnt, textFont);
+                             //        backBufferGraphics.FillRectangle(new GDI.SolidBrush(GDI.Color.Black), 60, 0, sizeF.Width, sizeF.Height);
+                             //        backBufferGraphics.DrawString(strTCnt, textFont, new GDI.SolidBrush(GDI.Color.Red), new GDI.PointF(60, 0));
+                             //    }
+                             //    if (touch.Points(0) != null && (MainViewModel.Intr.SelectedIC == eChipTypeList.SM_IC_8006 || MainViewModel.Intr.SelectedIC == eChipTypeList.SM_IC_810))
+                             //    {
+                             //        string xy_p = "  " + touch.Points(0).X.ToString() + "," + touch.Points(0).Y.ToString();
+                             //        //GDI.Font textFont = new GDI.Font("Arial", viewModel.PointSize * 0.8f, GDI.FontStyle.Bold);
+                             //        GDI.SizeF sizeF1 = backBufferGraphics.MeasureString(xy_p, textFont);
+                             //        backBufferGraphics.FillRectangle(new GDI.SolidBrush(GDI.Color.Black), (width - sizeF1.Width), 0, sizeF1.Width, sizeF1.Height);
+                             //        backBufferGraphics.DrawString(xy_p, textFont, new GDI.SolidBrush(GDI.Color.Red), new GDI.PointF(width - sizeF1.Width, 0));
+
+                             //    }
+
+                             //}
+
+
+                            if (touch.report[0] == 0xEB)
+                            {
+                                lastPenTouch = touch.Colne();
+                            }
+                            else
+                            {
+                                lastTouch = touch.Colne();
+                            }
+
+                            //lastTouch = touch.Colne();
+                       //}
+
+                        backBufferGraphics.Flush();
+                        mos.SetLength(0);
+                        backBufferBitmap.Save(mos, System.Drawing.Imaging.ImageFormat.Bmp);
+                    }
+                }
+
+                this.bitmap.AddDirtyRect(new Int32Rect(0, 0, (int)this.bitmap.Width, (int)this.bitmap.Height));
+                this.bitmap.Unlock();
+
+                if (viewModel.ShowPackets)
+                {
+                    BitmapImage bitmapImage = new BitmapImage();
+                    bitmapImage.BeginInit();
+                    bitmapImage.StreamSource = mos;
+                    bitmapImage.EndInit();
+                    img.Source = bitmapImage;
+                }
+            }
+
+        }
+
+        private void DrawInLineMode(GDI.Graphics backBufferGraphics, TouchReportData touch)
+        {
+            ModelTouch viewModel = this.DataContext as ModelTouch;
+            if (viewModel == null)
+                return;
+
+            int lineSize = viewModel.LineSize;
+            int halfLineSize = lineSize / 2;
+
+            int smMaxNumPoint = ExportDeclares.SM_MAX_NUM_POINT;
+            int pointCount = ExportDeclares.SM_MAX_NUM_POINT + ExportDeclares.SM_OTHER_NUM_POINT;
+            //Create a rectangle object in advance
+            var rcTp = new GDI.Rectangle(0, 0, ModelBase.XPixel, ModelBase.YPixel);
+            var rcScreen = new GDI.Rectangle(0, 0, (int)width, (int)(height - heightMeg));
+            //Reused point object
+            GDI.Point reusablePtScreen = new GDI.Point();
+            GDI.Point reusableLastScreen = new GDI.Point();
+
+            bool isPenTouch = touch.report[0] == 0xEB;
+            TPoint[] cachedLastPoints = null;
+            int startIndex = isPenTouch ? smMaxNumPoint : 0;
+            int endIndex = isPenTouch ? pointCount : smMaxNumPoint;
+
+            if (isPenTouch)
+            {
+                if (lastPenTouch != null)
+                {
+                    cachedLastPoints = new TPoint[endIndex - startIndex];
+                    for (int i = startIndex; i < endIndex; i++)
+                    {
+                        cachedLastPoints[i - startIndex] = lastPenTouch.Points(i);
+                    }
+                }
+            }
+            else
+            {
+                if (lastTouch != null)
+                {
+                    cachedLastPoints = new TPoint[endIndex - startIndex];
+                    for (int i = startIndex; i < endIndex; i++)
+                    {
+                        cachedLastPoints[i - startIndex] = lastTouch.Points(i);
+                    }
+                }
+            }
+
+            // Create a brush once (reusing within the using block)
+            using (var whitePen = new GDI.Pen(GDI.Color.White) { Width = lineSize })
+            {
+                for (int ptId = startIndex; ptId < endIndex; ptId++)
+                {
+                    // Retrieve historical points from the cache
+                    TPoint lastPt = null;
+                    int cacheIndex = ptId - startIndex;
+                    if (cachedLastPoints != null && cacheIndex >= 0 && cacheIndex < cachedLastPoints.Length)
+                    {
+                        lastPt = cachedLastPoints[cacheIndex];
+                    }
+
+                    // Obtain the current point
+                    TPoint thisPt = touch.Points(ptId);
+                    if (lastPt == null && thisPt == null) continue;
+
+                    bool isDownEvent = lastPt == null;
+                    bool isUpEvent = thisPt == null;
+                    if ((isDownEvent && thisPt != null && thisPt.ID < pointCount)
+                        || (isUpEvent && lastPt != null && lastPt.ID < pointCount))
+                        continue;
+
+                    // Coordinate transformation
+                    if (lastPt != null)
+                        SMChipBase.SMScreenXYChange(lastPt.X, lastPt.Y, ref reusableLastScreen, rcTp, rcScreen);
+                    if (thisPt != null)
+                        SMChipBase.SMScreenXYChange(thisPt.X, thisPt.Y, ref reusablePtScreen, rcTp, rcScreen);
+
+                    // Draw lines and endpoints
+                    GDI.Pen currentPen = pen[ptId];
+                    if (currentPen != null && lastPt != null && thisPt != null)
+                    {
+                        backBufferGraphics.DrawLine(currentPen, reusableLastScreen, reusablePtScreen);
+                    }
+
+                    // Draw the starting ellipse (only when there are historical points)
+                    if (lastPt != null)
+                    {
+                        backBufferGraphics.DrawEllipse(whitePen,
+                            reusableLastScreen.X - halfLineSize,
+                            reusableLastScreen.Y - halfLineSize,
+                            lineSize,
+                            lineSize);
+                    }
+
+                    // Draw the end ellipse (only when there is a current point)
+                    if (thisPt != null)
+                    {
+                        backBufferGraphics.DrawEllipse(whitePen,
+                            reusablePtScreen.X - halfLineSize,
+                            reusablePtScreen.Y - halfLineSize,
+                            lineSize,
+                            lineSize);
+                    }
+                }
+            }
+        }
+
+
+        private void DrawInPointMode(GDI.Graphics backBufferGraphics, TouchReportData touch)
+        {
+            ModelTouch viewModel = this.DataContext as ModelTouch;
+            if (viewModel == null)
+                return;
+
+            int pointSize = viewModel.PointSize;
+            byte drawType = viewModel.DrawType;
+
+            GDI.Rectangle rcTp = new GDI.Rectangle(0, 0, ModelBase.XPixel, ModelBase.YPixel);
+            GDI.Rectangle rcScreen = new GDI.Rectangle(0, 0, (int)width, (int)(height - heightMeg));
+            int smMaxNumPoint = ExportDeclares.SM_MAX_NUM_POINT;
+            int totalPoints = ExportDeclares.SM_MAX_NUM_POINT + ExportDeclares.SM_OTHER_NUM_POINT;
+
+            //Pre_calculate and cache the point data of lastTouch/lastPenTouch
+            TPoint[] cachedLastTouchPoints = GetCachedPoints(lastTouch, smMaxNumPoint, 0);
+            TPoint[] cachedLastPenTouchPoints = GetCachedPoints(lastPenTouch, totalPoints - smMaxNumPoint, smMaxNumPoint);
+
+            ClearBitmap(backBufferGraphics);
+
+            if (touch.report[0] == 0xEB)
+            {
+                for (int ptId = smMaxNumPoint; ptId < totalPoints; ptId++)
+                {
+                    TPoint thisPt = touch.Points(ptId);
+                    if (thisPt == null) continue;
+                    DrawPoint(backBufferGraphics, thisPt, ptId, pointSize, drawType, rcTp, rcScreen, ref _reusablePtScreen);
+                }
+
+                for (int ptId = 0; ptId < smMaxNumPoint; ptId++)
+                {
+                    // Retrieve 'lastPt' from the cache array to avoid the need to check whether 'lastTouch' is null within the loop.
+                    TPoint lastPt = cachedLastTouchPoints != null ? cachedLastTouchPoints[ptId] : null;
+                    TPoint thisPt = touch.Points(ptId);
+
+                    if (thisPt == null)
+                    {
+                        if (lastPt == null || lastPt.status == 4)
+                            continue;
+                        thisPt = lastPt;
+                    }
+                    DrawPoint(backBufferGraphics, thisPt, ptId, pointSize, drawType, rcTp, rcScreen, ref _reusablePtScreen);
+                }
+            }
+            else
+            {
+                for (int ptId = 0; ptId < smMaxNumPoint; ptId++)
+                {
+                    TPoint thisPt = touch.Points(ptId);
+                    if (thisPt == null) continue;
+                    DrawPoint(backBufferGraphics, thisPt, ptId, pointSize, drawType, rcTp, rcScreen, ref _reusablePtScreen);
+                }
+
+                for (int ptId = smMaxNumPoint; ptId < totalPoints; ptId++)
+                {
+                    //Calculate the index of the cache array (to avoid redundant calculations)
+                    int cacheIndex = ptId - smMaxNumPoint;
+                    TPoint lastPt = (cachedLastPenTouchPoints != null && cacheIndex < cachedLastPenTouchPoints.Length)
+                        ? cachedLastPenTouchPoints[cacheIndex]
+                        : null;
+
+                    TPoint thisPt = touch.Points(ptId);
+
+                    //if (null == thisPt) continue;
+                    if (thisPt == null)
+                    {
+                        if (lastPt == null || lastPt.status == 4)
+                            continue;
+                        thisPt = lastPt;
+                    }
+                    DrawPoint(backBufferGraphics, thisPt, ptId, pointSize, drawType, rcTp, rcScreen, ref _reusablePtScreen);
+                }
+            }
+        }
+
+        //Reused fonts and point objects
+        private GDI.Font _cachedTextFont = null;
+        private GDI.Point _reusablePtScreen = new GDI.Point();
+
+        private void DrawPoint(GDI.Graphics graphics, TPoint point, int ptId,
+                              int pointSize, byte drawType,// cache viewModel param
+                              GDI.Rectangle rcTp, GDI.Rectangle rcScreen,
+                              ref GDI.Point ptScreen)
+        {
+            // Calculate screen coordinates
+            SMChipBase.SMScreenXYChange(point.X, point.Y, ref ptScreen, rcTp, rcScreen);
+
+            // Calculate the size parameters
+            int outerSize = pointSize + point.Z;
+            int halfBase = pointSize / 2;
+            int halfOuter = outerSize / 2;
+
+            // Store local references to brush and pen to reduce the overhead of array indexing.
+            GDI.Brush currentBrush = brush[ptId];
+            GDI.Pen currentPen = pen[ptId];
+
+            // Draw filled interior graphics
+            if (drawType == 0)
+            {
+                graphics.FillRectangle(currentBrush, ptScreen.X - halfBase, ptScreen.Y - halfBase, pointSize, pointSize);
+                graphics.DrawRectangle(currentPen, ptScreen.X - halfOuter, ptScreen.Y - halfOuter, outerSize, outerSize);
+            }
+            else
+            {
+                graphics.FillEllipse(currentBrush, ptScreen.X - halfBase, ptScreen.Y - halfBase, pointSize, pointSize);
+                graphics.DrawEllipse(currentPen, ptScreen.X - halfOuter, ptScreen.Y - halfOuter, outerSize, outerSize);
+            }
+
+            //String formatting
+            string strPixel = string.Format("{0},{1},{2}", point.X, point.Y, point.Z);
+
+            // If you need to enable the comment logic, cache the SelectedIC in advance.
+            // if (MainViewModel.Intr.SelectedIC == eChipTypeList.SM_IC_810)
+            //     strPixel = string.Format("{0},{1},{2}", point.xcode, point.ycode, point.Z);
+
+            //Reuse font objects (rebuild only when the size changes, avoiding frequent creation of Font)
+            if (_cachedTextFont == null || _cachedTextFont.Size != pointSize)
+            {
+                // Release old fonts (to avoid memory leakage)
+                if (_cachedTextFont != null)
+                    _cachedTextFont.Dispose();
+                _cachedTextFont = new GDI.Font("Arial", pointSize, GDI.FontStyle.Bold);
+            }
+
+            // Draw text (reduce the creation of temporary PointF objects, directly pass coordinate parameters)
+            GDI.SizeF textSize = graphics.MeasureString(strPixel, _cachedTextFont);
+            graphics.DrawString(strPixel, _cachedTextFont, currentBrush,
+                              ptScreen.X - textSize.Width / 2,  // X
+                              ptScreen.Y + halfBase);           // Y
+        }
+
+        private void DrawInPointModeForPen(GDI.Graphics backBufferGraphics, TouchReportData touch)
+        {
+            ModelTouch viewModel = this.DataContext as ModelTouch;
+            if (viewModel == null)
+                return;
+
+            int pointSize = viewModel.PointSize;
+            //byte drawType = viewModel.DrawType; 
+
+            GDI.Rectangle rcTp = new GDI.Rectangle(0, 0, ModelBase.XPixel, ModelBase.YPixel);
+            GDI.Rectangle rcScreen = new GDI.Rectangle(0, 0, (int)width, (int)(height - heightMeg));
+            int smMaxNumPoint = ExportDeclares.SM_MAX_NUM_POINT;
+            int totalPoints = ExportDeclares.SM_MAX_NUM_POINT + ExportDeclares.SM_OTHER_NUM_POINT;
+
+            TPoint[] cachedLastTouchPoints = GetCachedPoints(lastTouch, smMaxNumPoint, 0);
+            TPoint[] cachedLastPenTouchPoints = GetCachedPoints(lastPenTouch, totalPoints - smMaxNumPoint, smMaxNumPoint);
+
+            ClearBitmap(backBufferGraphics);
+
+            if (touch.report[0] == 0xEB)
+            {
+                for (int ptId = smMaxNumPoint; ptId < totalPoints; ptId++)
+                {
+                    TPoint thisPt = touch.Points(ptId);
+                    if (thisPt == null) continue;
+                    DrawPointForPen(backBufferGraphics, thisPt, ptId, pointSize, rcTp, rcScreen, ref _reusablePtScreen);
+                }
+
+                for (int ptId = 0; ptId < smMaxNumPoint; ptId++)
+                {
+
+                    TPoint lastPt = cachedLastTouchPoints != null ? cachedLastTouchPoints[ptId] : null;
+                    TPoint thisPt = touch.Points(ptId);
+
+                    if (thisPt == null)
+                    {
+                        if (lastPt == null || lastPt.status == 4)
+                            continue;
+                        thisPt = lastPt;
+                    }
+                    DrawPointForPen(backBufferGraphics, thisPt, ptId, pointSize, rcTp, rcScreen, ref _reusablePtScreen);
+                }
+            }
+            else
+            {
+                for (int ptId = 0; ptId < smMaxNumPoint; ptId++)
+                {
+                    TPoint thisPt = touch.Points(ptId);
+                    if (thisPt == null) continue;
+                    DrawPointForPen(backBufferGraphics, thisPt, ptId, pointSize, rcTp, rcScreen, ref _reusablePtScreen);
+                }
+
+                for (int ptId = smMaxNumPoint; ptId < totalPoints; ptId++)
+                {
+                    int cacheIndex = ptId - smMaxNumPoint;
+                    TPoint lastPt = (cachedLastPenTouchPoints != null && cacheIndex < cachedLastPenTouchPoints.Length)
+                        ? cachedLastPenTouchPoints[cacheIndex]
+                        : null;
+
+                    TPoint thisPt = touch.Points(ptId);
+
+                    if (thisPt == null)
+                    {
+                        if (lastPt == null || lastPt.status == 4)
+                            continue;
+                        thisPt = lastPt;
+                    }
+                    DrawPointForPen(backBufferGraphics, thisPt, ptId, pointSize, rcTp, rcScreen, ref _reusablePtScreen);
+                }
+            }
+        }
+
+        //private void DrawPointForPen(GDI.Graphics graphics, TPoint point, int ptId,
+        //              ModelTouch viewModel, GDI.Rectangle rcTp, GDI.Rectangle rcScreen)
+        //{
+        //    // Calculate screen coordinates
+        //    GDI.Point ptScreen = new GDI.Point();
+        //    SMChipBase.SMScreenXYChange(point.X, point.Y, ref ptScreen, rcTp, rcScreen);
+
+        //     //Calculate the size parameters
+        //    int baseSize = viewModel.PointSize;
+        //    int outerSize = baseSize + point.Z;
+        //    int halfBase = baseSize / 2;
+        //    int halfOuter = outerSize / 2;
+
+        //    graphics.FillEllipse(brush[ptId], ptScreen.X - halfBase, ptScreen.Y - halfBase, baseSize, baseSize);
+
+        //     //Draw the external border
+
+        //    graphics.DrawEllipse(pen[ptId], ptScreen.X - halfOuter, ptScreen.Y - halfOuter, outerSize, outerSize);
+
+        //    //string strPixel = string.Format("{0},{1},{2}", point.X, point.Y, point.Z);
+
+        //    //using (GDI.Font textFont = new GDI.Font("Arial", baseSize, GDI.FontStyle.Bold))
+        //    //{
+        //    //    GDI.SizeF textSize = graphics.MeasureString(strPixel, textFont);
+        //    //    graphics.DrawString(strPixel, textFont, brush[ptId],
+        //    //                  new GDI.PointF(ptScreen.X - textSize.Width / 2,
+        //    //                               ptScreen.Y + halfBase));
+        //    //}
+        //}
+
+        private void DrawPointForPen(GDI.Graphics graphics, TPoint point, int ptId, int pointSize,
+                              GDI.Rectangle rcTp, GDI.Rectangle rcScreen, ref GDI.Point ptScreen)
+        {
+            SMChipBase.SMScreenXYChange(point.X, point.Y, ref ptScreen, rcTp, rcScreen);
+
+            //int baseSize = viewModel.PointSize;
+            int outerSize = pointSize + point.Z;
+            int halfBase = pointSize / 2;
+            int halfOuter = outerSize / 2;
+
+            GDI.Brush currentBrush = brush[ptId];
+            GDI.Pen currentPen = pen[ptId];
+
+            graphics.FillEllipse(currentBrush, ptScreen.X - halfBase, ptScreen.Y - halfBase, pointSize, pointSize);
+            graphics.DrawEllipse(currentPen, ptScreen.X - halfOuter, ptScreen.Y - halfOuter, outerSize, outerSize);
+        }
+
+        private TPoint[] GetCachedPoints(object touchSource, int count, int startPtId)
+        {
+            if (touchSource == null)
+                return null;
+
+            dynamic source = touchSource;
+            TPoint[] points = new TPoint[count];
+            for (int i = 0; i < count; i++)
+            {
+                points[i] = source.Points(startPtId + i);
+            }
+            return points;
+        }
+
+        private void OnControlUnloaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (_cachedTextFont != null)
+            {
+                _cachedTextFont.Dispose();
+                _cachedTextFont = null;
+            }
+        }
+
+        //private void DrawInPointMode(GDI.Graphics backBufferGraphics, TouchReportData touch)
+        //{
+        //    ModelTouch viewModel = this.DataContext as ModelTouch;
+        //    ClearBitmap(backBufferGraphics);
+
+        //    if (touch.report[0] == 0xEB)
+        //    {
+        //        for (int ptId = 10; ptId < ExportDeclares.SM_MAX_NUM_POINT + ExportDeclares.SM_OTHER_NUM_POINT; ptId++)
+        //        {
+        //            TPoint thisPt = touch.Points(ptId);
+        //            GDI.Point ptScreen = new GDI.Point();
+        //            GDI.Rectangle rcTp = new GDI.Rectangle(0, 0, ModelBase.XPixel, ModelBase.YPixel);
+        //            GDI.Rectangle rcScreen = new GDI.Rectangle(0, 0, (int)width, (int)(height - heightMeg));
+        //            SMChipBase.SMScreenXYChange(thisPt.X, thisPt.Y, ref ptScreen, rcTp, rcScreen);
+
+        //            if (0 == viewModel.DrawType)
+        //            {
+        //                backBufferGraphics.FillRectangle(brush[ptId], ptScreen.X - viewModel.PointSize / 2,
+        //                    ptScreen.Y - viewModel.PointSize / 2, viewModel.PointSize, viewModel.PointSize);
+        //                backBufferGraphics.DrawRectangle(pen[ptId], ptScreen.X - (viewModel.PointSize + thisPt.Z) / 2, ptScreen.Y - (viewModel.PointSize + thisPt.Z) / 2,
+        //                    viewModel.PointSize + thisPt.Z, viewModel.PointSize + thisPt.Z);
+        //            }
+        //            else
+        //            {
+        //                backBufferGraphics.FillEllipse(brush[ptId], ptScreen.X - viewModel.PointSize / 2,
+        //                    ptScreen.Y - viewModel.PointSize / 2, viewModel.PointSize, viewModel.PointSize);
+        //                backBufferGraphics.DrawEllipse(pen[ptId], ptScreen.X - (viewModel.PointSize + thisPt.Z) / 2, ptScreen.Y - (viewModel.PointSize + thisPt.Z) / 2,
+        //                    viewModel.PointSize + thisPt.Z, viewModel.PointSize + thisPt.Z);
+        //            }
+
+        //            string strPixel = thisPt.X.ToString() + "," + thisPt.Y.ToString() + "," + thisPt.Z.ToString();
+        //            //if (MainViewModel.Intr.SelectedIC == eChipTypeList.SM_IC_810)
+        //            //{
+        //            //    strPixel = thisPt.xcode.ToString() + "," + thisPt.ycode.ToString() + "," + thisPt.Z.ToString();
+        //            //}
+        //            GDI.Font text = new GDI.Font("Arial", viewModel.PointSize, GDI.FontStyle.Bold);
+        //            GDI.SizeF size = backBufferGraphics.MeasureString(strPixel, text);
+        //            backBufferGraphics.DrawString(strPixel, text, brush[ptId],
+        //                new GDI.PointF(ptScreen.X - size.Width / 2, ptScreen.Y + viewModel.PointSize / 2));
+        //        }
+
+        //        for (int ptId = 0; ptId < ExportDeclares.SM_MAX_NUM_POINT; ptId++)
+        //        {
+        //            TPoint lastPt = null;
+        //            if (lastTouch != null)
+        //            {
+        //                lastPt = lastTouch.Points(ptId);
+        //            }
+        //            TPoint thisPt = touch.Points(ptId);
+
+        //            //if (null == thisPt) continue;
+        //            if (null == thisPt)
+        //            {
+        //                if (lastPt == null || lastPt.status == 4)
+        //                {
+        //                    continue;
+        //                }
+        //                thisPt = lastPt;
+        //            }
+
+        //            GDI.Point ptScreen = new GDI.Point();
+        //            GDI.Rectangle rcTp = new GDI.Rectangle(0, 0, ModelBase.XPixel, ModelBase.YPixel);
+        //            GDI.Rectangle rcScreen = new GDI.Rectangle(0, 0, (int)width, (int)(height - heightMeg));
+        //            SMChipBase.SMScreenXYChange(thisPt.X, thisPt.Y, ref ptScreen, rcTp, rcScreen);
+
+        //            if (0 == viewModel.DrawType)
+        //            {
+        //                backBufferGraphics.FillRectangle(brush[ptId], ptScreen.X - viewModel.PointSize / 2,
+        //                    ptScreen.Y - viewModel.PointSize / 2, viewModel.PointSize, viewModel.PointSize);
+        //                backBufferGraphics.DrawRectangle(pen[ptId], ptScreen.X - (viewModel.PointSize + thisPt.Z) / 2, ptScreen.Y - (viewModel.PointSize + thisPt.Z) / 2,
+        //                    viewModel.PointSize + thisPt.Z, viewModel.PointSize + thisPt.Z);
+        //            }
+        //            else
+        //            {
+        //                backBufferGraphics.FillEllipse(brush[ptId], ptScreen.X - viewModel.PointSize / 2,
+        //                    ptScreen.Y - viewModel.PointSize / 2, viewModel.PointSize, viewModel.PointSize);
+        //                backBufferGraphics.DrawEllipse(pen[ptId], ptScreen.X - (viewModel.PointSize + thisPt.Z) / 2, ptScreen.Y - (viewModel.PointSize + thisPt.Z) / 2,
+        //                    viewModel.PointSize + thisPt.Z, viewModel.PointSize + thisPt.Z);
+        //            }
+
+        //            string strPixel = thisPt.X.ToString() + "," + thisPt.Y.ToString() + "," + thisPt.Z.ToString();
+        //            //if (MainViewModel.Intr.SelectedIC == eChipTypeList.SM_IC_810)
+        //            //{
+        //            //    strPixel = thisPt.xcode.ToString() + "," + thisPt.ycode.ToString() + "," + thisPt.Z.ToString();
+        //            //}
+        //            GDI.Font text = new GDI.Font("Arial", viewModel.PointSize, GDI.FontStyle.Bold);
+        //            GDI.SizeF size = backBufferGraphics.MeasureString(strPixel, text);
+        //            backBufferGraphics.DrawString(strPixel, text, brush[ptId],
+        //                new GDI.PointF(ptScreen.X - size.Width / 2, ptScreen.Y + viewModel.PointSize / 2));
+        //        }
+        //    }
+        //    else
+        //    {
+        //        for (int ptId = 0; ptId < ExportDeclares.SM_MAX_NUM_POINT + ExportDeclares.SM_OTHER_NUM_POINT; ptId++)
+        //        {
+        //            //TPoint lastPt = lastTouch.Points(ptId);
+        //            TPoint thisPt = touch.Points(ptId);
+
+        //            if (null == thisPt) continue;
+
+        //            GDI.Point ptScreen = new GDI.Point();
+        //            GDI.Rectangle rcTp = new GDI.Rectangle(0, 0, ModelBase.XPixel, ModelBase.YPixel);
+        //            GDI.Rectangle rcScreen = new GDI.Rectangle(0, 0, (int)width, (int)(height - heightMeg));
+        //            SMChipBase.SMScreenXYChange(thisPt.X, thisPt.Y, ref ptScreen, rcTp, rcScreen);
+
+        //            if (0 == viewModel.DrawType)
+        //            {
+        //                backBufferGraphics.FillRectangle(brush[ptId], ptScreen.X - viewModel.PointSize / 2,
+        //                    ptScreen.Y - viewModel.PointSize / 2, viewModel.PointSize, viewModel.PointSize);
+        //                backBufferGraphics.DrawRectangle(pen[ptId], ptScreen.X - (viewModel.PointSize + thisPt.Z) / 2, ptScreen.Y - (viewModel.PointSize + thisPt.Z) / 2,
+        //                    viewModel.PointSize + thisPt.Z, viewModel.PointSize + thisPt.Z);
+        //            }
+        //            else
+        //            {
+        //                backBufferGraphics.FillEllipse(brush[ptId], ptScreen.X - viewModel.PointSize / 2,
+        //                    ptScreen.Y - viewModel.PointSize / 2, viewModel.PointSize, viewModel.PointSize);
+        //                backBufferGraphics.DrawEllipse(pen[ptId], ptScreen.X - (viewModel.PointSize + thisPt.Z) / 2, ptScreen.Y - (viewModel.PointSize + thisPt.Z)/2, 
+        //                    viewModel.PointSize + thisPt.Z, viewModel.PointSize + thisPt.Z);
+        //            }
+
+        //            string strPixel = thisPt.X.ToString() + "," + thisPt.Y.ToString() + "," + thisPt.Z.ToString();
+        //            //if (MainViewModel.Intr.SelectedIC == eChipTypeList.SM_IC_810)
+        //            //{
+        //            //    strPixel = thisPt.xcode.ToString() + "," + thisPt.ycode.ToString() + "," + thisPt.Z.ToString();
+        //            //}
+        //            GDI.Font text = new GDI.Font("Arial", viewModel.PointSize, GDI.FontStyle.Bold);
+        //            GDI.SizeF size = backBufferGraphics.MeasureString(strPixel, text);
+        //            backBufferGraphics.DrawString(strPixel, text, brush[ptId],
+        //                new GDI.PointF(ptScreen.X - size.Width / 2, ptScreen.Y + viewModel.PointSize / 2));
+        //        }
+
+        //        for (int ptId = 10; ptId < ExportDeclares.SM_MAX_NUM_POINT + ExportDeclares.SM_OTHER_NUM_POINT; ptId++)
+        //        {
+        //            TPoint lastPt = null;
+        //            if (lastPenTouch != null)
+        //            {
+        //                lastPt = lastPenTouch.Points(ptId);
+        //            }
+        //            TPoint thisPt = touch.Points(ptId);
+
+        //            //if (null == thisPt) continue;
+        //            if (null == thisPt)
+        //            {
+        //                if (lastPt == null || lastPt.status == 4)
+        //                {
+        //                    continue;
+        //                }
+        //                thisPt = lastPt;
+        //            }
+        //            GDI.Point ptScreen = new GDI.Point();
+        //            GDI.Rectangle rcTp = new GDI.Rectangle(0, 0, ModelBase.XPixel, ModelBase.YPixel);
+        //            GDI.Rectangle rcScreen = new GDI.Rectangle(0, 0, (int)width, (int)(height - heightMeg));
+        //            SMChipBase.SMScreenXYChange(thisPt.X, thisPt.Y, ref ptScreen, rcTp, rcScreen);
+
+        //            if (0 == viewModel.DrawType)
+        //            {
+        //                backBufferGraphics.FillRectangle(brush[ptId], ptScreen.X - viewModel.PointSize / 2,
+        //                    ptScreen.Y - viewModel.PointSize / 2, viewModel.PointSize, viewModel.PointSize);
+        //                backBufferGraphics.DrawRectangle(pen[ptId], ptScreen.X - (viewModel.PointSize + thisPt.Z) / 2, ptScreen.Y - (viewModel.PointSize + thisPt.Z) / 2,
+        //                    viewModel.PointSize + thisPt.Z, viewModel.PointSize + thisPt.Z);
+        //            }
+        //            else
+        //            {
+        //                backBufferGraphics.FillEllipse(brush[ptId], ptScreen.X - viewModel.PointSize / 2,
+        //                    ptScreen.Y - viewModel.PointSize / 2, viewModel.PointSize, viewModel.PointSize);
+        //                backBufferGraphics.DrawEllipse(pen[ptId], ptScreen.X - (viewModel.PointSize + thisPt.Z) / 2, ptScreen.Y - (viewModel.PointSize + thisPt.Z) / 2,
+        //                    viewModel.PointSize + thisPt.Z, viewModel.PointSize + thisPt.Z);
+        //            }
+
+        //            string strPixel = thisPt.X.ToString() + "," + thisPt.Y.ToString() + "," + thisPt.Z.ToString();
+        //            //if (MainViewModel.Intr.SelectedIC == eChipTypeList.SM_IC_810)
+        //            //{
+        //            //    strPixel = thisPt.xcode.ToString() + "," + thisPt.ycode.ToString() + "," + thisPt.Z.ToString();
+        //            //}
+        //            GDI.Font text = new GDI.Font("Arial", viewModel.PointSize, GDI.FontStyle.Bold);
+        //            GDI.SizeF size = backBufferGraphics.MeasureString(strPixel, text);
+        //            backBufferGraphics.DrawString(strPixel, text, brush[ptId],
+        //                new GDI.PointF(ptScreen.X - size.Width / 2, ptScreen.Y + viewModel.PointSize / 2));
+        //        }
+        //    }
+        //}
+
+        private void ClearBitmap(GDI.Graphics backBufferGraphics)
+        {
+            ModelTouch viewModel = this.DataContext as ModelTouch;
+
+            int effectiveHeight = height - heightMeg;
+
+            double xDelta = (double)width / (viewModel.LinesX);
+            double yDelta = (double)(effectiveHeight) / (viewModel.LinesY);
+
+            backBufferGraphics.Clear(GDI.Color.Black);
+
+            for (int iCol = 0; iCol < viewModel.LinesX; iCol++)
+            {
+                GDI.Point pt1 = new GDI.Point((int)(xDelta * (iCol + 1)), 0);
+                GDI.Point pt2 = new GDI.Point((int)(xDelta * (iCol + 1)), effectiveHeight);
+                backBufferGraphics.DrawLine(new GDI.Pen(GDI.Color.Gray, 1), pt1, pt2);
+            }
+            for (int iRow = 0; iRow < (viewModel.LinesY); iRow++)
+            {
+                GDI.Point pt1 = new GDI.Point(0, (int)(yDelta * (iRow + 1)));
+                GDI.Point pt2 = new GDI.Point(width, (int)(yDelta * (iRow + 1)));
+                backBufferGraphics.DrawLine(new GDI.Pen(GDI.Color.Gray, 1), pt1, pt2);
+            }
+
+            backBufferGraphics.DrawLine(new GDI.Pen(GDI.Color.Gray, 1), 0, effectiveHeight, width, effectiveHeight);
+
+            //GDI.Point ptScreen = new GDI.Point();
+            //GDI.Rectangle rcTp = new GDI.Rectangle(0, 0, ModelBase.XPixel, ModelBase.YPixel);
+            //GDI.Rectangle rcScreen = new GDI.Rectangle(0, 0, (int)width, (int)height);
+            //SMChipBase.SMScreenXYChange(150, 150, ref ptScreen, rcTp, rcScreen);
+            if (MainViewModel.Intr.SelectedIC == eChipTypeList.SM_IC_810)
+            {
+                backBufferGraphics.DrawEllipse(new GDI.Pen(GDI.Color.GreenYellow, 1), 0, 0,
+                 width, (height - heightMeg));
+                backBufferGraphics.DrawEllipse(new GDI.Pen(GDI.Color.GreenYellow, 1), (width / 4), (effectiveHeight / 4),
+                width / 2, effectiveHeight / 2);
+               
+            }
+
+
+        }
+
+//         private string TouchPacketToString(TouchReportData touch)
+//         {
+//             StringBuilder strRet = new StringBuilder();
+//             ModelTouch viewModel = this.DataContext as ModelTouch;
+//             if (viewModel.ShowCoordinate)
+//             {
+//                 if (touch.TCnt == 0) return "None";
+//                 int pointNumber = 0;
+//                 for (int index = 0; index < touch.TCnt; index++)
+//                 {
+//                     if (index >= 10) break;
+//                     if (touch.Points(index).X == 0xffff) continue;
+//                     if (touch.Points(index).Y == 0xffff) continue;
+//                     strRet.Append("P" + (++pointNumber).ToString() + "(" + index.ToString() + "," + touch.Points(index).X.ToString() + "," + touch.Points(index).Y.ToString() + ") ");
+//                 }
+//             }
+//             else
+//             {
+//                 int len = touch.Report.Length;
+//                 for (int index = 0; index < len; index++)
+//                 {
+//                     strRet.Append("0x" + touch.Report[index].ToString("X2") + ",");
+//                 }
+//                 strRet = strRet.Remove(strRet.Length - 1, 1);
+//             }
+//             return strRet.ToString();
+//         }
+    }
+}

@@ -1,0 +1,523 @@
+#include "GraphItemTest.h"
+#include "helper.h"
+extern CConfig* G_XMLConfig;
+
+CGraphItemTest::CGraphItemTest( LPVOID lp )
+	:m_paintTool( ((GraphParam*)lp)->tool )
+	,m_deviceNo( ((GraphParam*)lp)->dev )
+	,m_bExitLoop( false )
+	,m_lastMask( 0 )
+{
+
+}
+CGraphItemTest::~CGraphItemTest()
+{
+
+}
+void CGraphItemTest::Exit(  )
+{
+	m_bExitLoop = true;
+}
+void CGraphItemTest::AddPoint( int index, int xPoint, int yPoint, unsigned char bStrength/* = 0*/ )
+{
+	if (index<=MAX_NUM_POINT && index>=0)
+	{
+		m_PointReceive[index].AddPoint( xPoint, yPoint );
+	}
+	
+}
+void CGraphItemTest::ResetData()
+{
+	for ( int index = 0; index < MAX_NUM_POINT; ++index )
+	{
+		m_PointReceive[index].DoInit();
+	}
+}
+StateType CGraphItemTest::GetCurrentTestState(  ) const
+{
+	return m_stateTest;
+}
+void CGraphItemTest::SetCurrentStatte( StateType state )
+{
+	m_stateTest = state;
+}
+int CGraphItemTest::GetTimeLeft()
+{
+	return m_iTimeLeft;
+} 
+bool CGraphItemTest::DeCreaseOneSecond(  )
+{
+	bool bRet = true;
+	if( m_iTimeLeft == 1 ) bRet = false; 
+	m_iTimeLeft--;
+	if( m_iTimeLeft < 0 ) m_iTimeLeft = 0;
+	return bRet;
+}
+bool CGraphItemTest::Tick()
+{
+	LONGLONG sys_freq = 0;
+	LONGLONG timer_tick = 0;
+
+	QueryPerformanceFrequency( (LARGE_INTEGER*)&sys_freq );
+	QueryPerformanceCounter( (LARGE_INTEGER*)&timer_tick );
+
+	static LONGLONG prev_timer_tick = timer_tick;
+	if( (timer_tick - prev_timer_tick) / sys_freq > 0 )
+	{
+		prev_timer_tick = timer_tick;
+		bool btimeLeft = DeCreaseOneSecond();
+		if( btimeLeft )
+		{
+			GetTestWapperInterface()->GetCallBack().onTouchReport( m_deviceNo );
+		}
+
+		return btimeLeft;
+	}
+	else
+	{
+		return true;
+	}
+}
+void CGraphItemTest::GraphRefresh( HDC dcMem, const RectTP& rect )
+{
+	int iHeadFontHeight = 14, iHeadFontWidth = 7;
+	int iBottomFontHeight = 20, iBottomFontWidth = 12;
+	int iHeadHeight   = G_XMLConfig->Full_Screen ? 0 : iHeadFontHeight;
+	int iBottomHeight = G_XMLConfig->Full_Screen ? 0 : iBottomFontHeight;
+
+	//背景绘制成灰色
+	typeRect rcBody( rect.left, rect.top + iHeadFontHeight, rect.right, rect.bottom - iBottomFontHeight );
+	CUIRenderEx::DrawRectangle( dcMem, rcBody, m_paintTool.GetSolidBrushByType( (UINT32)RGB( 128, 128, 128 ) ) );
+
+	typeRect rcPaint = rcBody;
+	if( G_XMLConfig->resolution_y * rcBody.Width() > G_XMLConfig->resolution_x * rcBody.Height() ){
+		int realWidth = rcPaint.Height() * G_XMLConfig->resolution_x / G_XMLConfig->resolution_y;
+		rcPaint.left  += ( rcBody.Width() - realWidth ) / 2;
+		rcPaint.right -= ( rcBody.Width() - realWidth ) / 2;
+	}
+	else{
+		int realHeight = rcPaint.Width() * G_XMLConfig->resolution_y / G_XMLConfig->resolution_x;
+		rcPaint.top    += ( rcBody.Height() - realHeight ) / 2;
+		rcPaint.bottom -= ( rcBody.Height() - realHeight ) / 2;
+	}
+
+	CUIRenderEx::DrawRectangle( dcMem, rcPaint, m_paintTool.GetSolidBrushByType( (UINT32)RGB( 0, 0, 0 ) ) );
+
+	DoPaint( dcMem, rcPaint );
+// 	if( NULL != pTestItem ){
+// 		pTestItem->DoPaint( dcMem, rcBody );
+// 	}
+// 	else{
+// 		TypeFont typefont = TypeFont( 35, 25, FW_BOLD, false, _T("宋体") );
+// 		typeRect rcText = typeRect( rcBody.left, (rcBody.top + rcBody.bottom)/2, rcBody.right, rcBody.bottom );
+// 		if( g_stGraphTestInfo[m_NumDevice].bNeedToTest && g_stGraphTestInfo[m_NumDevice].uResult == RESULT_PASS )
+// 			CUIRenderEx::DrawText( dcMem, rcText, m_PaintTool.GetFontByType( typefont ), RGB( 0, 255, 0 ), _T("PASS"), DT_CENTER | DT_VCENTER );
+// 		else if( g_stGraphTestInfo[m_NumDevice].bNeedToTest )
+// 			CUIRenderEx::DrawText( dcMem, rcText, m_PaintTool.GetFontByType( typefont ), RGB( 255, 0, 0 ), _T("NG"), DT_CENTER | DT_VCENTER );
+// 	}
+
+	//绘制Head区域
+	typeRect rcHead( rect.left, rect.top, rect.right, rect.top + iHeadHeight );
+	CUIRenderEx::DrawRectangle( dcMem, rcHead, m_paintTool.GetSolidBrushByType( (UINT32)RGB( 255, 255, 255 ) ) );
+	//左上角显示Device序号
+	TCHAR strDervice[32] = {0};
+	typeRect rcText( rect.left, rect.top, rect.right, rect.top + iHeadFontHeight );
+	TypeFont typefont = TypeFont( iHeadFontHeight, iHeadFontWidth, FW_NORMAL, false, _T("黑体") );
+	COLORREF textColor  = RGB( 0, 0, 250 );
+	if( FALSE == SM_CommBase(m_deviceNo)->Connected() ) {
+		textColor = RGB( 255, 0, 0 );
+		transformat( strDervice, _T("#%d: No Device!"), m_deviceNo + 1 );
+	}
+	else{
+		transformat( strDervice, _T("#%d: Connected"), m_deviceNo + 1 );
+	}
+	CUIRenderEx::DrawText( dcMem, rcText, m_paintTool.GetFontByType( typefont ), textColor, strDervice, DT_LEFT|DT_VCENTER );
+
+	//绘制Bottom区域
+	typeRect rcBottom( rect.left, rect.bottom - iBottomHeight, rect.right, rect.bottom );
+	StateType curState = GetCurrentTestState();
+	COLORREF colorText = RGB( 255, 255, 255 );
+	CUIRenderEx::DrawRectangle( dcMem, rcBottom, m_paintTool.GetSolidBrushByType( (UINT32)curState ) );
+	typefont = TypeFont( 15, 10, FW_BOLD, false, _T("黑体") );
+	typeRect rcTextInfo( rcBottom.left, rcBottom.bottom - iBottomFontHeight, rcBottom.right, rcBottom.bottom );
+	CUIRenderEx::DrawText( dcMem, rcTextInfo, m_paintTool.GetFontByType( typefont ), colorText, m_paintTool.GetStringByState( curState ).c_str(), DT_CENTER | DT_VCENTER );
+	TCHAR strTimeLeft[10] = {0};
+	colorText = RGB( 0, 0, 250 );
+	if( GetTimeLeft() > 0 ) transformat( strTimeLeft, _T("%d S"), GetTimeLeft() );
+	CUIRenderEx::DrawText( dcMem, rcTextInfo, m_paintTool.GetFontByType( typefont ), colorText, strTimeLeft, DT_RIGHT | DT_VCENTER );
+}
+void CGraphItemTest::DoPaint( HDC dc, const RectTP& rc )
+{
+	//绘制点
+	TypePoint pcPrev;
+	m_paintRect = rc;
+	typeRect rcTp(0, 0, G_XMLConfig->resolution_x, G_XMLConfig->resolution_y);
+	TypePen typepen = TypePen( PS_SOLID, 3, RGB( 255, 0, 0 ) );
+	for ( int iCount = 0; iCount < MAX_NUM_POINT; ++iCount )
+	{
+		for ( int index = 0; index < m_PointReceive[iCount].iPointNum; ++index )
+		{
+			TypePoint pc;
+			PointTP& pt = m_PointReceive[iCount].ArrayPoint[index];
+
+			ScreenXYChange( pt.x, pt.y, pc.x, pc.y, rcTp, rc );
+
+			if( 0 )
+			{
+				CUIRenderEx::DrawEllipse(dc, pc.x, pc.y, 2, m_paintTool.GetSolidBrushByType(RGB(255,0,0)), m_paintTool.GetPenByType(typepen) );//画圆点
+			}
+			else
+			{
+				if( index > 0 )  CUIRenderEx::DrawLine( dc, pcPrev, pc, m_paintTool.GetPenByType( typepen ) );
+			}
+			pcPrev = pc;
+		}
+	}
+}
+void CGraphItemTest::DoInit( int iDeviceIndex /*= 0*/ )
+{
+	for ( int index = 0; index < MAX_NUM_POINT; ++index ){
+		m_PointReceive[index].DoInit();
+	}
+	m_stateTest = STATE_NULL;
+	m_iStepFinished = 0;
+}
+BOOL CGraphItemTest::AreYouOK()
+{
+	return GetCurrentTestState() == STATE_PASS;
+}
+BOOL CGraphItemTest::LoopAndDone( )
+{
+	unsigned short touchLen = 122;
+	unsigned char touchBuffer[84] = {0};
+	unsigned char iReCode = ERROR_CODE_OK;
+	ctp_report_parse report = ctp_report_parse( GetContainerInterface()->GetSubType( G_XMLConfig->IcType ), touchBuffer );
+	//static unsigned char lastMask = 0;
+    unsigned char chipFamily = GetContainerInterface()->GetChipFamily( G_XMLConfig->IcType );
+	DoInit( m_deviceNo );
+
+	m_bExitLoop = false;
+	iReCode = SM_ChipBase(m_deviceNo)->GetTouchPoint( touchBuffer, &touchLen );
+	//scap_rpt_data_t* report = (scap_rpt_data_t*)touchBuffer;
+	m_lastMask = (unsigned char)report.msk();
+
+	while( !m_bExitLoop ) 
+	{
+		if( !Tick() )
+		{ 
+			SetCurrentStatte( STATE_NG ); 
+			break; 
+		}
+		if( ERROR_CODE_OK !=  iReCode ) 
+		{ 
+			//trick
+			iReCode = SM_ChipBase(m_deviceNo)->IncokeCommand( CMD_CTP_RST );
+			SysDelay( 150 );
+            if (chipFamily == 5)
+            {
+                iReCode = SM_ChipBase(m_deviceNo)->IncokeCommand( 0x03, 0x07, 0x0 );//5816/1716
+                CHECK_RETURN_IF_FAIL( iReCode );
+                SysDelay( 10 );
+            }
+			iReCode = SM_ChipBase(m_deviceNo)->IncokeCommand( CMD_SWITCH_IIC );
+			CHECK_RETURN_IF_FAIL( iReCode );
+			SysDelay( 50 );
+			 
+			iReCode = SM_ChipBase(m_deviceNo)->IncokeCommand( 0x05,0x02,0x5c);
+			CHECK_RETURN_IF_FAIL( iReCode );             
+			SysDelay( 50 );
+
+			iReCode = SM_ChipBase(m_deviceNo)->SwitchMode( MODE_TOUCH, G_XMLConfig->sync_length );
+			if( !SM_ChipBase(m_deviceNo)->HaveTpLinked( 1 ) ) 
+			{
+				SetCurrentStatte( STATE_NG ); 
+				break;
+			}
+		}
+		iReCode = SM_ChipBase(m_deviceNo)->GetTouchPoint( touchBuffer, &touchLen );//按钮
+		if( ERROR_CODE_OK != iReCode )
+		{ 
+			SetCurrentStatte( STATE_NG );
+			break; 
+		}
+
+		//unsigned char chipFamily = GetContainerInterface()->GetChipFamily( G_XMLConfig->IcType );
+		if (chipFamily == 6)
+		{
+			static int t_num = 0;
+
+			if((touchBuffer[2]==0x64) && (touchBuffer[3]==0xc8) && (touchBuffer[6] == 0x00))
+			{	
+				t_num++;
+			}
+            if(t_num == 2)
+			{
+				touchBuffer[2] = 0xc8;
+				t_num = 0;
+			}
+		}
+		if( !touchLen )  continue;
+		//scap_rpt_data_t* report = (scap_rpt_data_t*)touchBuffer;
+		if(!report.valid()) continue;
+		if( !report.tcnt() && !m_lastMask )  continue;
+
+		//sm_pt_t* sp = report->pts;
+		for( int index = 0; index < MAX_NUM_POINT; index++ )
+		{
+			UINT32 uCombineResult = 0;
+			unsigned char ucPosition = 0x01 << index;
+			if( 0 == (m_lastMask & ucPosition) && (report.msk() & ucPosition) > 0 )
+			{
+				//event down
+				ResetData();
+				SetCurrentStatte( STATE_TESTING );
+
+				AddPoint( report.ID(index), report.X(index), report.Y(index) );
+			}
+			else if( (m_lastMask & ucPosition) > 0 && 0 == (report.msk() & ucPosition) )
+			{
+				//event up
+				bool bTestResult = false;
+				//if( STATE_NULL == pItemTest->GetCurrentTestState() ) continue;
+				bool bValide = StartCaculate( uCombineResult );
+				if( !bValide ) 
+				{
+					SetCurrentStatte( STATE_NG );	
+				}
+				else if( RESULT_PASS == ResultState( uCombineResult ) )
+				{
+					SetCurrentStatte( STATE_PASS );
+					
+					return AreYouOK();
+				}
+				//某些平台一直都没有按下事件 不Reset则会连线
+				else SetCurrentStatte(STATE_UPFTOUCH);
+
+				if( RESULT_NG == ResultState( uCombineResult ) )
+					return AreYouOK();
+				else if( STATE_NULL == GetCurrentTestState() )
+					continue;
+
+				break;
+			}
+			else if( (report.msk() & ucPosition) > 0 )
+			{
+				//event contact
+				AddPoint( report.ID(index), report.X(index), report.Y(index) );
+			}
+		}
+
+		m_lastMask = (unsigned char)report.msk();
+		GetTestWapperInterface()->GetCallBack().onTouchReport( m_deviceNo );
+	}
+
+	return AreYouOK();
+}
+
+
+
+ctp_report_parse::ctp_report_parse( unsigned short icSubType, unsigned char* buffer )
+	:subType(icSubType)
+	,bufferAddrCopy(buffer)
+{
+}
+ctp_report_parse::~ctp_report_parse()
+{
+}
+
+unsigned short ctp_report_parse:: msk()
+{
+	unsigned short temp = 0;
+	for (int index = 0; index < tcnt(); index++)
+		temp |= (unsigned short)(0x0001 << index);
+	return temp;
+}
+unsigned char ctp_report_parse:: tcnt()
+{
+	if(IC_TYPE_SCAP == subType)
+	{
+		if(bufferAddrCopy[2] > 0x0f) return 0;
+		return ((scap_rpt_data_t*)(bufferAddrCopy))->num;
+	}
+	else if(IC_TYPE_MCAP == subType)
+	{
+		if(bufferAddrCopy[1] > 0x0f) return 0;
+		return ((mcap_content_t*)(bufferAddrCopy))->num;
+	}
+	else //if(IC_TYPE_ROCKER == subType)
+	{
+		return 1;
+	}
+}
+bool ctp_report_parse:: valid()
+{
+	if(IC_TYPE_SCAP == subType)
+	{
+		return bufferAddrCopy[1] <= 0x02;
+	}
+	else if(IC_TYPE_MCAP == subType)
+	{
+        if(bufferAddrCopy[0] == 0xeb) //for 7126
+        {
+            return false;
+        }
+		return bufferAddrCopy[1] <= 0x0f;
+	}
+	else //if(IC_TYPE_ROCKER == subType)
+	{
+		return true;
+	}
+}
+unsigned short ctp_report_parse::X( int index )
+{
+	if(IC_TYPE_SCAP == subType)
+	{
+		//sm_pt_t* sp = ((scap_rpt_data_t*)(bufferAddrCopy))->pts;
+		//return ((sp[index].x_h & 0x3f) << 8) + sp[index].x_l;
+		unsigned short point_x = (unsigned short)(((bufferAddrCopy[3 + index * 6] & 0x3f) << 8) + bufferAddrCopy[4 + index * 6]);
+		return point_x;
+	}
+	else if(IC_TYPE_MCAP == subType)
+	{
+		unsigned char chipFamily = GetContainerInterface()->GetChipFamily( G_XMLConfig->IcType );
+		if (SEMI_IC_5562>>8 == chipFamily || SEMI_IC_570>>8 == chipFamily || SEMI_IC_7126>>8 == chipFamily)
+		{
+
+			if (0xf8 == bufferAddrCopy[0])
+			{
+				return(((bufferAddrCopy[3 + index * 6]) << 8) + bufferAddrCopy[2 + index * 6]);
+			}
+			else if (0xff == bufferAddrCopy[0])
+			{
+				return (((bufferAddrCopy[5 + index * 5] & 0x0f) << 8) + bufferAddrCopy[2 + index * 5]);
+			}
+			else
+			{
+				return(((bufferAddrCopy[3 + index * 6]) << 8) + bufferAddrCopy[2 + index * 6]);
+			}
+
+			//return(((bufferAddrCopy[3 + index * 6]) << 8) + bufferAddrCopy[2 + index * 6]);
+
+
+
+		}
+		else 
+		{
+            if (SEMI_IC_5816>>8 == chipFamily && (0xfd == bufferAddrCopy[0])) //key
+            {
+                return 40;
+            }
+			rpt_point_t* sp = ((mcap_content_t*)(bufferAddrCopy))->points;
+			return (sp[index].x_h4 << 8) + sp[index].x_l8;
+
+		}
+	}
+	else if(IC_TYPE_ROCKER == subType)
+	{
+		unsigned short point_x = (unsigned short)(((bufferAddrCopy[0]) << 8) + bufferAddrCopy[1]);
+		return point_x;
+	}
+	else //if(IC_TYPE_ROCKER_810 == subType)
+	{
+		unsigned short point_x = (unsigned short)(bufferAddrCopy[0] + (bufferAddrCopy[1] << 8));
+		return point_x;
+	}
+}
+unsigned short ctp_report_parse::Y( int index )
+{
+	if(IC_TYPE_SCAP == subType)
+	{
+		//sm_pt_t* sp = ((scap_rpt_data_t*)(bufferAddrCopy))->pts;
+		//return ((sp[index].y_h & 0x0f) << 8) + sp[index].y_l;
+		unsigned short point_y = (unsigned short)(((bufferAddrCopy[5 + index * 6] & 0x0f) << 8) + bufferAddrCopy[6 + index * 6]);
+		return point_y;
+	}
+	else if(IC_TYPE_MCAP == subType)
+	{
+		unsigned char chipFamily = GetContainerInterface()->GetChipFamily( G_XMLConfig->IcType );
+		if (SEMI_IC_5562>>8 == chipFamily || SEMI_IC_570>>8 == chipFamily || SEMI_IC_7126>>8 == chipFamily)
+		{
+			if (0xf8 == bufferAddrCopy[0])
+			{
+				return(((bufferAddrCopy[5 + index * 6] << 8)) + bufferAddrCopy[4 + index * 6]);
+			}
+			else if (0xff == bufferAddrCopy[0])
+			{
+				return (((bufferAddrCopy[5 + index * 5] & 0xf0) << 4) + bufferAddrCopy[3 + index * 5]);
+			}
+			else
+			{
+				return(((bufferAddrCopy[5 + index * 6] << 8)) + bufferAddrCopy[4 + index * 6]);
+			}
+
+			//return(((bufferAddrCopy[5 + index * 6] << 8)) + bufferAddrCopy[4 + index * 6]);
+
+		}
+		else 
+		{
+            if (SEMI_IC_5816>>8 == chipFamily && (0xfd == bufferAddrCopy[0])) //key
+            {
+                return 1000;
+            }
+			rpt_point_t* sp = ((mcap_content_t*)(bufferAddrCopy))->points;
+			return (sp[index].y_h4 << 8) + sp[index].y_l8;
+
+		}
+
+	}
+	else if(IC_TYPE_ROCKER == subType)
+	{
+		unsigned short point_y = (unsigned short)(((bufferAddrCopy[2]) << 8) + bufferAddrCopy[3]);
+		return point_y;
+	}
+	else //if(IC_TYPE_ROCKER_810 == subType)
+	{
+		unsigned short point_y = (unsigned short)(bufferAddrCopy[2] + (bufferAddrCopy[3]<< 8));
+		return point_y;
+	}
+}
+unsigned short ctp_report_parse::ID( int index )
+{
+	if(IC_TYPE_SCAP == subType)
+	{
+		//sm_pt_t* sp = ((scap_rpt_data_t*)(bufferAddrCopy))->pts;
+		//return ((sp[index].id & 0x0f)>>4);
+		auto point_id = (byte)((bufferAddrCopy[5 + index * 6] & 0xf0)>>4);
+
+		return point_id;
+	}
+	else if(IC_TYPE_MCAP == subType)
+	{
+		unsigned char chipFamily = GetContainerInterface()->GetChipFamily( G_XMLConfig->IcType );
+		if (SEMI_IC_5562>>8 == chipFamily || SEMI_IC_570>>8 == chipFamily || SEMI_IC_7126>>8 == chipFamily)
+		{
+			if (0xf8 == bufferAddrCopy[0])
+			{
+				return (bufferAddrCopy[7 + index * 6] & 0x0f);
+			} 
+			else if (0xff == bufferAddrCopy[0]) 
+			{
+				return (bufferAddrCopy[6 + index * 5] & 0x0f); 
+			}
+			else
+			{
+				return (bufferAddrCopy[7 + index * 6] & 0x0f);
+			}
+
+			//return (bufferAddrCopy[7 + index * 6] & 0x0f);
+
+		}
+		else 
+		{
+			rpt_point_t* sp = ((mcap_content_t*)(bufferAddrCopy))->points;
+			return sp[index].id;
+
+		}
+	}
+	else //if(IC_TYPE_ROCKER == subType)
+	{
+		return 0;
+	}
+}
+
+

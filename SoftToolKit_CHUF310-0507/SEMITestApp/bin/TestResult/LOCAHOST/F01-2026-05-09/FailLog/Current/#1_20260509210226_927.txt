@@ -1,0 +1,50 @@
+ChipSemi_Tester_V8.8.8_20260318
+WorkStation: F01   ProjectName: 0508
+
+Time Stamp:	2026-05-09 21:02:22 477
+Mtk Version = 0xd1103
+
+Time Stamp:	2026-05-09 21:02:22 969
+
+------------------------------Current Test------------------------------
+
+avdd_active = 1450(mA), avdd_sleep = 5884(uA), avdd_deep = 0(uA)
+
+vbus_active = 0(mA), vbus_sleep = 0(uA), vbus_deep = 0(uA)
+
+sleep(5884) > setting max(30)
+
+
+//Current Test is Fail
+
+------------------------------Current Test------------------------------
+
+avdd_active = 1450(mA), avdd_sleep = 5885(uA), avdd_deep = 0(uA)
+
+vbus_active = 0(mA), vbus_sleep = 0(uA), vbus_deep = 0(uA)
+
+sleep(5885) > setting max(30)
+
+
+//Current Test is Fail
+
+------------------------------Current Test------------------------------
+
+avdd_active = 1450(mA), avdd_sleep = 5885(uA), avdd_deep = 0(uA)
+
+vbus_active = 0(mA), vbus_sleep = 0(uA), vbus_deep = 0(uA)
+
+sleep(5885) > setting max(30)
+
+
+//Current Test is Fail
+
+Time Stamp:	2026-05-09 21:02:26 654
+
+------------------------------Project Test------------------------------
+
+
+//Project Test is Pass
+
+
+//Final result is NG

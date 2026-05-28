@@ -1,0 +1,125 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:viewModel="clr-namespace:SEMIDevelopKit.Src.WinSub"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+			<RowDefinition Height="665"></RowDefinition>
+        </Grid.RowDefinitions>
+		
+		<GroupBox Header="2.1：Function" Grid.Row="1">
+            <UniformGrid Rows="17">
+				<UniformGrid Columns="16">
+				<Label Content="cdsp func"  HorizontalAlignment="Right" Margin="5"></Label>
+			    <CheckBox Content="mul"  Tag="1" viewModel:TuningItem.ItemName="funcCfg0"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+                <CheckBox Content="mslt" Tag="2" viewModel:TuningItem.ItemName="funcCfg0"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+                <CheckBox Content="mslr" Tag="3" viewModel:TuningItem.ItemName="funcCfg0"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content=""  HorizontalAlignment="Right" Margin="5"></Label>
+				<CheckBox Content="noise"  Tag="6" viewModel:TuningItem.ItemName="funcCfg0"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+                <CheckBox Content="slt"  Tag="4" viewModel:TuningItem.ItemName="funcCfg0"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+                <CheckBox Content="slr"  Tag="5" viewModel:TuningItem.ItemName="funcCfg0"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="base"  HorizontalAlignment="Right" Margin="5"></Label>
+			    <CheckBox Content="upgrade en"  Tag="7" viewModel:TuningItem.ItemName="funcCfg0"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="rolling noise"  HorizontalAlignment="Right" Margin="5"></Label>
+                <CheckBox Content="mul" Tag="8" viewModel:TuningItem.ItemName="funcCfg0"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+                <CheckBox Content="mslt" Tag="9" viewModel:TuningItem.ItemName="funcCfg0"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+                <CheckBox Content="mslr"  Tag="10" viewModel:TuningItem.ItemName="funcCfg0"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				<CheckBox Content="display"  Tag="14" viewModel:TuningItem.ItemName="funcCfg0"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="idle mode"  HorizontalAlignment="Right" Margin="5"></Label>
+			    <CheckBox Content="mul"  Tag="11" viewModel:TuningItem.ItemName="funcCfg0"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+                <CheckBox Content="mslt" Tag="12" viewModel:TuningItem.ItemName="funcCfg0"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+                <CheckBox Content="mslr" Tag="13" viewModel:TuningItem.ItemName="funcCfg0"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="filter"  HorizontalAlignment="Right" Margin="5"></Label>
+			    <CheckBox Content="kalm"  Tag="16" viewModel:TuningItem.ItemName="funcCfg0"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+                <CheckBox Content="jitter" Tag="17" viewModel:TuningItem.ItemName="funcCfg0"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+                <CheckBox Content="jitter edge" Tag="18" viewModel:TuningItem.ItemName="funcCfg0"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content=""  HorizontalAlignment="Right" Margin="5"></Label>
+				<CheckBox Content="water"  Tag="21" viewModel:TuningItem.ItemName="funcCfg0"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+                <CheckBox Content="smooth"  Tag="19" viewModel:TuningItem.ItemName="funcCfg0"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				<CheckBox Content="smooth edge"  Tag="20" viewModel:TuningItem.ItemName="funcCfg0"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="palm"  HorizontalAlignment="Right" Margin="5"></Label>
+			    <CheckBox Content="palm"  Tag="22" viewModel:TuningItem.ItemName="funcCfg0"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+                <CheckBox Content="palm reject" Tag="23" viewModel:TuningItem.ItemName="funcCfg0"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="mis func"  HorizontalAlignment="Right" Margin="5"></Label>
+			    <CheckBox Content="xy switch"  Tag="24" viewModel:TuningItem.ItemName="funcCfg0"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+                <CheckBox Content="waterdrop" Tag="25" viewModel:TuningItem.ItemName="funcCfg0"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+                <CheckBox Content="int high" Tag="26" viewModel:TuningItem.ItemName="funcCfg0"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="noise"  HorizontalAlignment="Right" Margin="5"></Label>
+			    <CheckBox Content="large noise"  Tag="27" viewModel:TuningItem.ItemName="funcCfg0"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+                <CheckBox Content="diff" Tag="28" viewModel:TuningItem.ItemName="funcCfg0"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				<CheckBox Content="raw" Tag="30" viewModel:TuningItem.ItemName="funcCfg0"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="hovering"  HorizontalAlignment="Right" Margin="5"></Label>
+			    <CheckBox Content="reinf finger"  Tag="0" viewModel:TuningItem.ItemName="funcCfg1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+                <CheckBox Content="reinf merge" Tag="1" viewModel:TuningItem.ItemName="funcCfg1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="handside"  HorizontalAlignment="Right" Margin="5"></Label>
+			    <CheckBox Content="hand"  Tag="2" viewModel:TuningItem.ItemName="funcCfg1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+                <CheckBox Content="edge finger" Tag="3" viewModel:TuningItem.ItemName="funcCfg1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="algorithm"  HorizontalAlignment="Right" Margin="5"></Label>
+					<CheckBox Content="abandon self"  Tag="4" viewModel:TuningItem.ItemName="funcCfg1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+					<CheckBox Content="high rpt" Tag="5" viewModel:TuningItem.ItemName="funcCfg1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+					<CheckBox Content="rpt optimize" Tag="16" viewModel:TuningItem.ItemName="funcCfg1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="mcu 96M"  HorizontalAlignment="Right" Margin="5"></Label>
+                <CheckBox Content="96M EN" Tag="29" viewModel:TuningItem.ItemName="funcCfg0"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>
+				
+				<UniformGrid Columns="16">
+				<Label Content="Tx Drv1"  HorizontalAlignment="Right" Margin="5"></Label>
+                <CheckBox Content="LDO25(bypass AVDD)"    Tag="17" viewModel:TuningItem.ItemName="funcCfg1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				<CheckBox Content="LDO25(nobypass AVDD)"  Tag="18" viewModel:TuningItem.ItemName="funcCfg1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				<CheckBox Content="3v"    		          Tag="19" viewModel:TuningItem.ItemName="funcCfg1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				<CheckBox Content="5v"                    Tag="20" viewModel:TuningItem.ItemName="funcCfg1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				<CheckBox Content="±vol"                  Tag="21" viewModel:TuningItem.ItemName="funcCfg1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>
+
+				<UniformGrid Columns="16">
+				<Label Content="Tx Drv2"  HorizontalAlignment="Right" Margin="5"></Label>
+                <CheckBox Content="DCDC_PWM"              Tag="22" viewModel:TuningItem.ItemName="funcCfg1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				<CheckBox Content="DCOC_MUL_EN"           Tag="23" viewModel:TuningItem.ItemName="funcCfg1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				<CheckBox Content="DCOC_SELF_EN"          Tag="24" viewModel:TuningItem.ItemName="funcCfg1"  HorizontalAlignment="Left" Margin="5" ></CheckBox>
+				</UniformGrid>
+			</UniformGrid>
+        </GroupBox>
+    </Grid>
+</UserControl>

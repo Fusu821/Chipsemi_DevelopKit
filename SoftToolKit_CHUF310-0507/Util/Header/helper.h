@@ -1,0 +1,3556 @@
+#ifndef __UTIL_HELPER__
+#define __UTIL_HELPER__
+#include "Macro.h"
+#include "NativeTestInterface.h"
+#include <vector>
+#include <cmath>
+#include <cstdint>
+#include <string>
+/**************************************************************************************/
+#ifndef _MSC_VER
+struct SYSTEMTIME
+{
+	unsigned short wYear;
+	unsigned short wMonth;
+    unsigned short wDay;
+    unsigned short wHour;
+    unsigned short wMinute;
+    unsigned short wSecond;
+    unsigned short wMilliseconds;
+};
+
+void GetLocalTime(SYSTEMTIME* time);
+unsigned long GetTickCount();
+void Sleep(unsigned int ms);
+#endif 
+class LoopTicker
+{
+public:
+	LoopTicker(int maxTick);
+	virtual ~LoopTicker();
+
+	bool TickOnce();
+
+	bool CheckTickAndMark( unsigned int& iResult );
+
+	int TimeLeft();
+
+private:
+	int m_tickTime;
+};
+
+struct AnalyzeInfo
+{
+	int  iRowNum;
+	int  iColNum;
+	int  keyNum;
+	bool bIncludeKey;
+	bool bAbsCompare;
+	AnalyzeInfo( int row, int col, int key = 0, bool bIncludeKey = false, bool absCompare = false ):iRowNum(row),iColNum(col),keyNum(key),bIncludeKey(bIncludeKey),bAbsCompare(absCompare){}
+};
+struct StcInfo
+{
+	int iMaxVal;
+	int iMinVal;
+	int iTotalVal;
+	int iCount;
+	StcInfo()
+	{ 
+		iMaxVal = -100000;
+		iMinVal = +100000;
+		iTotalVal = 0; 
+		iCount = 0;
+	}
+	void AddToStatistic( int Value )
+	{
+		iMaxVal = max( iMaxVal, Value );
+		iMinVal = min( iMinVal, Value );
+		iTotalVal += Value;
+		++iCount;
+	}
+};
+struct NodeVal 
+{
+	int iRow;
+	int iCol; 
+	double Value;
+	double compareValue;
+	unsigned char errorType;
+
+	enum { NODE_SMALLER = 1, NODE_GRATER = 2, NODE_NODE33 = 3, NODE_NODE55 = 4,NODE_ALL = 5,};
+
+	NodeVal* Next;
+	NodeVal( int row, int col, double val, unsigned char type, double compare )
+		:iRow( row )
+		,iCol( col )
+		,Value( val )
+		,compareValue( compare )
+		,errorType( type )
+ 		,Next( NULL )
+	{
+	}
+	NodeVal()
+		:iRow( 0 )
+		,iCol( 0 )
+		,Value( 0 )
+		,compareValue( 0 )
+		,errorType(0)
+		,Next( NULL )
+	{
+
+	}
+	virtual ~NodeVal(){ Release(); }
+	void AddNext( NodeVal* node )
+	{
+		NodeVal* nodePrev = this;
+		while( nodePrev->Next ) nodePrev = nodePrev->Next;  
+		nodePrev->Next = node;
+	}
+	void Release()
+	{
+		for ( NodeVal* nodeNext = Next; nodeNext != NULL;  )
+		{
+			NodeVal* temp = nodeNext->Next;
+			nodeNext->Next = NULL;
+			delete nodeNext;
+			nodeNext = temp;
+		}
+		Next = NULL;
+		//delete this;
+	}
+	bool Empty() { return NULL == Next; }
+};
+
+// template<class T>
+// void ReShappingData( T (&dataMappinged)[MAX_MCAP_ROW][MAX_MCAP_COL], T* dataToShapping, unsigned int dataCnt, unsigned short maxRows, unsigned short maxCols )
+// {
+// 	memset( dataMappinged, 0, sizeof(dataMappinged) );
+// 
+// 	for( int iRow = 0; iRow < maxRows; iRow++ )
+// 	{
+// 		for( int iCol = 0; iCol < maxCols; iCol++ )
+// 		{
+// 			int index = (int)iRow * maxCols + iCol;
+// 			if( index >= (int)dataCnt )   continue;
+// 
+// 			dataMappinged[iRow][iCol] = dataToShapping[index];
+// 		}
+// 	}
+// }
+
+template<class T, const int M, const int N>
+void GenVerticalUniformity( T (&data)[M][N], T (&dataUniformity)[M][N], unsigned short maxRows, unsigned short maxCols )
+{
+	memset( dataUniformity, 0, sizeof(dataUniformity) );
+
+	for( int iCol = 1; iCol < maxCols; iCol++ )
+	{
+		for( int iRow = 0; iRow < maxRows; iRow++ )
+		{
+			double maxCell = max(data[iRow][iCol], data[iRow][iCol - 1]) + 0.000001;
+			dataUniformity[iRow][iCol] = (T)abs((data[iRow][iCol] - data[iRow][iCol - 1]) * 100 / maxCell);
+		}
+	}
+}
+
+template<class T, const int M, const int N>
+void GenHorizontalUniformity( T (&data)[M][N], T (&dataUniformity)[M][N], unsigned short maxRows, unsigned short maxCols )
+{
+	memset( dataUniformity, 0, sizeof(dataUniformity) );
+
+	for( int iRow = 1; iRow < maxRows; iRow++ )
+	{
+		for( int iCol = 0; iCol < maxCols; iCol++ )
+		{
+			double maxCell = max(data[iRow][iCol], data[iRow - 1][iCol]) + 0.000001;
+			dataUniformity[iRow][iCol] = (T)abs((data[iRow][iCol] - data[iRow - 1][iCol]) * 100 / maxCell);
+		}
+	}
+}
+
+template<class T, const int M, const int N>
+void GenHorizontalConvolution( T (&data)[M][N], T (&dataUniformity)[M][N], unsigned short maxRows, unsigned short maxCols, int covLen )
+{
+	memset( dataUniformity, 0, sizeof(dataUniformity) );
+
+	for( int iRow = 1; iRow < maxRows; iRow++ )
+	{
+		for( int iCol = 0; iCol < maxCols; iCol++ )
+		{
+			int sum = 0, covNum = 0;
+			for( int iBias = -(covLen >> 1); iBias < (covLen >> 1); iBias++ )
+			{
+				if((iCol + iBias) >= 0 && (iCol + iBias) <= (maxCols - 1))
+				{
+					sum += data[iRow][iCol + iBias];
+					covNum++;
+				}
+			}
+			dataUniformity[iRow][iCol] = (T)sum / covNum;
+		}
+	}
+}
+
+template<class T, const int M, const int N>
+void GenVerticalConvolution( T (&data)[M][N], T (&dataUniformity)[M][N], unsigned short maxRows, unsigned short maxCols, int covLen )
+{
+	memset( dataUniformity, 0, sizeof(dataUniformity) );
+
+	for( int iCol = 1; iCol < maxCols; iCol++ )
+	{
+		for( int iRow = 0; iRow < maxRows; iRow++ )
+		{
+			int sum = 0, covNum = 0;
+			for( int iBias = -(covLen >> 1); iBias < (covLen >> 1); iBias++ )
+			{
+				if((iRow + iBias) >= 0 && (iRow + iBias) <= (maxRows - 1))
+				{
+					sum += data[iRow + iBias][iCol];
+					covNum++;
+				}
+			}
+			dataUniformity[iRow][iCol] = (T)sum / covNum;
+		}
+	}
+}
+
+template<class T, const int M, const int N>
+void ReShappingData( T (&dataMappinged)[M][N], T* dataToShapping, unsigned int dataCnt, unsigned short maxRows, unsigned short maxCols )
+{
+	memset( dataMappinged, 0, sizeof(dataMappinged) );
+
+	for( int iRow = 0; iRow < maxRows; iRow++ )
+	{
+		for( int iCol = 0; iCol < maxCols; iCol++ )
+		{
+			int index = (int)iRow * maxCols + iCol;
+			if( index >= (int)dataCnt )   continue;
+
+			dataMappinged[iRow][iCol] = dataToShapping[index];
+		}
+	}
+}
+
+template<class T, const int M, const int N>
+void ReShappingData( T (&dataMappinged)[M][N], T* dataToShapping, unsigned int dataCnt, unsigned short maxRows, unsigned short* pCols )
+{
+	int index = 0;
+	memset( dataMappinged, 0, sizeof(dataMappinged) );
+
+	for( int iRow = 0; iRow < maxRows; iRow++ )
+	{
+		for( int iCol = 0; iCol < (int)pCols[iRow]; iCol++ )
+		{
+			if( index >= (int)dataCnt )   continue;
+
+			dataMappinged[iRow][iCol] = dataToShapping[index];
+
+			index += 1;
+		}
+	}
+}
+
+template<class T, const int M, const int N>
+void ConvertShappingData(  T* dataToShapping, T (&dataMappinged)[M][N],unsigned int dataCnt, unsigned short maxRows, unsigned short maxCols )
+{
+	memset( dataToShapping, 0, sizeof(maxRows * maxCols) );
+
+	for( int iRow = 0; iRow < maxRows; iRow++ )
+	{
+		for( int iCol = 0; iCol < maxCols; iCol++ )
+		{
+			int index = (int)iRow * maxCols + iCol;
+			if( index >= (int)dataCnt )   continue;
+
+			dataToShapping[index] = dataMappinged[iRow][iCol];
+		}
+	}
+}
+
+template<class T, const int M, const int N>
+void NormalizationData( T (&dataMappinged)[M][N], unsigned short maxRows, unsigned short* pCols )
+{
+	for( int iRow = 0; iRow < maxRows; iRow++ )
+	{
+		int iAvg = 0, iMax = -10000, iFits = 0;
+		for( int iCol = 0; iCol < (int)pCols[iRow]; iCol++ )
+		{
+			iMax = max(dataMappinged[iRow][iCol], iMax);
+		}
+		for( int iCol = 0; iCol < (int)pCols[iRow]; iCol++ )
+		{
+			if( dataMappinged[iRow][iCol] >= (iMax >> 1) )
+			{
+				iAvg += dataMappinged[iRow][iCol];
+				iFits++;
+			}
+		}
+		if( iFits > 0 )
+		{
+			iAvg /= iFits;
+		}
+		for( int iCol = 0; iCol < (int)pCols[iRow]; iCol++ )
+		{
+			dataMappinged[iRow][iCol] -= iAvg;
+		}
+	}
+}
+
+template<const int M, const int N>
+void CopyAndInvalid( unsigned char (&invalidCopy)[M][N], const unsigned char (&invalid)[M][N], int invalidRow = M, int invalidCol = N )
+{
+	memcpy_s( invalidCopy, sizeof(invalidCopy), invalid, sizeof(invalid) );
+
+	if( (invalidRow >= 0) && (invalidRow < M) )
+	{
+		for( int iCol = 0; iCol < N; iCol++ )
+		{
+			invalidCopy[invalidRow][iCol] = NODE_INVALID_TYPE;
+			for( int iRow = 1; iRow < M - 1; iRow++ )
+			{
+				if(NODE_INVALID_TYPE == invalid[iRow][iCol])
+				{
+					invalidCopy[iRow - 1][iCol] = NODE_INVALID_TYPE;
+					invalidCopy[iRow + 1][iCol] = NODE_INVALID_TYPE;
+				}
+			}
+			if(NODE_INVALID_TYPE == invalid[0][iCol])
+			{
+				invalidCopy[0 + 1][iCol] = NODE_INVALID_TYPE;
+			}
+		}
+	}
+	if( (invalidCol >= 0) && (invalidCol < N) )
+	{
+		for( int iRow = 0; iRow < M; iRow++ )
+		{
+			invalidCopy[iRow][invalidCol] = NODE_INVALID_TYPE;
+			for( int iCol = 1; iCol < N - 1; iCol++ )
+			{
+				if(NODE_INVALID_TYPE == invalid[iRow][iCol])
+				{
+					invalidCopy[iRow][iCol - 1] = NODE_INVALID_TYPE;
+					invalidCopy[iRow][iCol + 1] = NODE_INVALID_TYPE;
+				}
+			}
+			if(NODE_INVALID_TYPE == invalid[iRow][0])
+			{
+				invalidCopy[iRow][0 + 1] = NODE_INVALID_TYPE;
+			}
+		}
+	}
+}
+
+int PrintNodeValue( IN ColorText& text, NodeVal* nodeList,  LPCTSTR strHeader = NULL, int iPrecision = 0 );
+int PrintBaseNodeValue( IN ColorText& text, NodeVal* nodeList,  LPCTSTR strHeader = NULL, int iPrecision = 0 );
+int JudgeNodeOutRangeAgain( IN ColorText& text, NodeVal* nodeList, LPCTSTR strHeader, unsigned short RanksNum, unsigned short MaxNum, unsigned short OverrunRatio );
+
+template<class T>
+static T Sum( const T* begin, int cnt )
+{
+	T temp = 0;
+	for( int index = 0; index < cnt; index++ )
+	{
+		temp += *begin;
+		++begin;
+	}
+	return temp;
+}
+
+template<class T>
+static int FindSmaller( const T* begin, int cnt, T compared, bool abscmp = false )
+{
+	int findIndex = -1;
+	for( int index = 0; index < cnt; index++ )
+	{
+		int source = abscmp ? abs( begin[index] ) : begin[index];
+
+		if( source < compared )
+		{
+			findIndex = index;
+			break;
+		}
+	}
+
+	return findIndex;
+}
+
+template<class T, const int M, const int N>
+double GetHarfScreenSortingMean( T (&dataCopy)[M][N], unsigned char* pRows, int RowsCnt, int cols )
+{
+	double uDeltaHarfMean = 0;
+	std::list<short> listHarf; 
+	int iDrops = (cols * RowsCnt >= 12) ? 4 : ((cols * RowsCnt >= 6) ? 2 : 1);
+
+	for( int iRow = 0; iRow < RowsCnt; iRow++ )
+	{
+		int RealRow = pRows[iRow];
+		for( int iCol = 0; iCol < cols; iCol++ )
+		{
+			listHarf.push_back( dataCopy[RealRow][iCol] );
+		}
+	}
+	listHarf.sort();
+
+	for( int index = 0; index < iDrops; index++ )
+	{
+		listHarf.pop_front();
+		listHarf.pop_back();
+	}
+
+	for( std::list<short>::iterator it = listHarf.begin(); it != listHarf.end(); it++ )
+		uDeltaHarfMean += *it;
+
+	uDeltaHarfMean /= (int)listHarf.size();
+
+	return uDeltaHarfMean;
+}
+
+template<class T>
+static int FindGreater( const T* begin, int cnt, T compared, bool abscmp = false )
+{
+	int findIndex = -1;
+	for( int index = 0; index < cnt; index++ )
+	{
+		int source = abscmp ? abs( begin[index] ) : begin[index];
+
+		if( source > compared )
+		{
+			findIndex = index;
+			break;
+		}
+	}
+
+	return findIndex;
+}
+
+template<class T, class K, const int M, const int N>
+static void FillMatrixUseValue( T (&data)[M][N],  K *input, int rows, int cols )
+{
+	for( int iRow = 0; iRow < rows; iRow++ )
+	{
+		for( int iCol = 0; iCol < cols; iCol++ )
+		{
+			data[iRow][iCol] = input[iRow * cols + iCol];
+		}
+	}
+}
+
+
+
+template<class T, const int M, const int N>
+static void FillMatrixUseValue( T (&data)[M][N], T val )
+{
+	for( int iRow = 0; iRow < M; iRow++ )
+	{
+		for( int iCol = 0; iCol < N; iCol++ )
+		{
+			data[iRow][iCol] = (T)val;
+		}
+	}
+}
+
+template<class T, const int M, const int N>
+static void FillMatrixUseValue( T (&data)[M][N], T val1, T val2 )
+{
+    int iRow = 0;
+
+    for( int iCol = 0; iCol < N; iCol++ )
+    {
+        data[iRow][iCol] = (T)val1;
+    }
+
+    iRow ++;
+    if(iRow < M)
+    {
+        for( int iCol = 0; iCol < N; iCol++ )
+        {
+            data[iRow][iCol] = (T)val2;
+        }
+    }
+}
+
+template<class T,class U, const int M, const int N>
+static void FillMatrixUseRatio( T (&data)[M][N], const T (&src)[M][N], U val )
+{
+	for( int iRow = 0; iRow < M; iRow++ )
+	{
+		for( int iCol = 0; iCol < N; iCol++ )
+		{
+			data[iRow][iCol] = (T)(((U)src[iRow][iCol])*val);
+		}
+	}
+}
+
+template<class T, const int M, const int N>
+static void FillMatrixRowUseValue( T (&data)[M][N], T val, int row )
+{
+	for( int iCol = 0; iCol < N; iCol++ )
+	{
+		data[row][iCol] = (T)val;
+	}
+}
+
+template<class T, const int M, const int N>
+static void FillMatrixColUseValue( T (&data)[M][N], T val, int col )
+{
+	for( int iRow = 0; iRow < M; iRow++ )
+	{
+		data[iRow][col] = (T)val;
+	}
+}
+
+template<class T, class P, const int M>
+static void ArrayAddtion( T (&dataOut)[M], P (&dataIn)[M], int cnt )
+{
+	for( int index = 0; index < cnt; index++ )
+		dataOut[index] += dataIn[index];
+}
+
+template<class T, class P, const int M>
+static void ArraySubstract( T (&dataOut)[M], P (&dataIn)[M], int cnt )
+{
+	for( int index = 0; index < cnt; index++ )
+		dataOut[index] -= dataIn[index];
+}
+
+template<class T, class P, const int M>
+static void ArrayAverage( T (&dataOut)[M], P (&dataIn)[M], int cnt, int div )
+{
+	for( int index = 0; index < cnt; index++ )
+		dataOut[index] = dataIn[index] / div;
+}
+
+// template<class T, class K, const int M, const int N>
+// static void FillArrayUseValue( T (&data)[M][MAX_MCAP_COL],  K (&input)[MAX_MCAP_CHANNEL], int rows, int cols )
+// {
+// 	for( int iRow = 0; iRow < rows; iRow++ )
+// 	{
+// 		for( int iCol = 0; iCol < cols; iCol++ )
+// 		{
+// 			data[iRow][iCol] = input[iRow * cols + iCol];
+// 		}
+// 	}
+// }
+
+
+
+// template<class T>
+// static void FillArrayUseValue( T (&data)[MAX_MCAP_ROW][MAX_MCAP_COL], T val )
+// {
+// 	for( int iRow = 0; iRow < MAX_MCAP_ROW; iRow++ )
+// 	{
+// 		for( int iCol = 0; iCol < MAX_MCAP_COL; iCol++ )
+// 		{
+// 			data[iRow][iCol] = (T)val;
+// 		}
+// 	}
+// }
+
+template<class T, const int M, const int N>
+static void PrintMaxtrixValue( IN ColorText& text,  IN const T (&dataAnalyzed)[M][N], IN const unsigned char (&invalid)[M][N], IN const AnalyzeInfo& addInfo, LPCTSTR strHeader = NULL )
+{
+	string strBuffer = "";
+	TCHAR strTemp[50];
+	if( strHeader ) strBuffer = strBuffer + strHeader;
+	for ( int iTx = 0; iTx < addInfo.iRowNum + ( addInfo.bIncludeKey  ? 1 : 0 ); ++iTx )
+	{
+		//transformat( strTemp, _T("R-%02d:	"), iTx + 1 );
+		//strBuffer += strTemp;
+		int Cols = ( iTx == addInfo.iRowNum ) ? addInfo.keyNum : addInfo.iColNum;
+		for ( int iRx = 0; iRx < Cols; ++iRx )
+		{
+			if( NODE_AST_TYPE == invalid[iTx][iRx] )
+			{
+				transformat( strTemp, _T("%5s	"), _T("*") );
+				strBuffer += strTemp;
+				continue;
+			}
+			if( (NODE_INVALID_TYPE == invalid[iTx][iRx])
+				|| (!addInfo.bIncludeKey && (NODE_KEY_TYPE == invalid[iTx][iRx])) )  
+			{
+				transformat( strTemp, _T("%5s	"),_T("/") );
+				strBuffer += strTemp;
+				continue;
+			}
+
+			transformat( strTemp, _T("%5d	"), dataAnalyzed[iTx][iRx] );
+			strBuffer += strTemp;
+		}
+		strBuffer += _T("\r\n");
+	}
+
+	text += strBuffer;
+}
+
+template<class T, const int M, const int N>
+static void PrintMaxtrixValueJudge( IN ColorText& text,  IN const T (&dataAnalyzed)[M][N], IN const unsigned char (&invalid)[M][N], IN const AnalyzeInfo& addInfo, bool isCsv= false, LPCTSTR strHeader = NULL )
+{
+    string strBuffer = "";
+    TCHAR strTemp[50];
+
+    const TCHAR* fmtSym = isCsv ? _T("%5s,") : _T("%5s	");
+    const TCHAR* fmtDat = isCsv ? _T("%5d,") : _T("%5d	");
+
+    if( strHeader ) strBuffer = strBuffer + strHeader;
+    for ( int iTx = 0; iTx < addInfo.iRowNum + ( addInfo.bIncludeKey  ? 1 : 0 ); ++iTx )
+    {
+        //transformat( strTemp, _T("R-%02d:	"), iTx + 1 );
+        //strBuffer += strTemp;
+        int Cols = ( iTx == addInfo.iRowNum ) ? addInfo.keyNum : addInfo.iColNum;
+        for ( int iRx = 0; iRx < Cols; ++iRx )
+        {
+            if( NODE_AST_TYPE == invalid[iTx][iRx] )
+            {
+                //transformat( strTemp, _T("%5s	"), _T("*") );
+                transformat( strTemp, fmtSym, _T("*") );
+                strBuffer += strTemp;
+                continue;
+            }
+            if( (NODE_INVALID_TYPE == invalid[iTx][iRx])
+                || (!addInfo.bIncludeKey && (NODE_KEY_TYPE == invalid[iTx][iRx])) )  
+            {
+                //transformat( strTemp, _T("%5s	"),_T("/") );
+                transformat( strTemp, fmtSym,_T("/") );
+                strBuffer += strTemp;
+                continue;
+            }
+
+            //transformat( strTemp, _T("%5d	"), dataAnalyzed[iTx][iRx] );
+            transformat( strTemp, fmtDat, dataAnalyzed[iTx][iRx] );
+            strBuffer += strTemp;
+        }
+        strBuffer += _T("\r\n");
+    }
+
+    text += strBuffer;
+}
+
+template<class T, const int M, const int N>
+static void PrintScapData( IN ColorText& text,  IN const T (&dataAnalyzed)[M][N], IN const unsigned char (&invalid)[M][N], IN const AnalyzeInfo& addInfo,IN bool bNoShow = false )
+{
+	TCHAR strTemp[50];
+	string strBuffer, strHeadRow;
+
+	transformat( strTemp, _T("%-5s	"), "");
+	strHeadRow += strTemp;
+	for(int iCol = 0; iCol < max(addInfo.iRowNum, addInfo.iColNum); iCol++)
+	{
+		transformat( strTemp, _T("Col%02d%-2s	"), iCol, "");
+		strHeadRow += strTemp;
+	}
+	if( bNoShow ) text += (strHeadRow + _T("\r\n"));
+
+	transformat( strTemp, _T("%-5s	"), "Tx:" );
+	strBuffer = strTemp;
+	for ( int iTx = 0; iTx < addInfo.iColNum; ++iTx )
+	{
+		if( (NODE_INVALID_TYPE == invalid[addInfo.iRowNum + 0][iTx]) )  
+		{
+			transformat( strTemp, "%5s	",_T("/") );
+			strBuffer += strTemp;
+			continue;
+		}
+
+		transformat( strTemp, _T("%5d	"), dataAnalyzed[0][iTx] );
+	
+		strBuffer += strTemp;
+		
+	}
+	strBuffer += _T("\r\n");
+	transformat( strTemp, _T("%-5s	"), "Rx:" );
+	strBuffer += strTemp;
+	for ( int iRx = 0; iRx < addInfo.iRowNum; ++iRx )
+	{
+		
+		if( (NODE_INVALID_TYPE == invalid[addInfo.iRowNum + 1][iRx]) )  
+		{
+			transformat( strTemp, "%5s	",_T("/") );
+			strBuffer += strTemp;
+			continue;
+		}
+
+		transformat( strTemp, _T("%5d	"), dataAnalyzed[1][iRx] );
+
+		
+		strBuffer += strTemp;
+		
+	}
+
+	strBuffer += _T("\r\n");
+	if( !strBuffer.empty() ) text += strBuffer;
+}
+
+template<class T, const int M, const int N>
+static void PrintScapDataJudge( IN ColorText& text,  IN const T (&dataAnalyzed)[M][N], IN const unsigned char (&invalid)[M][N], IN const AnalyzeInfo& addInfo, IN bool isCsv, IN bool bNoShow = false )
+{
+    TCHAR strTemp[50];
+    string strBuffer, strHeadRow;
+    const TCHAR* separator = isCsv ? _T(",") : _T("");
+    const TCHAR* fmtSt = isCsv ? _T("	%s") : _T("%-5s	");
+    const TCHAR* fmtCol = isCsv ? _T("Col%02d%s") : _T("Col%02d%-2s	");
+    const TCHAR* fmtTRx = isCsv ? _T("%s,") : _T("%-5s	");
+    const TCHAR* fmtSym = isCsv ? _T("%5s,") : _T("%5s	");
+    const TCHAR* fmtDat = isCsv ? _T("%5d,") : _T("%5d	");
+
+    //transformat( strTemp, _T("%-5s	"), "");
+    transformat( strTemp, fmtSt, separator);
+    strHeadRow += strTemp;
+    for(int iCol = 0; iCol < max(addInfo.iRowNum, addInfo.iColNum); iCol++)
+    {
+        //transformat( strTemp, _T("Col%02d%-2s	"), iCol, "");
+        transformat( strTemp, fmtCol, iCol, separator);
+        strHeadRow += strTemp;
+    }
+    if( bNoShow ) text += (strHeadRow + _T("\r\n"));
+
+    //transformat( strTemp, _T("%-5s	"), "Tx:" );
+    transformat( strTemp, fmtTRx, "Tx:" );
+    strBuffer = strTemp;
+    for ( int iTx = 0; iTx < addInfo.iColNum; ++iTx )
+    {
+        if( (NODE_INVALID_TYPE == invalid[addInfo.iRowNum + 0][iTx]) )  
+        {
+            //transformat( strTemp, "%5s	",_T("/") );
+            transformat( strTemp, fmtSym, _T("/") );
+            strBuffer += strTemp;
+            continue;
+        }
+
+        //transformat( strTemp, _T("%5d	"), dataAnalyzed[0][iTx] );
+        transformat( strTemp, fmtDat, dataAnalyzed[0][iTx] );
+
+        strBuffer += strTemp;
+
+    }
+    strBuffer += _T("\r\n");
+    //transformat( strTemp, _T("%-5s	"), "Rx:" );
+    transformat( strTemp, fmtTRx, "Rx:" );
+    strBuffer += strTemp;
+    for ( int iRx = 0; iRx < addInfo.iRowNum; ++iRx )
+    {
+
+        if( (NODE_INVALID_TYPE == invalid[addInfo.iRowNum + 1][iRx]) )  
+        {
+            //transformat( strTemp, "%5s	",_T("/") );
+            transformat( strTemp, fmtSym,_T("/") );
+            strBuffer += strTemp;
+            continue;
+        }
+
+        //transformat( strTemp, _T("%5d	"), dataAnalyzed[1][iRx] );
+        transformat( strTemp, fmtDat, dataAnalyzed[1][iRx] );
+
+        strBuffer += strTemp;
+
+    }
+
+	strBuffer += _T("\r\n");
+	if( !strBuffer.empty() ) text += strBuffer;
+}
+
+template<class T, const int M, const int N>
+static void PrintMaxtrixValue( IN ColorText& text,  IN const T (&dataAnalyzed)[M][N], IN const unsigned char (&invalid)[M][N], IN const AnalyzeInfo& addInfo,IN bool bNoShow = false )
+{
+	string strBuffer, strHeadRow;
+	TCHAR strTemp[50];
+
+	transformat( strTemp, _T("%-5s	"), "");
+	strHeadRow = strTemp;
+	for(int iCol = 0; iCol < addInfo.iColNum; iCol++)
+	{
+		transformat( strTemp, _T("Col%02d%-2s	"), iCol, "");
+		strHeadRow += strTemp;
+	}
+	if( bNoShow ) text += (strHeadRow + _T("\r\n"));
+
+	/*打印col列显示*/
+	for ( int iTx = 0; iTx < addInfo.iRowNum + ( addInfo.bIncludeKey ? 1 : 0 ); ++iTx )
+	{
+		transformat( strTemp, _T("Row%02d: "), iTx );
+		if( bNoShow ) strBuffer += strTemp;
+		int Cols = ( iTx == addInfo.iRowNum ) ? addInfo.keyNum : addInfo.iColNum;
+
+		for ( int iRx = 0; iRx < Cols; ++iRx )
+		{
+			bool bRedHat = false;
+			if( NODE_AST_TYPE == invalid[iTx][iRx] )
+			{
+				transformat( strTemp,  _T("%5s	"), _T("*") );
+				strBuffer += strTemp;
+				continue;
+			}
+			if( (NODE_INVALID_TYPE == invalid[iTx][iRx])
+				|| (!addInfo.bIncludeKey && (NODE_KEY_TYPE == invalid[iTx][iRx])) )  
+			{
+				transformat( strTemp,  _T("%5s	"),_T("/") );
+				strBuffer += strTemp;
+				continue;
+			}
+
+			transformat( strTemp,  _T("%5d	"), dataAnalyzed[iTx][iRx] );
+			strBuffer += strTemp;
+		}
+		strBuffer += _T("\r\n");
+	}
+	text += strBuffer;
+	//if( !strBuffer.empty() ) text += strBuffer;
+
+	//return node.Empty();
+
+	//string strBuffer = "";
+	//TCHAR strTemp[50];
+	//if( strHeader ) strBuffer = strBuffer + strHeader;
+	//for ( int iTx = 0; iTx < addInfo.iRowNum + ( addInfo.bIncludeKey  ? 1 : 0 ); ++iTx )
+	//{
+	//	//transformat( strTemp, _T("R-%02d:	"), iTx + 1 );
+	//	//strBuffer += strTemp;
+	//	int Cols = ( iTx == addInfo.iRowNum ) ? addInfo.keyNum : addInfo.iColNum;
+	//	for ( int iRx = 0; iRx < Cols; ++iRx )
+	//	{
+	//		if( NODE_AST_TYPE == invalid[iTx][iRx] )
+	//		{
+	//			transformat( strTemp, _T("%5s	"), _T("*") );
+	//			strBuffer += strTemp;
+	//			continue;
+	//		}
+	//		if( (NODE_INVALID_TYPE == invalid[iTx][iRx])
+	//			|| (!addInfo.bIncludeKey && (NODE_KEY_TYPE == invalid[iTx][iRx])) )  
+	//		{
+	//			transformat( strTemp, _T("%5s	"),_T("/") );
+	//			strBuffer += strTemp;
+	//			continue;
+	//		}
+
+	//		transformat( strTemp, _T("%5d	"), dataAnalyzed[iTx][iRx] );
+	//		strBuffer += strTemp;
+	//	}
+	//	strBuffer += _T("\r\n");
+	//}
+
+	//text += strBuffer;
+}
+
+template<class T, const int M, const int N>
+static void PrintMaxtrixValueJudge( IN ColorText& text,  IN const T (&dataAnalyzed)[M][N], IN const unsigned char (&invalid)[M][N], IN const AnalyzeInfo& addInfo,IN bool isCsv = false, IN bool bNoShow = false )
+{
+    string strBuffer, strHeadRow;
+    TCHAR strTemp[50];
+
+    const TCHAR* separator = isCsv ? _T(",") : _T("");
+    const TCHAR* fmtSt = isCsv ? _T("	%s") : _T("%-5s	");
+    const TCHAR* fmtCol = isCsv ? _T("Col%02d%s") : _T("Col%02d%-2s	");
+    const TCHAR* fmtRow = isCsv ? _T("Row%02d:,") : _T("Row%02d: ");
+    const TCHAR* fmtSym = isCsv ? _T("%5s,") : _T("%5s	");
+    const TCHAR* fmtDat = isCsv ? _T("%5d,") : _T("%5d	");
+
+    //transformat( strTemp, _T("%-5s	"), "");
+    transformat( strTemp, fmtSt, separator);
+    strHeadRow = strTemp;
+    for(int iCol = 0; iCol < addInfo.iColNum; iCol++)
+    {
+        //transformat( strTemp, _T("Col%02d%-2s	"), iCol, "");
+        transformat( strTemp, fmtCol, iCol, separator);
+        strHeadRow += strTemp;
+    }
+    if( bNoShow ) text += (strHeadRow + _T("\r\n"));
+
+    /*打印col列显示*/
+    for ( int iTx = 0; iTx < addInfo.iRowNum + ( addInfo.bIncludeKey ? 1 : 0 ); ++iTx )
+    {
+        //transformat( strTemp, _T("Row%02d: "), iTx );
+        transformat( strTemp, fmtRow, iTx );
+        if( bNoShow ) strBuffer += strTemp;
+        int Cols = ( iTx == addInfo.iRowNum ) ? addInfo.keyNum : addInfo.iColNum;
+
+        for ( int iRx = 0; iRx < Cols; ++iRx )
+        {
+            bool bRedHat = false;
+            if( NODE_AST_TYPE == invalid[iTx][iRx] )
+            {
+                //transformat( strTemp,  _T("%5s	"), _T("*") );
+                transformat( strTemp,  fmtSym, _T("*") );
+                strBuffer += strTemp;
+                continue;
+            }
+            if( (NODE_INVALID_TYPE == invalid[iTx][iRx])
+                || (!addInfo.bIncludeKey && (NODE_KEY_TYPE == invalid[iTx][iRx])) )  
+            {
+                //transformat( strTemp,  _T("%5s	"),_T("/") );
+                transformat( strTemp,  fmtSym, _T("/") );
+                strBuffer += strTemp;
+                continue;
+            }
+
+            //transformat( strTemp,  _T("%5d	"), dataAnalyzed[iTx][iRx] );
+            transformat( strTemp,  fmtDat, dataAnalyzed[iTx][iRx] );
+            strBuffer += strTemp;
+        }
+        strBuffer += _T("\r\n");
+    }
+    text += strBuffer;
+    //if( !strBuffer.empty() ) text += strBuffer;
+
+    //return node.Empty();
+
+    //string strBuffer = "";
+    //TCHAR strTemp[50];
+    //if( strHeader ) strBuffer = strBuffer + strHeader;
+    //for ( int iTx = 0; iTx < addInfo.iRowNum + ( addInfo.bIncludeKey  ? 1 : 0 ); ++iTx )
+    //{
+    //	//transformat( strTemp, _T("R-%02d:	"), iTx + 1 );
+    //	//strBuffer += strTemp;
+    //	int Cols = ( iTx == addInfo.iRowNum ) ? addInfo.keyNum : addInfo.iColNum;
+    //	for ( int iRx = 0; iRx < Cols; ++iRx )
+    //	{
+    //		if( NODE_AST_TYPE == invalid[iTx][iRx] )
+    //		{
+    //			transformat( strTemp, _T("%5s	"), _T("*") );
+    //			strBuffer += strTemp;
+    //			continue;
+    //		}
+    //		if( (NODE_INVALID_TYPE == invalid[iTx][iRx])
+    //			|| (!addInfo.bIncludeKey && (NODE_KEY_TYPE == invalid[iTx][iRx])) )  
+    //		{
+    //			transformat( strTemp, _T("%5s	"),_T("/") );
+    //			strBuffer += strTemp;
+    //			continue;
+    //		}
+
+    //		transformat( strTemp, _T("%5d	"), dataAnalyzed[iTx][iRx] );
+    //		strBuffer += strTemp;
+    //	}
+    //	strBuffer += _T("\r\n");
+    //}
+
+    //text += strBuffer;
+}
+
+template<class T, const int M, const int N>
+static void PrintMaxtrixValue( IN ColorText& text,  IN T (dataAnalyzed)[M][N], IN const AnalyzeInfo& addInfo,IN bool bNoShow = false )
+{
+	string strBuffer, strHeadRow;
+	TCHAR strTemp[50];
+
+	transformat( strTemp, _T("%-5s	"), "");
+	strHeadRow = strTemp;
+	for(int iCol = 0; iCol < addInfo.iColNum; iCol++)
+	{
+		transformat( strTemp, _T("Col%02d%-2s	"), iCol, "");
+		strHeadRow += strTemp;
+	}
+	if( bNoShow ) text += (strHeadRow + _T("\r\n"));
+
+	/*打印col列显示*/
+	for ( int iTx = 0; iTx < addInfo.iRowNum + ( addInfo.bIncludeKey ? 1 : 0 ); ++iTx )
+	{
+		transformat( strTemp, _T("Row%02d: "), iTx );
+		if( bNoShow ) strBuffer += strTemp;
+		int Cols = ( iTx == addInfo.iRowNum ) ? addInfo.keyNum : addInfo.iColNum;
+
+		for ( int iRx = 0; iRx < Cols; ++iRx )
+		{
+			bool bRedHat = false;
+			transformat( strTemp,  _T("%5d	"), dataAnalyzed[iTx][iRx] );
+			strBuffer += strTemp;
+		}
+		strBuffer += _T("\r\n");
+	}
+	text += strBuffer;
+}
+
+template<class T, const int M, const int N>
+static void PrintMaxtrixValueJudge( IN ColorText& text,  IN T (dataAnalyzed)[M][N], IN const AnalyzeInfo& addInfo,IN bool isCsv = false, IN bool bNoShow = false )
+{
+    string strBuffer, strHeadRow;
+    TCHAR strTemp[50];
+
+    const TCHAR* separator = isCsv ? _T(",") : _T("");
+    const TCHAR* fmtSt = isCsv ? _T("	%s") : _T("%-5s	");
+    const TCHAR* fmtCol = isCsv ? _T("Col%02d%s") : _T("Col%02d%-2s	");
+    const TCHAR* fmtRow = isCsv ? _T("Row%02d:,") : _T("Row%02d: ");
+    const TCHAR* fmtDat = isCsv ? _T("%5d,") : _T("%5d	");
+
+    //transformat( strTemp, _T("%-5s	"), "");
+    transformat( strTemp, fmtSt, separator);
+    strHeadRow = strTemp;
+    for(int iCol = 0; iCol < addInfo.iColNum; iCol++)
+    {
+        //transformat( strTemp, _T("Col%02d%-2s	"), iCol, "");
+        transformat( strTemp, fmtCol, iCol, separator);
+        strHeadRow += strTemp;
+    }
+    if( bNoShow ) text += (strHeadRow + _T("\r\n"));
+
+    /*打印col列显示*/
+    for ( int iTx = 0; iTx < addInfo.iRowNum + ( addInfo.bIncludeKey ? 1 : 0 ); ++iTx )
+    {
+        //transformat( strTemp, _T("Row%02d: "), iTx );
+        transformat( strTemp, fmtRow, iTx );
+        if( bNoShow ) strBuffer += strTemp;
+        int Cols = ( iTx == addInfo.iRowNum ) ? addInfo.keyNum : addInfo.iColNum;
+
+        for ( int iRx = 0; iRx < Cols; ++iRx )
+        {
+            bool bRedHat = false;
+            //transformat( strTemp,  _T("%5d	"), dataAnalyzed[iTx][iRx] );
+            transformat( strTemp,  fmtDat, dataAnalyzed[iTx][iRx] );
+            strBuffer += strTemp;
+        }
+        strBuffer += _T("\r\n");
+    }
+    text += strBuffer;
+}
+
+template<class T, const int M,const int N>
+static void PrintMaxtrixValueScapRX( IN ColorText& text,  IN const T (&dataAnalyzed)[M][N], IN const AnalyzeInfo& addInfo,IN bool bNoShow = false )
+{
+	TCHAR strTemp[50];
+	string strBuffer, strHeadRow;
+
+	transformat( strTemp, _T("%-5s	"), "");
+	strHeadRow += strTemp;
+	for(int iCol = 0; iCol < max(addInfo.iRowNum, addInfo.iColNum); iCol++)
+	{
+		transformat( strTemp, _T("Col%02d%-2s	"), iCol, "");
+		strHeadRow += strTemp;
+	}
+	if( bNoShow ) text += (strHeadRow + _T("\r\n"));
+
+	transformat( strTemp, _T("%-5s	"), "Rx:" );
+	strBuffer = strTemp;
+	for ( int iTx = 0; iTx < addInfo.iRowNum; ++iTx )
+	{
+
+		transformat( strTemp, _T("%5d	"), dataAnalyzed[0][iTx] );
+		strBuffer += strTemp;
+
+	}
+
+	strBuffer += _T("\r\n");
+	if( !strBuffer.empty() ) text += strBuffer;
+}
+
+template<class T, const int M, const int N>
+static void PrintMaxtrixValue( IN ColorText& text, IN const T (&dataAnalyzed)[M][N], IN const unsigned char (&faileChannel)[M][N], IN const unsigned char (&invalid)[M][N], IN const AnalyzeInfo& addInfo, LPCTSTR strHeader = NULL )
+{
+	ColorText strBuffer = tstring("");
+	TCHAR strTemp[50];
+	if( strHeader ) strBuffer += strHeader;
+	for ( int iTx = 0; iTx < addInfo.iRowNum + ( addInfo.bIncludeKey  ? 1 : 0 ); ++iTx )
+	{
+		//transformat( strTemp, _T("R-%02d:	"), iTx + 1 );
+		//strBuffer += strTemp;
+		int Cols = ( iTx == addInfo.iRowNum ) ? addInfo.keyNum : addInfo.iColNum;
+		for ( int iRx = 0; iRx < Cols; ++iRx )
+		{
+			if( NODE_AST_TYPE == invalid[iTx][iRx] )
+			{
+				transformat( strTemp, _T("%5s	"), _T("*") );
+				strBuffer += strTemp;
+				continue;
+			}
+			if( (NODE_INVALID_TYPE == invalid[iTx][iRx])
+				|| (!addInfo.bIncludeKey && (NODE_KEY_TYPE == invalid[iTx][iRx])) )  
+			{
+				transformat( strTemp, _T("%5s	"),_T("/") );
+				strBuffer += strTemp;
+				continue;
+			}
+
+			transformat( strTemp, _T("%5d	"), dataAnalyzed[iTx][iRx] );
+			strBuffer += ColorText( strTemp, faileChannel[iTx][iRx] ? (unsigned int)RGB( 255, 0, 0 ) : (unsigned int)RGB( 0, 0, 0 ) );
+		}
+		strBuffer += _T("\r\n");
+	}
+
+	text += strBuffer;
+}
+
+template<class T, const int M, const int N>
+static void PrintMaxtrixValueJudge( IN ColorText& text, IN const T (&dataAnalyzed)[M][N], IN const unsigned char (&faileChannel)[M][N], IN const unsigned char (&invalid)[M][N], IN const AnalyzeInfo& addInfo, IN bool isCsv = false, LPCTSTR strHeader = NULL)
+{
+    ColorText strBuffer = tstring("");
+    TCHAR strTemp[50];
+
+    const TCHAR* fmtSym = isCsv ? _T("%5s,") : _T("%5s	");
+    const TCHAR* fmtDat = isCsv ? _T("%5d,") : _T("%5d	");
+
+    if( strHeader ) strBuffer += strHeader;
+    for ( int iTx = 0; iTx < addInfo.iRowNum + ( addInfo.bIncludeKey  ? 1 : 0 ); ++iTx )
+    {
+        //transformat( strTemp, _T("R-%02d:	"), iTx + 1 );
+        //strBuffer += strTemp;
+        int Cols = ( iTx == addInfo.iRowNum ) ? addInfo.keyNum : addInfo.iColNum;
+        for ( int iRx = 0; iRx < Cols; ++iRx )
+        {
+            if( NODE_AST_TYPE == invalid[iTx][iRx] )
+            {
+                //transformat( strTemp, _T("%5s	"), _T("*") );
+                transformat( strTemp, fmtSym, _T("*") );
+                strBuffer += strTemp;
+                continue;
+            }
+            if( (NODE_INVALID_TYPE == invalid[iTx][iRx])
+                || (!addInfo.bIncludeKey && (NODE_KEY_TYPE == invalid[iTx][iRx])) )  
+            {
+                //transformat( strTemp, _T("%5s	"),_T("/") );
+                transformat( strTemp, fmtSym, _T("/") );
+                strBuffer += strTemp;
+                continue;
+            }
+
+            //transformat( strTemp, _T("%5d	"), dataAnalyzed[iTx][iRx] );
+            transformat( strTemp,  fmtDat, dataAnalyzed[iTx][iRx] );
+            strBuffer += ColorText( strTemp, faileChannel[iTx][iRx] ? (unsigned int)RGB( 255, 0, 0 ) : (unsigned int)RGB( 0, 0, 0 ) );
+        }
+        strBuffer += _T("\r\n");
+    }
+
+	text += strBuffer;
+}
+
+template<class T, const int M, const int N>
+void MarkNodeToMatrix( NodeVal* nodeList, T (&matrix)[M][N] )
+{
+	for ( NodeVal* node = nodeList->Next; node != NULL; node = node->Next )
+	{
+		matrix[node->iRow - 1][node->iCol - 1] = 1;
+	}
+}
+
+//==================================================================
+//函数名：  AnalyzeTestResult
+//作者：    wuxun
+//日期：    2014-12-26
+//功能：    分析数组中的元素 并返回统计结果 适用于SCap/Mcap数据
+//输入参数：  dataAnalyzed     待分析数据 
+//           minHole          输入数据的下限 
+//           maxHole          输入数据的上限 
+//           invalid          无效的节点 
+//           addInfo          附加信息 有效数据范围，有效数据的起始位置
+//           text             返回Msg界面显示的文本 NG Node高亮
+//           info             返回统计信息 最大 最小 平均
+//返回值：  类型(void)
+//           
+//修改记录：
+//==================================================================
+template<class T, class K, class P, const int M, const int N>
+static bool AnalyzeTestResult( IN const T (&dataAnalyzed)[M][N], 
+	IN const K (&minHole)[M][N], 
+	IN const P (&maxHole)[M][N],
+	IN const unsigned char (&invalid)[M][N],
+	IN const AnalyzeInfo& addInfo,
+	OUT ColorText& text, 
+	OUT NodeVal& node,
+	IN bool bNoShow = false )
+{
+	string strBuffer, strHeadRow;
+	TCHAR strTemp[50];
+
+	transformat( strTemp, _T("%-5s	"), "");
+	strHeadRow = strTemp;
+	for(int iCol = 0; iCol < addInfo.iColNum; iCol++)
+	{
+		transformat( strTemp, _T("Col%02d%-2s	"), iCol, "");
+		strHeadRow += strTemp;
+	}
+	if( bNoShow ) text += (strHeadRow + _T("\r\n"));
+	
+	/*打印col列显示*/
+	for ( int iTx = 0; iTx < addInfo.iRowNum + ( addInfo.bIncludeKey ? 1 : 0 ); ++iTx )
+	{
+		transformat( strTemp, _T("Row%02d: "), iTx );
+		if( bNoShow ) strBuffer += strTemp;
+		int Cols = ( iTx == addInfo.iRowNum ) ? addInfo.keyNum : addInfo.iColNum;
+
+		for ( int iRx = 0; iRx < Cols; ++iRx )
+		{
+			bool bRedHat = false;
+			if( NODE_AST_TYPE == invalid[iTx][iRx] )
+			{
+				transformat( strTemp,  _T("%5s	"), _T("*") );
+				strBuffer += strTemp;
+				continue;
+			}
+			if( (NODE_INVALID_TYPE == invalid[iTx][iRx])
+				|| (!addInfo.bIncludeKey && (NODE_KEY_TYPE == invalid[iTx][iRx])) )  
+			{
+				transformat( strTemp,  _T("%5s	"),_T("/") );
+				strBuffer += strTemp;
+				continue;
+			}
+
+			if( addInfo.bAbsCompare )
+			{
+				if( abs((int)dataAnalyzed[iTx][iRx]) < minHole[iTx][iRx] )
+				{
+					bRedHat = true;
+					node.AddNext( new NodeVal( iTx+1, iRx+1, dataAnalyzed[iTx][iRx], NodeVal::NODE_SMALLER, minHole[iTx][iRx] ) );
+				}
+				else if( abs((int)dataAnalyzed[iTx][iRx]) > maxHole[iTx][iRx] )
+				{
+					bRedHat = true;
+					node.AddNext( new NodeVal( iTx+1, iRx+1, dataAnalyzed[iTx][iRx], NodeVal::NODE_GRATER, maxHole[iTx][iRx] ) );
+				}
+			}
+			else
+			{
+				if( dataAnalyzed[iTx][iRx] < minHole[iTx][iRx] )
+				{
+					bRedHat = true;
+					node.AddNext( new NodeVal( iTx+1, iRx+1, dataAnalyzed[iTx][iRx], NodeVal::NODE_SMALLER, minHole[iTx][iRx] ) );
+				}
+				else if( dataAnalyzed[iTx][iRx] > maxHole[iTx][iRx] )
+				{
+					bRedHat = true;
+					node.AddNext( new NodeVal( iTx+1, iRx+1, dataAnalyzed[iTx][iRx], NodeVal::NODE_GRATER, maxHole[iTx][iRx] ) );
+				}
+			}
+
+// 			if( addInfo.bAbsCompare && ( abs(dataAnalyzed[iTx][iRx]) < minHole[iTx][iRx]
+// 			|| abs(dataAnalyzed[iTx][iRx]) > maxHole[iTx][iRx] ) ) 
+// 			{
+// 				bRedHat = true;
+// 				node.AddNext( new NodeVal( iTx+1, iRx+1, dataAnalyzed[iTx][iRx]  ) );
+// 			}
+// 			else if( !addInfo.bAbsCompare && /*abs*/(dataAnalyzed[iTx][iRx]) < minHole[iTx][iRx]
+// 			|| /*abs*/(dataAnalyzed[iTx][iRx]) > maxHole[iTx][iRx] )
+// 			{
+// 				bRedHat = true;
+// 				node.AddNext( new NodeVal( iTx+1, iRx+1, dataAnalyzed[iTx][iRx] ) );
+// 			}
+			transformat( strTemp,  _T("%5d	"), dataAnalyzed[iTx][iRx] );
+
+			if( !bRedHat )
+			{
+				strBuffer += strTemp;
+			}
+			else
+			{
+				//先将Buffer的数据保存起来
+				text += strBuffer;
+				strBuffer = _T("");
+				//在保存需要高亮显示的数据
+				text += ColorText( strTemp, bRedHat ? (unsigned int)RGB( 255, 0, 0 ) : (unsigned int)RGB( 0, 0, 0 ) );
+			}
+		}
+		strBuffer += _T("\r\n");
+	}
+
+	if( !strBuffer.empty() ) text += strBuffer;
+
+	return node.Empty();
+}
+
+
+template<typename T>
+static bool AnalyzeMatrixResult(
+    IN const std::vector<std::vector<T>>& dataAnalyzed,
+    IN const std::vector<std::vector<T>>& minLimit,
+    IN const std::vector<std::vector<T>>& maxLimit,
+    OUT ColorText& text,
+    OUT NodeVal& node,
+    IN bool bAbsCompare = false,
+    IN bool bNoShow = false)
+{
+    static_assert(std::numeric_limits<T>::is_specialized,
+                  "T must be an arithmetic type.");
+
+    if (dataAnalyzed.empty())
+        return false;
+
+    const int rowCount =
+        static_cast<int>(dataAnalyzed.size());
+
+    const int colCount =
+        static_cast<int>(dataAnalyzed[0].size());
+
+    string strBuffer;
+    TCHAR strTemp[128];
+
+    // -------------------------------------------------------------------------
+    // Header
+    // -------------------------------------------------------------------------
+
+    transformat(strTemp, _T("%-8s"), _T(""));
+    strBuffer += strTemp;
+
+    for (int col = 0; col < colCount; col++)
+    {
+        transformat(strTemp, _T("Col%02d\t"), col);
+        strBuffer += strTemp;
+    }
+
+    strBuffer += _T("\r\n");
+
+    // -------------------------------------------------------------------------
+    // Matrix Data
+    // -------------------------------------------------------------------------
+
+    for (int row = 0; row < rowCount; row++)
+    {
+        transformat(strTemp, _T("Row%02d: "), row);
+        strBuffer += strTemp;
+
+        for (int col = 0; col < colCount; col++)
+        {
+            bool bRedHat = false;
+
+            T value = dataAnalyzed[row][col];
+
+			double compareValue =
+				bAbsCompare
+					? std::fabs(static_cast<double>(value))
+					: static_cast<double>(value);
+
+			double minValue =
+				static_cast<double>(minLimit[row][col]);
+
+			double maxValue =
+				static_cast<double>(maxLimit[row][col]);
+
+            if (compareValue < minValue)
+            {
+                bRedHat = true;
+
+                node.AddNext(
+                    new NodeVal(
+                        row + 1,
+                        col + 1,
+                        value,
+                        NodeVal::NODE_SMALLER,
+                        minLimit[row][col]));
+            }
+            else if (compareValue > maxValue)
+            {
+                bRedHat = true;
+
+                node.AddNext(
+                    new NodeVal(
+                        row + 1,
+                        col + 1,
+                        value,
+                        NodeVal::NODE_GRATER,
+                        maxLimit[row][col]));
+            }
+
+			// VS2010 不支持 if constexpr，因此运行时根据类型判断
+			if (std::numeric_limits<T>::is_integer)
+			{
+				transformat(
+					strTemp,
+					_T("%7d\t"),
+					static_cast<int>(value));
+			}
+			else
+			{
+				transformat(
+					strTemp,
+					_T("%7.2f\t"),
+					static_cast<double>(value));
+			}
+
+            if (!bRedHat)
+            {
+                strBuffer += strTemp;
+            }
+            else
+            {
+                text += strBuffer;
+                strBuffer.clear();
+
+                text += ColorText(
+                    strTemp,
+                    (unsigned int)RGB(255, 0, 0));
+            }
+        }
+
+        strBuffer += _T("\r\n");
+    }
+
+    if (!strBuffer.empty())
+    {
+        text += strBuffer;
+    }
+
+    return node.Empty();
+}
+
+template<typename T>
+static bool AnalyzeArrayResult(
+    IN const std::vector<T>& dataAnalyzed,
+    IN const std::vector<T>& minLimit,
+    IN const std::vector<T>& maxLimit,
+    OUT ColorText& text,
+    OUT NodeVal& node,
+    IN bool bAbsCompare = false)
+{
+    static_assert(std::numeric_limits<T>::is_specialized,
+                  "T must be an arithmetic type.");
+
+    // 防止数组长度不一致导致越界访问
+    if (dataAnalyzed.size() != minLimit.size() ||
+        dataAnalyzed.size() != maxLimit.size())
+    {
+        return false;
+    }
+
+	int colCount = 0;
+	std::string lineBuffer;
+
+    for (size_t i = 0; i < dataAnalyzed.size(); ++i)
+    {
+        bool bRedHat = false;
+
+        T value = dataAnalyzed[i];
+
+        // 统一使用 double 进行比较，避免 int16_t 最小值取绝对值时溢出
+        double compareValue =
+            bAbsCompare
+                ? std::fabs(static_cast<double>(value))
+                : static_cast<double>(value);
+
+        double minValue = static_cast<double>(minLimit[i]);
+        double maxValue = static_cast<double>(maxLimit[i]);
+
+        if (compareValue < minValue)
+        {
+            bRedHat = true;
+
+            node.AddNext(
+                new NodeVal(
+                    static_cast<int>(i + 1),
+                    0,
+                    static_cast<double>(value),
+                    NodeVal::NODE_SMALLER,
+                    minValue));
+        }
+        else if (compareValue > maxValue)
+        {
+            bRedHat = true;
+
+            node.AddNext(
+                new NodeVal(
+                    static_cast<int>(i + 1),
+                    0,
+                    static_cast<double>(value),
+                    NodeVal::NODE_GRATER,
+                    maxValue));
+        }
+
+		TCHAR strTemp[128];
+
+        // VS2010 不支持 if constexpr，因此运行时根据类型判断
+        if (std::numeric_limits<T>::is_integer)
+        {
+            transformat(
+                strTemp,
+                _T("[%02d] : %d\t"),
+                static_cast<int>(i),
+                static_cast<int>(value));
+        }
+        else
+        {
+            transformat(
+                strTemp,
+                _T("[%02d] : %7.2f\t"),
+                static_cast<int>(i),
+                static_cast<double>(value));
+        }
+
+		lineBuffer += strTemp;
+		colCount++;
+
+		// 每4个换行
+		if (colCount >= 4)
+		{
+			lineBuffer += _T("\r\n");
+			colCount = 0;
+		}
+
+		if (bRedHat)
+		{
+			if (!lineBuffer.empty())
+			{
+				text += ColorText(
+					lineBuffer.c_str(),
+					static_cast<unsigned int>(RGB(255, 0, 0)));
+				lineBuffer.clear();
+			}
+		}
+		else
+		{
+			text += lineBuffer;
+			lineBuffer.clear();
+		}
+    }
+
+	// 收尾
+	if (!lineBuffer.empty())
+	{
+		text += lineBuffer;
+	}
+
+    // true  : 没有超限项
+    // false : 存在超限项
+    return node.Empty();
+}
+
+
+    //==================================================================
+    //函数名：  AnalyzeTestResult
+    //作者：    LHL
+    //日期：    2025-11-25
+    //功能：    分析数组中的元素 并返回统计结果 适用于SCap/Mcap数据
+    //输入参数：  dataAnalyzed     待分析数据 
+    //           minHole          输入数据的下限 
+    //           maxHole          输入数据的上限 
+    //           invalid          无效的节点 
+    //           addInfo          附加信息 有效数据范围，有效数据的起始位置
+    //           text             返回Msg界面显示的文本 NG Node高亮
+    //           info             返回统计信息 最大 最小 平均
+    //返回值：  类型(void)
+    //           
+    //修改记录：功能和上面一致，对输出格式进行分类，支持Csv
+    //==================================================================
+    template<class T, class K, class P, const int M, const int N>
+    static bool AnalyzeTestResultJudge( IN const T (&dataAnalyzed)[M][N], 
+        IN const K (&minHole)[M][N], 
+        IN const P (&maxHole)[M][N],
+        IN const unsigned char (&invalid)[M][N],
+        IN const AnalyzeInfo& addInfo,
+        OUT ColorText& text, 
+        OUT NodeVal& node,
+        IN bool isCsv = false,
+        IN bool bNoShow = false )
+    {
+        string strBuffer, strHeadRow;
+        TCHAR strTemp[50];
+
+        const TCHAR* separator = isCsv ? _T(",") : _T("");
+        const TCHAR* fmtSt = isCsv ? _T("	%s") : _T("%-5s	");
+        const TCHAR* fmtCol = isCsv ? _T("Col%02d%s") : _T("Col%02d%-2s	");
+        const TCHAR* fmtRow = isCsv ? _T("Row%02d:,") : _T("Row%02d: ");
+        const TCHAR* fmtSym = isCsv ? _T("%5s,") : _T("%5s	");
+        const TCHAR* fmtDat = isCsv ? _T("%5d,") : _T("%5d	");
+
+        //transformat( strTemp, _T("%-5s	"), "");
+        transformat( strTemp, fmtSt, separator);
+        strHeadRow = strTemp;
+        for(int iCol = 0; iCol < addInfo.iColNum; iCol++)
+        {
+            //transformat( strTemp, _T("Col%02d%-2s	"), iCol, "");
+            transformat( strTemp, fmtCol, iCol, separator);
+            strHeadRow += strTemp;
+        }
+        if( bNoShow ) text += (strHeadRow + _T("\r\n"));
+
+        /*打印col列显示*/
+        for ( int iTx = 0; iTx < addInfo.iRowNum + ( addInfo.bIncludeKey ? 1 : 0 ); ++iTx )
+        {
+            //transformat( strTemp, _T("Row%02d: "), iTx );
+            transformat( strTemp, fmtRow, iTx );
+            if( bNoShow ) strBuffer += strTemp;
+            int Cols = ( iTx == addInfo.iRowNum ) ? addInfo.keyNum : addInfo.iColNum;
+
+            for ( int iRx = 0; iRx < Cols; ++iRx )
+            {
+                bool bRedHat = false;
+                if( NODE_AST_TYPE == invalid[iTx][iRx] )
+                {
+                    //transformat( strTemp,  _T("%5s	"), _T("*") );
+                    transformat( strTemp, fmtSym, _T("*"));
+                    strBuffer += strTemp;
+                    continue;
+                }
+                if( (NODE_INVALID_TYPE == invalid[iTx][iRx])
+                    || (!addInfo.bIncludeKey && (NODE_KEY_TYPE == invalid[iTx][iRx])) )  
+                {
+                    //transformat( strTemp,  _T("%5s	"),_T("/") );
+                    transformat( strTemp, fmtSym, _T("/"));
+                    strBuffer += strTemp;
+                    continue;
+                }
+
+                if( addInfo.bAbsCompare )
+                {
+                    if( abs((int)dataAnalyzed[iTx][iRx]) < minHole[iTx][iRx] )
+                    {
+                        bRedHat = true;
+                        node.AddNext( new NodeVal( iTx+1, iRx+1, dataAnalyzed[iTx][iRx], NodeVal::NODE_SMALLER, minHole[iTx][iRx] ) );
+                    }
+                    else if( abs((int)dataAnalyzed[iTx][iRx]) > maxHole[iTx][iRx] )
+                    {
+                        bRedHat = true;
+                        node.AddNext( new NodeVal( iTx+1, iRx+1, dataAnalyzed[iTx][iRx], NodeVal::NODE_GRATER, maxHole[iTx][iRx] ) );
+                    }
+                }
+                else
+                {
+                    if( dataAnalyzed[iTx][iRx] < minHole[iTx][iRx] )
+                    {
+                        bRedHat = true;
+                        node.AddNext( new NodeVal( iTx+1, iRx+1, dataAnalyzed[iTx][iRx], NodeVal::NODE_SMALLER, minHole[iTx][iRx] ) );
+                    }
+                    else if( dataAnalyzed[iTx][iRx] > maxHole[iTx][iRx] )
+                    {
+                        bRedHat = true;
+                        node.AddNext( new NodeVal( iTx+1, iRx+1, dataAnalyzed[iTx][iRx], NodeVal::NODE_GRATER, maxHole[iTx][iRx] ) );
+                    }
+                }
+
+                // 			if( addInfo.bAbsCompare && ( abs(dataAnalyzed[iTx][iRx]) < minHole[iTx][iRx]
+                // 			|| abs(dataAnalyzed[iTx][iRx]) > maxHole[iTx][iRx] ) ) 
+                // 			{
+                // 				bRedHat = true;
+                // 				node.AddNext( new NodeVal( iTx+1, iRx+1, dataAnalyzed[iTx][iRx]  ) );
+                // 			}
+                // 			else if( !addInfo.bAbsCompare && /*abs*/(dataAnalyzed[iTx][iRx]) < minHole[iTx][iRx]
+                // 			|| /*abs*/(dataAnalyzed[iTx][iRx]) > maxHole[iTx][iRx] )
+                // 			{
+                // 				bRedHat = true;
+                // 				node.AddNext( new NodeVal( iTx+1, iRx+1, dataAnalyzed[iTx][iRx] ) );
+                // 			}
+                //transformat( strTemp,  _T("%5d	"), dataAnalyzed[iTx][iRx] );
+                transformat( strTemp, fmtDat, dataAnalyzed[iTx][iRx]);
+
+                if( !bRedHat )
+                {
+                    strBuffer += strTemp;
+                }
+                else
+                {
+                    //先将Buffer的数据保存起来
+                    text += strBuffer;
+                    strBuffer = _T("");
+                    //在保存需要高亮显示的数据
+                    text += ColorText( strTemp, bRedHat ? (unsigned int)RGB( 255, 0, 0 ) : (unsigned int)RGB( 0, 0, 0 ) );
+                }
+            }
+            strBuffer += _T("\r\n");
+        }
+
+        if( !strBuffer.empty() ) text += strBuffer;
+
+        return node.Empty();
+    }
+
+//==================================================================
+//函数名：  AnalyzeTestResult
+//作者：    wuxun
+//日期：    2014-12-26
+//功能：    分析数组中的元素 并返回统计结果 适用于SCap数据
+//输入参数：  dataAnalyzed     待分析数据 
+//           minHole          输入数据的下限 
+//           maxHole          输入数据的上限 
+//           invalid          无效的节点 
+//           addInfo          附加信息 有效数据范围，有效数据的起始位置
+//           text             返回Msg界面显示的文本 NG Node高亮
+//           info             返回统计信息 最大 最小 平均
+//返回值：  类型(void)
+//           
+//修改记录：
+//==================================================================
+template<class T, class K, class P,const int M, const int N>
+bool AnalyzeTestResultMSCap( IN const T (&dataAnalyzed)[M][N], 
+	IN const K (&minHole)[M][N], 
+	IN const P (&maxHole)[M][N],
+	IN const unsigned char (&invalid)[50][50],
+	IN const AnalyzeInfo& addInfo,
+	OUT ColorText& text,
+	OUT NodeVal& node,
+	IN bool bNoShow = false )
+{
+	bool bRedHat = false;
+	TCHAR strTemp[50];
+	string strBuffer, strHeadRow;
+
+	transformat( strTemp, _T("%-5s	"), "");
+	strHeadRow += strTemp;
+	for(int iCol = 0; iCol < max(addInfo.iRowNum, addInfo.iColNum); iCol++)
+	{
+		transformat( strTemp, _T("Col%02d%-2s	"), iCol, "");
+		strHeadRow += strTemp;
+	}
+	if( bNoShow ) text += (strHeadRow + _T("\r\n"));
+
+	transformat( strTemp, _T("%-5s	"), "Tx:" );
+    strBuffer = strTemp;
+	for ( int iTx = 0; iTx < addInfo.iColNum; ++iTx )
+	{
+		bRedHat = false;
+		if( (NODE_INVALID_TYPE == invalid[addInfo.iRowNum + 0][iTx]) )  
+		{
+			transformat( strTemp, "%5s	",_T("/") );
+			strBuffer += strTemp;
+			continue;
+		}
+
+		transformat( strTemp, _T("%5d	"), dataAnalyzed[0][iTx] );
+		if( dataAnalyzed[0][iTx] < minHole[0][iTx] )
+		{
+			bRedHat = true;
+			node.AddNext( new NodeVal( 0 + 1, iTx + 1, dataAnalyzed[0][iTx], NodeVal::NODE_SMALLER, minHole[0][iTx] ) );
+		}
+		else if( dataAnalyzed[0][iTx] > maxHole[0][iTx] )
+		{
+			bRedHat = true;
+			node.AddNext( new NodeVal( 0 + 1, iTx + 1, dataAnalyzed[0][iTx], NodeVal::NODE_GRATER, maxHole[0][iTx] ) );
+		}
+
+		if( bRedHat )
+		{
+			text += strBuffer;
+			strBuffer = _T("");
+			//在保存需要高亮显示的数据
+			text += ColorText( strTemp, bRedHat ? (unsigned int)RGB( 255, 0, 0 ) : (unsigned int)RGB( 0, 0, 0 ) );
+		}
+		else
+		{
+			strBuffer += strTemp;
+		}
+	}
+
+	strBuffer += _T("\r\n");
+	transformat( strTemp, _T("%-5s	"), "Rx:" );
+	strBuffer += strTemp;
+	for ( int iRx = 0; iRx < addInfo.iRowNum; ++iRx )
+	{
+		bRedHat = false;
+		if( (NODE_INVALID_TYPE == invalid[addInfo.iRowNum + 1][iRx]) )  
+		{
+			transformat( strTemp, "%5s	",_T("/") );
+			strBuffer += strTemp;
+			continue;
+		}
+
+		transformat( strTemp, _T("%5d	"), dataAnalyzed[1][iRx] );
+		if( dataAnalyzed[1][iRx] < minHole[1][iRx] )
+		{
+			bRedHat = true;
+			node.AddNext( new NodeVal( 1 + 1, iRx + 1, dataAnalyzed[1][iRx], NodeVal::NODE_SMALLER, minHole[1][iRx] ) );
+		}
+		else if( dataAnalyzed[1][iRx] > maxHole[1][iRx] )
+		{
+			bRedHat = true;
+			node.AddNext( new NodeVal( 1 + 1, iRx + 1, dataAnalyzed[1][iRx], NodeVal::NODE_GRATER, maxHole[1][iRx] ) );
+		}
+
+		if( bRedHat )
+		{
+			text += strBuffer;
+			strBuffer = _T("");
+			//在保存需要高亮显示的数据
+			text += ColorText( strTemp, bRedHat ? (unsigned int)RGB( 255, 0, 0 ) : (unsigned int)RGB( 0, 0, 0 ) );
+		}
+		else
+		{
+			strBuffer += strTemp;
+		}
+	}
+
+	strBuffer += _T("\r\n");
+	if( !strBuffer.empty() ) text += strBuffer;
+
+	return node.Empty();
+}
+
+    template<class T, class K, class P,const int M, const int N>
+    bool AnalyzeTestResultMSCapJudge( IN const T (&dataAnalyzed)[M][N], 
+        IN const K (&minHole)[M][N], 
+        IN const P (&maxHole)[M][N],
+        IN const unsigned char (&invalid)[50][50],
+        IN const AnalyzeInfo& addInfo,
+        OUT ColorText& text,
+        OUT NodeVal& node,
+        IN bool isCsv = false,
+        IN bool bNoShow = false )
+    {
+        bool bRedHat = false;
+        TCHAR strTemp[50];
+        string strBuffer, strHeadRow;
+
+        const TCHAR* separator = isCsv ? _T(",") : _T("");
+        const TCHAR* fmtSt = isCsv ? _T("	%s") : _T("%-5s	");
+        const TCHAR* fmtCol = isCsv ? _T("Col%02d%s") : _T("Col%02d%-2s	");
+        const TCHAR* fmtTRx = isCsv ? _T("%s,") : _T("%-5s	");
+        const TCHAR* fmtSym = isCsv ? _T("%5s,") : _T("%5s	");
+        const TCHAR* fmtDat = isCsv ? _T("%5d,") : _T("%5d	");
+
+        //transformat( strTemp, _T("%-5s	"), "");
+        transformat( strTemp, fmtSt, separator);
+
+        strHeadRow += strTemp;
+        for(int iCol = 0; iCol < max(addInfo.iRowNum, addInfo.iColNum); iCol++)
+        {
+            //transformat( strTemp, _T("Col%02d%-2s	"), iCol, "");
+            transformat( strTemp, fmtCol, iCol, separator);
+            strHeadRow += strTemp;
+        }
+        if( bNoShow ) text += (strHeadRow + _T("\r\n"));
+
+        //transformat( strTemp, _T("%-5s	"), "Tx:" );
+        transformat( strTemp, fmtTRx, "Tx:" );
+        strBuffer = strTemp;
+        for ( int iTx = 0; iTx < addInfo.iColNum; ++iTx )
+        {
+            bRedHat = false;
+            if( (NODE_INVALID_TYPE == invalid[addInfo.iRowNum + 0][iTx]) )  
+            {
+                //transformat( strTemp, "%5s	",_T("/") );
+                transformat( strTemp, fmtSym, _T("/") );
+                strBuffer += strTemp;
+                continue;
+            }
+
+            //transformat( strTemp, _T("%5d	"), dataAnalyzed[0][iTx] );
+            transformat( strTemp, fmtDat, dataAnalyzed[0][iTx] );
+            if( dataAnalyzed[0][iTx] < minHole[0][iTx] )
+            {
+                bRedHat = true;
+                node.AddNext( new NodeVal( 0 + 1, iTx + 1, dataAnalyzed[0][iTx], NodeVal::NODE_SMALLER, minHole[0][iTx] ) );
+            }
+            else if( dataAnalyzed[0][iTx] > maxHole[0][iTx] )
+            {
+                bRedHat = true;
+                node.AddNext( new NodeVal( 0 + 1, iTx + 1, dataAnalyzed[0][iTx], NodeVal::NODE_GRATER, maxHole[0][iTx] ) );
+            }
+
+            if( bRedHat )
+            {
+                text += strBuffer;
+                strBuffer = _T("");
+                //在保存需要高亮显示的数据
+                text += ColorText( strTemp, bRedHat ? (unsigned int)RGB( 255, 0, 0 ) : (unsigned int)RGB( 0, 0, 0 ) );
+            }
+            else
+            {
+                strBuffer += strTemp;
+            }
+        }
+
+        strBuffer += _T("\r\n");
+        //transformat( strTemp, _T("%-5s	"), "Rx:" );
+        transformat( strTemp, fmtTRx, "Rx:" );
+        strBuffer += strTemp;
+        for ( int iRx = 0; iRx < addInfo.iRowNum; ++iRx )
+        {
+            bRedHat = false;
+            if( (NODE_INVALID_TYPE == invalid[addInfo.iRowNum + 1][iRx]) )  
+            {
+                //transformat( strTemp, "%5s	",_T("/") );
+                transformat( strTemp, fmtSym, _T("/") );
+                strBuffer += strTemp;
+                continue;
+            }
+
+            //transformat( strTemp, _T("%5d	"), dataAnalyzed[1][iRx] );
+            transformat( strTemp, fmtDat, dataAnalyzed[1][iRx] );
+            if( dataAnalyzed[1][iRx] < minHole[1][iRx] )
+            {
+                bRedHat = true;
+                node.AddNext( new NodeVal( 1 + 1, iRx + 1, dataAnalyzed[1][iRx], NodeVal::NODE_SMALLER, minHole[1][iRx] ) );
+            }
+            else if( dataAnalyzed[1][iRx] > maxHole[1][iRx] )
+            {
+                bRedHat = true;
+                node.AddNext( new NodeVal( 1 + 1, iRx + 1, dataAnalyzed[1][iRx], NodeVal::NODE_GRATER, maxHole[1][iRx] ) );
+            }
+
+            if( bRedHat )
+            {
+                text += strBuffer;
+                strBuffer = _T("");
+                //在保存需要高亮显示的数据
+                text += ColorText( strTemp, bRedHat ? (unsigned int)RGB( 255, 0, 0 ) : (unsigned int)RGB( 0, 0, 0 ) );
+            }
+            else
+            {
+                strBuffer += strTemp;
+            }
+        }
+
+        strBuffer += _T("\r\n");
+        if( !strBuffer.empty() ) text += strBuffer;
+
+        return node.Empty();
+    }
+
+/*********************Used for supplementary short testing******************************************/
+    template<class T, class K, class P,const int M, const int N>
+    bool AnalyzeTestResultAdditionalMSCapJudge(
+        IN T* const dataToMapping, 
+        IN const K (&minHole)[M][N], 
+        IN const P (&maxHole)[M][N],
+        unsigned short maxRows,
+        unsigned short maxcols,
+        OUT ColorText& text,
+        OUT NodeVal& node,
+        IN bool isCsv = false)
+    {
+        bool bRedHat = false;
+        TCHAR strTemp[50];
+        string strBuffer;
+
+        const TCHAR* fmtTRx = isCsv ? _T("%s,") : _T("%-5s  ");
+        const TCHAR* fmtDat = isCsv ? _T("%5d,") : _T("%5d	");
+
+        //transformat( strTemp, _T("%-5s    "), "Tx:" );
+        transformat( strTemp, fmtTRx, "Tx:" );
+        strBuffer = strTemp;
+        for ( int iTx = 0; iTx < maxcols; ++iTx )
+        {
+            bRedHat = false;
+
+            //transformat( strTemp, _T("%5d "), dataAnalyzed[0][iTx] );
+            transformat( strTemp, fmtDat, dataToMapping[iTx]);
+            if( dataToMapping[iTx] < minHole[0][iTx] )
+            {
+                bRedHat = true;
+                node.AddNext( new NodeVal( 3, iTx, dataToMapping[iTx], NodeVal::NODE_SMALLER, minHole[0][iTx] ) );
+            }
+            else if( dataToMapping[iTx] > maxHole[0][iTx] )
+            {
+                bRedHat = true;
+                node.AddNext( new NodeVal( 3, iTx, dataToMapping[iTx], NodeVal::NODE_GRATER, maxHole[0][iTx] ) );
+            }
+
+            if( bRedHat )
+            {
+                text += strBuffer;
+                strBuffer = _T("");
+                //在保存需要高亮显示的数据
+                text += ColorText( strTemp, bRedHat ? (unsigned int)RGB( 255, 0, 0 ) : (unsigned int)RGB( 0, 0, 0 ) );
+            }
+        }
+
+        strBuffer += _T("\r\n");
+        //transformat( strTemp, _T("%-5s	"), "Rx:" );
+        transformat( strTemp, fmtTRx, "Rx:" );
+        strBuffer += strTemp;
+        for ( int iRx = 0; iRx < maxRows; ++iRx )
+        {
+            bRedHat = false;
+
+            //transformat( strTemp, _T("%5d	"), dataAnalyzed[1][iRx] );
+            transformat( strTemp, fmtDat, dataToMapping[maxcols + iRx] );
+            if( dataToMapping[maxcols + iRx] < minHole[1][iRx] )
+            {
+                bRedHat = true;
+                node.AddNext( new NodeVal( 4, iRx, dataToMapping[maxcols + iRx], NodeVal::NODE_SMALLER, minHole[1][iRx] ) );
+            }
+            else if( dataToMapping[maxcols + iRx] > maxHole[1][iRx] )
+            {
+                bRedHat = true;
+                node.AddNext( new NodeVal( 4, iRx, dataToMapping[maxcols + iRx], NodeVal::NODE_GRATER, maxHole[1][iRx] ) );
+            }
+
+            if( bRedHat )
+            {
+                text += strBuffer;
+                strBuffer = _T("");
+                //在保存需要高亮显示的数据
+                text += ColorText( strTemp, bRedHat ? (unsigned int)RGB( 255, 0, 0 ) : (unsigned int)RGB( 0, 0, 0 ) );
+            }
+        }
+
+        strBuffer += _T("\r\n");
+        if( !strBuffer.empty() ) text += strBuffer;
+
+        return node.Empty();
+
+    }
+
+template<class T, class K, class P,const int M, const int N>
+bool AnalyzeTestResultMSCap_710( IN const T (&dataAnalyzed)[M][N], 
+		IN const K (&minHole)[M][N], 
+		IN const P (&maxHole)[M][N],
+		IN const unsigned char (&invalid)[100][100],
+		IN const AnalyzeInfo& addInfo,
+		OUT ColorText& text,
+		OUT NodeVal& node,
+		IN bool bNoShow = false )
+{
+		bool bRedHat = false;
+		TCHAR strTemp[50];
+		string strBuffer, strHeadRow;
+
+		transformat( strTemp, _T("%-5s	"), "");
+		strHeadRow += strTemp;
+		for(int iCol = 0; iCol < max(addInfo.iRowNum, addInfo.iColNum); iCol++)
+		{
+			transformat( strTemp, _T("Col%02d%-2s	"), iCol, "");
+			strHeadRow += strTemp;
+		}
+		if( bNoShow ) text += (strHeadRow + _T("\r\n"));
+
+		transformat( strTemp, _T("%-5s	"), "Tx:" );
+		strBuffer = strTemp;
+		for ( int iTx = 0; iTx < addInfo.iColNum; ++iTx )
+		{
+			bRedHat = false;
+			if( (NODE_INVALID_TYPE == invalid[addInfo.iRowNum + 0][iTx]) )  
+			{
+				transformat( strTemp, "%5s	",_T("/") );
+				strBuffer += strTemp;
+				continue;
+			}
+
+			transformat( strTemp, _T("%5d	"), dataAnalyzed[0][iTx] );
+			if( dataAnalyzed[0][iTx] < minHole[0][iTx] )
+			{
+				bRedHat = true;
+				node.AddNext( new NodeVal( 0 + 1, iTx + 1, dataAnalyzed[0][iTx], NodeVal::NODE_SMALLER, minHole[0][iTx] ) );
+			}
+			else if( dataAnalyzed[0][iTx] > maxHole[0][iTx] )
+			{
+				bRedHat = true;
+				node.AddNext( new NodeVal( 0 + 1, iTx + 1, dataAnalyzed[0][iTx], NodeVal::NODE_GRATER, maxHole[0][iTx] ) );
+			}
+
+			if( bRedHat )
+			{
+				text += strBuffer;
+				strBuffer = _T("");
+				//在保存需要高亮显示的数据
+				text += ColorText( strTemp, bRedHat ? (unsigned int)RGB( 255, 0, 0 ) : (unsigned int)RGB( 0, 0, 0 ) );
+			}
+			else
+			{
+				strBuffer += strTemp;
+			}
+		}
+
+		strBuffer += _T("\r\n");
+		transformat( strTemp, _T("%-5s	"), "Rx:" );
+		strBuffer += strTemp;
+		for ( int iRx = 0; iRx < addInfo.iRowNum; ++iRx )
+		{
+			bRedHat = false;
+			if( (NODE_INVALID_TYPE == invalid[addInfo.iRowNum + 1][iRx]) )  
+			{
+				transformat( strTemp, "%5s	",_T("/") );
+				strBuffer += strTemp;
+				continue;
+			}
+
+			transformat( strTemp, _T("%5d	"), dataAnalyzed[1][iRx] );
+			if( dataAnalyzed[1][iRx] < minHole[1][iRx] )
+			{
+				bRedHat = true;
+				node.AddNext( new NodeVal( 1 + 1, iRx + 1, dataAnalyzed[1][iRx], NodeVal::NODE_SMALLER, minHole[1][iRx] ) );
+			}
+			else if( dataAnalyzed[1][iRx] > maxHole[1][iRx] )
+			{
+				bRedHat = true;
+				node.AddNext( new NodeVal( 1 + 1, iRx + 1, dataAnalyzed[1][iRx], NodeVal::NODE_GRATER, maxHole[1][iRx] ) );
+			}
+
+			if( bRedHat )
+			{
+				text += strBuffer;
+				strBuffer = _T("");
+				//在保存需要高亮显示的数据
+				text += ColorText( strTemp, bRedHat ? (unsigned int)RGB( 255, 0, 0 ) : (unsigned int)RGB( 0, 0, 0 ) );
+			}
+			else
+			{
+				strBuffer += strTemp;
+			}
+		}
+
+		strBuffer += _T("\r\n");
+		if( !strBuffer.empty() ) text += strBuffer;
+
+		return node.Empty();
+	}
+
+template<class T, class K, class P,const int M, const int N>
+bool AnalyzeTestResultMSCap_TX_RX( IN const T (&dataAnalyzed)[M][N], 
+	IN const K (&minHole)[M][N], 
+	IN const P (&maxHole)[M][N],
+	IN const unsigned char (&invalid)[50][50],
+	IN const AnalyzeInfo& addInfo,
+	OUT ColorText& text,
+	OUT NodeVal& node,
+	IN bool bNoShow = false ,IN int TRX = 0 )
+{
+	bool bRedHat = false;
+	TCHAR strTemp[50];
+	string strBuffer, strHeadRow;
+
+	transformat( strTemp, _T("%-5s	"), "");
+	strHeadRow += strTemp;
+	for(int iCol = 0; iCol < addInfo.iColNum ; iCol++)//max(addInfo.iRowNum, addInfo.iColNum)
+	{
+		transformat( strTemp, _T("Col%02d%-2s	"), iCol, "");
+		strHeadRow += strTemp;
+	}
+	if( bNoShow ) text += (strHeadRow + _T("\r\n"));
+
+	if (TRX==0 ||TRX==1)
+	{
+		transformat( strTemp, _T("%-5s	"), "Tx:" );
+		strBuffer = strTemp;
+		for ( int iTx = 0; iTx < addInfo.iColNum; ++iTx )
+		{
+			bRedHat = false;
+			if( (NODE_INVALID_TYPE == invalid[addInfo.iRowNum + 0][iTx]) )  
+			{
+				transformat( strTemp, "%5s	",_T("/") );
+				strBuffer += strTemp;
+				continue;
+			}
+
+			transformat( strTemp, _T("%5d	"), dataAnalyzed[0][iTx] );
+			if( dataAnalyzed[0][iTx] < minHole[0][iTx] )
+			{
+				bRedHat = true;
+				node.AddNext( new NodeVal( 0 + 1, iTx + 1, dataAnalyzed[0][iTx], NodeVal::NODE_SMALLER, minHole[0][iTx] ) );
+			}
+			else if( dataAnalyzed[0][iTx] > maxHole[0][iTx] )
+			{
+				bRedHat = true;
+				node.AddNext( new NodeVal( 0 + 1, iTx + 1, dataAnalyzed[0][iTx], NodeVal::NODE_GRATER, maxHole[0][iTx] ) );
+			}
+
+			if( bRedHat )
+			{
+				text += strBuffer;
+				strBuffer = _T("");
+				//在保存需要高亮显示的数据
+				text += ColorText( strTemp, bRedHat ? (unsigned int)RGB( 255, 0, 0 ) : (unsigned int)RGB( 0, 0, 0 ) );
+			}
+			else
+			{
+				strBuffer += strTemp;
+			}
+		}
+
+	}
+
+	if (TRX==0 ||TRX==2)
+	{
+		strBuffer += _T("\r\n");
+		transformat( strTemp, _T("%-5s	"), "Rx:" );
+		strBuffer += strTemp;
+		for ( int iRx = 0; iRx < addInfo.iRowNum; ++iRx )
+		{
+			bRedHat = false;
+			if( (NODE_INVALID_TYPE == invalid[addInfo.iRowNum + 1][iRx]) )  
+			{
+				transformat( strTemp, "%5s	",_T("/") );
+				strBuffer += strTemp;
+				continue;
+			}
+
+			transformat( strTemp, _T("%5d	"), dataAnalyzed[1][iRx] );
+			if( dataAnalyzed[1][iRx] < minHole[1][iRx] )
+			{
+				bRedHat = true;
+				node.AddNext( new NodeVal( 1 + 1, iRx + 1, dataAnalyzed[1][iRx], NodeVal::NODE_SMALLER, minHole[1][iRx] ) );
+			}
+			else if( dataAnalyzed[1][iRx] > maxHole[1][iRx] )
+			{
+				bRedHat = true;
+				node.AddNext( new NodeVal( 1 + 1, iRx + 1, dataAnalyzed[1][iRx], NodeVal::NODE_GRATER, maxHole[1][iRx] ) );
+			}
+
+			if( bRedHat )
+			{
+				text += strBuffer;
+				strBuffer = _T("");
+				//在保存需要高亮显示的数据
+				text += ColorText( strTemp, bRedHat ? (unsigned int)RGB( 255, 0, 0 ) : (unsigned int)RGB( 0, 0, 0 ) );
+			}
+			else
+			{
+				strBuffer += strTemp;
+			}
+		}
+	}
+	
+	
+
+	strBuffer += _T("\r\n");
+	if( !strBuffer.empty() ) text += strBuffer;
+
+	return node.Empty();
+}
+
+template<class T, class K, class P,const int M, const int N>
+bool AnalyzeTestResultMSCap_TX_RX_Judge( IN const T (&dataAnalyzed)[M][N], 
+    IN const K (&minHole)[M][N], 
+    IN const P (&maxHole)[M][N],
+    IN const unsigned char (&invalid)[50][50],
+    IN const AnalyzeInfo& addInfo,
+    OUT ColorText& text,
+    OUT NodeVal& node,
+    IN bool bNoShow = false ,IN int TRX = 0, IN bool isCsv = false )
+{
+    bool bRedHat = false;
+    TCHAR strTemp[50];
+    string strBuffer, strHeadRow;
+
+    const TCHAR* separator = isCsv ? _T(",") : _T("");
+    const TCHAR* fmtSt = isCsv ? _T("	%s") : _T("%-5s	");
+    const TCHAR* fmtCol = isCsv ? _T("Col%02d%s") : _T("Col%02d%-2s	");
+    const TCHAR* fmtTRx = isCsv ? _T("%s,") : _T("%-5s	");
+    const TCHAR* fmtSym = isCsv ? _T("%5s,") : _T("%5s	");
+    const TCHAR* fmtDat = isCsv ? _T("%5d,") : _T("%5d	");
+
+    //transformat( strTemp, _T("%-5s	"), "");
+    transformat( strTemp, fmtSt, separator);
+
+    strHeadRow += strTemp;
+    for(int iCol = 0; iCol < addInfo.iColNum ; iCol++)//max(addInfo.iRowNum, addInfo.iColNum)
+    {
+        //transformat( strTemp, _T("Col%02d%-2s	"), iCol, "");
+        transformat( strTemp, fmtCol, iCol, separator);
+        strHeadRow += strTemp;
+    }
+    if( bNoShow ) text += (strHeadRow + _T("\r\n"));
+
+    if (TRX==0 ||TRX==1)
+    {
+        //transformat( strTemp, _T("%-5s	"), "Tx:" );
+        transformat( strTemp, fmtTRx, "Tx:" );
+        strBuffer = strTemp;
+        for ( int iTx = 0; iTx < addInfo.iColNum; ++iTx )
+        {
+            bRedHat = false;
+            if( (NODE_INVALID_TYPE == invalid[addInfo.iRowNum + 0][iTx]) )  
+            {
+                //transformat( strTemp, "%5s	",_T("/") );
+                transformat( strTemp, fmtSym, _T("/") );
+                strBuffer += strTemp;
+                continue;
+            }
+
+            //transformat( strTemp, _T("%5d	"), dataAnalyzed[0][iTx] );
+            transformat( strTemp, fmtDat, dataAnalyzed[0][iTx] );
+            if( dataAnalyzed[0][iTx] < minHole[0][iTx] )
+            {
+                bRedHat = true;
+                node.AddNext( new NodeVal( 0 + 1, iTx + 1, dataAnalyzed[0][iTx], NodeVal::NODE_SMALLER, minHole[0][iTx] ) );
+            }
+            else if( dataAnalyzed[0][iTx] > maxHole[0][iTx] )
+            {
+                bRedHat = true;
+                node.AddNext( new NodeVal( 0 + 1, iTx + 1, dataAnalyzed[0][iTx], NodeVal::NODE_GRATER, maxHole[0][iTx] ) );
+            }
+
+            if( bRedHat )
+            {
+                text += strBuffer;
+                strBuffer = _T("");
+                //在保存需要高亮显示的数据
+                text += ColorText( strTemp, bRedHat ? (unsigned int)RGB( 255, 0, 0 ) : (unsigned int)RGB( 0, 0, 0 ) );
+            }
+            else
+            {
+                strBuffer += strTemp;
+            }
+        }
+
+    }
+
+    if (TRX==0 ||TRX==2)
+    {
+        strBuffer += _T("\r\n");
+        //transformat( strTemp, _T("%-5s	"), "Rx:" );
+        transformat( strTemp, fmtTRx, "Rx:" );
+        strBuffer += strTemp;
+        for ( int iRx = 0; iRx < addInfo.iRowNum; ++iRx )
+        {
+            bRedHat = false;
+            if( (NODE_INVALID_TYPE == invalid[addInfo.iRowNum + 1][iRx]) )  
+            {
+                //transformat( strTemp, "%5s	",_T("/") );
+                transformat( strTemp, fmtSym, _T("/") );
+                strBuffer += strTemp;
+                continue;
+            }
+
+            //transformat( strTemp, _T("%5d	"), dataAnalyzed[1][iRx] );
+            transformat( strTemp, fmtDat, dataAnalyzed[1][iRx] );
+            if( dataAnalyzed[1][iRx] < minHole[1][iRx] )
+            {
+                bRedHat = true;
+                node.AddNext( new NodeVal( 1 + 1, iRx + 1, dataAnalyzed[1][iRx], NodeVal::NODE_SMALLER, minHole[1][iRx] ) );
+            }
+            else if( dataAnalyzed[1][iRx] > maxHole[1][iRx] )
+            {
+                bRedHat = true;
+                node.AddNext( new NodeVal( 1 + 1, iRx + 1, dataAnalyzed[1][iRx], NodeVal::NODE_GRATER, maxHole[1][iRx] ) );
+            }
+
+            if( bRedHat )
+            {
+                text += strBuffer;
+                strBuffer = _T("");
+                //在保存需要高亮显示的数据
+                text += ColorText( strTemp, bRedHat ? (unsigned int)RGB( 255, 0, 0 ) : (unsigned int)RGB( 0, 0, 0 ) );
+            }
+            else
+            {
+                strBuffer += strTemp;
+            }
+        }
+    }
+
+
+
+    strBuffer += _T("\r\n");
+    if( !strBuffer.empty() ) text += strBuffer;
+
+    return node.Empty();
+}
+
+template<class T, class K, class P,const int M, const int N>
+bool AnalyzeTestResultVTSCapRX( IN const T (&dataAnalyzed)[M][N], 
+	IN const K (&minHole)[M][N], 
+	IN const P (&maxHole)[M][N],
+	IN const AnalyzeInfo& addInfo,
+	OUT ColorText& text,
+	OUT NodeVal& node,
+	IN bool bNoShow = false )
+{
+	bool bRedHat = false;
+	TCHAR strTemp[50];
+	string strBuffer, strHeadRow;
+
+	transformat( strTemp, _T("%-5s	"), "");
+	strHeadRow += strTemp;
+	for(int iCol = 0; iCol < max(addInfo.iRowNum, addInfo.iColNum); iCol++)
+	{
+		transformat( strTemp, _T("Col%02d%-2s	"), iCol, "");
+		strHeadRow += strTemp;
+	}
+	if( bNoShow ) text += (strHeadRow + _T("\r\n"));
+	strBuffer += _T("\r\n");
+	transformat( strTemp, _T("%-5s	"), "Rx:" );
+	strBuffer += strTemp;
+	for ( int iRx = 0; iRx < addInfo.iRowNum; ++iRx )
+	{
+		bRedHat = false;
+
+		transformat( strTemp, _T("%5d	"), dataAnalyzed[0][iRx] );
+		if( dataAnalyzed[0][iRx] < minHole[0][iRx] )
+		{
+			bRedHat = true;
+			node.AddNext( new NodeVal( 1 + 1, iRx + 1, dataAnalyzed[0][iRx], NodeVal::NODE_SMALLER, minHole[0][iRx] ) );
+		}
+		else if( dataAnalyzed[0][iRx] > maxHole[0][iRx] )
+		{
+			bRedHat = true;
+			node.AddNext( new NodeVal( 1 + 1, iRx + 1, dataAnalyzed[0][iRx], NodeVal::NODE_GRATER, maxHole[0][iRx] ) );
+		}
+
+		if( bRedHat )
+		{
+			text += strBuffer;
+			strBuffer = _T("");
+			//在保存需要高亮显示的数据
+			text += ColorText( strTemp, bRedHat ? (unsigned int)RGB( 255, 0, 0 ) : (unsigned int)RGB( 0, 0, 0 ) );
+		}
+		else
+		{
+			strBuffer += strTemp;
+		}
+	}
+
+	strBuffer += _T("\r\n");
+	if( !strBuffer.empty() ) text += strBuffer;
+
+	return node.Empty();
+}
+
+template<class T>
+static tstring value_buffer_to_string( T* buffer, int len )
+{
+	tstring sz;
+	TCHAR temp[10] = {0};
+	for( int index = 0; index < len; index++ )
+	{
+		transformat( temp, _T("%02x "), buffer[index] );
+		sz += temp;
+	}
+
+	return sz;
+}
+template<const int M, const int N>
+static void Copy_RawData(short (&dataAnalyzed)[M][N],short (database)[M][N],unsigned short maxRows, unsigned short maxCols)
+{
+	for (int i = 0; i < maxRows; i++ )
+	{
+		for (int j = 0; j < maxCols; j++ )
+		{
+
+		  dataAnalyzed[i][j] =  database[i][j];
+
+		}
+
+	}
+}
+
+template<const int M, const int N>
+static bool RawData_Normalization( short (&dataAnalyzed)[M][N], unsigned short const minHole[M][N], unsigned short const maxHole[M][N],unsigned short maxRows, unsigned short maxCols,float n_ratioMin, float n_ratioMax, float& ratioOut)
+{
+	float sum_max = 0, sum_min = 0, sum_cur = 0;
+	float icoe = 1.0f; 
+	for (int i = 0; i < maxRows; i++ )
+	{
+		for (int j = 0; j < maxCols; j++ )
+		{
+			if(dataAnalyzed[i][j] > 2000)
+			{
+				sum_max += (float) maxHole[i][j];
+				sum_min += (float) minHole[i][j];
+				sum_cur += (float) dataAnalyzed[i][j];
+			}
+			
+		}
+
+	}
+	if(sum_cur == 0)//(sum_max==0) && (sum_min==0) && 满屏都小于2000时icoe = 1 
+	{
+	  icoe = 1.0f;
+	}
+	else
+	{
+	  icoe = (sum_max + sum_min) / (2  * sum_cur);
+	}
+	ratioOut = icoe;
+
+	if((icoe < n_ratioMin)||(icoe > n_ratioMax))
+	{
+		icoe =1.0f;
+	}
+
+	for (int i = 0; i < maxRows; i++ )
+	{
+		for (int j = 0; j < maxCols; j++ )
+		{
+			dataAnalyzed[i][j] =(short)(dataAnalyzed[i][j] * icoe );
+		}
+
+	}
+
+	return true;
+}
+//Judge_RawData_sampling判断RawData测试项是否采样,返回true认为采样-hjx_20240531;
+template<const int M, const int N>
+static bool Judge_RawData_sampling(unsigned short const minHole[M][N], unsigned short const maxHole[M][N],const unsigned char (&invalid)[M][N],unsigned short maxRows, unsigned short maxCols,unsigned short Min, unsigned short Max)
+{
+	bool ret = false;
+	bool ret_min = false;
+	bool ret_max = false;
+
+	for(int row =0; row< maxRows; row++)
+	{
+		for(int col =0; col < maxCols; col++)
+		{
+			if(invalid[row][col]!=1)
+			{
+				continue;
+			}
+			if((minHole[row][col]!=Min))
+			{
+				ret_min = true;
+			}
+			if((maxHole[row][col]!=Max))
+			{
+				ret_max = true;
+			}
+		}
+	}
+	if((ret_min == true) && (ret_max == true))
+	{
+		ret = true;
+	}
+
+	return ret;
+
+}
+
+static bool ScapRawData_Normalization( short (&dataAnalyzed)[50][50], unsigned short const minHole[50][50], unsigned short const maxHole[50][50],unsigned short maxRows, unsigned short maxCols)
+{
+	float sum_max = 0, sum_min = 0, sum_cur = 0;
+	float icoe = 1.0f; 
+	int array[2][2] = {{0 , maxCols},{1 , maxRows}};
+	for (int i = 0; i < 2; i++ )
+	{
+		for (int j = 0; j < array[i][1]; j++ )
+		{
+
+			sum_max += (float) maxHole[array[i][0]][j];
+			sum_min += (float) minHole[array[i][0]][j];
+			sum_cur += (float) dataAnalyzed[array[i][0]][j];
+		}
+		icoe = (sum_max + sum_min) / (2  * sum_cur);
+		for (int j = 0; j < array[i][1]; j++ )
+		{
+			dataAnalyzed[array[i][0]][j] =(short)(dataAnalyzed[array[i][0]][j] * icoe );
+		}
+		
+	}
+	/*for (int i = 0; i < maxCols; i++ )
+	{
+		
+		sum_max += (float) maxHole[0][i];
+		sum_min += (float) minHole[0][i];
+		sum_cur += (float) dataAnalyzed[0][i];
+	}
+
+	icoe = (sum_max + sum_min) / (2  * sum_cur);
+
+	for (int i = 0; i < maxCols; i++ )
+	{
+	   dataAnalyzed[0][i] =(short)(dataAnalyzed[0][i] * icoe );
+	}
+
+	for (int i = 0; i < maxRows; i++ )
+	{
+
+		sum_max += (float) maxHole[1][i];
+		sum_min += (float) minHole[1][i];
+		sum_cur += (float) dataAnalyzed[1][i];
+	}
+
+	icoe = (sum_max + sum_min) / (2  * sum_cur);
+
+	for (int i = 0; i < maxRows; i++ )
+	{
+		dataAnalyzed[1][i] =(short)(dataAnalyzed[1][i] * icoe );
+	}*/
+
+	return true;
+}
+
+
+template<class T, class U, class V, const int M, const int N>
+static bool tmp_diff(OUT T(&diff)[M][N], IN U(&source)[M][N], IN V base[M][N],unsigned short maxRows, unsigned short maxCols,const unsigned char (&invalid)[M][N])//unsigned short const short(&base)
+{
+	short base_diff[M][N];
+
+	int sourcesum = 0;
+	float sourcemean = 0;
+	int basesum = 0;
+	float basemean = 0;
+	int notCount = 0;
+	for (int i =0; i < maxRows; i++)
+	{
+		for (int j =0; j < maxCols; j++)
+		{
+			if (invalid[i][j] == 0)
+			{
+				notCount++;
+				continue;
+			}
+			sourcesum += source[i][j];
+			basesum += base[i][j];
+		}
+	}
+	sourcemean = (float)sourcesum/(maxRows * maxCols - notCount);
+
+	basemean = (float)basesum/(maxRows * maxCols - notCount);
+
+	auto bf = (sourcemean/10000) == 0 ? 1 :(sourcemean/10000);
+	auto bs = (basemean/10000) == 0 ? 1 :(basemean/10000);
+
+	for (int i =0; i < maxRows; i++)
+	{
+		for (int j =0; j < maxCols; j++)
+		{
+			
+			float df = (source[i][j])/ bf;
+			float ds = ((short)base[i][j])/ bs;
+
+			base_diff[i][j] = (short)(df - ds);
+		}
+	}
+
+	//for (int i = 0; i < maxRows; i++ )
+	//{
+	//	for (int j=0;j<maxCols;j++)
+	//	{
+	//		base_diff[i][j] = (source[i][j]) - ((short)base[i][j]);
+	//	}
+	//}
+
+	for (int i = 0; i < maxRows; i++ )
+	{
+		for (int j=0;j<maxCols;j++)
+		{	
+			diff[i][j] = (base_diff[i+1][j+1]-base_diff[i][j+1])-(base_diff[i+1][j]-base_diff[i][j]);
+			if((i==maxRows-1)||(j==maxCols-1)||(invalid[i][j]==0)||(invalid[i+1][j]==0)||(invalid[i][j+1]==0)||(invalid[i+1][j+1]==0))
+			{
+				diff[i][j] = 0;
+			}
+		}
+	}
+
+	return true;
+}
+
+template<class T,  const int M, const int N>
+static bool tmp_diff_patch_one( T(&diff)[M][N],const unsigned short maxRows, const unsigned short maxCols,const unsigned short threshold)
+{
+
+	for ( int iTx = 0; iTx < maxRows; ++iTx )
+	{
+		for ( int iRx = 0; iRx < maxCols; ++iRx )
+		{
+			if((iTx <= maxRows - 2) &&(iRx <= maxCols - 2))
+			{
+
+				int num = 0, sum = 0;
+				for ( int y = iTx; y < iTx + 2; ++y )
+				{
+					for ( int x = iRx; x < iRx + 2; ++x )
+					{
+						if(abs(diff[y][x]) > threshold/2)
+						{
+							num++;
+							sum += diff[y][x];
+						}
+					}
+				}
+
+				if (num>=4 && abs(sum) < threshold)
+				{
+					for ( int y = iTx; y < iTx + 2; ++y )
+					{
+						for ( int x = iRx; x < iRx + 2; ++x )
+						{
+							(diff[y][x]) = 0;
+						}
+					}
+				}
+			}
+		}
+	}
+	return true;
+}
+
+template<class T, class U, const int M, const int N>
+static bool tmp_data_normalization(OUT T(&dataDst)[M][N], IN const U(&source)[M][N], const unsigned short maxRows, const unsigned short maxCols, const unsigned short num)
+{
+	if (maxRows <= 2*num) return false;
+	if (maxCols <= 2*num) return false;
+	if (M < maxRows) return false;
+	if (N < maxCols) return false;
+
+	float avg_ratio[M] ={0};
+	unsigned int sum = 0;
+
+	for( int iRow = 0; iRow < maxRows; iRow++ )
+	{
+		sum = 0;
+
+		for( int iCol = num; iCol < maxCols - num; iCol++ )
+		{
+			sum += source[iRow][iCol];
+		}
+		float f = (float)(sum/(maxCols - 2 * num))/10000;
+		avg_ratio[iRow] = f == 0 ? 1:f; 
+	}
+	
+	for( int iRow = 0; iRow < maxRows; iRow++ )
+	{
+
+		for( int iCol = 0; iCol < maxCols; iCol++ )
+		{
+			dataDst[iRow][iCol] = (T)(source[iRow][iCol] / avg_ratio[iRow]);
+		}
+	}
+
+	for( int iCol = 0; iCol < maxCols; iCol++ )
+	{
+		sum = 0;
+
+		for( int iRow = num; iRow < maxRows - num; iRow++ )
+		{
+			sum += dataDst[iRow][iCol];
+		}
+		float f = (float)(sum/(maxRows - 2 * num))/10000;
+		avg_ratio[iCol] = f == 0 ? 1 : f;
+	}
+
+	for( int iCol = 0; iCol < maxCols; iCol++ )
+	{
+
+		for( int iRow = 0; iRow < maxRows; iRow++ )
+		{
+			dataDst[iRow][iCol] = (T)(dataDst[iRow][iCol] / avg_ratio[iCol]);
+		}
+
+	}
+
+	return true;
+}
+
+
+template<class T, const int M, const int N>
+static bool TmpDiffAnalyzeTestResult( IN const T (&dataAnalyzed)[M][N], 
+	IN unsigned short maxRows, 
+	IN unsigned short maxCols, 
+	IN unsigned short threshold, 
+	IN unsigned short thresholdNum, 
+	IN unsigned short allthreshold, 
+	IN unsigned short allthresholdNum, 
+	OUT ColorText& text, 
+	OUT NodeVal& node,
+
+	IN bool bNoShow = true )
+{
+	string strBuffer, strHeadRow;
+	TCHAR strTemp[50];
+
+	transformat( strTemp, _T("%-5s	"), "");
+	strHeadRow = strTemp;
+	for(int iCol = 0; iCol < maxCols; iCol++)
+	{
+		transformat( strTemp, _T("Col%02d%-2s	"), iCol, "");
+		strHeadRow += strTemp;
+	}
+	if( bNoShow ) text += (strHeadRow + _T("\r\n"));
+	int allnum = 0;
+	/*打印col列显示*/
+	for ( int iTx = 0; iTx < maxRows; ++iTx )
+	{
+		transformat( strTemp, _T("Row%02d: "), iTx );
+		if( bNoShow ) strBuffer += strTemp;
+		
+		for ( int iRx = 0; iRx < maxCols; ++iRx )
+		{
+			bool bRedHat = false;
+			int num = 0;
+			if((iTx>=1) && (iTx<=maxRows-2) && (iRx>=1) && (iRx<=maxCols-2))
+			{
+				if(abs(dataAnalyzed[iTx-1][iRx-1])>threshold)
+				{
+					num++;
+				}
+				if(abs(dataAnalyzed[iTx-1][iRx])>threshold)
+				{
+					num++;
+				}
+				if(abs(dataAnalyzed[iTx-1][iRx+1])>threshold)
+				{
+					num++;
+				}
+				if(abs(dataAnalyzed[iTx][iRx-1])>threshold)
+				{
+					num++;
+				}
+				if(abs(dataAnalyzed[iTx][iRx])>threshold)
+				{
+					num++;
+				}
+				if(abs(dataAnalyzed[iTx][iRx+1])>threshold)
+				{
+					num++;
+				}
+				if(abs(dataAnalyzed[iTx+1][iRx-1])>threshold)
+				{
+					num++;
+				}
+				if(abs(dataAnalyzed[iTx+1][iRx])>threshold)
+				{
+					num++;
+				}
+				if(abs(dataAnalyzed[iTx+1][iRx+1])>threshold)
+				{
+					num++;
+				}
+				if (num>=thresholdNum)
+				{
+					bRedHat = true;
+					node.AddNext( new NodeVal( iTx+1, iRx+1, dataAnalyzed[iTx][iRx], NodeVal::NODE_SMALLER, num ) );
+				}
+			
+			}
+			if (abs(dataAnalyzed[iTx][iRx])>allthreshold)
+			{
+				allnum++;
+				bRedHat = true;
+			}
+			if (allnum>=allthresholdNum)
+			{
+				node.AddNext( new NodeVal( iTx+1, iRx+1, dataAnalyzed[iTx][iRx], NodeVal::NODE_SMALLER, allnum ) );
+			}
+			transformat( strTemp,  _T("%5d	"), dataAnalyzed[iTx][iRx] );
+
+			if( !bRedHat )
+			{
+				strBuffer += strTemp;
+			}
+			else
+			{
+				//先将Buffer的数据保存起来
+				text += strBuffer;
+				strBuffer = _T("");
+				//在保存需要高亮显示的数据
+				text += ColorText( strTemp, bRedHat ? (unsigned int)RGB( 255, 0, 0 ) : (unsigned int)RGB( 0, 0, 0 ) );
+			}
+		}
+		strBuffer += _T("\r\n");
+	}
+
+	if( !strBuffer.empty() ) text += strBuffer;
+
+	return node.Empty();
+}
+
+
+template<class T, const int M, const int N>
+static bool WTmpDiffAnalyzeTestResult( IN const T (&dataAnalyzed)[M][N], 
+	IN unsigned short maxRows, 
+	IN unsigned short maxCols, 
+	IN unsigned short node33, 
+	IN unsigned short node33Num, 
+	IN unsigned short allthreshold, 
+	IN unsigned short allthresholdNum, 
+	OUT ColorText& text, 
+	OUT NodeVal& node,
+
+	IN bool bNoShow = true )
+{
+	string strBuffer, strHeadRow;
+	TCHAR strTemp[50];
+
+	transformat( strTemp, _T("%-5s	"), "");
+	strHeadRow = strTemp;
+	for(int iCol = 0; iCol < maxCols; iCol++)
+	{
+		transformat( strTemp, _T("Col%02d%-2s	"), iCol, "");
+		strHeadRow += strTemp;
+	}
+	if( bNoShow ) text += (strHeadRow + _T("\r\n"));
+	int allnum = 0;
+	/*打印col列显示*/
+	for ( int iTx = 0; iTx < maxRows; ++iTx )
+	{
+		transformat( strTemp, _T("Row%02d: "), iTx );
+		if( bNoShow ) strBuffer += strTemp;
+
+		for ( int iRx = 0; iRx < maxCols; ++iRx )
+		{
+			bool bRedHat = false;
+			int num = 0;
+			if((iTx<=maxRows-3) &&(iRx<=maxCols-3))
+			{
+				for ( int y = iTx; y < iTx + 3; ++y )
+				{
+					for ( int x = iRx; x < iRx + 3; ++x )
+					{
+						if(abs(dataAnalyzed[y][x])>node33)
+						{
+							num++;
+						}
+					}
+				}
+
+				if (num>=node33Num)
+				{
+					bRedHat = true;
+					node.AddNext( new NodeVal( iTx+1, iRx+1, dataAnalyzed[iTx][iRx], NodeVal::NODE_NODE33, num ) );
+				}
+
+			}
+			if (abs(dataAnalyzed[iTx][iRx])>allthreshold)
+			{
+				allnum++;
+				bRedHat = true;
+			}
+
+			transformat( strTemp,  _T("%5d	"), dataAnalyzed[iTx][iRx] );
+
+			if( !bRedHat )
+			{
+				strBuffer += strTemp;
+			}
+			else
+			{
+				//先将Buffer的数据保存起来
+				text += strBuffer;
+				strBuffer = _T("");
+				//在保存需要高亮显示的数据
+				text += ColorText( strTemp, bRedHat ? (unsigned int)RGB( 255, 0, 0 ) : (unsigned int)RGB( 0, 0, 0 ) );
+			}
+		}
+
+		strBuffer += _T("\r\n");
+	}
+
+	if (allnum>=allthresholdNum)
+	{
+		node.AddNext( new NodeVal( 1, 1, dataAnalyzed[0][0], NodeVal::NODE_ALL, allnum ) );
+	}
+
+	if( !strBuffer.empty() ) text += strBuffer;
+
+	return node.Empty();
+}
+
+template<class T, const int M, const int N>
+static bool WTmpDiffAnalyzeTestResultJudge( IN const T (&dataAnalyzed)[M][N], 
+    IN unsigned short maxRows, 
+    IN unsigned short maxCols, 
+    IN unsigned short node33, 
+    IN unsigned short node33Num, 
+    IN unsigned short allthreshold, 
+    IN unsigned short allthresholdNum, 
+    OUT ColorText& text, 
+    OUT NodeVal& node,
+    IN bool isCsv = false,
+    IN bool bNoShow = true )
+{
+    string strBuffer, strHeadRow;
+    TCHAR strTemp[50];
+
+    const TCHAR* separator = isCsv ? _T(",") : _T("");
+    const TCHAR* fmtSt = isCsv ? _T("	%s") : _T("%-5s	");
+    const TCHAR* fmtCol = isCsv ? _T("Col%02d%s") : _T("Col%02d%-2s	");
+    const TCHAR* fmtRow = isCsv ? _T("Row%02d:,") : _T("Row%02d: ");
+    const TCHAR* fmtSym = isCsv ? _T("%5s,") : _T("%5s	");
+    const TCHAR* fmtDat = isCsv ? _T("%5d,") : _T("%5d	");
+
+    //transformat( strTemp, _T("%-5s	"), "");
+    transformat( strTemp, fmtSt, separator);
+    strHeadRow = strTemp;
+    for(int iCol = 0; iCol < maxCols; iCol++)
+    {
+        //transformat( strTemp, _T("Col%02d%-2s	"), iCol, "");
+        transformat( strTemp, fmtCol, iCol, separator);
+        strHeadRow += strTemp;
+    }
+    if( bNoShow ) text += (strHeadRow + _T("\r\n"));
+    int allnum = 0;
+    /*打印col列显示*/
+    for ( int iTx = 0; iTx < maxRows; ++iTx )
+    {
+        //transformat( strTemp, _T("Row%02d: "), iTx );
+        transformat( strTemp, fmtRow, iTx );
+        if( bNoShow ) strBuffer += strTemp;
+
+        for ( int iRx = 0; iRx < maxCols; ++iRx )
+        {
+            bool bRedHat = false;
+            int num = 0;
+            if((iTx<=maxRows-3) &&(iRx<=maxCols-3))
+            {
+                for ( int y = iTx; y < iTx + 3; ++y )
+                {
+                    for ( int x = iRx; x < iRx + 3; ++x )
+                    {
+                        if(abs(dataAnalyzed[y][x])>node33)
+                        {
+                            num++;
+                        }
+                    }
+                }
+
+                if (num>=node33Num)
+                {
+                    bRedHat = true;
+                    node.AddNext( new NodeVal( iTx+1, iRx+1, dataAnalyzed[iTx][iRx], NodeVal::NODE_NODE33, num ) );
+                }
+
+            }
+            if (abs(dataAnalyzed[iTx][iRx])>allthreshold)
+            {
+                allnum++;
+                bRedHat = true;
+            }
+
+            //transformat( strTemp,  _T("%5d	"), dataAnalyzed[iTx][iRx] );
+            transformat( strTemp,  fmtDat, dataAnalyzed[iTx][iRx] );
+
+            if( !bRedHat )
+            {
+                strBuffer += strTemp;
+            }
+            else
+            {
+                //先将Buffer的数据保存起来
+                text += strBuffer;
+                strBuffer = _T("");
+                //在保存需要高亮显示的数据
+                text += ColorText( strTemp, bRedHat ? (unsigned int)RGB( 255, 0, 0 ) : (unsigned int)RGB( 0, 0, 0 ) );
+            }
+        }
+
+        strBuffer += _T("\r\n");
+    }
+
+    if (allnum>=allthresholdNum)
+    {
+        node.AddNext( new NodeVal( 1, 1, dataAnalyzed[0][0], NodeVal::NODE_ALL, allnum ) );
+    }
+
+    if( !strBuffer.empty() ) text += strBuffer;
+
+    return node.Empty();
+}
+
+
+//template<class T, const int M, const int N>
+//static bool WTmpDiffAnalyzeTestResult( IN const T (&dataAnalyzed)[M][N], 
+//	IN unsigned short maxRows, 
+//	IN unsigned short maxCols, 
+//	IN unsigned short node33, 
+//	IN unsigned short node33Num,
+//	IN unsigned short node55, 
+//	IN unsigned short node55Num, 
+//	IN unsigned short allthreshold, 
+//	IN unsigned short allthresholdNum, 
+//	OUT ColorText& text, 
+//	OUT NodeVal& node,
+//
+//	IN bool bNoShow = true )
+//{
+//	string strBuffer, strHeadRow;
+//	TCHAR strTemp[50];
+//
+//	transformat( strTemp, _T("%-5s	"), "");
+//	strHeadRow = strTemp;
+//	for(int iCol = 0; iCol < maxCols; iCol++)
+//	{
+//		transformat( strTemp, _T("Col%02d%-2s	"), iCol, "");
+//		strHeadRow += strTemp;
+//	}
+//	if( bNoShow ) text += (strHeadRow + _T("\r\n"));
+//	int allnum = 0;
+//	/*打印col列显示*/
+//	for ( int iTx = 0; iTx < maxRows; ++iTx )
+//	{
+//		transformat( strTemp, _T("Row%02d: "), iTx );
+//		if( bNoShow ) strBuffer += strTemp;
+//
+//		for ( int iRx = 0; iRx < maxCols; ++iRx )
+//		{
+//			bool bRedHat = false;
+//			int num = 0;
+//			if((iTx<=maxRows-3) &&(iRx<=maxCols-3))
+//			{
+//				for ( int y = iTx; y < iTx + 3; ++y )
+//				{
+//					for ( int x = iRx; x < iRx + 3; ++x )
+//					{
+//						if(abs(dataAnalyzed[y][x])>node33)
+//						{
+//							num++;
+//						}
+//					}
+//				}
+//				
+//				if (num>=node33Num)
+//				{
+//					bRedHat = true;
+//					node.AddNext( new NodeVal( iTx+1, iRx+1, dataAnalyzed[iTx][iRx], NodeVal::NODE_NODE33, num ) );
+//				}
+//
+//			}
+//			int num55 = 0;
+//			if((iTx<=maxRows-5) && (iRx<=maxCols-5))
+//			{
+//				for ( int y = iTx; y < iTx + 5; ++y )
+//				{
+//					for ( int x = iRx; x < iRx + 5; ++x )
+//					{
+//						if(abs(dataAnalyzed[y][x])>node55)
+//						{
+//							num55++;
+//						}
+//					}
+//				}
+//				if (num55>=node55Num)
+//				{
+//					bRedHat = true;
+//					node.AddNext( new NodeVal( iTx+1, iRx+1, dataAnalyzed[iTx][iRx], NodeVal::NODE_NODE55, num55 ) );
+//				}
+//
+//			}
+//			if (abs(dataAnalyzed[iTx][iRx])>allthreshold)
+//			{
+//				allnum++;
+//				bRedHat = true;
+//			}
+//
+//			transformat( strTemp,  _T("%5d	"), dataAnalyzed[iTx][iRx] );
+//
+//			if( !bRedHat )
+//			{
+//				strBuffer += strTemp;
+//			}
+//			else
+//			{
+//				//先将Buffer的数据保存起来
+//				text += strBuffer;
+//				strBuffer = _T("");
+//				//在保存需要高亮显示的数据
+//				text += ColorText( strTemp, bRedHat ? (unsigned int)RGB( 255, 0, 0 ) : (unsigned int)RGB( 0, 0, 0 ) );
+//			}
+//		}
+//
+//		strBuffer += _T("\r\n");
+//	}
+//
+//	if (allnum>=allthresholdNum)
+//	{
+//		node.AddNext( new NodeVal( 1, 1, dataAnalyzed[0][0], NodeVal::NODE_ALL, allnum ) );
+//	}
+//
+//	if( !strBuffer.empty() ) text += strBuffer;
+//
+//	return node.Empty();
+//}
+
+template<class T,class U, const int M, const int N>
+static void fsd_diff(OUT T(&diff)[M][N], IN U const(fast)[M][N], IN U const (slow)[M][N],unsigned short maxRows, unsigned short maxCols)
+{
+	int fastsum = 0;
+	float fastmean = 0;
+	int slowsum = 0;
+	float slowmean = 0;
+	for (int i =0; i < maxRows; i++)
+	{
+		for (int j =0; j < maxCols; j++)
+		{
+			fastsum += fast[i][j];
+			slowsum += slow[i][j];
+		}
+	}
+	fastmean = (float)fastsum/(maxRows * maxCols);
+
+	slowmean = (float)slowsum/(maxRows * maxCols);
+
+	auto bf = (fastmean/10000) == 0 ? 1 :(fastmean/10000);
+	auto bs = (slowmean/10000) == 0 ? 1 :(slowmean/10000);
+
+	for (int i =0; i < maxRows; i++)
+	{
+		for (int j =0; j < maxCols; j++)
+		{
+
+			float df = (fast[i][j])/ bf;
+			float ds = (slow[i][j])/ bs;
+
+			diff[i][j] = (short)(df - ds);
+		}
+	}
+
+}
+
+template<class T,class U, const int M, const int N>
+static void fsd_LineSubtraction(OUT T(&dataDst)[M][N], IN U const(dataSrc)[M][N],unsigned short maxRows, unsigned short maxCols, bool IsAbs = false)
+{
+	memset( dataDst, 0, sizeof(dataDst) );
+	int rawavg[M] ={0};
+	//int rawsum[M] ={0};
+	std::list<short> listraw; 
+	int iDrops = (maxCols > 4) ? 2 : 0;
+	for( int iRow = 0; iRow < maxRows - 1; iRow++ )
+	{
+		for( int iCol = 0; iCol < maxCols; iCol++ )
+		{
+			dataDst[iRow][iCol] = (T)(dataSrc[iRow+1][iCol] - dataSrc[iRow][iCol]);
+			//rawsum[iRow] += dataDst[iRow][iCol];
+			listraw.push_back(dataDst[iRow][iCol]);
+		}
+
+		listraw.sort();
+
+		for( int index = 0; index < iDrops; index++ )
+		{
+			listraw.pop_front();
+			listraw.pop_back();
+		}
+
+		for( std::list<short>::iterator it = listraw.begin(); it != listraw.end(); it++ )
+		{
+			rawavg[iRow] += *it;
+		}	
+		rawavg[iRow] /= (int)listraw.size();
+
+		listraw.clear();
+	}
+	for( int iRow = 0; iRow < maxRows - 1; iRow++ )
+	{
+		//float  mean = ((float)rawsum[iRow])/maxCols;
+		for( int iCol = 0; iCol < maxCols; iCol++ )
+		{
+			if (IsAbs == true)
+			{
+				dataDst[iRow][iCol] = abs((T)(dataDst[iRow][iCol] - rawavg[iRow]));
+			} 
+			else
+			{
+				dataDst[iRow][iCol] = (T)(dataDst[iRow][iCol] - rawavg[iRow]);
+			}
+			
+		}
+	}
+}
+
+template<class T,class U,class V, const int M, const int N>
+static void MatrixAddition(OUT T(&Add)[M][N], IN U const(source1)[M][N], IN V const (source2)[M][N],unsigned short maxRows, unsigned short maxCols, bool IsAbs = false)//unsigned short const short(&base)
+{
+	for (int i =0; i < maxRows; i++)
+	{
+		for (int j =0; j < maxCols; j++)
+		{
+			if(false == IsAbs)
+			{
+				Add[i][j] = (T)(source1[i][j] + source2[i][j]);
+			}
+			else
+			{
+				Add[i][j] = abs((T)(source1[i][j] + source2[i][j]));
+			}
+			
+		}
+	}
+}
+
+template<class T,class U,class V, const int M, const int N>
+static void MatrixSubtraction(OUT T(&Sub)[M][N], IN U const(source1)[M][N], IN V const (source2)[M][N],unsigned short maxRows, unsigned short maxCols, bool IsAbs = false)//unsigned short const short(&base)
+{
+	for (int i =0; i < maxRows; i++)
+	{
+		for (int j =0; j < maxCols; j++)
+		{
+			if(false == IsAbs)
+			{
+				Sub[i][j] = (T)(source1[i][j] - source2[i][j]);
+			}
+			else
+			{
+				Sub[i][j] = abs((T)(source1[i][j] - source2[i][j]));
+			}
+			
+		}
+	}
+}
+
+template<class T,class U,class V, const int M, const int N>
+static void MatrixMultiplication(OUT T(&Multipy)[M][N], IN U const(source1)[M][N], IN V const (source2)[M][N],unsigned short maxRows, unsigned short maxCols, bool IsAbs = false)//unsigned short const short(&base)
+{
+	for (int i =0; i < maxRows; i++)
+	{
+		for (int j =0; j < maxCols; j++)
+		{
+			if(false == IsAbs)
+			{
+				Multipy[i][j] = (T)(source1[i][j] * source2[i][j]);
+			}
+			else
+			{
+				Multipy[i][j] = abs((T)(source1[i][j] * source2[i][j]));
+			}
+
+		}
+	}
+}
+
+template<class T,class U,class V, const int M, const int N>
+static void MatrixMultiplication(OUT T(&Multipy)[M][N], IN U const(source1)[M][N], IN V const source2,unsigned short maxRows, unsigned short maxCols, bool IsAbs = false)//unsigned short const short(&base)
+{
+	for (int i =0; i < maxRows; i++)
+	{
+		for (int j =0; j < maxCols; j++)
+		{
+			if(false == IsAbs)
+			{
+				Multipy[i][j] = (T)(source1[i][j] * source2);
+			}
+			else
+			{
+				Multipy[i][j] = abs((T)(source1[i][j] * source2));
+			}
+
+		}
+	}
+}
+
+template<class T,class U, class v,const int M, const int N>
+static void MatrixDivision(OUT T(&Division)[M][N], IN U const(source1)[M][N], IN v const (source2)[M][N],unsigned short maxRows, unsigned short maxCols, bool IsAbs = false)//unsigned short const short(&base)
+{
+	for (int i =0; i < maxRows; i++)
+	{
+		for (int j =0; j < maxCols; j++)
+		{
+			if(false == IsAbs)
+			{
+				Division[i][j] = (T)(source1[i][j] / source2[i][j]);
+			}
+			else
+			{
+				Division[i][j] = abs((T)(source1[i][j] / source2[i][j]));
+			}
+
+		}
+	}
+}
+template<class T, const int M, const int N>
+static bool MatrixInvalidSet(IN T(&source)[M][N], const unsigned char (&invalid)[M][N], unsigned short maxRows, unsigned short maxCols, T num)
+{
+	for (int i =0; i < maxRows; i++)
+	{
+		for (int j =0; j < maxCols; j++)
+		{
+			if (0 == invalid[i][j])
+			{
+				source[i][j] = (T)num;
+			}
+
+		}
+	}
+	return true;
+}
+
+template<class T, class K, class P,  class X, class Y, const int M, const int N>
+static bool AnalyzeTestResult_H_V( IN const T (&dataAnalyzed)[M][N], 
+	IN const K (&minHole)[M][N], 
+	IN const P (&maxHole)[M][N],
+	IN const unsigned char (&invalid)[M][N],
+	IN const AnalyzeInfo& addInfo,
+	OUT ColorText& text, 
+	OUT NodeVal& node,
+	IN const unsigned char (&uniformity_invalid_node)[M][N],
+	IN X hv_over_limit_ratio,
+	IN Y& hv_over_limit_num,
+	OUT NodeVal& node1,
+	IN bool bNoShow = false )
+{
+	string strBuffer, strHeadRow;
+	TCHAR strTemp[50];
+	hv_over_limit_num = 0;
+	transformat( strTemp, _T("%-5s	"), "");
+	strHeadRow = strTemp;
+	for(int iCol = 0; iCol < addInfo.iColNum; iCol++)
+	{
+		transformat( strTemp, _T("Col%02d%-2s	"), iCol, "");
+		strHeadRow += strTemp;
+	}
+	if( bNoShow ) text += (strHeadRow + _T("\r\n"));
+
+	/*打印col列显示*/
+	for ( int iTx = 0; iTx < addInfo.iRowNum + ( addInfo.bIncludeKey ? 1 : 0 ); ++iTx )
+	{
+		transformat( strTemp, _T("Row%02d: "), iTx );
+		if( bNoShow ) strBuffer += strTemp;
+		int Cols = ( iTx == addInfo.iRowNum ) ? addInfo.keyNum : addInfo.iColNum;
+
+		for ( int iRx = 0; iRx < Cols; ++iRx )
+		{
+			bool bRedHat = false;
+			if( NODE_AST_TYPE == invalid[iTx][iRx] )
+			{
+				transformat( strTemp,  _T("%5s	"), _T("*") );
+				strBuffer += strTemp;
+				continue;
+			}
+			if( (NODE_INVALID_TYPE == invalid[iTx][iRx])
+				|| (!addInfo.bIncludeKey && (NODE_KEY_TYPE == invalid[iTx][iRx])) )  
+			{
+				transformat( strTemp,  _T("%5s	"),_T("/") );
+				strBuffer += strTemp;
+				continue;
+			}
+
+			if( addInfo.bAbsCompare )
+			{
+				if( abs((int)dataAnalyzed[iTx][iRx]) < minHole[iTx][iRx] )
+				{
+					bRedHat = true;
+					node.AddNext( new NodeVal( iTx+1, iRx+1, dataAnalyzed[iTx][iRx], NodeVal::NODE_SMALLER, minHole[iTx][iRx] ) );
+				}
+				else if( abs((int)dataAnalyzed[iTx][iRx]) > maxHole[iTx][iRx] )
+				{
+					bRedHat = true;
+					node.AddNext( new NodeVal( iTx+1, iRx+1, dataAnalyzed[iTx][iRx], NodeVal::NODE_GRATER, maxHole[iTx][iRx] ) );
+				}
+
+				if( (abs((int)dataAnalyzed[iTx][iRx]) > maxHole[iTx][iRx]* hv_over_limit_ratio)&&(uniformity_invalid_node[iTx][iRx]==1))
+				{
+					hv_over_limit_num++;
+					bRedHat = true;
+					node1.AddNext( new NodeVal( iTx+1, iRx+1, dataAnalyzed[iTx][iRx], NodeVal::NODE_GRATER, maxHole[iTx][iRx]* hv_over_limit_ratio ) );
+				}
+			}
+			else
+			{
+				if( dataAnalyzed[iTx][iRx] < minHole[iTx][iRx] )
+				{
+					bRedHat = true;
+					node.AddNext( new NodeVal( iTx+1, iRx+1, dataAnalyzed[iTx][iRx], NodeVal::NODE_SMALLER, minHole[iTx][iRx] ) );
+				}
+				else if( dataAnalyzed[iTx][iRx] > maxHole[iTx][iRx] )
+				{
+					bRedHat = true;
+					node.AddNext( new NodeVal( iTx+1, iRx+1, dataAnalyzed[iTx][iRx], NodeVal::NODE_GRATER, maxHole[iTx][iRx] ) );
+				}
+
+				if( (dataAnalyzed[iTx][iRx] > maxHole[iTx][iRx]* hv_over_limit_ratio)&&(uniformity_invalid_node[iTx][iRx]==1))
+				{
+					hv_over_limit_num++;
+					bRedHat = true;
+					node1.AddNext( new NodeVal( iTx+1, iRx+1, dataAnalyzed[iTx][iRx], NodeVal::NODE_GRATER, maxHole[iTx][iRx]* hv_over_limit_ratio ) );
+				}
+			}
+			transformat( strTemp,  _T("%5d	"), dataAnalyzed[iTx][iRx] );
+
+			if( !bRedHat )
+			{
+				strBuffer += strTemp;
+			}
+			else
+			{
+				//先将Buffer的数据保存起来
+				text += strBuffer;
+				strBuffer = _T("");
+				//在保存需要高亮显示的数据
+				text += ColorText( strTemp, bRedHat ? (unsigned int)RGB( 255, 0, 0 ) : (unsigned int)RGB( 0, 0, 0 ) );
+			}
+		}
+		strBuffer += _T("\r\n");
+	}
+
+	if( !strBuffer.empty() ) text += strBuffer;
+
+	return node.Empty() ;
+}
+
+template<class T, class K, class P,  class X, class Y, const int M, const int N>
+static bool AnalyzeTestResult_H_V_Judge( IN const T (&dataAnalyzed)[M][N], 
+    IN const K (&minHole)[M][N], 
+    IN const P (&maxHole)[M][N],
+    IN const unsigned char (&invalid)[M][N],
+    IN const AnalyzeInfo& addInfo,
+    OUT ColorText& text, 
+    OUT NodeVal& node,
+    IN const unsigned char (&uniformity_invalid_node)[M][N],
+    IN X hv_over_limit_ratio,
+    IN Y& hv_over_limit_num,
+    OUT NodeVal& node1,
+    IN bool isCsv = false,
+    IN bool bNoShow = false )
+{
+    string strBuffer, strHeadRow;
+    TCHAR strTemp[50];
+    hv_over_limit_num = 0;
+
+    const TCHAR* separator = isCsv ? _T(",") : _T("");
+    const TCHAR* fmtSt = isCsv ? _T("	%s") : _T("%-5s	");
+    const TCHAR* fmtCol = isCsv ? _T("Col%02d%s") : _T("Col%02d%-2s	");
+    const TCHAR* fmtRow = isCsv ? _T("Row%02d:,") : _T("Row%02d: ");
+    const TCHAR* fmtSym = isCsv ? _T("%5s,") : _T("%5s	");
+    const TCHAR* fmtDat = isCsv ? _T("%5d,") : _T("%5d	");
+
+    //transformat( strTemp, _T("%-5s	"), "");
+    transformat( strTemp, fmtSt, separator);
+    strHeadRow = strTemp;
+    for(int iCol = 0; iCol < addInfo.iColNum; iCol++)
+    {
+        //transformat( strTemp, _T("Col%02d%-2s	"), iCol, "");
+        transformat( strTemp, fmtCol, iCol, separator);
+        strHeadRow += strTemp;
+    }
+    if( bNoShow ) text += (strHeadRow + _T("\r\n"));
+
+    /*打印col列显示*/
+    for ( int iTx = 0; iTx < addInfo.iRowNum + ( addInfo.bIncludeKey ? 1 : 0 ); ++iTx )
+    {
+        //transformat( strTemp, _T("Row%02d: "), iTx );
+        transformat( strTemp, fmtRow, iTx );
+        if( bNoShow ) strBuffer += strTemp;
+        int Cols = ( iTx == addInfo.iRowNum ) ? addInfo.keyNum : addInfo.iColNum;
+
+        for ( int iRx = 0; iRx < Cols; ++iRx )
+        {
+            bool bRedHat = false;
+            if( NODE_AST_TYPE == invalid[iTx][iRx] )
+            {
+                //transformat( strTemp,  _T("%5s	"), _T("*") );
+                transformat( strTemp,  fmtSym, _T("*") );
+                strBuffer += strTemp;
+                continue;
+            }
+            if( (NODE_INVALID_TYPE == invalid[iTx][iRx])
+                || (!addInfo.bIncludeKey && (NODE_KEY_TYPE == invalid[iTx][iRx])) )  
+            {
+                //transformat( strTemp,  _T("%5s	"),_T("/") );
+                transformat( strTemp,  fmtSym, _T("/") );
+                strBuffer += strTemp;
+                continue;
+            }
+
+            if( addInfo.bAbsCompare )
+            {
+                if( abs((int)dataAnalyzed[iTx][iRx]) < minHole[iTx][iRx] )
+                {
+                    bRedHat = true;
+                    node.AddNext( new NodeVal( iTx+1, iRx+1, dataAnalyzed[iTx][iRx], NodeVal::NODE_SMALLER, minHole[iTx][iRx] ) );
+                }
+                else if( abs((int)dataAnalyzed[iTx][iRx]) > maxHole[iTx][iRx] )
+                {
+                    bRedHat = true;
+                    node.AddNext( new NodeVal( iTx+1, iRx+1, dataAnalyzed[iTx][iRx], NodeVal::NODE_GRATER, maxHole[iTx][iRx] ) );
+                }
+
+                if( (abs((int)dataAnalyzed[iTx][iRx]) > maxHole[iTx][iRx]* hv_over_limit_ratio)&&(uniformity_invalid_node[iTx][iRx]==1))
+                {
+                    hv_over_limit_num++;
+                    bRedHat = true;
+                    node1.AddNext( new NodeVal( iTx+1, iRx+1, dataAnalyzed[iTx][iRx], NodeVal::NODE_GRATER, maxHole[iTx][iRx]* hv_over_limit_ratio ) );
+                }
+            }
+            else
+            {
+                if( dataAnalyzed[iTx][iRx] < minHole[iTx][iRx] )
+                {
+                    bRedHat = true;
+                    node.AddNext( new NodeVal( iTx+1, iRx+1, dataAnalyzed[iTx][iRx], NodeVal::NODE_SMALLER, minHole[iTx][iRx] ) );
+                }
+                else if( dataAnalyzed[iTx][iRx] > maxHole[iTx][iRx] )
+                {
+                    bRedHat = true;
+                    node.AddNext( new NodeVal( iTx+1, iRx+1, dataAnalyzed[iTx][iRx], NodeVal::NODE_GRATER, maxHole[iTx][iRx] ) );
+                }
+
+                if( (dataAnalyzed[iTx][iRx] > maxHole[iTx][iRx]* hv_over_limit_ratio)&&(uniformity_invalid_node[iTx][iRx]==1))
+                {
+                    hv_over_limit_num++;
+                    bRedHat = true;
+                    node1.AddNext( new NodeVal( iTx+1, iRx+1, dataAnalyzed[iTx][iRx], NodeVal::NODE_GRATER, maxHole[iTx][iRx]* hv_over_limit_ratio ) );
+                }
+            }
+            //transformat( strTemp,  _T("%5d	"), dataAnalyzed[iTx][iRx] );
+            transformat( strTemp,  fmtDat, dataAnalyzed[iTx][iRx] );
+            if( !bRedHat )
+            {
+                strBuffer += strTemp;
+            }
+            else
+            {
+                //先将Buffer的数据保存起来
+                text += strBuffer;
+                strBuffer = _T("");
+                //在保存需要高亮显示的数据
+                text += ColorText( strTemp, bRedHat ? (unsigned int)RGB( 255, 0, 0 ) : (unsigned int)RGB( 0, 0, 0 ) );
+            }
+        }
+        strBuffer += _T("\r\n");
+    }
+
+    if( !strBuffer.empty() ) text += strBuffer;
+
+    return node.Empty() ;
+}
+/**************************************************************************************/
+#endif

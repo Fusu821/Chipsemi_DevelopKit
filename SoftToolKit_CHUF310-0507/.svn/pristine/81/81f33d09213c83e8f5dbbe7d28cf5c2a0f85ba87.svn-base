@@ -1,0 +1,90 @@
+﻿<UserControl x:Class="SEMIDevelopKit.Src.WinSub.StatisticFrame"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:app_util="clr-namespace:SEMIDevelopKit.Src.Util"
+             xmlns:avalonDock="http://schemas.xceed.com/wpf/xaml/avalondock"
+             xmlns:wpfCtrl="clr-namespace:SEMI.Util;assembly=SEMI.Util"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"   
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="190"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <wpfCtrl:WpfLineChart x:Name="lineBoom" LatestPair="{Binding ScanPoint}" ItemsSource="{Binding SourceAnalyzed, Mode=TwoWay}" SpeedUp="{Binding SpeedUp}" X_Min="{Binding XMin}" X_Max="{Binding XMax}" Y_Min="{Binding YMin}" Y_Max="{Binding YMax}"  Clean="{Binding CleanChart, Mode=TwoWay}" BreakDown="{Binding BreakChart, Mode=TwoWay}" SelIdentity="{Binding CurPointIdentity, Mode=TwoWay}" Background="#FEFEFE">
+                <wpfCtrl:WpfLineChart.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Save Log" Click="SaveScanDataClick"/>
+                    </ContextMenu>
+                </wpfCtrl:WpfLineChart.ContextMenu>
+            </wpfCtrl:WpfLineChart>
+        </Grid>
+
+        <GridSplitter Height="2" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"></GridSplitter>
+
+        <avalonDock:DockingManager  Grid.Row="1" x:Name="dockManager"  AllowMixedOrientation="True">
+            <avalonDock:DockingManager.Theme>
+                <avalonDock:VS2010Theme></avalonDock:VS2010Theme>
+            </avalonDock:DockingManager.Theme>
+            <avalonDock:LayoutRoot>
+                <avalonDock:LayoutPanel Orientation="Horizontal">
+                    <avalonDock:LayoutAnchorablePaneGroup>
+                        <avalonDock:LayoutAnchorablePane x:Name="panelLeft">
+                            <avalonDock:LayoutAnchorable Title="Operate">
+                                <DockPanel Background="#AAAAAA" LastChildFill="True" Margin="5">
+                                    <GroupBox Header="Setting" Style="{x:Null}" Width="250">
+                                        <UniformGrid Rows="4" Columns="2">
+                                            <Label Content="XMin:" Margin="1" HorizontalContentAlignment="Right"></Label>
+                                            <TextBox Text="{Binding XMin}" Margin="1"></TextBox>
+                                            <Label Content="XMax:" Margin="1" HorizontalContentAlignment="Right"></Label>
+                                            <TextBox Text="{Binding XMax}" Margin="1"></TextBox>
+                                            <Label Content="YMin:" Margin="1" HorizontalContentAlignment="Right"></Label>
+                                            <TextBox Text="{Binding YMin}" Margin="1"></TextBox>
+                                            <Label Content="YMax:" Margin="1" HorizontalContentAlignment="Right"></Label>
+                                            <TextBox Text="{Binding YMax}" Margin="1"></TextBox>
+                                        </UniformGrid>
+                                    </GroupBox>
+                                    <GroupBox Header="Sample" Style="{x:Null}">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition></RowDefinition>
+                                                <RowDefinition></RowDefinition>
+                                                <RowDefinition></RowDefinition>
+                                                <RowDefinition></RowDefinition>
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="60"></ColumnDefinition>
+                                                <ColumnDefinition></ColumnDefinition>
+                                            </Grid.ColumnDefinitions>
+                                            <Button Grid.Column="0" Content="Path" Margin="3">
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="Click">
+                                                        <i:InvokeCommandAction Command="{Binding ctrlClickCommand}" CommandParameter="sample-load-checked"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                            </Button>
+                                            <TextBox Grid.Column="1" Text="{Binding SelectPath}" Margin="3"></TextBox>
+                                            <Label Grid.Row="1" Grid.Column="0" Content="Key" HorizontalContentAlignment="Right"></Label>
+                                            <ComboBox Margin="3" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding ListKeys}" SelectedValue="{Binding KeyToStc}" SelectedValuePath="TypeVal" DisplayMemberPath="TypeName"></ComboBox>
+                                            <Label Grid.Row="2" Grid.Column="0" Content="SelectFile" HorizontalContentAlignment="Right"></Label>
+                                            <TextBox Margin="3" Grid.Row="2" Grid.Column="1" Text="{Binding SelFileName}"></TextBox>
+                                        </Grid>
+                                    </GroupBox>
+                                </DockPanel>
+                            </avalonDock:LayoutAnchorable>
+                            <avalonDock:LayoutAnchorable Title="Channel" >
+                                <app_util:WpfDataGrid MatrixSource="{Binding ScanMatrix, Mode=TwoWay}" Reference="2500" SelComplex="True" SelCoor="{Binding SelectedCoor, Mode=TwoWay}"  Background="#FEFEFE">
+                                </app_util:WpfDataGrid>
+                            </avalonDock:LayoutAnchorable>
+                        </avalonDock:LayoutAnchorablePane>
+                    </avalonDock:LayoutAnchorablePaneGroup>
+                </avalonDock:LayoutPanel>
+            </avalonDock:LayoutRoot>
+        </avalonDock:DockingManager>
+    </Grid>
+</UserControl>

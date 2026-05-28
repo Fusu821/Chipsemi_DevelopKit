@@ -1,0 +1,774 @@
+#include "framework.h"
+#include "ChipWrapper.h"
+#include "Comm/CommMtk.h"
+#include "Comm/CommAdb.h"
+#include "Comm/CommFake.h"
+#include "Chip/ChipBase.h"
+#include "Comm/CommAdbTHP.h"
+
+#//include <tchar.h>
+
+#ifdef _MSC_VER
+#include <winioctl.h>
+extern "C" {   
+#include <setupapi.h>
+#include <Dbt.h>
+#include "Comm/CommAdb.h"
+}
+#pragma comment(lib,"Setupapi.lib")
+#endif
+
+
+
+// #pragma comment(lib,"./USBHeader/hid.lib")
+
+// DEFINE_GUID(IID_HIDGUID, 0x4D1E55B2, 0xF16F, 0x11CF, 0x88, 0xCB, 0x00, 0x11, 0x11, 0x00, 0x00, 0x30);
+// DEFINE_GUID(IID_FTUSBGUID,0x33E5E5B0, 0x315C, 0x46C9, 0xA4, 0xE7, 0x36, 0x19, 0x6D, 0x1B, 0x1D, 0x2D);
+
+void mytolower(char *s){
+	int len=strlen(s);
+	for(int i=0;i<len;i++){
+		if(s[i]>='A'&&s[i]<='Z'){
+			s[i]+=32;//+32转换为小写
+			//s[i]=s[i]-'A'+'a';
+		}
+	}
+}
+
+#ifdef _1_MULTIPLE_N_
+static CChipWrapper wraper0(0);
+static CChipWrapper wraper1(1);
+static CChipWrapper wraper2(2);
+static CChipWrapper wraper3(3);
+static CChipWrapper wraper4(4);
+static CChipWrapper wraper5(5);
+static CChipWrapper wraper6(6);
+static CChipWrapper wraper7(7);
+CChipWrapper* CChipWrapper::m_SeltContainer[MAX_DEVICE_NUM] = 
+{ 
+	&wraper0,  &wraper1,  &wraper2,  &wraper3,&wraper4,  &wraper5,  &wraper6,  &wraper7, 
+};
+#else
+static CChipWrapper wraper;
+CChipWrapper* CChipWrapper::m_SeltContainer = &wraper;
+ISMChipBase*& chipbase      = wraper.GetChipBaseInterface();
+ICommBase*& commbase        = wraper.GetCommBaseInterface();
+//IICProgram*& icprograme     = wraper.GetProgramInterface();
+#endif
+
+
+/***********************************************************************************/
+bool DoLinkTest( HANDLE hDevice, int& ucDeviceNo )
+{
+	unsigned char  ReCode = ERROR_CODE_OK;
+
+#ifdef _MSC_VER
+	int flag = 0;
+
+	OVERLAPPED oWrite;
+	memset((char*)&oWrite, 0, sizeof(OVERLAPPED));
+	oWrite.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+	ResetEvent(oWrite.hEvent);
+
+	DWORD nBytesReaded = 0;
+	unsigned char writeBuffer[] = { 0x02, (SM_MTK_DEVICE_NO_ADDR >> 8) & 0xff, (SM_MTK_DEVICE_NO_ADDR >> 0) & 0xff, 0 };
+	if( DeviceIoControl( hDevice, IOCTL_USBPRINT_VENDOR_GET_COMMAND, writeBuffer, 4, (LPVOID)&flag, 8 + 4, &nBytesReaded, &oWrite ) )
+	{
+		ReCode = ERROR_CODE_OK;
+	}
+	else
+	{
+		DWORD dError = GetLastError();
+		if( GetLastError() == ERROR_IO_PENDING )
+		{
+			long WaitResult = WaitForSingleObject( oWrite.hEvent, USB_RW_TIMEOUT );
+			if( WaitResult == WAIT_OBJECT_0 )
+			{
+				ReCode = ERROR_CODE_OK;
+			}
+			else if( WaitResult == WAIT_TIMEOUT )
+			{
+				ReCode = ERROR_CODE_WAIT_RESPONSE_TIMEOUT;
+				CancelIo(hDevice);  //close all I/O Operation
+			}
+			else
+			{
+				ReCode = ERROR_CODE_WRITE_USB_ERROR;
+				CancelIo(hDevice);  //close all I/O Operation
+			}
+		}
+		else
+		{
+			ReCode = ERROR_CODE_WRITE_USB_ERROR;
+		}
+	}
+
+	//wasim
+ 	if( !VARIFY_DEVICE_NO_OK( flag ) )
+ 	{
+// 		ReCode = ERROR_CODE_READ_USB_ERROR;
+ 	}
+	ucDeviceNo = (flag & 0x0f) % MAX_DEVICE_NUM;
+#endif
+
+	return ERROR_CODE_OK == ReCode;
+}
+HDEVNOTIFY  hRegistNotify;
+TCHAR arrayDevicePath[MAX_DEVICE_NUM][MAX_PATH] = {0};
+bool EnumPrintDevice( const GUID* pInterfaceGUID, HANDLE (&arrayHandle)[MAX_DEVICE_NUM] )
+{
+	HANDLE handle = (HANDLE)INVALID_HANDLE_VALUE;
+
+#ifdef _MSC_VER
+	HDEVINFO hardwareDeviceInfo;
+	//SP_DEVINFO_DATA hwInfoData;
+	SP_INTERFACE_DEVICE_DATA deviceInfoData;
+	PSP_INTERFACE_DEVICE_DETAIL_DATA functionClassDeviceData = NULL;
+	ULONG predictedLength = 0;
+	ULONG requiredLength  = 0;
+	ULONG hwpredictedLength = 254;
+	ULONG hwrequiredLength  = 254;
+
+	//TCHAR lpPath[MAX_PATH] = {0};//新加获取HID设备实例路径查找字符串
+	//::GetModuleFileName( GetModuleHandle( _T("SEMITouch.dll") ), lpPath, MAX_PATH );
+	//*(_tcsrchr( lpPath, _T('\\') ) + 1) = 0;
+	//copytextappend(lpPath, _T("Ini.ini"));
+	//LPTSTR PathInfor= new char[128];
+	//GetPrivateProfileString("HIDIIC", "PathInfor", "", PathInfor, 128, lpPath);
+	//mytolower(PathInfor);
+
+	deviceInfoData.cbSize = sizeof(SP_INTERFACE_DEVICE_DATA);
+	hardwareDeviceInfo = SetupDiGetClassDevs( pInterfaceGUID, NULL, NULL, (DIGCF_PRESENT|DIGCF_DEVICEINTERFACE) );
+	for (int i = 0; i < 128; i++)
+	{
+		//遍历所有的USB设备
+		if (!SetupDiEnumDeviceInterfaces( hardwareDeviceInfo, 0, pInterfaceGUID, i, &deviceInfoData) ) continue;
+		SetupDiGetDeviceInterfaceDetail( hardwareDeviceInfo, &deviceInfoData, NULL, 0, &requiredLength, NULL );
+		predictedLength = requiredLength;
+		functionClassDeviceData = (PSP_INTERFACE_DEVICE_DETAIL_DATA)malloc(predictedLength);
+		if (!functionClassDeviceData) continue;
+		functionClassDeviceData->cbSize = sizeof(SP_INTERFACE_DEVICE_DETAIL_DATA);
+		if (!SetupDiGetDeviceInterfaceDetail(hardwareDeviceInfo, &deviceInfoData, functionClassDeviceData, predictedLength, &requiredLength, NULL)) 
+		{
+			free( functionClassDeviceData );
+			break;
+		}
+
+		if((NULL != findtext( functionClassDeviceData->DevicePath, _T("vid_248a&pid_"))))//联想小新hid#msft0001&col03  || (NULL != findtext(functionClassDeviceData->DevicePath, PathInfor))
+		{
+			static int iDeviceIndex = 0;
+			if(*pInterfaceGUID == IID_SMHIDGUID && INVALID_HANDLE_VALUE != handle) break;
+
+			handle = CreateFile( functionClassDeviceData->DevicePath, GENERIC_READ|GENERIC_WRITE, FILE_SHARE_READ|FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_FLAG_OVERLAPPED, NULL );
+			if ( handle == INVALID_HANDLE_VALUE )
+			{
+				free( functionClassDeviceData );
+				continue;
+			}
+
+			if( *pInterfaceGUID == IID_SMUSBGUID && !DoLinkTest( handle, iDeviceIndex ) ) 
+			{
+				CloseHandle( handle );
+				free( functionClassDeviceData );
+				continue;
+			}
+
+			if( NULL != arrayHandle[iDeviceIndex] )
+			{
+				//该ID的设备已经被打开过了 
+				CloseHandle( arrayHandle[iDeviceIndex] );
+				arrayHandle[iDeviceIndex] = NULL;
+			}
+
+			arrayHandle[iDeviceIndex] = handle;
+			memset( arrayDevicePath[iDeviceIndex], 0, sizeof(TCHAR) * MAX_PATH );
+			copytextto( arrayDevicePath[iDeviceIndex], functionClassDeviceData->DevicePath, lengthof(functionClassDeviceData->DevicePath) );
+			free( functionClassDeviceData );
+			functionClassDeviceData = NULL;	
+		}
+	}
+	SetupDiDestroyDeviceInfoList( hardwareDeviceInfo );
+	//delete [] PathInfor;
+#endif
+
+	return (handle != (HANDLE)NULL);
+}
+
+unsigned char OpenDeviceByName( LPCTSTR pszName, HANDLE& hDevice, int& number )
+{
+#ifdef _MSC_VER
+	//指定打开设备的名称 直接获取设备句柄
+	HANDLE handle = CreateFile( pszName, GENERIC_READ|GENERIC_WRITE, FILE_SHARE_READ|FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_FLAG_OVERLAPPED/*0*/, NULL );
+	if ( handle != INVALID_HANDLE_VALUE )
+	{
+		hDevice = handle;
+		DoLinkTest( hDevice, number );
+
+		return ERROR_CODE_OK;
+	}
+#endif
+
+	return ERROR_CODE_INVALID_PARAM;
+}
+
+unsigned char HalLinkAndDoInit( LinkParam& param )
+{
+	int iRet = ERROR_CODE_INVALID_PARAM;
+
+	if( LINK_TYPE_USB == param.LinkType || LINK_TYPE_HID == param.LinkType || LINK_TYPE_HID_IIC == param.LinkType )
+	{
+		if( NULL == param.usb.pszLinkName )
+		{
+			HANDLE arrayHandle[MAX_DEVICE_NUM] = {0};
+
+			EnumPrintDevice( LINK_TYPE_USB == param.LinkType ? &IID_SMUSBGUID : &IID_SMHIDGUID, arrayHandle );
+
+#ifdef _1_MULTIPLE_N_
+			for( int index = 0; index < MAX_DEVICE_NUM; ++index )
+			{
+                if( (HANDLE)NULL == arrayHandle[index] )  continue;
+
+				Device device;
+				device.handle = arrayHandle[index];
+				device.iDevIndex = index;
+				
+				param.usb.devID = device.iDevIndex;
+				iRet = CChipWrapper::m_SeltContainer[index]->HalLinkAndDoInit( param, device );
+			}
+#else
+			Device device;
+			device.handle = NULL;
+			for( int index = 0; index < MAX_DEVICE_NUM; ++index )
+			{
+	            if( arrayHandle[index] )
+				{
+					device.handle = arrayHandle[index];
+					device.iDevIndex = 0;
+					break;
+				}
+			}
+			iRet = CChipWrapper::m_SeltContainer->HalLinkAndDoInit( param, device );
+			if( NULL == device.handle )  iRet = ERROR_CODE_DEVICE_CLOSED;
+#endif
+		}
+		else
+		{
+			Device device;
+			iRet = OpenDeviceByName( param.usb.pszLinkName, device.handle, device.iDevIndex );
+			if( iRet == ERROR_CODE_OK )
+			{
+				param.usb.devID = device.iDevIndex;
+				memset( arrayDevicePath[device.iDevIndex], 0, sizeof(TCHAR) * MAX_PATH );
+				copytextto( arrayDevicePath[device.iDevIndex], param.usb.pszLinkName, lengthof(param.usb.pszLinkName) );
+#ifdef _1_MULTIPLE_N_
+				iRet = CChipWrapper::m_SeltContainer[device.iDevIndex]->HalLinkAndDoInit( param, device );
+#else
+				iRet = CChipWrapper::m_SeltContainer->HalLinkAndDoInit( param, device );
+#endif
+			}
+		}
+	}
+	else if(LINK_TYPE_TCP == param.LinkType||LINK_TYPE_THP == param.LinkType){
+		Device device;
+		device.handle = (HANDLE)NULL;
+		device.iDevIndex = 0;
+#ifndef _1_MULTIPLE_N_
+		iRet = CChipWrapper::m_SeltContainer->HalLinkAndDoInit( param, device );
+#else
+		iRet = CChipWrapper::m_SeltContainer[device.iDevIndex]->HalLinkAndDoInit( param, device );
+#endif
+	}
+	else if(LINK_TYPE_FAKE == param.LinkType){
+		Device device;
+		device.handle = (HANDLE)NULL;
+		device.iDevIndex = 0;
+#ifndef _1_MULTIPLE_N_
+		iRet = CChipWrapper::m_SeltContainer->HalLinkAndDoInit( param, device );
+#else
+		iRet = CChipWrapper::m_SeltContainer[device.iDevIndex]->HalLinkAndDoInit( param, device );
+#endif
+	}
+	else if(LINK_TYPE_PROC == param.LinkType)
+	{
+		Device device;
+		device.handle = (HANDLE)NULL;
+		device.iDevIndex = 0;
+#ifndef _1_MULTIPLE_N_
+		iRet = CChipWrapper::m_SeltContainer->HalLinkAndDoInit( param, device );
+#else
+		iRet = CChipWrapper::m_SeltContainer[device.iDevIndex]->HalLinkAndDoInit( param, device );
+#endif
+	}
+	else 
+	{
+
+	}
+
+	return iRet;
+}
+unsigned char HalDetachAndClean( LinkParam& param )
+{
+    int iRet = ERROR_CODE_INVALID_PARAM;
+	if( LINK_TYPE_USB == param.LinkType ||LINK_TYPE_HID == param.LinkType ||LINK_TYPE_HID_IIC == param.LinkType  )
+	{
+        if( param.usb.pszLinkName )
+		{
+			Device device;
+			device.handle = (HANDLE)NULL;
+
+#ifdef _1_MULTIPLE_N_
+			int index = 0;
+			for( int index = 0; index < MAX_DEVICE_NUM; ++index )
+			{
+				if( 0 == icomparetext( param.usb.pszLinkName, arrayDevicePath[index] ) )
+				{
+					memset( arrayDevicePath[index], 0, sizeof(TCHAR) * MAX_PATH );
+
+					device.iDevIndex = index + 1;
+					CChipWrapper::m_SeltContainer[index]->HalLinkAndDoInit( param, device );
+					break;
+				}
+			}
+#else
+			CChipWrapper::m_SeltContainer->HalLinkAndDoInit( param, device );
+#endif
+		}
+	}
+	else
+	{
+       
+	}
+
+	return iRet;
+}
+unsigned char RegisterNotification( HWND wnd, REFIID guid )
+{
+#ifdef _MSC_VER
+	static GUID uid = {0};
+	if( uid != guid )
+	{
+		DEV_BROADCAST_DEVICEINTERFACE devIF = {0};
+		devIF.dbcc_size = sizeof(devIF);
+		devIF.dbcc_devicetype = DBT_DEVTYP_DEVICEINTERFACE;
+		devIF.dbcc_classguid  = guid;
+		hRegistNotify = RegisterDeviceNotification(wnd, &devIF, DEVICE_NOTIFY_WINDOW_HANDLE);
+		if(hRegistNotify == NULL){
+			return ERROR_CODE_INVALID_PARAM;
+		}
+		uid = guid;
+	}
+#endif
+
+	return ERROR_CODE_OK;
+}
+unsigned char UnRegisterNotification( )
+{
+#ifdef _MSC_VER
+	UnregisterDeviceNotification( hRegistNotify );
+#endif
+
+#ifdef _1_MULTIPLE_N_
+	for( int index = 0; index < MAX_DEVICE_NUM; ++index )
+		CChipWrapper::m_SeltContainer[index]->MakeClean();
+#else
+	CChipWrapper::m_SeltContainer->MakeClean();
+#endif
+
+	return ERROR_CODE_OK;
+}
+void GetDeviceNameInfo(unsigned char Index, void *pName)
+{
+    if(Index >= MAX_DEVICE_NUM) return ;
+
+    memcpy_s(pName, sizeof(TCHAR) * MAX_PATH, arrayDevicePath[Index], sizeof(TCHAR) * MAX_PATH);
+    return ;
+}
+
+bool HaveDeviceAttached( int deviceNum /*= 0*/ )
+{
+#ifdef _1_MULTIPLE_N_
+	return NULL != CChipWrapper::m_SeltContainer[deviceNum]->GetCommBaseInterface() && CChipWrapper::m_SeltContainer[deviceNum]->GetCommBaseInterface()->Connected();
+#else
+	return NULL != CChipWrapper::m_SeltContainer->GetCommBaseInterface() && CChipWrapper::m_SeltContainer->GetCommBaseInterface()->Connected();
+#endif
+
+	return ERROR_CODE_OK;
+}
+int NumOfDeviceAttached()
+{
+	int number = 0;
+#ifdef _1_MULTIPLE_N_
+	for( int index = 0; index < MAX_DEVICE_NUM; index++ )
+		if( CChipWrapper::m_SeltContainer[index]->GetCommBaseInterface() && CChipWrapper::m_SeltContainer[index]->GetCommBaseInterface()->Connected() ) number++;
+#else
+	if( CChipWrapper::m_SeltContainer->GetCommBaseInterface() && CChipWrapper::m_SeltContainer->GetCommBaseInterface()->Connected() ) number++;
+#endif
+
+	return number;
+}
+
+
+
+LPCTSTR GetErrorMessage( unsigned int errorCode )
+{
+
+	if( ERROR_CODE_OK == errorCode ) 
+		return _T("Comm OK.");
+	else if( ERROR_CODE_LOOP_BEYOND_MAX_RETRY == errorCode )
+		return _T("Loop Max Try");
+	else if( ERROR_CODE_NO_DEVICE == errorCode )
+		return _T("No Usb Device");
+	else if( ERROR_CODE_NO_KINDOF_IC == errorCode )
+		return _T("No Ic Type");
+	else if( ERROR_CODE_INVALID_PARAM == errorCode )
+		return _T("Invalid Parameter");
+	else if( ERROR_CODE_WRITE_USB_ERROR == errorCode )
+		return _T("Wrte Usb Error");
+	else if( ERROR_CODE_WAIT_RESPONSE_TIMEOUT == errorCode )
+		return _T("Wait Timeout");
+	else if( ERROR_CODE_READ_USB_ERROR == errorCode )
+		return _T("Read Usb Error");
+	else if( ERROR_CODE_COMM_ERROR == errorCode )
+		return _T("Comm Error");
+	else if( ERROR_CODE_DEVICE_CLOSED == errorCode )
+		return _T("Usb Device Closed");
+	else if( ERROR_CODE_CHECK_RESPONSE_FAILED == errorCode )
+		return _T("Response Error");
+	else if( ERROR_CODE_ONE_PROCESS_RUNING == errorCode )
+		return _T("Multiple Process");
+	else if( ERROR_CODE_INVALID_FILE == errorCode )
+		return _T("Invalid File");
+	else if( ERROR_CODE_CHECK_SUM_MISMATCH == errorCode )
+		return _T("CheckSum mismatch");
+
+	return _T("UnDefined Error!");
+}
+LPCTSTR GetProgramErrorMessage( unsigned char errorCode )
+{
+	return _T("UnDefined Error!");
+}
+
+void SysDelayFake( unsigned int DelayMS )
+{
+
+}
+void SysDelayReal( unsigned int DelayMS )	
+{
+#ifdef _MSC_VER
+	LARGE_INTEGER Param;
+	LONGLONG StartTime, EndTime;
+	double SysFreq;
+
+	QueryPerformanceFrequency( &Param );
+	SysFreq = (double)Param.QuadPart;
+	QueryPerformanceCounter( &Param );
+	StartTime = Param.QuadPart;
+	do
+	{
+		QueryPerformanceCounter( &Param );
+		EndTime = Param.QuadPart;
+	}while((EndTime-StartTime)*1000/SysFreq<DelayMS);
+#else
+	usleep((DelayMS) * 1000);
+#endif
+}
+
+SysDelayFunctionPoint SysDelay = SysDelayReal;
+
+void SetSimulateGate( BOOL bSimulateGateOpen /*= FALSE */)
+{
+	if( bSimulateGateOpen )
+	{
+		SysDelay = SysDelayFake;
+	}
+	else
+	{
+		SysDelay = SysDelayReal;
+	}
+}
+BOOL GetSimulateGate()
+{
+    return SysDelay == SysDelayFake;
+}
+
+/***********************************************************************************/
+CChipWrapper::CChipWrapper(  )
+:m_pChipIntr( 0 )
+,m_pCommIntr( 0 )
+,m_ucIDMark( 0 )
+/*,m_pProgramIntr( 0 )*/
+{
+}
+CChipWrapper::CChipWrapper( unsigned char id )
+:m_pChipIntr( 0 )
+,m_pCommIntr( 0 )
+,m_ucIDMark( id )
+{
+#if LOG_SEMI_TOUCH_OPEN
+	OnLineLogApp.OnInitLogParam( m_ucIDMark );
+#endif
+}
+CChipWrapper::~CChipWrapper()
+{
+    MakeClean();
+}
+void CChipWrapper::MakeClean()
+{
+// 	if( NULL != m_pProgramIntr// 	elete m_pProgramIntr;
+// 	m_pProgramIntr = NULL;
+
+	if(NULL != m_pChipIntr )      delete m_pChipIntr;
+	m_pChipIntr = NULL;
+	if( NULL != m_pCommIntr )     delete m_pCommIntr;
+	m_pCommIntr = NULL;
+}
+
+unsigned int CChipWrapper::HalLinkAndDoInit( LinkParam& param, Device hDevice )
+{
+	if( m_pCommIntr )
+	{
+#ifdef _MSC_VER
+		if( param.LinkType != m_pCommIntr->GetCommType() )
+#endif
+		{
+			LinkParam tp;
+			tp.LinkType = m_pCommIntr->GetCommType();
+			HalDetachAndClean(param);
+			delete m_pCommIntr;
+			m_pCommIntr = NULL;
+		}
+	}
+
+	if( NULL == m_pCommIntr )
+	{
+		m_pCommIntr = (ICommBase*)RunTimeClassFactoryInstEx(COMM_TYPE).CreateObject( (COMM_TYPE)param.LinkType, (unsigned long)&param );
+	}
+
+	if( m_pCommIntr )
+	{
+		if(LINK_TYPE_TCP == param.LinkType)
+		{
+			((CCommAdb*)m_pCommIntr)->SetWrapperAddr( this );
+			((CCommAdb*)m_pCommIntr)->SyncWorkcInit( );
+		}
+		else if(LINK_TYPE_THP == param.LinkType)
+		{
+			((CCommAdbTHP*)m_pCommIntr)->SetWrapperAddr( this );
+			((CCommAdbTHP*)m_pCommIntr)->SyncWorkcInit( );
+		}
+		else
+		{
+			((CCommMtk*)m_pCommIntr)->SetWrapperAddr( this );
+			m_pCommIntr->HalTrySetDeviceManuly( hDevice );
+			
+			if( m_pChipIntr )
+			{
+				m_pCommIntr->SyncWorkcInit();
+			}
+		}
+	}
+
+	return m_pCommIntr ? ERROR_CODE_OK : ERROR_CODE_INVALID_PARAM;
+}
+
+unsigned int CChipWrapper::SetICTypeAndCreateComponent( USHORT uIcType )
+{
+	//if( NULL != m_pProgramIntr ) delete m_pProgramIntr;
+    if( NULL != m_pChipIntr )     delete m_pChipIntr;
+
+    m_pChipIntr = (ISMChipBase*)RunTimeClassFactoryInst(CHIP_TYPE).CreateObject( (CHIP_TYPE)uIcType );
+	if( m_pChipIntr )
+	{
+		RefSelf* SRefIntr = (RefSelf*)m_pChipIntr->GetSRefInterface();
+		if( NULL != SRefIntr ) SRefIntr->SetWrapperAddr( this );
+	}
+
+	return ERROR_CODE_OK;
+}
+
+#ifdef _1_MULTIPLE_N_ 
+ISMChipWrapper* GetChipWrapperAddr( int iDevice ) { return CChipWrapper::m_SeltContainer[iDevice]; }
+#else
+ISMChipWrapper* GetChipWrapperAddr(  ) { return CChipWrapper::m_SeltContainer; }
+#endif
+
+struct ChipNode 
+{
+#define CHIP_NAME_LENGTH 20
+#define PRAM_NAME_LENGTH 100
+	unsigned char chipType;
+	unsigned char chipFamily;
+	unsigned short chipId;
+	TCHAR chipName[CHIP_NAME_LENGTH];
+	TCHAR pramMapping[PRAM_NAME_LENGTH];
+	ChipNode( unsigned short id, LPCTSTR name, unsigned char ictype, unsigned char family, LPCTSTR pramName = NULL )
+		:chipId(id)
+		,chipType(ictype)
+		,chipFamily(family)
+	{
+		memset( chipName, 0, sizeof(chipName) );
+		copytextto( chipName, name, lengthof(name) );
+		memset( pramMapping, 0, sizeof(pramMapping) );
+		if(pramName) copytextto( pramMapping, pramName, lengthof(pramName) );
+	}
+};
+
+enum{ FAMILY_SCAP_3535 = 0, FAMILY_SCAP_3536 = 2, FAMILY_MCAP_5472 = 4, FAMILY_MCAP_5816 = 5, FAMILY_MCAP_7449 = 6, FAMILY_MCAP_5562 = 7, FAMILY_CHGA_8006 = 8, FAMILY_CHGA_810 = 9, FAMILY_MCAP_7126 = 10, FAMILY_MCAP_570 = 11 };
+
+ChipNode arrayNode[] =
+{
+	ChipNode( SEMI_IC_3535, _T("TL6306"), IC_TYPE_SCAP, FAMILY_SCAP_3535,  NULL ),
+
+	ChipNode( SEMI_IC_3536, _T("CHSC6424"), IC_TYPE_SCAP, FAMILY_SCAP_3536,  NULL ),
+	ChipNode( SEMI_IC_6440, _T("CHSC6440"), IC_TYPE_SCAP, FAMILY_SCAP_3536,  NULL ),
+	ChipNode( SEMI_IC_6448, _T("CHSC6448"), IC_TYPE_SCAP, FAMILY_SCAP_3536,  NULL ),
+	ChipNode( SEMI_IC_6413, _T("CHSC6413"), IC_TYPE_SCAP, FAMILY_SCAP_3536,  NULL ),
+	ChipNode( SEMI_IC_6417, _T("CHSC6417"), IC_TYPE_SCAP, FAMILY_SCAP_3536,  NULL ),
+	ChipNode( SEMI_IC_6540, _T("CHSC6540"), IC_TYPE_SCAP, FAMILY_SCAP_3536,  NULL ),
+	ChipNode( SEMI_IC_6545, _T("CHSC6545"), IC_TYPE_SCAP, FAMILY_SCAP_3536,  NULL ),
+	ChipNode( SEMI_IC_6410, _T("CHSC6410"), IC_TYPE_SCAP, FAMILY_SCAP_3536,  NULL ),
+	ChipNode( SEMI_IC_6430, _T("CHSC6430"), IC_TYPE_SCAP, FAMILY_SCAP_3536,  NULL ),
+	ChipNode( SEMI_IC_6448S, _T("CHSC6448S"), IC_TYPE_SCAP, FAMILY_SCAP_3536,  NULL ),
+	
+
+	ChipNode( SEMI_IC_5472, _T("CHSC5472"), IC_TYPE_MCAP, FAMILY_MCAP_5472, NULL ),
+	ChipNode( SEMI_IC_5448, _T("CHSC5448"), IC_TYPE_MCAP, FAMILY_MCAP_5472, NULL ),
+	ChipNode( SEMI_IC_5460, _T("CHSC5460"), IC_TYPE_MCAP, FAMILY_MCAP_5472, NULL ),
+	ChipNode( SEMI_IC_5448A, _T("CHSC5448A"), IC_TYPE_MCAP, FAMILY_MCAP_5472, NULL ),
+	ChipNode( SEMI_IC_5448C, _T("CHSC5448C"), IC_TYPE_MCAP, FAMILY_MCAP_5472, NULL ),
+	ChipNode( SEMI_IC_5448D, _T("CHSC5448D"), IC_TYPE_MCAP, FAMILY_MCAP_5472, NULL ),
+	ChipNode( SEMI_IC_5448E, _T("CHSC5448E"), IC_TYPE_MCAP, FAMILY_MCAP_5472, NULL ),
+	ChipNode( SEMI_IC_5468, _T("CHSC5468"), IC_TYPE_MCAP, FAMILY_MCAP_5472, NULL ),
+	ChipNode( SEMI_IC_5428, _T("CHSC5428"), IC_TYPE_MCAP, FAMILY_MCAP_5472, NULL ),
+	ChipNode( SEMI_IC_5432, _T("CHSC5432"), IC_TYPE_MCAP, FAMILY_MCAP_5472, NULL ),
+	ChipNode( SEMI_IC_8328, _T("CHSC8328"), IC_TYPE_MCAP, FAMILY_MCAP_5472, NULL ),
+
+	ChipNode( SEMI_IC_5562, _T("CHCT5562"), IC_TYPE_MCAP, FAMILY_MCAP_5562, NULL ),
+	ChipNode( SEMI_IC_5460S, _T("CHCT5460S"), IC_TYPE_MCAP, FAMILY_MCAP_5562, NULL ),
+	ChipNode( SEMI_IC_5560, _T("CHCT5560"), IC_TYPE_MCAP, FAMILY_MCAP_5562, NULL ),
+	ChipNode( SEMI_IC_7562, _T("CHCT7562"), IC_TYPE_MCAP, FAMILY_MCAP_5562, NULL ),
+
+	ChipNode( SEMI_IC_5816, _T("CHSC5816"), IC_TYPE_MCAP, FAMILY_MCAP_5816, NULL ),
+	ChipNode( SEMI_IC_1716, _T("CHSC1716"), IC_TYPE_MCAP, FAMILY_MCAP_5816, NULL ),
+
+	ChipNode( SEMI_IC_7449, _T("CHCT7449"), IC_TYPE_MCAP, FAMILY_MCAP_7449, NULL ),
+    ChipNode( SEMI_IC_7438, _T("CHCT7438"), IC_TYPE_MCAP, FAMILY_MCAP_7449, NULL ),
+	ChipNode( SEMI_IC_7448, _T("CHCT7448"), IC_TYPE_MCAP, FAMILY_MCAP_7449, NULL ),
+	ChipNode( SEMI_IC_7464, _T("CHCT7464"), IC_TYPE_MCAP, FAMILY_MCAP_7449, NULL ),
+
+	ChipNode( SEMI_IC_CHGA8006, _T("CHGA8006"), IC_TYPE_ROCKER, FAMILY_CHGA_8006, NULL ),
+	ChipNode( SEMI_IC_CHGA810, _T("CHGA810"), IC_TYPE_ROCKER_810, FAMILY_CHGA_810, NULL ),
+
+	ChipNode( SEMI_IC_7126, _T("CHCT7126"), IC_TYPE_MCAP, FAMILY_MCAP_7126, NULL ),
+
+	ChipNode( SEMI_IC_570, _T("CHCT570"), IC_TYPE_MCAP, FAMILY_MCAP_570, NULL ),
+
+
+};
+class CChipNodeContainer : public ISMChipNodeContainer
+{
+public:
+	int Count( unsigned char type = 0xff )
+	{ 
+		if( 0xff == type ) return arraycount(arrayNode);
+
+		int iCount = 0;
+		for( int index = 0; index < arraycount(arrayNode); ++index )
+		{
+			if( type == arrayNode[index].chipType )
+				++iCount;
+		}
+		return iCount;
+	}
+	LPCTSTR GetIcName( unsigned short IcCode )
+	{
+		for( int index = 0; index < Count(); ++index )
+			if( IcCode == arrayNode[index].chipId ) 
+				return arrayNode[index].chipName;
+		return NULL;
+	}
+	LPCTSTR GetIcNameByIndex( int index, unsigned char type = 0xff )
+	{
+		int match = -1;
+		for( int iter = 0; iter < arraycount(arrayNode); ++iter )
+		{
+            if( type & arrayNode[iter].chipType )
+				++match;
+			if( match == index ) return arrayNode[iter].chipName;
+		}
+		return NULL;
+	} 
+	unsigned short GetIcCode( LPCTSTR strIcName )
+	{
+		for( int index = 0; index < Count(); ++index )
+			if( 0 == icomparetext( strIcName, arrayNode[index].chipName ) ) 
+				return arrayNode[index].chipId;
+		return 0;
+	}
+	unsigned short GetIcCodeByIndex( int index, unsigned char type = 0xff )
+	{
+		int match = -1;
+		for( int iter = 0; iter < arraycount(arrayNode); ++iter )
+		{
+			if( type & arrayNode[iter].chipType )
+				++match;
+			if( match == index ) return arrayNode[iter].chipId;
+		}
+		return 0;
+	}
+	unsigned char GetChipFamily( unsigned short icID )
+	{
+		for( int index = 0; index < arraycount(arrayNode); index++ )
+		{
+			if( arrayNode[index].chipId == icID )
+			{
+				return arrayNode[index].chipFamily;
+			}
+		}
+
+		return 0;
+	}
+// 	LPCTSTR GetIcPrambootName( unsigned short IcCode )
+// 	{
+// 		for( int index = 0; index < Count(); ++index )
+// 			if( IcCode == arrayNode[index].chipId ) 
+// 				return arrayNode[index].pramMapping;
+// 		return NULL;
+// 	}
+	unsigned char GetSubType( LPCTSTR strIcName )
+	{
+		unsigned char ucChipType = 0;
+		for( int index = 0; index < Count(); ++index )
+		{
+			if( 0 == icomparetext( strIcName, arrayNode[index].chipName ) ) 
+			{
+				return arrayNode[index].chipType;
+			}
+		}
+	
+		return 0;
+	}
+	unsigned char GetSubType( unsigned short icID )
+	{
+		unsigned char ucChipType = 0;
+		for( int index = 0; index < Count(); ++index )
+		{
+			if( icID == arrayNode[index].chipId ) 
+			{
+				return arrayNode[index].chipType;
+			}
+		}
+
+		return 0;
+	}
+	BOOL IsSameKind( const unsigned short compared, const unsigned short compareto )
+	{
+		return (compared & 0xff00) == (compareto & 0xff00);
+	}
+};
+
+ISMChipNodeContainer* GetContainerInterface()
+{
+    static CChipNodeContainer contain;
+	return &contain;
+}

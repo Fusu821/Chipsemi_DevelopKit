@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<SOUI name="mainWindow" bigIcon="ICON_LOGO:32" smallIcon="ICON_LOGO:16" width="1100" height="650" appWnd="1" translucent="1">
+	<root colorBkgnd="#3FAFDE">
+		<caption pos="1,1,-1,30" colorBkgnd="#666666">
+		    <icon pos="2,8" src="ICON_LOGO:16"/>
+			<text pos="21,9" name="textVer" colorText="#ffffffff"></text>
+			<imgbtn name="btn_close" skin="_skin.sys.btn.close" pos="-45,0" tip="close" animate="1" />
+			<imgbtn name="btn_max" skin="_skin.sys.btn.maximize" pos="-83,0" animate="1" />
+			<imgbtn name="btn_restore" skin="_skin.sys.btn.restore" pos="-83,0" show="0" animate="1" />
+			<imgbtn name="btn_min" skin="_skin.sys.btn.minimize" pos="-121,0" animate="1" />
+		</caption>
+		<window pos="1,30,-1,-22" colorBkgnd="#F3F3F3">
+			<caption pos="0,0" show="1" font="adding:0">
+				<link pos="[8,0" size="40, 32" cursor="hand" colorTextHover="#0000ffff" font="face:仿宋,size:18" fontHover="face:仿宋,underline:1,size:18" name="main_mode">Mode</link>
+				<link pos="[8,0" size="48, 32" cursor="hand" colorTextHover="#0000ffff" font="face:仿宋,size:18" fontHover="face:仿宋,underline:1,size:18">login</link>
+				<link pos="[8,0" size="48, 32" cursor="hand" colorTextHover="#0000ffff" font="face:仿宋,size:18" fontHover="face:仿宋,underline:1,size:18">Theme</link>
+				<link pos="[8,0" size="48, 32" cursor="hand" colorTextHover="#0000ffff" font="face:仿宋,size:18" fontHover="face:仿宋,underline:1,size:18" name="main_help">Help</link>
+			</caption>
+			<text pos="-810,8, -80, 30" font="face:仿宋,bold:1,size:15" colorText="#0000ffff" name="txtProjInfo" align="right">projInfo</text>
+			<tabctrl name="tabMode" pos="0,[8,-0,-0" tabHeight="0">
+				<page>
+					<include src="layout:page_single" />
+				</page>
+				<page>
+					<include src="layout:page_multiple" />
+				</page>
+			</tabctrl>
+			<!--pane pos="1,[0,-0,-0">
+				<window colorBkgnd="#555555" pos="0, 0, -0, -0" colorBkgnd="RGB(191,141,255)" colorBkgnd="RGB(191,141,255)">&lt;include src="layout:TEST_MODE_SINGLE" colorBkgnd="#555555" /&gt;</window>
+			</pane-->
+		</window>
+		<caption pos="1, -23, -1, -1" colorBkgnd="#666666">
+			<text name="devStatus" colorText="#ffff00ff" pos="11,3">Device Num：1 MTK = 4</text>
+			<text name="stcText" colorText="#ffffffff" pos="18,3,-3,-0" align="right"></text>
+		</caption>
+	</root>
+</SOUI>

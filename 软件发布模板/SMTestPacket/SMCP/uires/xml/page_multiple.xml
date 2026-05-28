@@ -1,0 +1,34 @@
+<include width="500" height="500">
+        <tabctrl pos="2,2,-2,-2" tabHeight="23">
+		    <page title="List">
+			    <!--window pos="0,0,-0,-0"-->
+				<PacketWindow pos="[0,0,%25,-0" name="muti1"> 
+				   <include src="layout:multi_sub"/>
+				</PacketWindow>
+				<PacketWindow pos="[3,0,%50,-0" name="muti2">
+				   <include src="layout:multi_sub"/>
+				</PacketWindow>
+				<PacketWindow pos="[3,0,%75,-0" name="muti3">
+				   <include src="layout:multi_sub"/>
+				</PacketWindow>
+				<PacketWindow pos="[3,0,%100,-0" name="muti4">
+				   <include src="layout:multi_sub"/>
+				</PacketWindow>
+			<!--/window-->
+			</page>
+			<page title="Message">
+			    <richedit name="richText" pos="0,0,-120,-0" multilines="1" autovscroll="1" autohscroll="1" hscrollBar="1" vscrollBar="1" wordwrap="0" margin-x="2" margin-y="2"></richedit>
+				<text pos="-115,0,-2,25">DeviceNo:</text>
+				 <combobox name="cbx_test" pos="-115,26,-2,50"  dropDown="1" dropHeight="130" class="cls_border" dotted="0" animateTime="200" curSel="-1">
+					  <liststyle class="cls_edit" itemHeight="30" colorText="#000000" colorSelText="#FFFFFF" colorItemBkgnd="#FFFFFF" colorItemSelBkgnd="#000088"/>
+					  <editstyle inset="5,0,5,0" colorText="#000000" align="left" colorBkgnd="#FFFFFF"/>
+					  <items>
+						<item text="#1" id="100" data="100"/>
+						<item text="#2" data="100"/>
+						<item text="#3" data="103"/>
+						<item text="#4" data="100"/>
+					  </items>
+				</combobox>
+			</page>
+		</tabctrl>
+</include>

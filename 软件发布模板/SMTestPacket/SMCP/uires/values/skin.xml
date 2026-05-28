@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<skin>
+	<button name="StartBtnNor" colorBorder="#0078D7" colorUp="#E1E1E1" colorDown="#E1E1E1" colorBorderHover="#0078D7" colorUpHover="#E5F1FB" colorDownHover="#E5F1FB" colorBorderPush="#005499" colorUpPush="#CCE4F7" colorDownPush="#CCE4F7" cornerPercent="0.1" />
+	<button name="StartBtnNG" colorBorder="#0078D7" colorUp="#FF0000" colorDown="#FF0000" colorBorderHover="#0078D7" colorBorderPush="#005499" cornerPercent="0.1" />
+	<button name="StartBtnPASS" colorBorder="#0078D7" colorUp="#00FF00" colorDown="#00FF00" colorBorderHover="#0078D7" colorBorderPush="#005499" cornerPercent="0.1" />
+	<button name="StartBtnTEST" colorBorder="#0078D7" colorUp="#FFFF00" colorDown="#FFFF00" colorBorderHover="#0078D7" colorBorderPush="#005499" cornerPercent="0.1" />
+	<button name="StartBtnTBD" colorBorder="#0078D7" colorUp="#FFFF00" colorDown="#FFFF00" colorBorderHover="#0078D7" colorBorderPush="#005499" cornerPercent="0.1" />
+	<button name="listResult" colorBorder="#0078D7" cornerPercent="0" colorUpHover="#00000000" colorDownHover="#00000000" colorUp="#00000000" colorDown="#00000000" colorUpPush="#00000000" colorDownPush="#00000000"/>
+	<gradation name="skin_pos" colorFrom="#0000FF" colorTo="#0005ff" vertical="0" />
+</skin>

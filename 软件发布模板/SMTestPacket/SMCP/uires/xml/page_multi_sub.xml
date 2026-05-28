@@ -1,0 +1,26 @@
+<include>
+        <mclistview name="resultlist" pos="0,0,-0,-50" headerHeight="30" class="cls_border" hscrollBar="0">
+                <header2 align="center" itemSwapEnable="0" matchParent="0" font="face:仿宋,bold:1,size:15" sortHeader="0" colorBkgnd="#F3F3F3" >
+				  <items>
+					<item width="76">NAME</item>
+					<item width="76">RESULT</item>
+					<item width="112">MARK</item>
+				  </items>
+				</header2>
+				<template itemHeight="32">
+				  <window name="col1"  clipClient="1" colorBkgnd="rgb(202,202,202)">
+					<text name="name" pos="1,0,-0,-1" align="center" colorBkgnd="#F3F3F3"  font="face:仿宋,bold:1,size:18"></text>
+				  </window>
+				  <window name="col2" clipClient="1" colorBkgnd="rgb(202,202,202)">
+					<text name="result" pos="1,0,-0,-1" align="center" colorBkgnd="#F3F3F3" font="face:仿宋,bold:1,size:18" ></text>
+				  </window>
+				  <window name="col3" clipClient="1" colorBkgnd="rgb(202,202,202)">
+					<text name="mark" pos="1,0,-0,-1" align="center" colorBkgnd="#F3F3F3" font="face:仿宋,bold:1,size:18"  ></text>
+				  </window>
+				</template>
+          </mclistview>
+		  <graph name="imageGraph" pos="0,0,-0,-50" show="0"/>
+	
+	<progress name="progress" pos="0,[3,-0,@7" posSkin="skin_pos" value="0" min="0" max="100"/>
+	<button name="btnstart" pos="0,[3,-0,-0" font="face:仿宋,bold:1,size:28" skin="StartBtnNor" colorText="#000000">START</button>
+</include>

@@ -1,0 +1,5 @@
+//运行烧录代码
+run_ram_code(chsc_venus_idle.bin)
+
+//延时
+d 100

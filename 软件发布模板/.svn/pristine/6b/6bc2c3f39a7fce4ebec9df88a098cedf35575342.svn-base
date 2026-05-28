@@ -1,0 +1,9 @@
+;工具参数
+[ToolsConfig]
+ToolCheckSum=1
+ToolProtocal=1
+ToolFilterTransform=1
+Tool2=0
+Tool3=0
+Tool4=0
+Tool5=0
